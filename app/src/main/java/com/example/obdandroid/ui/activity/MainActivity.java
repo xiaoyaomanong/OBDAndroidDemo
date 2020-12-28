@@ -6,8 +6,6 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,7 +25,6 @@ import com.example.obdandroid.ui.fragment.HomeFragment;
 import com.example.obdandroid.ui.fragment.PersonalFragment;
 import com.example.obdandroid.utils.ActivityManager;
 import com.example.obdandroid.utils.StringUtil;
-import com.hacknife.immersive.Immersive;
 import com.kongzue.dialog.util.BlurView;
 
 import java.util.ArrayList;
@@ -39,14 +36,20 @@ import static com.kongzue.dialog.v2.DialogSettings.dialog_background_color;
 import static com.kongzue.dialog.v2.DialogSettings.dialog_theme;
 import static com.kongzue.dialog.v2.DialogSettings.use_blur;
 
+/**
+ * 作者：Jealous
+ * 日期：2020/12/22 0022
+ * 描述：正式项目
+ */
+
 public class MainActivity extends BaseActivity {
     private ViewPager viewPager;
     private BottomNavigationView navigation;
-    private List<Fragment> fragments = new ArrayList<>();
+    private final List<Fragment> fragments = new ArrayList<>();
     private Context context;
     private int blur_front_color;
     private BlurView blur;
-    private String string="";
+    private String string = "";
 
     @Override
     protected int getContentViewId() {

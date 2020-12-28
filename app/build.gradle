@@ -1,0 +1,123 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    useLibrary 'org.apache.http.legacy'
+
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/rxjava.properties'
+    }
+
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+    defaultConfig {
+        applicationId "com.example.obdandroid"
+        minSdkVersion 21
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        renderscriptTargetApi 17
+        renderscriptSupportModeEnabled true
+        multiDexEnabled true
+        testInstrumentationRunner "android.test.runner.AndroidJUnitRunner"
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+        preDexLibraries = false
+        additionalParameters = [
+                '--multi-dex',//多分包
+                '--set-max-idx-number=60000'//每个包内方法数上限
+        ]
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    aaptOptions {
+        cruncherEnabled = false
+        useNewCruncher = false
+    }
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+        // 防止在发布的时候出现因MissingTranslation导致Build Failed!
+        disable 'MissingTranslation'
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                //这里修改apk文件名
+                outputFileName = "CarScanner_v${defaultConfig.versionName}_${buildType.name}_${releaseTime()}.apk"
+            }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+static def releaseTime() {
+    return new Date().format("yyMMdd", TimeZone.getTimeZone("UTC"))
+}
+
+
+repositories {
+    flatDir {
+        dirs 'libs' //就是你放aar的目录地址
+    }
+}
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testImplementation 'junit:junit:4.12'
+    //noinspection GradleCompatible
+    implementation 'com.android.support:appcompat-v7:28+'
+    //noinspection GradleCompatible
+    implementation 'com.android.support:design:28+'
+    //noinspection GradleCompatible
+    implementation 'com.android.support:recyclerview-v7:28+'
+    //noinspection GradleCompatible
+    implementation 'com.android.support:cardview-v7:28+'
+    //noinspection GradleCompatible
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.qianwen:okhttp-utils:3.8.0'
+    implementation 'com.github.zhouxu88:OkHttp3_MultiFile:v1.0'
+    implementation 'com.lzy.net:okgo:3.0.4'
+    implementation project(':notchtools')
+    implementation 'com.github.bumptech.glide:glide:4.5.0'
+    implementation 'io.reactivex:rxandroid:1.1.0'
+    implementation 'io.reactivex:rxjava:1.1.0'
+    implementation 'cn.bingoogolapple:bga-banner:2.2.6@aar'
+    implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
+    implementation 'com.hjq:titlebar:8.2'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.34'
+    implementation 'com.hacknife:immersive:1.1.0'
+    implementation 'com.kongzue.dialog:dialog:2.4.8'
+    implementation 'com.tbruyelle.rxpermissions:rxpermissions:0.9.4@aar'
+    implementation 'com.alibaba:fastjson:1.2.75'
+}
+

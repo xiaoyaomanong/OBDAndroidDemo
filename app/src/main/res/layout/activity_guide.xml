@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/MatchMatch">
+
+    <ImageView
+        android:id="@+id/img_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <cn.bingoogolapple.bgabanner.BGAGuideLinkageLayout style="@style/MatchMatch">
+
+        <cn.bingoogolapple.bgabanner.BGABanner
+            android:id="@+id/banner_guide_backgrounds"
+            style="@style/MatchMatch"
+            app:banner_pageChangeDuration="1000"
+            app:banner_pointAutoPlayAble="false"
+            app:banner_pointContainerBackground="@android:color/transparent"
+            app:banner_pointDrawable="@drawable/selector_banner_unequal"
+            app:banner_pointTopBottomMargin="15dp"
+            app:banner_transitionEffect="fade" />
+
+        <cn.bingoogolapple.bgabanner.BGABanner
+            android:id="@+id/banner_guide_foregrounds"
+            style="@style/MatchMatch"
+            app:banner_pageChangeDuration="1000"
+            app:banner_pointAutoPlayAble="false"
+            app:banner_pointContainerBackground="@android:color/transparent"
+            app:banner_pointDrawable="@drawable/selector_banner_unequal"
+            app:banner_pointTopBottomMargin="15dp"
+            app:banner_transitionEffect="alpha" />
+    </cn.bingoogolapple.bgabanner.BGAGuideLinkageLayout>
+
+    <TextView
+        android:id="@+id/tv_guide_skip"
+        style="@style/WrapWrap"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/corners_bg"
+        android:clickable="true"
+        android:padding="6dp"
+        android:text=" 跳过 "
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/btn_guide_enter"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="48dp"
+        android:background="@drawable/shape_color_next"
+        android:gravity="center"
+        android:minEms="7"
+        android:text="@string/onMain"
+        android:textColor="@color/colorMain"
+        android:textSize="13sp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</RelativeLayout>

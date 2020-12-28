@@ -22,7 +22,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        renderscriptTargetApi 17
+        renderscriptTargetApi 21
         renderscriptSupportModeEnabled true
         multiDexEnabled true
         testInstrumentationRunner "android.test.runner.AndroidJUnitRunner"
@@ -119,5 +119,7 @@ dependencies {
     implementation 'com.kongzue.dialog:dialog:2.4.8'
     implementation 'com.tbruyelle.rxpermissions:rxpermissions:0.9.4@aar'
     implementation 'com.alibaba:fastjson:1.2.75'
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation 'com.mylhyl:acp:1.2.0'
 }
 

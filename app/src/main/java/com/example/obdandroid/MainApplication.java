@@ -1,6 +1,7 @@
 package com.example.obdandroid;
 
 import android.app.Application;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Looper;
 import android.support.multidex.MultiDex;
@@ -23,8 +24,10 @@ import static com.kongzue.dialog.v2.DialogSettings.THEME_LIGHT;
  * 描述：2222
  */
 public class MainApplication extends Application {
-    private static Context context;
+    public static Context context;
     private final String TAG = BaseActivity.class.getSimpleName();
+    //不管是蓝牙连接方还是服务器方，得到socket对象后都传入
+    public static BluetoothSocket bluetoothSocket;
 
     @Override
     public void onCreate() {

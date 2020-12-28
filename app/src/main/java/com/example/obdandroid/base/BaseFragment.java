@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+
 
 /**
  * 作者：Jealous
@@ -27,7 +29,7 @@ public abstract class BaseFragment extends Fragment {
     protected abstract int getLayoutId();
 
     // 初始化视图方法
-    protected abstract void initView(View view, Bundle savedInstanceState);
+    public abstract void initView(View view, Bundle savedInstanceState);
 
 
     public void setFrView(View frView) {

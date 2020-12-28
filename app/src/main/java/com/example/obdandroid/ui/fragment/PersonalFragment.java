@@ -47,7 +47,7 @@ public class PersonalFragment extends BaseFragment {
     }
 
     @Override
-    protected void initView(View view, Bundle savedInstanceState) {
+    public void initView(View view, Bundle savedInstanceState) {
         context = getHoldingActivity();
         swipeRefreshLayout = getView(R.id.swipeRefreshLayout);
         recyclerView = getView(R.id.recyclerView);

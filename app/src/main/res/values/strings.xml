@@ -16,4 +16,6 @@
     <string name="changPWD">修改密码</string>
     <string name="about">关于我们</string>
     <string name="version">版本信息</string>
+    <string name="huoqubveidilanyamingcheng">获取本地蓝牙名称</string>
+    <string name="ceshishebei">测试设备</string>
 </resources>

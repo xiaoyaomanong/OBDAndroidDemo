@@ -13,6 +13,8 @@ import com.example.obdandroid.R;
 import com.example.obdandroid.utils.ActivityManager;
 import com.hacknife.immersive.Immersive;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.Set;

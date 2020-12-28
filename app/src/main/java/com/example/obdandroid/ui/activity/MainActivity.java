@@ -1,5 +1,6 @@
 package com.example.obdandroid.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -49,7 +50,6 @@ public class MainActivity extends BaseActivity {
     private Context context;
     private int blur_front_color;
     private BlurView blur;
-    private String string = "";
 
     @Override
     protected int getContentViewId() {
@@ -94,9 +94,10 @@ public class MainActivity extends BaseActivity {
     };
 
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
+        @SuppressLint("NonConstantResourceId")
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
@@ -121,12 +122,12 @@ public class MainActivity extends BaseActivity {
      * 退出提示
      */
     private void goBack() {
-        final AlertDialog exitDialog = new AlertDialog.Builder(this, R.style.darkMode).create();
+        final AlertDialog exitDialog = new AlertDialog.Builder(context, R.style.darkMode).create();
         View rootView = LayoutInflater.from(context).inflate(R.layout.dialog_select_ios, null);
         Window window = exitDialog.getWindow();
         exitDialog.setView(rootView);
         window.setWindowAnimations(R.style.iOSAnimStyle);
-        RelativeLayout bkg = (RelativeLayout) rootView.findViewById(R.id.bkg);
+        RelativeLayout bkg = rootView.findViewById(R.id.bkg);
         TextView txtDialogTitle = rootView.findViewById(R.id.txt_dialog_title);
         TextView txtDialogTip = rootView.findViewById(R.id.txt_dialog_tip);
         ImageView splitHorizontal = rootView.findViewById(R.id.split_horizontal);

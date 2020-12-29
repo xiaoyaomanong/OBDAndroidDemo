@@ -16,6 +16,11 @@
     <string name="changPWD">修改密码</string>
     <string name="about">关于我们</string>
     <string name="version">版本信息</string>
-    <string name="huoqubveidilanyamingcheng">获取本地蓝牙名称</string>
     <string name="ceshishebei">测试设备</string>
+    <string name="unabletoconnect">无法连接到设备</string>
+    <string name="connectionlost">与设备连接已断开</string>
+    <string name="elm_timeout_descr">等待ELM响应的最小超时时间 [ms]</string>
+    <string name="connected_to">"连接到 "</string>
+    <string name="title_connecting">正在连接…</string>
+    <string name="title_connected_to">已连接 %s</string>
 </resources>

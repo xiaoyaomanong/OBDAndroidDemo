@@ -60,7 +60,7 @@
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppThemes"
         android:usesCleartextTraffic="true"
@@ -96,12 +96,6 @@
         <activity android:name=".ui.activity.SettingActivity" />
         <activity android:name=".ui.activity.RegisterActivity" />
 
-        <receiver android:name=".service.BluetoothReceiver">
-            <intent-filter android:priority="1000">
-                <action android:name="android.bluetooth.device.action.PAIRING_REQUEST" />
-                <action android:name="android.bluetooth.device.action.FOUND" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

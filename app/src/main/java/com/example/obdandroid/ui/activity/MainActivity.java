@@ -51,6 +51,25 @@ public class MainActivity extends BaseActivity {
     private int blur_front_color;
     private BlurView blur;
 
+    /**
+     * 从蓝牙聊天服务处理程序发送的消息类型
+     */
+    public static final int MESSAGE_STATE_CHANGE = 1;
+    public static final int MESSAGE_DEVICE_NAME = 4;
+    public static final int MESSAGE_TOAST = 5;
+    public static final int REQUEST_ENABLE_BT = 3;
+    public static final int MESSAGE_UPDATE_VIEW = 7;
+    public static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
+    /**
+     * 显示更新之间的间隔时间，以表示数据更改
+     */
+    public static final int DISPLAY_UPDATE_TIME = 250;
+    /**
+     * 首选项的键名
+     */
+    public static final String DEVICE_NAME = "device_name";
+    public static final String TOAST = "toast";
+
     @Override
     protected int getContentViewId() {
         return R.layout.activity_main;
@@ -104,12 +123,6 @@ public class MainActivity extends BaseActivity {
                 case R.id.navigation_home:
                     viewPager.setCurrentItem(0);
                     return true;
-             /*   case R.id.navigation_category:
-                    viewPager.setCurrentItem(1);
-                    return true;
-                case R.id.navigation_cart:
-                    viewPager.setCurrentItem(2);
-                    return true;*/
                 case R.id.navigation_my:
                     viewPager.setCurrentItem(3);
                     return true;

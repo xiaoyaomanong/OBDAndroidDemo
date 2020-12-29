@@ -120,6 +120,6 @@ dependencies {
     implementation 'com.tbruyelle.rxpermissions:rxpermissions:0.9.4@aar'
     implementation 'com.alibaba:fastjson:1.2.75'
     implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.mylhyl:acp:1.2.0'
+    implementation 'com.github.pires:obd-java-api:1.0-RC16'
 }
 

@@ -11,44 +11,39 @@
         android:layout_height="wrap_content"
         app:backButton="false"
         app:barStyle="night"
+        app:leftColor="@color/white"
         app:rightColor="#0033FF"
         app:rightIcon="@drawable/action_connect"
         app:rightSize="18sp"
         app:title="汽车扫描器"
         app:titleSize="17sp" />
 
-    <Button
-        android:id="@+id/scan"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/huoqubveidilanyamingcheng" />
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/localblumessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/sousuo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="搜索蓝牙设备" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="center"
+                android:src="@drawable/web_hi_res_1280x800" />
 
-    <TextView
-        android:id="@+id/bluemessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/scanfinnish"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycle_Fun"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycleBluetooth"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            </android.support.v7.widget.RecyclerView>
 
-    </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 </LinearLayout>

@@ -1,59 +1,51 @@
 package com.example.obdandroid.ui.fragment;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
-import com.example.obdandroid.config.Constant;
-import com.example.obdandroid.service.BltService;
-import com.example.obdandroid.service.BlueToothReceiver;
+import com.example.obdandroid.service.BtCommService;
+import com.example.obdandroid.service.CommService;
+import com.example.obdandroid.ui.activity.MainActivity;
 import com.example.obdandroid.ui.adapter.BluetoothSimpleAdapter;
-import com.example.obdandroid.ui.entity.BluRxBean;
-import com.example.obdandroid.ui.entity.BluetoothEntity;
-import com.example.obdandroid.utils.BltManager;
-import com.example.obdandroid.utils.BluetoothManager;
+import com.example.obdandroid.ui.adapter.HomeAdapter;
 import com.example.obdandroid.utils.DialogUtils;
-import com.example.obdandroid.utils.factory.ThreadPoolProxyFactory;
+import com.example.obdandroid.utils.DividerGridItemDecoration;
+import com.example.obdandroid.utils.ToastUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
-import com.mylhyl.acp.Acp;
-import com.mylhyl.acp.AcpListener;
-import com.mylhyl.acp.AcpOptions;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
-
-import static android.app.Activity.RESULT_OK;
+import static com.example.obdandroid.ui.activity.MainActivity.DEVICE_NAME;
+import static com.example.obdandroid.ui.activity.MainActivity.DISPLAY_UPDATE_TIME;
+import static com.example.obdandroid.ui.activity.MainActivity.MESSAGE_DEVICE_NAME;
+import static com.example.obdandroid.ui.activity.MainActivity.MESSAGE_STATE_CHANGE;
+import static com.example.obdandroid.ui.activity.MainActivity.MESSAGE_TOAST;
+import static com.example.obdandroid.ui.activity.MainActivity.REQUEST_ENABLE_BT;
+import static com.example.obdandroid.ui.activity.MainActivity.TOAST;
 
 /**
  * 作者：Jealous
@@ -63,11 +55,25 @@ import static android.app.Activity.RESULT_OK;
 public class HomeFragment extends BaseFragment {
     private Context context;
     private TitleBar titleBar;
-    private Button scan;
-    private TextView localblumessage;
-    private Button sousuo;
-    private TextView bluemessage;
-    private RecyclerView recycleBluetooth;
+    private BluetoothAdapter bluetoothadapter;
+    private BluetoothSimpleAdapter simpleAdapter;
+    private DialogUtils dialogUtils;
+    private List<HashMap<String, Object>> blueList;
+    private int yourChoice;
+    private HomeAdapter homeAdapter;
+    /**
+     * 显示更新计时器
+     */
+    private static final Timer updateTimer = new Timer();
+    /**
+     * 连接的BT设备的名称
+     */
+    private static String mConnectedDeviceName = null;
+    /**
+     * 当前操作模式
+     */
+    private MODE mode = MODE.OFFLINE;
+    private RecyclerView recycleFun;
 
     /**
      * 操作模式
@@ -77,17 +83,50 @@ public class HomeFragment extends BaseFragment {
         ONLINE,    //< ONLINE mode
     }
 
-    private BluetoothAdapter bluetoothadapter;
-    private List<BluetoothEntity> list;
-    private List<BluetoothDevice> listdevice;
-    private BlueToothReceiver blueToothReceiver = new BlueToothReceiver();
-    private int connectsuccess = 12;//连接成功
-    private BluetoothSimpleAdapter adapter;
-    private DialogUtils dialogUtils;
+    /**
+     * 处理消息请求
+     */
+    @SuppressLint("HandlerLeak")
+    private transient final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            try {
+                //接收到的处理程序通知事件的日志跟踪消息
+                switch (msg.what) {
+                    case MESSAGE_STATE_CHANGE:
+                        // 接收到的处理程序通知事件的日志跟踪消息
+                        switch ((CommService.STATE) msg.obj) {
+                            case CONNECTED:
+                                onConnect();
+                                break;
+                            case CONNECTING:
+                                // 正在连接
+                                titleBar.setLeftTitle(R.string.title_connecting);
+                                break;
+                            default:
+                                onDisconnect();
+                                break;
+                        }
+                        break;
+                    case MESSAGE_DEVICE_NAME:
+                        // 保存连接设备的名称
+                        mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
+                        Toast.makeText(context, getString(R.string.connected_to) + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case MESSAGE_TOAST:
+                        Toast.makeText(context, msg.getData().getString(TOAST),
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            } catch (Exception ex) {
+                LogE("mHandler中的错误" + ex.getMessage());
+            }
+        }
+    };
 
     public static HomeFragment getInstance() {
-        HomeFragment fragment = new HomeFragment();
-        return fragment;
+        return new HomeFragment();
     }
 
     @Override
@@ -101,37 +140,40 @@ public class HomeFragment extends BaseFragment {
     public void initView(View view, Bundle savedInstanceState) {
         context = getHoldingActivity();
         titleBar = getView(R.id.titleBar);
-        scan = getView(R.id.scan);
-        localblumessage = getView(R.id.localblumessage);
-        sousuo = getView(R.id.sousuo);
-        bluemessage = getView(R.id.bluemessage);
-        recycleBluetooth = getView(R.id.recycleBluetooth);
+        recycleFun = getView(R.id.recycle_Fun);
         titleBar.setTitle("汽车扫描");
         dialogUtils = new DialogUtils(context);
-        context.registerReceiver(blueToothReceiver, blueToothReceiver.makeFilter());
-        EventBus.getDefault().register(this);
-        BltManager.getInstance().initBltManager(context);
-        LinearLayoutManager manager = new LinearLayoutManager(context);
-        manager.setOrientation(OrientationHelper.VERTICAL);
-        recycleBluetooth.setLayoutManager(manager);
-        adapter = new BluetoothSimpleAdapter(context);
-        initBluetooth();
-        init();
-        sousuo.setOnClickListener(v -> {
-            if (!getBlueIsEnable()) {
-                Intent enabler = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enabler, 1);
-            } else {
-                startScan();
-            }
-        });
+        initBlueTooth();
 
-        scan.setOnClickListener(v -> {
-            //获取本地蓝牙名称
-            String name = bluetoothadapter.getName();
-            //获取本地蓝牙地址
-            String address = bluetoothadapter.getAddress();
-            localblumessage.setText("本地蓝牙名称:" + name + "本地蓝牙地址:" + address);
+        if (CommService.medium == CommService.MEDIUM.BLUETOOTH) {// 获取本地蓝牙适配器
+            bluetoothadapter = BluetoothAdapter.getDefaultAdapter();
+            //如果BT未开启，请请求将其启用。
+            if (bluetoothadapter != null) {
+                /*
+                 * 记住最初的蓝牙状态
+                 * 蓝牙适配器的初始状态
+                 */
+                boolean initialBtStateEnabled = bluetoothadapter.isEnabled();
+                if (!initialBtStateEnabled) {
+                    Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+                }
+            }
+        }
+        // 设置数据更新计时器
+        updateTimer.schedule(updateTask, 0, DISPLAY_UPDATE_TIME);
+
+        GridLayoutManager manager = new GridLayoutManager(context, 2);
+        manager.setOrientation(OrientationHelper.VERTICAL);
+        recycleFun.setLayoutManager(manager);
+        recycleFun.addItemDecoration(new DividerGridItemDecoration(context));
+        homeAdapter = new HomeAdapter(context);
+        recycleFun.setAdapter(homeAdapter);
+        homeAdapter.setClickCallBack(new HomeAdapter.OnClickCallBack() {
+            @Override
+            public void Click(String name) {
+
+            }
         });
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -146,189 +188,129 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onRightClick(View v) {
-                LogE("333333");
+                showSingleChoiceDialog();
             }
         });
     }
 
+    /* *//**
+     * 获取故障代码
+     *//*
+   // private void getTroubleCodes() {
+        startActivity(new Intent(this, TroubleCodesActivity.class));
+    }*/
+
+
     /**
-     * 初始化蓝牙设备
+     * 选择已配对蓝牙
      */
-    private void initBluetooth() {
-        bluetoothadapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothadapter == null) {
-            Toast.makeText(context, "设备不支持蓝牙", Toast.LENGTH_SHORT).show();
+    private void showSingleChoiceDialog() {
+        yourChoice = 0;
+        final String[] items = new String[blueList.size()];
+        final String[] itemsAddress = new String[blueList.size()];
+        for (int i = 0; i < blueList.size(); i++) {
+            items[i] = (String) blueList.get(i).get("blue_name");
+            itemsAddress[i] = (String) blueList.get(i).get("blue_address");
         }
+        AlertDialog.Builder singleChoiceDialog =
+                new AlertDialog.Builder(context);
+        singleChoiceDialog.setTitle("已配对蓝牙设备");
+        singleChoiceDialog.setIcon(R.drawable.icon_bluetooth);
+        // 第二个参数是默认选项，此处设置为0
+        singleChoiceDialog.setSingleChoiceItems(items, 0,
+                (dialog, which) -> yourChoice = which);
+        singleChoiceDialog.setPositiveButton("确定",
+                (dialog, which) -> {
+                    if (yourChoice != -1) {
+                        connectBtDevice(itemsAddress[yourChoice]);
+                        Toast.makeText(context,
+                                "你选择了" + items[yourChoice],
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+        singleChoiceDialog.show();
     }
 
     /**
-     * 组件初始化
+     * 计时器任务循环更新数据屏幕
      */
-    private void init() {
-        list = new ArrayList<>();
-        listdevice = new ArrayList<>();
-        adapter.setClickCallBack((entity, position) -> {
-            if (entity.getState().equals("已配对")) {
-                dialogUtils.showProgressDialog("正在连接");
-                ThreadPoolProxyFactory.getNormalThreadPoolProxy().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            BluetoothManager.connect(listdevice.get(position), new BluetoothManager.ConnBluetoothSocketListener() {
-                                @Override
-                                public void connectMsg(int code, String msg) {
+    private transient final TimerTask updateTask = new TimerTask() {
+        @Override
+        public void run() {
+            /* 转发消息以更新视图*/
+            Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_UPDATE_VIEW);
+            mHandler.sendMessage(msg);
+        }
+    };
 
-                                }
-                            });
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
-            } else {
+    /**
+     * 初始化蓝牙
+     */
+    private void initBlueTooth() {
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        if (adapter != null) {
+            if (!adapter.isEnabled()) {
+                adapter.enable();
+                //睡一秒钟，避免不发现
                 try {
-                    //如果想要取消已经配对的设备，只需要将creatBond改为removeBond
-                    Method method = BluetoothDevice.class.getMethod("createBond");
-                    Log.e(context.getPackageName(), "开始配对");
-                    method.invoke(listdevice.get(position));
-                } catch (Exception e) {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-        });
-    }
 
-    /**
-     * 开始扫描蓝牙
-     */
-    private void startScan() {
-        Intent enabler = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        startActivity(enabler);
-        list.clear();
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-            bluemessage.setText("");
-            listdevice.clear();
-        }
-        ThreadPoolProxyFactory.getNormalThreadPoolProxy().execute(() -> BltService.getInstance().startBluService());// 开启蓝牙服务端
-        Acp.getInstance(context).request(new AcpOptions.Builder()
-                .setPermissions(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
-                .build(), new AcpListener() {
-            @Override
-            public void onGranted() {
-                if (bluetoothadapter.isDiscovering()) {
-                    bluetoothadapter.cancelDiscovery();
-                }
-                bluetoothadapter.startDiscovery();
+            Set<BluetoothDevice> devices = adapter.getBondedDevices();
+            blueList = new ArrayList<>();
+            LogE("获取已经配对devices" + devices.size());
+            for (BluetoothDevice bluetoothDevice : devices) {
+                LogE("已经配对的蓝牙设备：");
+                LogE(bluetoothDevice.getName());
+                LogE(bluetoothDevice.getAddress());
+                HashMap<String, Object> blueHashMap = new HashMap<>();
+                blueHashMap.put("blue_device", bluetoothDevice);
+                blueHashMap.put("blue_name", bluetoothDevice.getName());
+                blueHashMap.put("blue_address", bluetoothDevice.getAddress());
+                blueList.add(blueHashMap);
             }
-
-            @Override
-            public void onDenied(List<String> permissions) {
-
-            }
-        });
-    }
-
-    /**
-     * @return 判断蓝牙是否开启
-     */
-    public boolean getBlueIsEnable() {
-        return bluetoothadapter.isEnabled();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == 1) {
-                startScan();
-            }
+        } else {
+            ToastUtil.shortShow("本机没有蓝牙设备");
         }
     }
 
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        context.unregisterReceiver(blueToothReceiver);
-        EventBus.getDefault().unregister(this);
+    /**
+     * 启动与所选蓝牙设备的连接
+     *
+     * @param address bluetooth device address
+     */
+    private void connectBtDevice(String address) {
+        // 获取BluetoothDevice对象
+        BluetoothDevice device = bluetoothadapter.getRemoteDevice(address);
+        /*
+         * 尝试连接到设备
+         * BT通讯服务的成员对象
+         */
+        CommService mCommService = new BtCommService(context, mHandler);
+        mCommService.connect(device, true);
     }
 
     /**
-     * EventBus 异步
-     * 1:找到设备
-     * 2：扫描完成
-     * 3：开始扫描
-     * 4.配对成功
-     * 12:连接成功
+     * 处理建立的蓝牙连接...
      */
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onMessageEvent(BluRxBean bluRxBean) {
-        switch (bluRxBean.getId()) {
-            case 1:
-                listdevice.add(bluRxBean.getBluetoothDevice());
-                LogE("设备名称:" + bluRxBean.getBluetoothDevice().getName());
-                // 添加到列表
-                bluemessage.append(bluRxBean.getBluetoothDevice().getName() + ":"
-                        + bluRxBean.getBluetoothDevice().getAddress() + "\n");
-                BluetoothEntity entity = new BluetoothEntity();
-                entity.setBluetoothDeviceName(bluRxBean.getBluetoothDevice().getName());
-                if (bluRxBean.getBluetoothDevice().getBondState() != BluetoothDevice.BOND_BONDED) {
-                    entity.setState("未配对");
-                } else {
-                    entity.setState("已配对");
-                }
-                list.add(entity);
-                adapter.setList(list);
-                recycleBluetooth.setAdapter(adapter);
-                break;
-            case 2:
-                dialogUtils.dismiss();
-                TipDialog.show(context, "扫描完成", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
-                break;
-            case 12:
-                dialogUtils.dismiss();
-                TipDialog.show(context, "连接成功", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
-                break;
-            case 3:
-                dialogUtils.dismiss();
-                TipDialog.show(context, "正在扫描", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
-                break;
-            default:
-                break;
-        }
+    @SuppressLint("StringFormatInvalid")
+    private void onConnect() {
+        mode = MODE.ONLINE;
+        // 显示连接状态
+        TipDialog.show(context, R.string.title_connected_to + mConnectedDeviceName, TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
+        titleBar.setLeftTitle("ONLINE");
+        titleBar.setRightIcon(R.drawable.action_connect);
     }
-
-    /***
-     * 蓝牙连接代码,项目中连接会使用封装的工具类，在这里提取重写
-     */
-    private void connect(BluetoothDevice bluetoothDevice) {
-        try {
-            mBluetoothSocket = bluetoothDevice.createRfcommSocketToServiceRecord(Constant.SPP_UUID);
-            if (mBluetoothSocket != null) {
-                MainApplication.bluetoothSocket = mBluetoothSocket;
-                if (bluetoothadapter.isDiscovering()) {
-                    bluetoothadapter.cancelDiscovery();
-                }
-                if (!mBluetoothSocket.isConnected()) {
-                    mBluetoothSocket.connect();
-                }
-                EventBus.getDefault().post(new BluRxBean(connectsuccess, bluetoothDevice));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            try {
-                mBluetoothSocket.close();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        }
-    }
-
 
     /**
-     * 配对成功后的蓝牙套接字
+     * 处理蓝牙连接丢失...
      */
-    private BluetoothSocket mBluetoothSocket;
+    private void onDisconnect() {
+        mode = MODE.OFFLINE;
+        titleBar.setLeftTitle("OFFLINE");
+        titleBar.setRightIcon(R.drawable.action_disconnect);
+    }
 }

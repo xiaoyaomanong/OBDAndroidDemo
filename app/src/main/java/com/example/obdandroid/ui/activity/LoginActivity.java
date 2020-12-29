@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
     public void getPermission() {
         RxPermissions rxPermissions = new RxPermissions(this);
         rxPermissions.request(CAMERA, READ_EXTERNAL_STORAGE,  WRITE_EXTERNAL_STORAGE,
-                READ_PHONE_STATE, ACCESS_COARSE_LOCATION, CALL_PHONE, ACCESS_FINE_LOCATION, RECORD_AUDIO)
+                READ_PHONE_STATE, ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION)
                 .subscribe(aBoolean -> {
                     if (!aBoolean) {
                         Toast.makeText(context, "未授权", Toast.LENGTH_SHORT).show();

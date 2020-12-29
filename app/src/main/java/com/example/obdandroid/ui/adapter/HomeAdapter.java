@@ -1,37 +1,32 @@
 package com.example.obdandroid.ui.adapter;
 
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.obdandroid.R;
-import com.example.obdandroid.ui.entity.BluetoothEntity;
-
-import java.util.HashMap;
-import java.util.List;
-
 
 /**
  * 作者：Jealous
- * 日期：2020/12/28 0028
+ * 日期：2020/12/29 0029
  * 描述：
  */
-public class BluetoothSimpleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private LayoutInflater inflater;
     private OnClickCallBack clickCallBack;
-    private List<HashMap<String, Object>> list;
-    ;
+    private final String[] list = {"故障代码", "冷却系统", "电瓶电压", "排放系统", "引擎系统", "进气系统"};
+    private final int[] resImg = {R.drawable.icon_trouble_codes, R.drawable.iocn_lqxt, R.drawable.icon_press, R.drawable.icon_pqxt, R.drawable.icon_engine, R.drawable.icon_jqxt};
     private final int EMPTY_VIEW = 0;//空页面
     private final int NOT_EMPTY_VIEW = 1;//正常页面
 
-    public BluetoothSimpleAdapter(Context context) {
+    public HomeAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
     }
@@ -40,16 +35,12 @@ public class BluetoothSimpleAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.clickCallBack = clickCallBack;
     }
 
-    public void setList(List<HashMap<String, Object>> list) {
-        this.list = list;
-    }
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (EMPTY_VIEW == viewType) {
             return new EmptyViewHolder(inflater.inflate(R.layout.stub_empty, parent, false));
         }
-        return new MyViewHolder(inflater.inflate(R.layout.devices, parent, false));
+        return new MyViewHolder(inflater.inflate(R.layout.item_home, parent, false));
     }
 
     @Override
@@ -60,10 +51,9 @@ public class BluetoothSimpleAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             viewHolder.mEmptyTextView.setText("附近没有蓝牙");
         } else if (NOT_EMPTY_VIEW == itemViewType) {
             final MyViewHolder holder1 = (MyViewHolder) holder;
-            holder1.device = (BluetoothDevice) list.get(position).get("blue_device");
-            holder1.tvDeviceName.setText((String) list.get(position).get("blue_name"));
-            holder1.tvStatue.setText((String) list.get(position).get("blue_address"));
-            holder1.card_view.setOnClickListener(v -> clickCallBack.Click((BluetoothDevice) list.get(position).get("blue_device")));
+            holder1.tvName.setText(list[position]);
+            holder1.ivName.setImageResource(resImg[position]);
+            holder1.card_view.setOnClickListener(v -> clickCallBack.Click(list[position]));
         }
     }
 
@@ -71,8 +61,8 @@ public class BluetoothSimpleAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public int getItemCount() {
         //获取传入adapter的条目数，没有则返回 1
         if (list != null) {
-            if (list.size() > 0) {
-                return list.size();
+            if (list.length > 0) {
+                return list.length;
             }
         }
         //位空视图保留一个条目
@@ -83,7 +73,7 @@ public class BluetoothSimpleAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public int getItemViewType(int position) {
         //根据传入adapter来判断是否有数据
         if (list != null) {
-            if (list.size() != 0) {
+            if (list.length != 0) {
                 return NOT_EMPTY_VIEW;
             } else {
                 return EMPTY_VIEW;
@@ -94,16 +84,15 @@ public class BluetoothSimpleAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         View itemView;
-        public BluetoothDevice device;//不是用来显示，用来在item点击时返回连接对象
-        private TextView tvDeviceName;
-        private TextView tvStatue;
+        private ImageView ivName;
+        private TextView tvName;
         private LinearLayout card_view;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
-            tvDeviceName = itemView.findViewById(R.id.tvDeviceName);
-            tvStatue = itemView.findViewById(R.id.tvStatue);
+            ivName = itemView.findViewById(R.id.ivName);
+            tvName = itemView.findViewById(R.id.tvName);
             card_view = itemView.findViewById(R.id.card_view);
         }
     }
@@ -118,6 +107,6 @@ public class BluetoothSimpleAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public interface OnClickCallBack {
-        void Click(BluetoothDevice device);
+        void Click(String name);
     }
 }

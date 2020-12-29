@@ -38,7 +38,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<Multiple
                 helper.addOnClickListener(R.id.ll_my_order);
                 break;
             case MultipleItem.TYPE_ORDER:
-                helper.setImageDrawable(R.id.my_order_image, ContextCompat.getDrawable(mContext, R.mipmap.ic_launcher_round));
+                helper.setImageDrawable(R.id.my_order_image, ContextCompat.getDrawable(mContext, R.mipmap.ic_launcher));
                 helper.setText(R.id.my_order_name, item.mString1);
                 if (item.isShow) {
                     helper.getView(R.id.my_order_count).setVisibility(View.VISIBLE);
@@ -63,7 +63,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<Multiple
                 //helper.setText(R.id.tv_item_name, item.mString1);
                 break;
             case MultipleItem.TYPE_TOOLS:
-                helper.setImageDrawable(R.id.my_tools_image, ContextCompat.getDrawable(mContext, R.mipmap.ic_launcher_round));
+                helper.setImageDrawable(R.id.my_tools_image, ContextCompat.getDrawable(mContext, R.mipmap.ic_launcher));
                 helper.setText(R.id.my_tools_text, item.mString1);
                 if (item.isShow) {
                     helper.getView(R.id.my_tools_count).setVisibility(View.VISIBLE);

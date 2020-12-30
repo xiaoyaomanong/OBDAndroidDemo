@@ -95,6 +95,9 @@
         <activity android:name=".ui.activity.MainActivity" />
         <activity android:name=".ui.activity.SettingActivity" />
         <activity android:name=".ui.activity.RegisterActivity" />
+        <activity android:name=".ui.activity.OBDSettingActivity" />
+        <activity android:name=".ui.activity.ObdCommandActivity" />
+        <activity android:name=".ui.activity.OBDProtocolActivity" />
 
     </application>
 

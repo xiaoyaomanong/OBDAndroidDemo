@@ -12,7 +12,6 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -56,7 +55,6 @@ public class HomeFragment extends BaseFragment {
     private Context context;
     private TitleBar titleBar;
     private BluetoothAdapter bluetoothadapter;
-    private BluetoothSimpleAdapter simpleAdapter;
     private DialogUtils dialogUtils;
     private List<HashMap<String, Object>> blueList;
     private int yourChoice;

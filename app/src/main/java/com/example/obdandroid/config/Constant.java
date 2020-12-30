@@ -28,4 +28,6 @@ public class Constant {
     //关闭蓝牙连接
     public static final int BLUE_TOOTH_CLEAR = BLUE_TOOTH_MY_SEARTH + 1;
 
+    public static final String PROTOCOLS_LIST_KEY = "obd_protocols_preference";
+
 }

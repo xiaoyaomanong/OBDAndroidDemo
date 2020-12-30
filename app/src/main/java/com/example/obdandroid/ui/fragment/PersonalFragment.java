@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
+import com.example.obdandroid.ui.activity.OBDSettingActivity;
 import com.example.obdandroid.ui.activity.SettingActivity;
 import com.example.obdandroid.ui.adapter.MultipleItemQuickAdapter;
 import com.example.obdandroid.ui.entity.MultipleItem;
@@ -99,9 +100,9 @@ public class PersonalFragment extends BaseFragment {
             itemDataList.add(multipleItem);
         }
 
-        multipleItem = new MultipleItem(MultipleItem.TYPE_BALANCE, 5);
+      /*  multipleItem = new MultipleItem(MultipleItem.TYPE_BALANCE, 5);
         multipleItem.mString1 = "￥9999.00";
-        itemDataList.add(multipleItem);
+        itemDataList.add(multipleItem);*/
 
         multipleItem = new MultipleItem(MultipleItem.TYPE_TOOLS_HEADER, 5);
         multipleItem.mString1 = "type5";
@@ -145,6 +146,7 @@ public class PersonalFragment extends BaseFragment {
     }
 
 
+    @SuppressLint("SetTextI18n")
     private View getHeaderView(View.OnClickListener listener) {
         View headerView = getLayoutInflater().inflate(R.layout.layout_my_header, (ViewGroup) recyclerView.getParent(), false);
 
@@ -153,10 +155,10 @@ public class PersonalFragment extends BaseFragment {
         myHeaderImage.setOnClickListener(listener);
 
         TextView myHeaderName = headerView.findViewById(R.id.my_header_name);
-        myHeaderName.setText("名字");
+        myHeaderName.setText("马云");
 
         TextView myHeaderMobile = headerView.findViewById(R.id.my_header_mobile);
-        myHeaderMobile.setText("手机号");
+        myHeaderMobile.setText("15012134598");
 
         ImageView myHeaderSettings = headerView.findViewById(R.id.my_header_settings);
         myHeaderSettings.setOnClickListener(listener);
@@ -187,18 +189,16 @@ public class PersonalFragment extends BaseFragment {
                 case R.id.my_favorites:
                     showToast("收藏");
                     break;
-                case R.id.my_bands:
-                    showToast("关注");
-                    break;
+              /*  case R.id.my_bands:
+                    JumpUtil.startAct(context, OBDSettingActivity.class);
+                    break;*/
                 case R.id.ll_my_order:
-                    showToast("全部订单");
+                    JumpUtil.startAct(context, OBDSettingActivity.class);
                     break;
-                case R.id.my_balance_btn:
+               /* case R.id.my_balance_btn:
                     showToast("立即充值");
-                    break;
+                    break;*/
             }
         });
-
     }
-
 }

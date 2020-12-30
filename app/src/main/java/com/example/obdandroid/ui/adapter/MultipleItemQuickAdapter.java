@@ -22,7 +22,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<Multiple
         addItemType(MultipleItem.TYPE_COUNT, R.layout.layout_my_count);
         addItemType(MultipleItem.TYPE_ORDER_HEADER, R.layout.layout_my_order_header);
         addItemType(MultipleItem.TYPE_ORDER, R.layout.layout_my_order);
-        addItemType(MultipleItem.TYPE_BALANCE, R.layout.layout_my_balance);
+        //addItemType(MultipleItem.TYPE_BALANCE, R.layout.layout_my_balance);
         addItemType(MultipleItem.TYPE_TOOLS_HEADER, R.layout.layout_my_tools_header);
         addItemType(MultipleItem.TYPE_TOOLS, R.layout.layout_my_tools);
     }
@@ -40,20 +40,6 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<Multiple
             case MultipleItem.TYPE_ORDER:
                 helper.setImageDrawable(R.id.my_order_image, ContextCompat.getDrawable(mContext, R.mipmap.ic_launcher));
                 helper.setText(R.id.my_order_name, item.mString1);
-                if (item.isShow) {
-                    helper.getView(R.id.my_order_count).setVisibility(View.VISIBLE);
-                    if (item.count > 0) {
-                        if (item.count < 99) {
-                            helper.setText(R.id.my_order_count, String.valueOf(item.count));
-                        } else {
-                            helper.setText(R.id.my_order_count, String.valueOf("99+"));
-                        }
-                    } else {
-                        helper.getView(R.id.my_order_count).setVisibility(View.GONE);
-                    }
-                } else {
-                    helper.getView(R.id.my_order_count).setVisibility(View.GONE);
-                }
                 break;
             case MultipleItem.TYPE_BALANCE:
                 helper.setText(R.id.my_balance_text, item.mString1);
@@ -65,20 +51,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<Multiple
             case MultipleItem.TYPE_TOOLS:
                 helper.setImageDrawable(R.id.my_tools_image, ContextCompat.getDrawable(mContext, R.mipmap.ic_launcher));
                 helper.setText(R.id.my_tools_text, item.mString1);
-                if (item.isShow) {
-                    helper.getView(R.id.my_tools_count).setVisibility(View.VISIBLE);
-                    if (item.count > 0) {
-                        if (item.count < 99) {
-                            helper.setText(R.id.my_tools_count, String.valueOf(item.count));
-                        } else {
-                            helper.setText(R.id.my_tools_count, String.valueOf("99+"));
-                        }
-                    } else {
-                        helper.getView(R.id.my_tools_count).setVisibility(View.GONE);
-                    }
-                } else {
-                    helper.getView(R.id.my_tools_count).setVisibility(View.GONE);
-                }
+
                 break;
         }
     }

@@ -141,7 +141,7 @@ public class BtCommService extends CommService {
         mBtWorkerThread.start();
 
         //我们已连接->已建立信号连接
-        connectionEstablished(device.getName());
+        connectionEstablished(device.getName(),device.getAddress());
     }
 
     /**

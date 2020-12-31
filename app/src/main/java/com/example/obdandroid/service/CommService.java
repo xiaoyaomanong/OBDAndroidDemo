@@ -30,12 +30,20 @@ import com.example.obdandroid.ui.activity.MainActivity;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.example.obdandroid.config.Constant.DEVICE_ADDRESS;
+import static com.example.obdandroid.config.Constant.DEVICE_NAME;
+import static com.example.obdandroid.config.Constant.MESSAGE_DEVICE_NAME;
+import static com.example.obdandroid.config.Constant.MESSAGE_STATE_CHANGE;
+import static com.example.obdandroid.config.Constant.MESSAGE_TOAST;
+import static com.example.obdandroid.config.Constant.TOAST;
+
 /**
  * 抽象通信服务
  */
 public abstract class CommService {
+
     /**
-     *通讯媒体
+     * 通讯媒体
      */
     public enum MEDIUM {
         BLUETOOTH    //<蓝牙装置
@@ -56,6 +64,7 @@ public abstract class CommService {
         CONNECTED,      ///< 连接到远程设备
         OFFLINE         ///< 我们离线
     }
+
     private static final String TAG = "CommService";
 
     static final Logger log = Logger.getLogger(TAG);
@@ -103,7 +112,7 @@ public abstract class CommService {
         mState = state;
 
         // 将新状态赋予处理程序，以便UI活动可以更新
-        mHandler.obtainMessage(MainActivity.MESSAGE_STATE_CHANGE, state).sendToTarget();
+        mHandler.obtainMessage(MESSAGE_STATE_CHANGE, state).sendToTarget();
     }
 
     /**
@@ -113,7 +122,7 @@ public abstract class CommService {
     protected abstract void start();
 
     /**
-     *停止所有线程
+     * 停止所有线程
      */
     public abstract void stop();
 
@@ -140,9 +149,9 @@ public abstract class CommService {
         // 离线设置新状态
         setState(STATE.OFFLINE);
         // 将失败消息发送回活动
-        Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_TOAST);
+        Message msg = mHandler.obtainMessage(MESSAGE_TOAST);
         Bundle bundle = new Bundle();
-        bundle.putString(MainActivity.TOAST, mContext.getString(R.string.unabletoconnect));
+        bundle.putString(TOAST, mContext.getString(R.string.unabletoconnect));
         msg.setData(bundle);
         mHandler.sendMessage(msg);
     }
@@ -155,9 +164,9 @@ public abstract class CommService {
         // 离线设置新状态
         setState(STATE.OFFLINE);
         //将失败消息发送回活动
-        Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_TOAST);
+        Message msg = mHandler.obtainMessage(MESSAGE_TOAST);
         Bundle bundle = new Bundle();
-        bundle.putString(MainActivity.TOAST, mContext.getString(R.string.connectionlost));
+        bundle.putString(TOAST, mContext.getString(R.string.connectionlost));
         msg.setData(bundle);
         mHandler.sendMessage(msg);
     }
@@ -165,11 +174,12 @@ public abstract class CommService {
     /**
      * 指示已建立连接，并通知UI活动。
      */
-    void connectionEstablished(String deviceName) {
+    void connectionEstablished(String deviceName, String deviceAddress) {
         // 将建立连接的设备的名称发送回UI活动
-        Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_DEVICE_NAME);
+        Message msg = mHandler.obtainMessage(MESSAGE_DEVICE_NAME);
         Bundle bundle = new Bundle();
-        bundle.putString(MainActivity.DEVICE_NAME, deviceName);
+        bundle.putString(DEVICE_NAME, deviceName);
+        bundle.putString(DEVICE_ADDRESS, deviceAddress);
         msg.setData(bundle);
         mHandler.sendMessage(msg);
         // 将状态设置为已连接

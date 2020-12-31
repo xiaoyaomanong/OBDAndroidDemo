@@ -14,18 +14,19 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
+import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.service.BtCommService;
 import com.example.obdandroid.service.CommService;
-import com.example.obdandroid.ui.activity.MainActivity;
-import com.example.obdandroid.ui.adapter.BluetoothSimpleAdapter;
 import com.example.obdandroid.ui.adapter.HomeAdapter;
 import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.DividerGridItemDecoration;
+import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.ToastUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
@@ -38,13 +39,19 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.example.obdandroid.ui.activity.MainActivity.DEVICE_NAME;
-import static com.example.obdandroid.ui.activity.MainActivity.DISPLAY_UPDATE_TIME;
-import static com.example.obdandroid.ui.activity.MainActivity.MESSAGE_DEVICE_NAME;
-import static com.example.obdandroid.ui.activity.MainActivity.MESSAGE_STATE_CHANGE;
-import static com.example.obdandroid.ui.activity.MainActivity.MESSAGE_TOAST;
-import static com.example.obdandroid.ui.activity.MainActivity.REQUEST_ENABLE_BT;
-import static com.example.obdandroid.ui.activity.MainActivity.TOAST;
+import static com.example.obdandroid.config.Constant.BT_ADDRESS_KEY;
+import static com.example.obdandroid.config.Constant.BT_NAME_KEY;
+import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
+import static com.example.obdandroid.config.Constant.DEVICE_ADDRESS;
+import static com.example.obdandroid.config.Constant.DEVICE_NAME;
+import static com.example.obdandroid.config.Constant.DISPLAY_UPDATE_TIME;
+import static com.example.obdandroid.config.Constant.MESSAGE_DEVICE_NAME;
+import static com.example.obdandroid.config.Constant.MESSAGE_STATE_CHANGE;
+import static com.example.obdandroid.config.Constant.MESSAGE_TOAST;
+import static com.example.obdandroid.config.Constant.MESSAGE_UPDATE_VIEW;
+import static com.example.obdandroid.config.Constant.REQUEST_ENABLE_BT;
+import static com.example.obdandroid.config.Constant.TOAST;
+
 
 /**
  * 作者：Jealous
@@ -55,10 +62,9 @@ public class HomeFragment extends BaseFragment {
     private Context context;
     private TitleBar titleBar;
     private BluetoothAdapter bluetoothadapter;
-    private DialogUtils dialogUtils;
     private List<HashMap<String, Object>> blueList;
     private int yourChoice;
-    private HomeAdapter homeAdapter;
+    private SPUtil spUtil;
     /**
      * 显示更新计时器
      */
@@ -67,11 +73,11 @@ public class HomeFragment extends BaseFragment {
      * 连接的BT设备的名称
      */
     private static String mConnectedDeviceName = null;
+    private static String mConnectedDeviceAddress = null;
     /**
      * 当前操作模式
      */
     private MODE mode = MODE.OFFLINE;
-    private RecyclerView recycleFun;
 
     /**
      * 操作模式
@@ -109,6 +115,9 @@ public class HomeFragment extends BaseFragment {
                     case MESSAGE_DEVICE_NAME:
                         // 保存连接设备的名称
                         mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
+                        mConnectedDeviceAddress = msg.getData().getString(DEVICE_ADDRESS);
+                        spUtil.put(BT_NAME_KEY, mConnectedDeviceName);
+                        spUtil.put(BT_ADDRESS_KEY, mConnectedDeviceAddress);
                         Toast.makeText(context, getString(R.string.connected_to) + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
                         break;
 
@@ -138,11 +147,13 @@ public class HomeFragment extends BaseFragment {
     public void initView(View view, Bundle savedInstanceState) {
         context = getHoldingActivity();
         titleBar = getView(R.id.titleBar);
-        recycleFun = getView(R.id.recycle_Fun);
+        RecyclerView recycleFun = getView(R.id.recycle_Fun);
         titleBar.setTitle("汽车扫描");
-        dialogUtils = new DialogUtils(context);
+        spUtil = new SPUtil(context);
+        mConnectedDeviceName = spUtil.getString(DEVICE_NAME, "");
+        mConnectedDeviceAddress = spUtil.getString(DEVICE_ADDRESS, "");
+        DialogUtils dialogUtils = new DialogUtils(context);
         initBlueTooth();
-
         if (CommService.medium == CommService.MEDIUM.BLUETOOTH) {// 获取本地蓝牙适配器
             bluetoothadapter = BluetoothAdapter.getDefaultAdapter();
             //如果BT未开启，请请求将其启用。
@@ -158,6 +169,13 @@ public class HomeFragment extends BaseFragment {
                 }
             }
         }
+        setDefaultMode(mode);
+        if (!TextUtils.isEmpty(mConnectedDeviceAddress)) {
+            connectBtDevice(mConnectedDeviceAddress);
+        } else {
+            TipDialog.show(context, getString(R.string.text_bluetooth_error_connecting), TipDialog.SHOW_TIME_LONG, TipDialog.TYPE_WARNING);
+        }
+
         // 设置数据更新计时器
         updateTimer.schedule(updateTask, 0, DISPLAY_UPDATE_TIME);
 
@@ -165,13 +183,10 @@ public class HomeFragment extends BaseFragment {
         manager.setOrientation(OrientationHelper.VERTICAL);
         recycleFun.setLayoutManager(manager);
         recycleFun.addItemDecoration(new DividerGridItemDecoration(context));
-        homeAdapter = new HomeAdapter(context);
+        HomeAdapter homeAdapter = new HomeAdapter(context);
         recycleFun.setAdapter(homeAdapter);
-        homeAdapter.setClickCallBack(new HomeAdapter.OnClickCallBack() {
-            @Override
-            public void Click(String name) {
+        homeAdapter.setClickCallBack(name -> {
 
-            }
         });
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -190,14 +205,6 @@ public class HomeFragment extends BaseFragment {
             }
         });
     }
-
-    /* *//**
-     * 获取故障代码
-     *//*
-   // private void getTroubleCodes() {
-        startActivity(new Intent(this, TroubleCodesActivity.class));
-    }*/
-
 
     /**
      * 选择已配对蓝牙
@@ -221,9 +228,6 @@ public class HomeFragment extends BaseFragment {
                 (dialog, which) -> {
                     if (yourChoice != -1) {
                         connectBtDevice(itemsAddress[yourChoice]);
-                        Toast.makeText(context,
-                                "你选择了" + items[yourChoice],
-                                Toast.LENGTH_SHORT).show();
                     }
                 });
         singleChoiceDialog.show();
@@ -236,7 +240,7 @@ public class HomeFragment extends BaseFragment {
         @Override
         public void run() {
             /* 转发消息以更新视图*/
-            Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_UPDATE_VIEW);
+            Message msg = mHandler.obtainMessage(MESSAGE_UPDATE_VIEW);
             mHandler.sendMessage(msg);
         }
     };
@@ -259,7 +263,7 @@ public class HomeFragment extends BaseFragment {
 
             Set<BluetoothDevice> devices = adapter.getBondedDevices();
             blueList = new ArrayList<>();
-            LogE("获取已经配对devices" + devices.size());
+            LogE("获取已经配对" + devices.size());
             for (BluetoothDevice bluetoothDevice : devices) {
                 LogE("已经配对的蓝牙设备：");
                 LogE(bluetoothDevice.getName());
@@ -301,6 +305,8 @@ public class HomeFragment extends BaseFragment {
         TipDialog.show(context, R.string.title_connected_to + mConnectedDeviceName, TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
         titleBar.setLeftTitle("ONLINE");
         titleBar.setRightIcon(R.drawable.action_connect);
+        spUtil.put(CONNECT_BT_KEY, "ONLINE");
+
     }
 
     /**
@@ -310,5 +316,14 @@ public class HomeFragment extends BaseFragment {
         mode = MODE.OFFLINE;
         titleBar.setLeftTitle("OFFLINE");
         titleBar.setRightIcon(R.drawable.action_disconnect);
+        spUtil.put(CONNECT_BT_KEY, "OFFLINE");
+    }
+
+    private void setDefaultMode(MODE mode) {
+        if (mode.equals(MODE.OFFLINE)) {
+            titleBar.setLeftTitle("OFFLINE");
+            titleBar.setRightIcon(R.drawable.action_disconnect);
+            spUtil.put(CONNECT_BT_KEY, "OFFLINE");
+        }
     }
 }

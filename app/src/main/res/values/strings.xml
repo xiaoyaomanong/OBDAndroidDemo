@@ -38,4 +38,7 @@
     <string name="title_pref_commands">OBD 指令</string>
     <string name="Bluetooth_Name">蓝牙</string>
     <string name="gps_name">GPS</string>
+    <string name="text_bluetooth_error_connecting">不能连接到蓝牙设备!</string>
+    <string name="update_distance">修改更新距离(米)</string>
+    <string name="update_period">修改更新周期(秒)</string>
 </resources>

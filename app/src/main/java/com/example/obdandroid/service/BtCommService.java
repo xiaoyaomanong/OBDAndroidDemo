@@ -27,6 +27,7 @@ import android.os.Handler;
 import android.os.ParcelUuid;
 
 
+import com.example.obdandroid.listener.SocketCallBack;
 import com.example.obdandroid.utils.StreamHandler;
 
 import java.io.IOException;
@@ -47,6 +48,7 @@ public class BtCommService extends CommService {
 
     private BtConnectThread mBtConnectThread;
     private BtWorkerThread mBtWorkerThread;
+    private BluetoothSocket mmSocket;
     /**
      * 通信流处理程序
      */
@@ -88,13 +90,13 @@ public class BtCommService extends CommService {
     }
 
     /**
-     *开始连接到指定设备
+     * 开始连接到指定设备
      *
      * @param device 要连接的设备
      * @param secure 套接字安全性类型-安全（true），不安全（false）
      */
     @Override
-    public synchronized void connect(Object device, boolean secure) {
+    public synchronized void connect(Object device, boolean secure, SocketCallBack callBack) {
         log.log(Level.FINE, "connect to: " + device);
         //取消任何试图建立连接的线程
         if (mState == STATE.CONNECTING) {
@@ -111,7 +113,7 @@ public class BtCommService extends CommService {
         }
         setState(STATE.CONNECTING);
         //启动线程以与给定的设备连接
-        mBtConnectThread = new BtConnectThread((BluetoothDevice) device, secure);
+        mBtConnectThread = new BtConnectThread((BluetoothDevice) device, secure, callBack);
         mBtConnectThread.start();
     }
 
@@ -141,7 +143,7 @@ public class BtCommService extends CommService {
         mBtWorkerThread.start();
 
         //我们已连接->已建立信号连接
-        connectionEstablished(device.getName(),device.getAddress());
+        connectionEstablished(device.getName(), device.getAddress());
     }
 
     /**
@@ -181,17 +183,17 @@ public class BtCommService extends CommService {
      */
     private class BtConnectThread extends Thread {
         private final BluetoothDevice mmDevice;
-        private BluetoothSocket mmSocket;
         private final String mSocketType;
+        private SocketCallBack mCallBack;
 
-        BtConnectThread(BluetoothDevice device, boolean secure) {
+        BtConnectThread(BluetoothDevice device, boolean secure, SocketCallBack callBack) {
             mmDevice = device;
             BluetoothSocket tmp = null;
+            mCallBack = callBack;
             mSocketType = secure ? "Secure" : "Insecure";
 
             // 修改以与SPP设备一起使用
-            final UUID SPP_UUID = UUID
-                    .fromString("00001101-0000-1000-8000-00805F9B34FB");
+            final UUID SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
             // 获取用于与给定BluetoothDevice连接的BluetoothSocket
             try {
@@ -212,7 +214,7 @@ public class BtCommService extends CommService {
          * 记录指定的BluetoothSocket支持的UUID
          *
          * @param socket 套接字记录
-         * @param msg   附加UUID的消息
+         * @param msg    附加UUID的消息
          */
         private void logSocketUuids(BluetoothSocket socket, String msg) {
             if (log.isLoggable(Level.INFO)) {
@@ -253,9 +255,11 @@ public class BtCommService extends CommService {
                     logSocketUuids(mmSocket, "Fallback socket");
                     // co连接后备插座
                     mmSocket.connect();
+                    mCallBack.connectMsg("已连接", mmSocket);
                 } catch (Exception e2) {
                     log.log(Level.SEVERE, e2.getMessage());
                     connectionFailed();
+                    mCallBack.connectMsg("连接失败", mmSocket);
                     return;
                 }
             }

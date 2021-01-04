@@ -41,4 +41,17 @@
     <string name="text_bluetooth_error_connecting">不能连接到蓝牙设备!</string>
     <string name="update_distance">修改更新距离(米)</string>
     <string name="update_period">修改更新周期(秒)</string>
+    <string name="notification_action">点击打开 Android OBD-II</string>
+    <string name="service_starting">正在开启 OBD 连接..</string>
+    <string name="service_started">OBD 连接已经开启.</string>
+    <string name="service_stopped">OBD 连接已经关闭.</string>
+    <string name="status_no_bluetooth_id">不可用的</string>
+    <string name="status_bluetooth_disabled">未打开的</string>
+    <string name="status_bluetooth_ok">准备中</string>
+    <string name="status_bluetooth_connecting">连接中&#8230;</string>
+    <string name="status_bluetooth_connected">已连接</string>
+    <string name="status_bluetooth_error_connecting">连接失败</string>
+    <string name="text_bluetooth_nodevice">没有蓝牙设备可选</string>
+    <string name="myCar">我的车辆</string>
+    <string name="status_obd_disconnected">未连接</string>
 </resources>

@@ -79,15 +79,14 @@ public class PersonalFragment extends BaseFragment {
         itemDataList = new ArrayList<>();
 
         multipleItem = new MultipleItem(MultipleItem.TYPE_COUNT, 5);
-        multipleItem.mString1 = "收藏";
-        multipleItem.mString2 = "关注";
+        multipleItem.mString2 = "type1";
         itemDataList.add(multipleItem);
 
         multipleItem = new MultipleItem(MultipleItem.TYPE_ORDER_HEADER, 5);
         multipleItem.mString2 = "type2";
         itemDataList.add(multipleItem);
 
-        for (int i = 0; i < 5; i++) {
+      /*  for (int i = 0; i < 5; i++) {
             multipleItem = new MultipleItem(MultipleItem.TYPE_ORDER, 1);
             multipleItem.mString1 = "待付款";
             if (i % 2 == 0) {
@@ -98,13 +97,13 @@ public class PersonalFragment extends BaseFragment {
                 multipleItem.count = 0;
             }
             itemDataList.add(multipleItem);
-        }
+        }*/
 
       /*  multipleItem = new MultipleItem(MultipleItem.TYPE_BALANCE, 5);
         multipleItem.mString1 = "￥9999.00";
         itemDataList.add(multipleItem);*/
 
-        multipleItem = new MultipleItem(MultipleItem.TYPE_TOOLS_HEADER, 5);
+    /*    multipleItem = new MultipleItem(MultipleItem.TYPE_TOOLS_HEADER, 5);
         multipleItem.mString1 = "type5";
         itemDataList.add(multipleItem);
 
@@ -119,7 +118,7 @@ public class PersonalFragment extends BaseFragment {
                 multipleItem.count = 0;
             }
             itemDataList.add(multipleItem);
-        }
+        }*/
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -186,13 +185,13 @@ public class PersonalFragment extends BaseFragment {
 
         multipleItemQuickAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             switch (view.getId()) {
-                case R.id.my_favorites:
-                    showToast("收藏");
+                case R.id.ll_my_car:
+                    showToast("我的车辆");
                     break;
               /*  case R.id.my_bands:
                     JumpUtil.startAct(context, OBDSettingActivity.class);
                     break;*/
-                case R.id.ll_my_order:
+                case R.id.ll_my_obd:
                     JumpUtil.startAct(context, OBDSettingActivity.class);
                     break;
                /* case R.id.my_balance_btn:

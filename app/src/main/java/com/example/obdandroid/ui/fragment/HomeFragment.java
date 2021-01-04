@@ -3,12 +3,18 @@ package com.example.obdandroid.ui.fragment;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
+import android.os.PowerManager;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,8 +26,12 @@ import android.widget.Toast;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
+import com.example.obdandroid.listener.SocketCallBack;
+import com.example.obdandroid.service.AbstractGatewayService;
 import com.example.obdandroid.service.BtCommService;
 import com.example.obdandroid.service.CommService;
+import com.example.obdandroid.service.MockObdGatewayService;
+import com.example.obdandroid.service.ObdGatewayService;
 import com.example.obdandroid.ui.adapter.HomeAdapter;
 import com.example.obdandroid.utils.DividerGridItemDecoration;
 import com.example.obdandroid.utils.SPUtil;
@@ -30,6 +40,7 @@ import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,6 +74,10 @@ public class HomeFragment extends BaseFragment {
     private List<HashMap<String, Object>> blueList;
     private int yourChoice;
     private SPUtil spUtil;
+    private boolean preRequisites = true;
+    private boolean isServiceBound;
+    private AbstractGatewayService service;
+    private BluetoothSocket bluetoothSocket;
     /**
      * 显示更新计时器
      */
@@ -129,6 +144,43 @@ public class HomeFragment extends BaseFragment {
             }
         }
     };
+    private final ServiceConnection serviceConn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder binder) {
+            LogE(className.toString() + " 服务绑定");
+            isServiceBound = true;
+            service = ((AbstractGatewayService.AbstractGatewayServiceBinder) binder).getService();
+            service.setContext(context);
+            LogE("开始实时数据");
+            try {
+                service.startService(mConnectedDeviceAddress, mHandler,bluetoothSocket);
+                if (preRequisites) {
+                    showToast(getString(R.string.status_bluetooth_connected));
+                }
+            } catch (IOException ioe) {
+                LogE("无法启动实时数据");
+                showToast(getString(R.string.status_bluetooth_error_connecting));
+                doUnbindService();
+            }
+        }
+
+        @Override
+        protected Object clone() throws CloneNotSupportedException {
+            return super.clone();
+        }
+
+        /**
+         * 仅在与服务的连接意外丢失时才调用此方法
+         * 而不是在客户端解除绑定时（http：developer.android.comguidecomponentsbound-services.html）
+         * 因此，当我们从服务取消绑定时，isServiceBound属性也应设置为false。
+         */
+        @Override
+        public void onServiceDisconnected(ComponentName className) {
+            LogE(className.toString() + " 服务没有绑定");
+            isServiceBound = false;
+        }
+    };
+
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -285,12 +337,16 @@ public class HomeFragment extends BaseFragment {
     private void connectBtDevice(String address) {
         // 获取BluetoothDevice对象
         BluetoothDevice device = bluetoothadapter.getRemoteDevice(address);
-        /*
-         * 尝试连接到设备
-         * BT通讯服务的成员对象
-         */
+        //尝试连接到设备  BT通讯服务的成员对象
         CommService mCommService = new BtCommService(context, mHandler);
-        mCommService.connect(device, true);
+        mCommService.connect(device, true, new SocketCallBack() {
+            @Override
+            public void connectMsg(String msg, BluetoothSocket socket) {
+                if (TextUtils.equals(msg, "已连接")) {
+                    bluetoothSocket = socket;
+                }
+            }
+        });
     }
 
     /**
@@ -304,7 +360,8 @@ public class HomeFragment extends BaseFragment {
         titleBar.setLeftTitle("ONLINE");
         titleBar.setRightIcon(R.drawable.action_connect);
         spUtil.put(CONNECT_BT_KEY, "ONLINE");
-
+        preRequisites = true;
+        doBindService();
     }
 
     /**
@@ -315,6 +372,7 @@ public class HomeFragment extends BaseFragment {
         titleBar.setLeftTitle("OFFLINE");
         titleBar.setRightIcon(R.drawable.action_disconnect);
         spUtil.put(CONNECT_BT_KEY, "OFFLINE");
+        preRequisites = false;
     }
 
     private void setDefaultMode(MODE mode) {
@@ -323,5 +381,45 @@ public class HomeFragment extends BaseFragment {
             titleBar.setRightIcon(R.drawable.action_disconnect);
             spUtil.put(CONNECT_BT_KEY, "OFFLINE");
         }
+    }
+
+    /**
+     * 绑定OBD服务
+     */
+    private void doBindService() {
+        if (!isServiceBound) {
+            LogE("绑定OBD服务");
+            Intent serviceIntent;
+            if (preRequisites) {
+                showTipDialog(getString(R.string.status_bluetooth_connecting), TipDialog.TYPE_WARNING);
+                serviceIntent = new Intent(context, ObdGatewayService.class);
+            } else {
+                showTipDialog(getString(R.string.status_bluetooth_disabled), TipDialog.TYPE_WARNING);
+                serviceIntent = new Intent(context, MockObdGatewayService.class);
+            }
+            context.bindService(serviceIntent, serviceConn, Context.BIND_AUTO_CREATE);
+        }
+    }
+
+
+    /**
+     * 解除OBD服务绑定
+     */
+    private void doUnbindService() {
+        if (isServiceBound) {
+            if (service.isRunning()) {
+                service.stopService();
+                if (preRequisites)
+                    showTipDialog(getString(R.string.status_bluetooth_ok), TipDialog.TYPE_FINISH);
+            }
+            LogE("解除OBD服务绑定");
+            context.unbindService(serviceConn);
+            isServiceBound = false;
+            showTipDialog(getString(R.string.status_obd_disconnected), TipDialog.TYPE_ERROR);
+        }
+    }
+
+    private void showTipDialog(String msg, int type) {
+        TipDialog.show(context, msg, TipDialog.TYPE_ERROR, type);
     }
 }

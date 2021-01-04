@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/black"
@@ -22,7 +23,8 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="20dp"
         android:layout_toEndOf="@id/my_header_image"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="RelativeOverlap">
 
         <TextView
             android:id="@+id/my_header_name"

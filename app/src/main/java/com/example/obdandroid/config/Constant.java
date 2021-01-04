@@ -49,6 +49,7 @@ public class Constant {
      */
     public static final String DEVICE_NAME = "device_name";
     public static final String DEVICE_ADDRESS = "device_address";
+    public static final String DEVICE_SOCKET = "device_socket";
     public static final String TOAST = "toast";
 
     public static final String OBD_UPDATE_PERIOD_KEY = "obd_update_period_preference";

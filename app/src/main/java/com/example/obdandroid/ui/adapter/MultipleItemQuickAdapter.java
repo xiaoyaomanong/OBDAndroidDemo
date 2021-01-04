@@ -1,8 +1,5 @@
 package com.example.obdandroid.ui.adapter;
 
-import android.support.v4.content.ContextCompat;
-import android.view.View;
-
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.obdandroid.R;
@@ -19,25 +16,24 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<Multiple
 
     public MultipleItemQuickAdapter(List data) {
         super(data);
-        addItemType(MultipleItem.TYPE_COUNT, R.layout.layout_my_count);
-        addItemType(MultipleItem.TYPE_ORDER_HEADER, R.layout.layout_my_order_header);
-        addItemType(MultipleItem.TYPE_ORDER, R.layout.layout_my_order);
+        addItemType(MultipleItem.TYPE_COUNT, R.layout.layout_my_obd);
+        addItemType(MultipleItem.TYPE_ORDER_HEADER, R.layout.layout_my_car);
+        //addItemType(MultipleItem.TYPE_ORDER, R.layout.layout_my_order);
         //addItemType(MultipleItem.TYPE_BALANCE, R.layout.layout_my_balance);
-        addItemType(MultipleItem.TYPE_TOOLS_HEADER, R.layout.layout_my_tools_header);
-        addItemType(MultipleItem.TYPE_TOOLS, R.layout.layout_my_tools);
+        // addItemType(MultipleItem.TYPE_TOOLS_HEADER, R.layout.layout_my_tools_header);
+        //addItemType(MultipleItem.TYPE_TOOLS, R.layout.layout_my_tools);
     }
 
     @Override
     protected void convert(BaseViewHolder helper, MultipleItem item) {
         switch (helper.getItemViewType()) {
             case MultipleItem.TYPE_COUNT:
-                helper.setText(R.id.my_favorites, item.mString1).addOnClickListener(R.id.my_favorites);
-                helper.setText(R.id.my_bands, item.mString2).addOnClickListener(R.id.my_bands);
+                helper.addOnClickListener(R.id.ll_my_obd);
                 break;
             case MultipleItem.TYPE_ORDER_HEADER:
-                helper.addOnClickListener(R.id.ll_my_order);
+                helper.addOnClickListener(R.id.ll_my_car);
                 break;
-            case MultipleItem.TYPE_ORDER:
+          /*  case MultipleItem.TYPE_ORDER:
                 helper.setImageDrawable(R.id.my_order_image, ContextCompat.getDrawable(mContext, R.mipmap.ic_launcher));
                 helper.setText(R.id.my_order_name, item.mString1);
                 break;
@@ -51,8 +47,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<Multiple
             case MultipleItem.TYPE_TOOLS:
                 helper.setImageDrawable(R.id.my_tools_image, ContextCompat.getDrawable(mContext, R.mipmap.ic_launcher));
                 helper.setText(R.id.my_tools_text, item.mString1);
-
-                break;
+                break;*/
         }
     }
 

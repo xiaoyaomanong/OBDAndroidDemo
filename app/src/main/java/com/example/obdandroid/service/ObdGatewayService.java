@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.obdandroid.R;
+import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.activity.MainActivity;
 import com.example.obdandroid.utils.SPUtil;
 import com.github.pires.obd.commands.protocol.EchoOffCommand;
@@ -26,7 +27,6 @@ import java.io.File;
 import java.io.IOException;
 
 import static com.example.obdandroid.config.Constant.IMPERIAL_UNITS_KEY;
-import static com.example.obdandroid.config.Constant.MESSAGE_STATE_CHANGE;
 import static com.example.obdandroid.config.Constant.PROTOCOLS_LIST_KEY;
 
 /**
@@ -36,7 +36,7 @@ import static com.example.obdandroid.config.Constant.PROTOCOLS_LIST_KEY;
  */
 public class ObdGatewayService extends AbstractGatewayService {
 
-    private static final String TAG = ObdGatewayService.class.getName();
+    private static final String TAG = BaseActivity.class.getName();
     private Handler mHandler = null;
     private BluetoothSocket bluetoothSocket;
     private SPUtil spUtil;

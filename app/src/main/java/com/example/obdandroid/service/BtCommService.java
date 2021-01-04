@@ -25,8 +25,10 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Handler;
 import android.os.ParcelUuid;
+import android.util.Log;
 
 
+import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.listener.SocketCallBack;
 import com.example.obdandroid.utils.StreamHandler;
 
@@ -45,7 +47,7 @@ import java.util.logging.Level;
  */
 @SuppressLint("NewApi")
 public class BtCommService extends CommService {
-
+    private static final String TAG = BaseActivity.class.getName();
     private BtConnectThread mBtConnectThread;
     private BtWorkerThread mBtWorkerThread;
     private BluetoothSocket mmSocket;
@@ -53,7 +55,6 @@ public class BtCommService extends CommService {
      * 通信流处理程序
      */
     private final StreamHandler ser = new StreamHandler();
-
 
     /**
      * 构造函数。 准备一个新的蓝牙通信会话。
@@ -97,7 +98,7 @@ public class BtCommService extends CommService {
      */
     @Override
     public synchronized void connect(Object device, boolean secure, SocketCallBack callBack) {
-        log.log(Level.FINE, "connect to: " + device);
+        Log.e(TAG, "连接到: " + device);
         //取消任何试图建立连接的线程
         if (mState == STATE.CONNECTING) {
             if (mBtConnectThread != null) {
@@ -125,7 +126,7 @@ public class BtCommService extends CommService {
      */
     private synchronized void connected(BluetoothSocket socket, BluetoothDevice
             device, final String socketType) {
-        log.log(Level.FINE, "connected, Socket Type:" + socketType);
+        Log.e(TAG, "已连接， Socket Type: " + socketType);
 
         // 取消完成连接的线程
         if (mBtConnectThread != null) {
@@ -151,7 +152,7 @@ public class BtCommService extends CommService {
      */
     @Override
     public synchronized void stop() {
-        log.log(Level.FINE, "stop");
+        Log.e(TAG, "stop");
         if (mBtConnectThread != null) {
             mBtConnectThread.cancel();
             mBtConnectThread = null;
@@ -203,10 +204,9 @@ public class BtCommService extends CommService {
                     tmp = device.createInsecureRfcommSocketToServiceRecord(SPP_UUID);
                 }
             } catch (IOException e) {
-                log.log(Level.SEVERE, "Socket Type: " + mSocketType + "create() failed", e);
+                Log.e(TAG, "Socket Type: " + mSocketType + "create() failed，" + e.getMessage());
             }
             mmSocket = tmp;
-
             logSocketUuids(mmSocket, "BT socket");
         }
 
@@ -219,7 +219,6 @@ public class BtCommService extends CommService {
         private void logSocketUuids(BluetoothSocket socket, String msg) {
             if (log.isLoggable(Level.INFO)) {
                 StringBuilder message = new StringBuilder(msg);
-                // dump supported UUID's
                 message.append(" - UUIDs:");
                 ParcelUuid[] uuids = socket.getRemoteDevice().getUuids();
                 if (uuids != null) {
@@ -234,16 +233,17 @@ public class BtCommService extends CommService {
         }
 
         public void run() {
-            log.log(Level.INFO, "BEGIN mBtConnectThread SocketType:" + mSocketType);
+            Log.e(TAG, "BEGIN mBtConnectThread SocketType:" + mSocketType);
             // 连接到BluetoothSocket
             try {
-                log.log(Level.FINE, "Connect BT socket");
+                Log.e(TAG, "Connect BT socket");
                 // 这是一个阻塞的调用，只会在连接成功或出现异常时返回
                 mmSocket.connect();
+                mCallBack.connectMsg("已连接", mmSocket);
             } catch (IOException e) {
-                log.log(Level.FINE, e.getMessage());
+                Log.e(TAG, e.getMessage());
                 cancel();
-                log.log(Level.INFO, "后备尝试创建RfComm套接字");
+                Log.e(TAG, "后备尝试创建RfComm套接字");
                 BluetoothSocket sockFallback;
                 Class<?> clazz = mmSocket.getRemoteDevice().getClass();
                 Class<?>[] paramTypes = new Class<?>[]{Integer.TYPE};
@@ -275,10 +275,10 @@ public class BtCommService extends CommService {
 
         synchronized void cancel() {
             try {
-                log.log(Level.INFO, "Closing BT socket");
+                Log.e(TAG, "Closing BT socket");
                 mmSocket.close();
             } catch (IOException e) {
-                log.log(Level.SEVERE, e.getMessage());
+                Log.e(TAG, e.getMessage());
             }
         }
     }
@@ -293,7 +293,7 @@ public class BtCommService extends CommService {
         private final OutputStream mmOutStream;
 
         BtWorkerThread(BluetoothSocket socket, String socketType) {
-            log.log(Level.FINE, "create BtWorkerThread: " + socketType);
+            Log.e(TAG, "create BtWorkerThread: " + socketType);
             mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
@@ -303,7 +303,7 @@ public class BtCommService extends CommService {
                 tmpIn = socket.getInputStream();
                 tmpOut = socket.getOutputStream();
             } catch (IOException e) {
-                log.log(Level.SEVERE, "temp sockets not created", e);
+                Log.e(TAG, "temp sockets not created," + e.getMessage());
             }
 
             mmInStream = tmpIn;
@@ -316,13 +316,13 @@ public class BtCommService extends CommService {
          * 运行主通讯回路
          */
         public void run() {
-            log.log(Level.INFO, "BEGIN mBtWorkerThread");
+            Log.e(TAG, "BEGIN mBtWorkerThread");
             try {
                 // 运行通讯线程
                 ser.run();
             } catch (Exception ex) {
                 // 故意忽略
-                log.log(Level.SEVERE, "Comm thread aborted", ex);
+                Log.e(TAG, "Comm thread aborted," + ex.getMessage());
             }
             connectionLost();
         }
@@ -338,9 +338,10 @@ public class BtCommService extends CommService {
 
         synchronized void cancel() {
             try {
-                log.log(Level.INFO, "Closing BT socket");
+                Log.e(TAG, "Closing BT socket");
                 mmSocket.close();
             } catch (IOException e) {
+                Log.e(TAG, e.getMessage());
                 log.log(Level.SEVERE, e.getMessage());
             }
         }

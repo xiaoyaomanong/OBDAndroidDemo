@@ -14,6 +14,7 @@ import android.os.Message;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.activity.MainActivity;
 import com.google.inject.Inject;
 
@@ -30,7 +31,7 @@ import static com.example.obdandroid.config.Constant.MESSAGE_DEVICE_NAME;
 
 public abstract class AbstractGatewayService extends RoboService {
     public static final int NOTIFICATION_ID = 1;
-    private static final String TAG = AbstractGatewayService.class.getName();
+    private static final String TAG = BaseActivity.class.getName();
     private final IBinder binder = new AbstractGatewayServiceBinder();
     @Inject
     protected NotificationManager notificationManager;

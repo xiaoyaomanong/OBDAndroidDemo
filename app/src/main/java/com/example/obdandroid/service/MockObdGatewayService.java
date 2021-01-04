@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.util.Log;
 
+import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.activity.MainActivity;
 import com.github.pires.obd.commands.protocol.EchoOffCommand;
 import com.github.pires.obd.commands.protocol.LineFeedOffCommand;
@@ -22,8 +23,7 @@ import java.io.ByteArrayOutputStream;
  * 其次，它将用作ObdCommandJobs的存储库时间应用程序状态机。
  */
 public class MockObdGatewayService extends AbstractGatewayService {
-
-    private static final String TAG = MockObdGatewayService.class.getName();
+    private static final String TAG = BaseActivity.class.getName();
 
     /**
      * 操作模式

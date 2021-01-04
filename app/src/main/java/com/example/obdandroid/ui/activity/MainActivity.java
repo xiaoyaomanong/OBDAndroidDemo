@@ -65,8 +65,6 @@ public class MainActivity extends BaseActivity {
     public void initView() {
         super.initView();
         context = this;
-      /*  Immersive.setContentView(this, getContentViewId(), R.color.white, R.color.black, false, false);
-        Immersive.setStatusBarColor(this, Color.rgb(255, 255, 255));*/
         viewPager = findViewById(R.id.viewPager);
         navigation = findViewById(R.id.navigation);
         fragments.add(HomeFragment.getInstance());

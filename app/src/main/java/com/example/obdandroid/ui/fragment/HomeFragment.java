@@ -20,11 +20,9 @@ import android.widget.Toast;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
-import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.service.BtCommService;
 import com.example.obdandroid.service.CommService;
 import com.example.obdandroid.ui.adapter.HomeAdapter;
-import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.DividerGridItemDecoration;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.ToastUtil;
@@ -152,7 +150,6 @@ public class HomeFragment extends BaseFragment {
         spUtil = new SPUtil(context);
         mConnectedDeviceName = spUtil.getString(DEVICE_NAME, "");
         mConnectedDeviceAddress = spUtil.getString(DEVICE_ADDRESS, "");
-        DialogUtils dialogUtils = new DialogUtils(context);
         initBlueTooth();
         if (CommService.medium == CommService.MEDIUM.BLUETOOTH) {// 获取本地蓝牙适配器
             bluetoothadapter = BluetoothAdapter.getDefaultAdapter();
@@ -185,6 +182,7 @@ public class HomeFragment extends BaseFragment {
         recycleFun.addItemDecoration(new DividerGridItemDecoration(context));
         HomeAdapter homeAdapter = new HomeAdapter(context);
         recycleFun.setAdapter(homeAdapter);
+
         homeAdapter.setClickCallBack(name -> {
 
         });

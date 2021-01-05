@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -13,8 +13,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
+import com.example.obdandroid.http.OkHttpClientUtils;
 import com.example.obdandroid.listener.OnSwipeTouchListener;
+import com.example.obdandroid.ui.entity.RegisterParam;
+import com.example.obdandroid.ui.view.CircleImageView;
+
+import static com.example.obdandroid.config.APIConfig.REGISTER_URL;
+import static com.example.obdandroid.config.APIConfig.SERVER_URL;
+import static com.example.obdandroid.config.TAG.TAG_Activity;
 
 /**
  * 作者：Jealous
@@ -30,6 +38,10 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText etUser;
     private EditText etPwd;
     private Button btnSignUp;
+    private CircleImageView myHeaderImage;
+    private EditText etNick;
+    private EditText etCode;
+    private Button btnCode;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -73,14 +85,12 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
         //注册
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+        btnSignUp.setOnClickListener(v -> registerUser(generateParam()));
     }
 
+    /**
+     * 初始化控件
+     */
     private void initView() {
         imageView = findViewById(R.id.imageView);
         textView = findViewById(R.id.textView);
@@ -88,5 +98,41 @@ public class RegisterActivity extends AppCompatActivity {
         etUser = findViewById(R.id.etUser);
         etPwd = findViewById(R.id.etPwd);
         btnSignUp = findViewById(R.id.btnSignUp);
+        myHeaderImage = findViewById(R.id.my_header_image);
+        etNick = findViewById(R.id.etNick);
+        etCode = findViewById(R.id.etCode);
+        btnCode = findViewById(R.id.btn_code);
     }
+
+    private String generateParam() {
+        RegisterParam param = new RegisterParam();
+        param.setHeadPortrait("");
+        param.setMobile("15101307774");
+        param.setNickname("蛋疼");
+        param.setPassword("123");
+        param.setVerificationCode("666666");
+        param.setRegistrationPlatform("Android");
+        return JSON.toJSONString(param);
+    }
+
+    /**
+     * @param param 注册内容
+     *              用户注册
+     */
+    private void registerUser(String param) {
+        OkHttpClientUtils.submitFormBody(SERVER_URL + REGISTER_URL,
+                param, new OkHttpClientUtils.UPLoadIMGCallBack() {
+                    @Override
+                    public void OnSuccess(String response) {
+                        Log.e(TAG_Activity, "用户注册:" + response);
+
+                    }
+
+                    @Override
+                    public void OnFail(String error) {
+
+                    }
+                });
+    }
+
 }

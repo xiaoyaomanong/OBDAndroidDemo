@@ -19,7 +19,6 @@
 
 package com.example.obdandroid.service;
 
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,14 +26,11 @@ import android.os.Message;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.listener.SocketCallBack;
-import com.example.obdandroid.ui.activity.MainActivity;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.example.obdandroid.config.Constant.DEVICE_ADDRESS;
 import static com.example.obdandroid.config.Constant.DEVICE_NAME;
-import static com.example.obdandroid.config.Constant.DEVICE_SOCKET;
 import static com.example.obdandroid.config.Constant.MESSAGE_DEVICE_NAME;
 import static com.example.obdandroid.config.Constant.MESSAGE_STATE_CHANGE;
 import static com.example.obdandroid.config.Constant.MESSAGE_TOAST;

@@ -5,7 +5,9 @@
     <string name="sign_up">注册</string>
     <string name="sign_in">登录</string>
     <string name="hint_pwd">密码</string>
-    <string name="hint_user">账号</string>
+    <string name="hint_user">手机号</string>
+    <string name="hint_nick">昵称</string>
+    <string name="hint_code">验证码</string>
     <string name="des_log">We pursue a relaxed gaming experience</string>
     <string name="morning">Morning</string>
     <string name="good">Good </string>
@@ -54,4 +56,11 @@
     <string name="text_bluetooth_nodevice">没有蓝牙设备可选</string>
     <string name="myCar">我的车辆</string>
     <string name="status_obd_disconnected">未连接</string>
+    <string name="status_gps_started">GPS开始</string>
+    <string name="status_gps_stopped">GPS结束</string>
+    <string name="status_gps_ready">GPS准备中</string>
+    <string name="status_gps_fix">GPS已确定</string>
+    <string name="status_gps_no_support">GPS不可用</string>
+    <string name="status_obd_no_support">OBD不可用</string>
+    <string name="status_obd_data">正在接收OBD数据&#8230;</string>
 </resources>

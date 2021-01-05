@@ -1,41 +1,59 @@
 package com.example.obdandroid.ui.fragment;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
+import android.location.GpsStatus;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.PowerManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
+import com.example.obdandroid.config.ObdConfig;
+import com.example.obdandroid.listener.ObdProgressListener;
 import com.example.obdandroid.listener.SocketCallBack;
 import com.example.obdandroid.service.AbstractGatewayService;
 import com.example.obdandroid.service.BtCommService;
 import com.example.obdandroid.service.CommService;
 import com.example.obdandroid.service.MockObdGatewayService;
+import com.example.obdandroid.service.ObdCommandJob;
 import com.example.obdandroid.service.ObdGatewayService;
 import com.example.obdandroid.ui.adapter.HomeAdapter;
+import com.example.obdandroid.ui.view.IosDialog;
 import com.example.obdandroid.utils.DividerGridItemDecoration;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.ToastUtil;
+import com.github.pires.obd.commands.ObdCommand;
+import com.github.pires.obd.enums.AvailableCommandNames;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
@@ -44,16 +62,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.example.obdandroid.config.Constant.BT_ADDRESS_KEY;
 import static com.example.obdandroid.config.Constant.BT_NAME_KEY;
 import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
 import static com.example.obdandroid.config.Constant.DEVICE_ADDRESS;
 import static com.example.obdandroid.config.Constant.DEVICE_NAME;
 import static com.example.obdandroid.config.Constant.DISPLAY_UPDATE_TIME;
+import static com.example.obdandroid.config.Constant.GPS_DISTANCE_PERIOD_KEY;
+import static com.example.obdandroid.config.Constant.GPS_UPDATE_PERIOD_KEY;
 import static com.example.obdandroid.config.Constant.MESSAGE_DEVICE_NAME;
 import static com.example.obdandroid.config.Constant.MESSAGE_STATE_CHANGE;
 import static com.example.obdandroid.config.Constant.MESSAGE_TOAST;
@@ -67,7 +90,7 @@ import static com.example.obdandroid.config.Constant.TOAST;
  * 日期：2020/12/23 0023
  * 描述：
  */
-public class HomeFragment extends BaseFragment {
+public class HomeFragment extends BaseFragment implements ObdProgressListener, LocationListener {
     private Context context;
     private TitleBar titleBar;
     private BluetoothAdapter bluetoothadapter;
@@ -91,6 +114,7 @@ public class HomeFragment extends BaseFragment {
      * 当前操作模式
      */
     private MODE mode = MODE.OFFLINE;
+
 
     /**
      * 操作模式
@@ -153,7 +177,7 @@ public class HomeFragment extends BaseFragment {
             service.setContext(context);
             LogE("开始实时数据");
             try {
-                service.startService(mConnectedDeviceAddress, mHandler,bluetoothSocket);
+                service.startService(mConnectedDeviceAddress, mHandler, bluetoothSocket);
                 if (preRequisites) {
                     showToast(getString(R.string.status_bluetooth_connected));
                 }
@@ -180,7 +204,41 @@ public class HomeFragment extends BaseFragment {
             isServiceBound = false;
         }
     };
+    public Map<String, String> commandResult = new HashMap<>();
+    boolean mGpsIsStarted = false;
+    private Location mLastLocation;
+    private final Runnable mQueueCommands = new Runnable() {
+        public void run() {
+            if (service != null && service.isRunning() && service.queueEmpty()) {
+                queueCommands();
+                double lat = 0;
+                double lon = 0;
+                double alt = 0;
+                final int posLen = 7;
+                if (mGpsIsStarted && mLastLocation != null) {
+                    lat = mLastLocation.getLatitude();
+                    lon = mLastLocation.getLongitude();
+                    alt = mLastLocation.getAltitude();
 
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("Lat: ");
+                    sb.append(String.valueOf(mLastLocation.getLatitude()), 0, posLen);
+                    sb.append(" Lon: ");
+                    sb.append(String.valueOf(mLastLocation.getLongitude()), 0, posLen);
+                    sb.append(" Alt: ");
+                    sb.append(mLastLocation.getAltitude());
+                    LogE(sb.toString());
+                }
+                // final String vin = spUtil.getString(VEHICLE_ID_KEY, "UNDEFINED_VIN");//汽车id
+                Map<String, String> temp = new HashMap<>(commandResult);
+                LogE("命令结果:" + JSON.toJSONString(temp));
+                commandResult.clear();
+            }
+            new Handler().postDelayed(mQueueCommands, 1);
+        }
+    };
+    private LocationManager mLocService;
+    private LocationProvider mLocProvider;
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -227,7 +285,6 @@ public class HomeFragment extends BaseFragment {
 
         // 设置数据更新计时器
         updateTimer.schedule(updateTask, 0, DISPLAY_UPDATE_TIME);
-
         GridLayoutManager manager = new GridLayoutManager(context, 2);
         manager.setOrientation(OrientationHelper.VERTICAL);
         recycleFun.setLayoutManager(manager);
@@ -238,6 +295,7 @@ public class HomeFragment extends BaseFragment {
         homeAdapter.setClickCallBack(name -> {
 
         });
+        gpsInit();
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -330,9 +388,8 @@ public class HomeFragment extends BaseFragment {
     }
 
     /**
-     * 启动与所选蓝牙设备的连接
-     *
-     * @param address bluetooth device address
+     * @param address 蓝牙设备MAC地址
+     *                启动与所选蓝牙设备的连接
      */
     private void connectBtDevice(String address) {
         // 获取BluetoothDevice对象
@@ -347,6 +404,18 @@ public class HomeFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    /**
+     * 队列命令
+     */
+    private void queueCommands() {
+        if (isServiceBound) {
+            for (ObdCommand Command : ObdConfig.getCommands()) {
+                if (spUtil.getBoolean(Command.getName(), true))
+                    service.queueJob(new ObdCommandJob(Command));
+            }
+        }
     }
 
     /**
@@ -365,7 +434,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     /**
-     * 处理蓝牙连接丢失...
+     * 处理蓝牙连接断开
      */
     private void onDisconnect() {
         mode = MODE.OFFLINE;
@@ -375,6 +444,10 @@ public class HomeFragment extends BaseFragment {
         preRequisites = false;
     }
 
+    /**
+     * @param mode 模式
+     *             设置默认模式
+     */
     private void setDefaultMode(MODE mode) {
         if (mode.equals(MODE.OFFLINE)) {
             titleBar.setLeftTitle("OFFLINE");
@@ -401,7 +474,6 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-
     /**
      * 解除OBD服务绑定
      */
@@ -421,5 +493,132 @@ public class HomeFragment extends BaseFragment {
 
     private void showTipDialog(String msg, int type) {
         TipDialog.show(context, msg, TipDialog.TYPE_ERROR, type);
+    }
+
+    /**
+     * gps定位初始化
+     */
+    private void gpsInit() {
+        mLocService = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (mLocService != null) {
+            mLocProvider = mLocService.getProvider(LocationManager.GPS_PROVIDER);
+            if (mLocProvider != null) {
+                if (ActivityCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                mLocService.addGpsStatusListener(event -> {
+                    switch (event) {
+                        case GpsStatus.GPS_EVENT_STARTED:
+                            showToast(getString(R.string.status_gps_started));
+                            break;
+                        case GpsStatus.GPS_EVENT_STOPPED:
+                            showToast(getString(R.string.status_gps_stopped));
+                            break;
+                        case GpsStatus.GPS_EVENT_FIRST_FIX:
+                            showToast(getString(R.string.status_gps_fix));
+                            break;
+                        case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
+                            break;
+                    }
+                });
+                //mLocService.addGpsStatusListener(this);
+                if (mLocService.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    showToast(getString(R.string.status_gps_ready));
+                    return;
+                }
+            }
+        }
+        showTipDialog(getString(R.string.status_gps_no_support), TipDialog.TYPE_WARNING);
+        LogE("无法获得GPS提供商");
+    }
+
+    private synchronized void gpsStart() {
+        if (!mGpsIsStarted && mLocProvider != null && mLocService != null && mLocService.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            if (ActivityCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            mLocService.requestLocationUpdates(mLocProvider.getName(), spUtil.getInt(GPS_UPDATE_PERIOD_KEY, 1), spUtil.getFloat(GPS_DISTANCE_PERIOD_KEY, 5), this);
+            mGpsIsStarted = true;
+        } else {
+            showToast(getString(R.string.status_gps_no_support));
+        }
+    }
+
+    private synchronized void gpsStop() {
+        if (mGpsIsStarted) {
+            mLocService.removeUpdates(this);
+            mGpsIsStarted = false;
+            showToast(getString(R.string.status_gps_stopped));
+        }
+    }
+
+    public void onLocationChanged(Location location) {
+        mLastLocation = location;
+    }
+
+    public void onStatusChanged(String provider, int status, android.os.Bundle extras) {
+    }
+
+    public void onProviderEnabled(String provider) {
+    }
+
+    public void onProviderDisabled(String provider) {
+    }
+
+    @Override
+    public void stateUpdate(ObdCommandJob job) {
+        final String cmdName = job.getCommand().getName();
+        String cmdResult = "";
+        final String cmdID = LookUpCommand(cmdName);
+
+        if (job.getState().equals(ObdCommandJob.ObdCommandJobState.EXECUTION_ERROR)) {
+            cmdResult = job.getCommand().getResult();
+            if (cmdResult != null && isServiceBound) {
+                LogE("OBD状态:" + cmdResult.toLowerCase());
+            }
+        } else if (job.getState().equals(ObdCommandJob.ObdCommandJobState.BROKEN_PIPE)) {
+            if (isServiceBound)
+                stopLiveData();
+        } else if (job.getState().equals(ObdCommandJob.ObdCommandJobState.NOT_SUPPORTED)) {
+            cmdResult = getString(R.string.status_obd_no_support);
+        } else {
+            cmdResult = job.getCommand().getFormattedResult();
+            if (isServiceBound)
+                LogE("OBD状态:" + getString(R.string.status_obd_data));
+        }
+        LogE("cmdID: " + cmdID + "   cmdName: " + cmdName + "  cmdResult: " + cmdResult);
+        commandResult.put(cmdID, cmdResult);
+        //updateTripStatistic(job, cmdID);
+    }
+
+    public static String LookUpCommand(String txt) {
+        for (AvailableCommandNames item : AvailableCommandNames.values()) {
+            if (item.getValue().equals(txt)) return item.name();
+        }
+        return txt;
+    }
+
+    private void stopLiveData() {
+        LogE("停止获取OBD实时数据");
+        gpsStop();
+        doUnbindService();
+        // releaseWakeLockIfHeld();
+        // final String devemail = prefs.getString(ConfigActivity.DEV_EMAIL_KEY, null);
+        //问题反馈
+       /* new IosDialog(context, new IosDialog.DialogClick() {
+            @Override
+            public void Confirm(android.app.AlertDialog exitDialog, boolean confirm) {
+                if (confirm){
+                    exitDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void Cancel(android.app.AlertDialog exitDialog, boolean confirm) {
+                if (confirm){
+                    exitDialog.dismiss();
+                }
+            }
+        }).setSelectNegative("取消").setSelectPositive("确定").setMessage("哪里有问题?\n然后请发送日志给我们.\n发送日志?").setTitle("联系").showDialog();*/
     }
 }

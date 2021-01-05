@@ -48,7 +48,6 @@ public class ObdCommandActivity extends BaseActivity {
         manager.setOrientation(OrientationHelper.VERTICAL);
         recycleObdCommand.setLayoutManager(manager);
         adapter = new ObdCommandAdapter(context);
-        // ArrayList<ObdCommand> commands= ObdConfig.getCommands();
         adapter.setList(ObdConfig.getCommands());
         recycleObdCommand.setAdapter(adapter);
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {

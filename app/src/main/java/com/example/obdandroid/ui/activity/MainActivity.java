@@ -21,11 +21,14 @@ import android.widget.Toast;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.config.ObdConfig;
 import com.example.obdandroid.ui.adapter.SimpleFragmentPagerAdapter;
 import com.example.obdandroid.ui.fragment.HomeFragment;
 import com.example.obdandroid.ui.fragment.PersonalFragment;
 import com.example.obdandroid.utils.ActivityManager;
+import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.StringUtil;
+import com.github.pires.obd.commands.ObdCommand;
 import com.kongzue.dialog.util.BlurView;
 
 import java.util.ArrayList;
@@ -50,6 +53,7 @@ public class MainActivity extends BaseActivity {
     private Context context;
     private int blur_front_color;
     private BlurView blur;
+    private SPUtil spUtil;
 
     @Override
     protected int getContentViewId() {
@@ -67,11 +71,19 @@ public class MainActivity extends BaseActivity {
         context = this;
         viewPager = findViewById(R.id.viewPager);
         navigation = findViewById(R.id.navigation);
+        spUtil = spUtil = new SPUtil(context);
         fragments.add(HomeFragment.getInstance());
         fragments.add(PersonalFragment.getInstance());
         viewPager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
         viewPager.addOnPageChangeListener(mOnPageChangeListener);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        setOBDCommand(ObdConfig.getCommands());
+    }
+
+    private void setOBDCommand(ArrayList<ObdCommand> command) {
+        for (ObdCommand Command : command) {
+            spUtil.put(Command.getName(), true);
+        }
     }
 
     private final ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {

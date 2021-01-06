@@ -19,4 +19,6 @@
     <color name="red">#ff0000</color>
     <color name="color_000000">#000000</color>
     <color name="color_layout">#F1F1F1</color>
+    <color name="color1">#449EEF</color>
+    <color name="gray_line">#F1F1F1</color>
 </resources>

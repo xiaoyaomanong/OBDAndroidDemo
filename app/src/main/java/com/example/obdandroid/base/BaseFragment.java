@@ -11,7 +11,14 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.obdandroid.utils.SPUtil;
+import com.example.obdandroid.utils.StringUtil;
+
 import org.greenrobot.eventbus.EventBus;
+
+import static com.example.obdandroid.config.Constant.EXPIRETIME;
+import static com.example.obdandroid.config.Constant.TOKEN;
+import static com.example.obdandroid.config.Constant.USERID;
 
 
 /**
@@ -22,8 +29,11 @@ import org.greenrobot.eventbus.EventBus;
 public abstract class BaseFragment extends Fragment {
     private static final String TAG = BaseFragment.class.getSimpleName();
     protected BaseActivity mActivity; // 宿主Activity
-    private SparseArray<View> mViews = new SparseArray<View>();
+    private final SparseArray<View> mViews = new SparseArray<View>();
     protected View frView;
+    private String token;
+    private String userId = "";
+    private String expireTime = "";
 
     //获取布局文件ID
     protected abstract int getLayoutId();
@@ -59,6 +69,19 @@ public abstract class BaseFragment extends Fragment {
             parent.removeView(frView);
         }
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        SPUtil spUtil = new SPUtil(getHoldingActivity());
+        token = spUtil.getString(TOKEN, "");
+        userId = spUtil.getString(USERID, "");
+        expireTime = spUtil.getString(EXPIRETIME, "");
+        if (!StringUtil.isNull(token)) {
+            setToken(token);
+        }
+        if (!StringUtil.isNull(userId)) {
+            setUserId(userId);
+        }
+        if (!StringUtil.isNull(expireTime)) {
+            setExpireTime(expireTime);
+        }
         initView(frView, savedInstanceState);
         setFrView(frView);
         return frView;
@@ -76,6 +99,30 @@ public abstract class BaseFragment extends Fragment {
             mViews.put(viewId, view);
         }
         return (T) view;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getExpireTime() {
+        return expireTime;
+    }
+
+    public void setExpireTime(String expireTime) {
+        this.expireTime = expireTime;
     }
 
     /**

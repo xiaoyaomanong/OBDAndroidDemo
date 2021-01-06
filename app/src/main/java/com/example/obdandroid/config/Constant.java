@@ -2,6 +2,8 @@ package com.example.obdandroid.config;
 
 import java.util.UUID;
 
+import okhttp3.MediaType;
+
 /**
  * 文件描述：项目中使用到的一些常量
  * <p/>
@@ -13,6 +15,11 @@ public class Constant {
     public static final String INT_FLAG = "intFlag";
     public static final String SP_NAME = "shift";
     public static final String ISLOGIN = "islogin";
+    public static final String PLATFORM = "Android";
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    public static final String TOKEN = "token";
+    public static final String USERID = "userId";
+    public static final String EXPIRETIME = "expireTime";
     /**
      * 蓝牙UUID
      */

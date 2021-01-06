@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:focusableInTouchMode="true">
 
     <FrameLayout
@@ -13,7 +15,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/good_morning_img" />
+            android:src="@drawable/good_morning_img"
+            tools:ignore="ContentDescription" />
 
     </FrameLayout>
 
@@ -100,7 +103,7 @@
                 android:id="@+id/etUser"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:drawableEnd="@drawable/ic_email_white_24dp"
+                android:drawableStart="@drawable/ic_email_white_24dp"
                 android:drawablePadding="16dp"
                 android:fontFamily="@font/calibri"
                 android:hint="@string/hint_user"
@@ -114,13 +117,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="#ffffff"
+            app:passwordToggleEnabled="true"
             android:theme="@style/EditScreenTextInputLayoutStyle">
 
             <EditText
                 android:id="@+id/etPwd"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:drawableEnd="@drawable/ic_lock_white_24dp"
+                android:autofillHints=""
+                android:drawableStart="@drawable/ic_lock_white_24dp"
                 android:drawablePadding="16dp"
                 android:fontFamily="@font/calibri"
                 android:hint="@string/hint_pwd"
@@ -143,7 +148,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:background="@drawable/buttonshapewhitebg"
+                android:background="@drawable/btn_shape_white_bg"
                 android:fontFamily="@font/calibri"
                 android:text="@string/sign_up"
                 android:textAllCaps="false"
@@ -156,7 +161,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:background="@drawable/buttonshapewhitebg"
+                android:background="@drawable/btn_shape_white_bg"
                 android:fontFamily="@font/calibri"
                 android:text="@string/sign_in"
                 android:textAllCaps="false"

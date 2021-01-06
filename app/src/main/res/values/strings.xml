@@ -5,6 +5,8 @@
     <string name="sign_up">注册</string>
     <string name="sign_in">登录</string>
     <string name="hint_pwd">密码</string>
+    <string name="hint_new_pwd">新密码</string>
+    <string name="hint_new_pwd_ok">确认新密码</string>
     <string name="hint_user">手机号</string>
     <string name="hint_nick">昵称</string>
     <string name="hint_code">验证码</string>
@@ -63,4 +65,10 @@
     <string name="status_gps_no_support">GPS不可用</string>
     <string name="status_obd_no_support">OBD不可用</string>
     <string name="status_obd_data">正在接收OBD数据&#8230;</string>
+    <string name="select_type_pic">选择照片</string>
+    <string name="select_type_content">请选取照片方式</string>
+    <string name="select_album">相册</string>
+    <string name="select_camera">照相</string>
+    <string name="update_pwd">修改密码</string>
+    <string name="confirm">确定</string>
 </resources>

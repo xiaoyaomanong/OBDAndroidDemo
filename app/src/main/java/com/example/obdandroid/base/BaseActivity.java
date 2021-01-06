@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.utils.ActivityManager;
+import com.example.obdandroid.utils.SPUtil;
+import com.example.obdandroid.utils.StringUtil;
 import com.hacknife.immersive.Immersive;
 
 import org.greenrobot.eventbus.EventBus;
@@ -18,6 +20,10 @@ import org.greenrobot.eventbus.EventBus;
 import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.Set;
+
+import static com.example.obdandroid.config.Constant.EXPIRETIME;
+import static com.example.obdandroid.config.Constant.TOKEN;
+import static com.example.obdandroid.config.Constant.USERID;
 
 
 /**
@@ -31,6 +37,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     public Context mContext;
     private final SparseArray<View> mViews = new SparseArray<>();
     private WeakReference<Activity> weakReference = null;
+    private String token;
+    private String userId = "";
+    private String expireTime = "";
 
     //布局文件ID
     protected abstract int getContentViewId();
@@ -68,6 +77,43 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public void initView() {
         setContentView(getContentViewId());
+        SPUtil spUtil = new SPUtil(mContext);
+        token = spUtil.getString(TOKEN, "");
+        userId = spUtil.getString(USERID, "");
+        expireTime = spUtil.getString(EXPIRETIME, "");
+        if (!StringUtil.isNull(token)) {
+            setToken(token);
+        }
+        if (!StringUtil.isNull(userId)) {
+            setUserId(userId);
+        }
+        if (!StringUtil.isNull(expireTime)) {
+            setExpireTime(expireTime);
+        }
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getExpireTime() {
+        return expireTime;
+    }
+
+    public void setExpireTime(String expireTime) {
+        this.expireTime = expireTime;
     }
 
     /**
@@ -94,7 +140,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void showToast(int resId) {
         Toast.makeText(mContext, resId, Toast.LENGTH_SHORT).show();
     }
-
 
 
     /**

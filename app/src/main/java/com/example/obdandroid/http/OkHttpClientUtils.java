@@ -1,5 +1,6 @@
 package com.example.obdandroid.http;
 
+import com.example.obdandroid.utils.HttpExceptionUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ import okhttp3.Response;
  */
 public class OkHttpClientUtils {
     private static UPLoadIMGCallBack callBacks;
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     private OkHttpClientUtils() {
     }
@@ -41,17 +43,15 @@ public class OkHttpClientUtils {
                 .post(requestBody).build();
         //  请求网络
         okHttpClient1.newCall(request).
-
                 enqueue(new Callback() {
                     @Override
-                    public void onFailure(Call call, IOException e) {
-                        callBack.OnFail(e.getMessage());
+                    public void onFailure(Call call, IOException error) {
+                        callBack.OnFail(HttpExceptionUtils.validateError(error));
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        String string = response.body().string();
-                        callBack.OnSuccess(string);
+                        callBack.OnSuccess(response.body().string());
                     }
                 });
     }
@@ -97,6 +97,34 @@ public class OkHttpClientUtils {
                     }
                 });
     }
+
+
+    public static void postJson(String url, String param, UPLoadIMGCallBack callBack) {
+        //申明给服务端传递一个json串
+        //创建一个OkHttpClient对象
+        OkHttpClient okHttpClient = new OkHttpClient();
+        //创建一个RequestBody(参数1：数据类型 参数2传递的json串)
+        RequestBody requestBody = RequestBody.create(JSON, param);
+        //创建一个请求对象
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
+        //发送请求获取响应
+        try {
+            Response response = okHttpClient.newCall(request).execute();
+            //判断请求是否成功
+            if (response.isSuccessful()) {
+                //打印服务端返回结果
+                callBack.OnSuccess(response.body().string());
+            }
+        } catch (IOException error) {
+            error.printStackTrace();
+            callBack.OnFail(HttpExceptionUtils.validateError(error));
+        }
+
+    }
+
 
     public interface UPLoadIMGCallBack {
         void OnSuccess(String response);

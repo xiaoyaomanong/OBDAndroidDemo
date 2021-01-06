@@ -14,4 +14,16 @@ public class APIConfig {
      * 注册接口
      */
     public static final String REGISTER_URL = "/api/register";
+    /**
+     * 用户登录
+     */
+    public static final String LOGIN_URL = "/api/login";
+    /**
+     * 获取用户信息
+     */
+    public static final String USER_INFO_URL = "/api/getUserInformation";
+    /**
+     * 修改密码
+     */
+    public static final String UPDATE_PASSWORD_URL = "/api/updatePwd";
 }

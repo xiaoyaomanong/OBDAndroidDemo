@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity {
         context = this;
         viewPager = findViewById(R.id.viewPager);
         navigation = findViewById(R.id.navigation);
-        spUtil = spUtil = new SPUtil(context);
+        spUtil = new SPUtil(context);
         fragments.add(HomeFragment.getInstance());
         fragments.add(PersonalFragment.getInstance());
         viewPager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));

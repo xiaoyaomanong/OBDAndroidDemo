@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,7 +14,7 @@
         android:contentDescription="@null"
         android:src="@mipmap/ic_launcher"
         app:border_color="@color/white"
-        app:border_width="2dp"/>
+        app:border_width="2dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -26,19 +25,38 @@
         android:orientation="vertical"
         tools:ignore="RelativeOverlap">
 
-        <TextView
-            android:id="@+id/my_header_name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="14sp"/>
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:id="@+id/ivVip"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="5dp"
+                android:src="@drawable/icon_vip_ok"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/my_header_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/my_header_mobile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
 
     </LinearLayout>
 
@@ -48,6 +66,6 @@
         android:layout_height="25dp"
         android:layout_alignParentRight="true"
         android:contentDescription="@null"
-        android:src="@drawable/ic_sitting"/>
+        android:src="@drawable/ic_sitting" />
 
 </RelativeLayout>

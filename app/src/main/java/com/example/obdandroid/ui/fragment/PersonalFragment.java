@@ -2,27 +2,42 @@ package com.example.obdandroid.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.ui.activity.OBDSettingActivity;
-import com.example.obdandroid.ui.activity.SettingActivity;
+import com.example.obdandroid.ui.activity.AppSettingActivity;
 import com.example.obdandroid.ui.adapter.MultipleItemQuickAdapter;
 import com.example.obdandroid.ui.entity.MultipleItem;
+import com.example.obdandroid.ui.entity.UserInfoEntity;
 import com.example.obdandroid.ui.view.CircleImageView;
 import com.example.obdandroid.utils.JumpUtil;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Response;
+
+import static com.example.obdandroid.config.APIConfig.SERVER_URL;
+import static com.example.obdandroid.config.APIConfig.USER_INFO_URL;
+import static com.example.obdandroid.config.TAG.TAG_Activity;
 
 /**
  * 作者：Jealous
@@ -55,10 +70,36 @@ public class PersonalFragment extends BaseFragment {
         initSwipeRefreshLayout();
 
         initItemData();
+        getUserInfo(getUserId(), getToken());
 
-        initRecyclerView();
+    }
 
-        initListener();
+    /**
+     * @param userId 用户id
+     * @param token  接口令牌
+     *               用户信息
+     */
+    private void getUserInfo(String userId, String token) {
+        OkHttpUtils.get().
+                url(SERVER_URL + USER_INFO_URL).
+                addParam("userId", userId).
+                addParam("token", token).
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                Log.e(TAG_Activity, "用户信息:" + response);
+                UserInfoEntity entity = JSON.parseObject(response, UserInfoEntity.class);
+                if (entity.isSuccess()) {
+                    initRecyclerView(entity);
+                    initListener();
+                }
+            }
+        });
     }
 
     private void initSwipeRefreshLayout() {
@@ -77,7 +118,6 @@ public class PersonalFragment extends BaseFragment {
 
     private void initItemData() {
         itemDataList = new ArrayList<>();
-
         multipleItem = new MultipleItem(MultipleItem.TYPE_COUNT, 5);
         multipleItem.mString2 = "type1";
         itemDataList.add(multipleItem);
@@ -85,83 +125,51 @@ public class PersonalFragment extends BaseFragment {
         multipleItem = new MultipleItem(MultipleItem.TYPE_ORDER_HEADER, 5);
         multipleItem.mString2 = "type2";
         itemDataList.add(multipleItem);
-
-      /*  for (int i = 0; i < 5; i++) {
-            multipleItem = new MultipleItem(MultipleItem.TYPE_ORDER, 1);
-            multipleItem.mString1 = "待付款";
-            if (i % 2 == 0) {
-                multipleItem.isShow = true;
-                multipleItem.count = 6;
-            } else {
-                multipleItem.isShow = false;
-                multipleItem.count = 0;
-            }
-            itemDataList.add(multipleItem);
-        }*/
-
-      /*  multipleItem = new MultipleItem(MultipleItem.TYPE_BALANCE, 5);
-        multipleItem.mString1 = "￥9999.00";
-        itemDataList.add(multipleItem);*/
-
-    /*    multipleItem = new MultipleItem(MultipleItem.TYPE_TOOLS_HEADER, 5);
-        multipleItem.mString1 = "type5";
-        itemDataList.add(multipleItem);
-
-        for (int i = 0; i < 5; i++) {
-            multipleItem = new MultipleItem(MultipleItem.TYPE_TOOLS, 1);
-            multipleItem.mString1 = "使用帮助";
-            if (i % 2 == 0) {
-                multipleItem.isShow = true;
-                multipleItem.count = 100;
-            } else {
-                multipleItem.isShow = false;
-                multipleItem.count = 0;
-            }
-            itemDataList.add(multipleItem);
-        }*/
     }
 
     @SuppressLint("NonConstantResourceId")
-    private void initRecyclerView() {
+    private void initRecyclerView(UserInfoEntity entity) {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 5);
         recyclerView.setLayoutManager(gridLayoutManager);
-
         multipleItemQuickAdapter = new MultipleItemQuickAdapter(itemDataList);
-
-        View headerView = getHeaderView(view -> {
+        View headerView = getHeaderView(entity, view -> {
             switch (view.getId()) {
                 case R.id.my_header_image:
                     showToast("你点击了头像");
                     break;
                 case R.id.my_header_settings:
-                    JumpUtil.startAct(context, SettingActivity.class);
+                    JumpUtil.startAct(context, AppSettingActivity.class);
                     break;
             }
         });
-
         multipleItemQuickAdapter.addHeaderView(headerView);
-
         recyclerView.setAdapter(multipleItemQuickAdapter);
     }
 
 
+    /**
+     * @param listener 点击监听事件
+     * @return 头部布局
+     */
     @SuppressLint("SetTextI18n")
-    private View getHeaderView(View.OnClickListener listener) {
+    private View getHeaderView(UserInfoEntity entity, View.OnClickListener listener) {
         View headerView = getLayoutInflater().inflate(R.layout.layout_my_header, (ViewGroup) recyclerView.getParent(), false);
-
         CircleImageView myHeaderImage = headerView.findViewById(R.id.my_header_image);
         myHeaderImage.setImageResource(R.drawable.header_image);
         myHeaderImage.setOnClickListener(listener);
-
         TextView myHeaderName = headerView.findViewById(R.id.my_header_name);
-        myHeaderName.setText("马云");
-
+        myHeaderName.setText(entity.getData().getNickname());
         TextView myHeaderMobile = headerView.findViewById(R.id.my_header_mobile);
-        myHeaderMobile.setText("15012134598");
-
+        myHeaderMobile.setText(entity.getData().getPhoneNum());
         ImageView myHeaderSettings = headerView.findViewById(R.id.my_header_settings);
+        myHeaderImage.setImageBitmap(stringToBitmap(entity.getData().getHeadPortrait()));
         myHeaderSettings.setOnClickListener(listener);
-
+        ImageView ivVip = headerView.findViewById(R.id.ivVip);
+        if (entity.getData().getIsVip() == 1) {
+            ivVip.setImageResource(R.drawable.icon_vip_ok);
+        } else {
+            ivVip.setImageResource(R.drawable.icon_vip_no);
+        }
         return headerView;
     }
 
@@ -169,7 +177,6 @@ public class PersonalFragment extends BaseFragment {
     @SuppressLint("NonConstantResourceId")
     private void initListener() {
         multipleItemQuickAdapter.setSpanSizeLookup((gridLayoutManager, position) -> itemDataList.get(position).getSpanSize());
-
         multipleItemQuickAdapter.setOnItemClickListener((adapter, view, position) -> {
             showToast("第  " + position);
             //可以再加一层 类型 的判断，一般来说订单不是点了就消失的
@@ -199,5 +206,20 @@ public class PersonalFragment extends BaseFragment {
                     break;*/
             }
         });
+    }
+
+    /**
+     * @param string Base64图片
+     * @return Base64转换图片
+     */
+    public static Bitmap stringToBitmap(String string) {
+        Bitmap bitmap = null;
+        try {
+            byte[] bitmapArray = Base64.decode(string.split(",")[1], Base64.DEFAULT);
+            bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 }

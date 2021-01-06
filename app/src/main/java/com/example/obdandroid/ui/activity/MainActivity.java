@@ -34,6 +34,8 @@ import com.kongzue.dialog.util.BlurView;
 import java.util.ArrayList;
 import java.util.List;
 
+import roboguice.fragment.RoboFragment;
+
 import static com.kongzue.dialog.v2.DialogSettings.THEME_DARK;
 import static com.kongzue.dialog.v2.DialogSettings.blur_alpha;
 import static com.kongzue.dialog.v2.DialogSettings.dialog_background_color;

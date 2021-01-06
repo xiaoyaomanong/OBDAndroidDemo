@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.activity.MainActivity;
+import com.example.obdandroid.ui.fragment.HomeFragment;
 import com.example.obdandroid.utils.SPUtil;
 import com.github.pires.obd.commands.protocol.EchoOffCommand;
 import com.github.pires.obd.commands.protocol.LineFeedOffCommand;
@@ -51,7 +52,7 @@ public class ObdGatewayService extends AbstractGatewayService {
             stopService();
             throw new IOException();
         } else {
-            showNotification(getString(R.string.notification_action), getString(R.string.service_starting), R.drawable.logo, true, true, false);
+           // showNotification(getString(R.string.notification_action), getString(R.string.service_starting), R.drawable.logo, true, true, false);
             try {
                 startObdConnection(socket);
             } catch (Exception e) {
@@ -60,7 +61,7 @@ public class ObdGatewayService extends AbstractGatewayService {
                 stopService();
                 throw new IOException();
             }
-            showNotification(getString(R.string.notification_action), getString(R.string.service_started), R.drawable.logo, true, true, false);
+          //  showNotification(getString(R.string.notification_action), getString(R.string.service_started), R.drawable.logo, true, true, false);
         }
     }
 
@@ -170,7 +171,7 @@ public class ObdGatewayService extends AbstractGatewayService {
                 ((MainActivity) ctx).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //((MainActivity) ctx).stateUpdate(job2);
+                       // HomeFragment.stateUpdate(job2);
                     }
                 });
             }

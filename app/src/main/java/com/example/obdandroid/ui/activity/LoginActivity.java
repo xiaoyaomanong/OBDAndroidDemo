@@ -127,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
         dialog = builder1.create();
         //登录
         btnSignIn.setOnClickListener(v -> {
-            if (TextUtils.isEmpty(etUser.getText().toString().trim())) {
+          /*  if (TextUtils.isEmpty(etUser.getText().toString().trim())) {
                 showTipsDialog("请输入手机号", TipDialog.TYPE_ERROR);
                 return;
             }
@@ -135,7 +135,9 @@ public class LoginActivity extends AppCompatActivity {
                 showTipsDialog("请输入密码", TipDialog.TYPE_ERROR);
                 return;
             }
-            userLogin(etUser.getText().toString(), etPwd.getText().toString());
+            userLogin(etUser.getText().toString(), etPwd.getText().toString());*/
+            JumpUtil.startAct(context, MainActivity.class);
+            ActivityManager.getInstance().finishActivitys();
         });
         //注册
         btnSignUp.setOnClickListener(v -> JumpUtil.startAct(context, RegisterActivity.class));

@@ -276,10 +276,10 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
                 }
             }
         }
-        setDefaultMode(mode);
         if (!TextUtils.isEmpty(mConnectedDeviceAddress)) {
             connectBtDevice(mConnectedDeviceAddress);
         } else {
+            setDefaultMode(mode);
             TipDialog.show(context, getString(R.string.text_bluetooth_error_connecting), TipDialog.SHOW_TIME_LONG, TipDialog.TYPE_WARNING);
         }
 
@@ -429,7 +429,7 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
         titleBar.setLeftTitle("ONLINE");
         titleBar.setRightIcon(R.drawable.action_connect);
         spUtil.put(CONNECT_BT_KEY, "ONLINE");
-        preRequisites = true;
+       // preRequisites = true;
         doBindService();
     }
 
@@ -441,7 +441,7 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
         titleBar.setLeftTitle("OFFLINE");
         titleBar.setRightIcon(R.drawable.action_disconnect);
         spUtil.put(CONNECT_BT_KEY, "OFFLINE");
-        preRequisites = false;
+       // preRequisites = false;
     }
 
     /**

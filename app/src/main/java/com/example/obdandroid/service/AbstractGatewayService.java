@@ -3,6 +3,7 @@ package com.example.obdandroid.service;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
@@ -29,7 +30,7 @@ import static com.example.obdandroid.config.Constant.DEVICE_NAME;
 import static com.example.obdandroid.config.Constant.MESSAGE_DEVICE_NAME;
 
 
-public abstract class AbstractGatewayService extends RoboService {
+public abstract class AbstractGatewayService extends Service {
     public static final int NOTIFICATION_ID = 1;
     private static final String TAG = BaseActivity.class.getName();
     private final IBinder binder = new AbstractGatewayServiceBinder();
@@ -38,13 +39,6 @@ public abstract class AbstractGatewayService extends RoboService {
     protected Context ctx;
     protected boolean isRunning = false;
     protected Long queueCounter = 0L;
-    /**
-     * 操作模式
-     */
-    public enum MODE {
-        OFFLINE,//< OFFLINE mode
-        ONLINE,    //< ONLINE mode
-    }
     protected BlockingQueue<ObdCommandJob> jobsQueue = new LinkedBlockingQueue<>();
     // 在另一个线程中运行executeQueue，以减轻UI线程
     Thread t = new Thread(new Runnable() {
@@ -108,9 +102,9 @@ public abstract class AbstractGatewayService extends RoboService {
         }
     }
 
-    /**
+   /* *//**
      * 在此服务运行时显示通知。
-     */
+     *//*
     protected void showNotification(String contentTitle, String contentText, int icon, boolean ongoing, boolean notify, boolean vibrate) {
         final PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, new Intent(ctx, MainActivity.class), 0);
         final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ctx);
@@ -130,7 +124,7 @@ public abstract class AbstractGatewayService extends RoboService {
         if (notify) {
             notificationManager.notify(NOTIFICATION_ID, notificationBuilder.getNotification());
         }
-    }
+    }*/
 
     public void setContext(Context c) {
         ctx = c;

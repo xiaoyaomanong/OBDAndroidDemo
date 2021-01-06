@@ -144,14 +144,6 @@
         <activity android:name=".ui.activity.OBDProtocolActivity" />
         <activity android:name=".ui.activity.UpdatePwdActivity" />
 
-        <service
-            android:name=".service.ObdGatewayService"
-            android:exported="false"
-            android:launchMode="singleInstance" />
-        <service
-            android:name=".service.MockObdGatewayService"
-            android:exported="false"
-            android:launchMode="singleInstance" />
     </application>
 
 </manifest>

@@ -1,11 +1,14 @@
 package com.example.obdandroid.utils;
 
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.util.Log;
 
+import com.example.obdandroid.config.ObdConfig;
 import com.example.obdandroid.config.TAG;
 import com.example.obdandroid.service.ObdCommandJob;
 import com.example.obdandroid.ui.activity.MainActivity;
+import com.github.pires.obd.commands.ObdCommand;
 import com.github.pires.obd.commands.protocol.EchoOffCommand;
 import com.github.pires.obd.commands.protocol.LineFeedOffCommand;
 import com.github.pires.obd.commands.protocol.ObdResetCommand;
@@ -29,45 +32,58 @@ import static com.example.obdandroid.config.Constant.PROTOCOLS_LIST_KEY;
  */
 public class ODBUtils {
 
-    protected Long queueCounter = 0L;
-    protected BlockingQueue<ObdCommandJob> jobsQueue = new LinkedBlockingQueue<>();
+    //类初始化时，不初始化这个对象(延时加载，真正用的时候再创建)
+    private static ODBUtils instance;
+    private SPUtil spUtil;
+
+    //构造器私有化
+    private ODBUtils(Context context) {
+        spUtil = new SPUtil(context);
+    }
+
+    //方法同步，调用效率低
+    public static synchronized ODBUtils getInstance(Context context) {
+        if (instance == null) {
+            instance = new ODBUtils(context);
+        }
+        return instance;
+    }
+
+    private Long queueCounter = 0L;
+    private BlockingQueue<ObdCommandJob> jobsQueue = new LinkedBlockingQueue<>();
+
     /**
      * 启动并配置到OBD接口的连接。
-     * @throws IOException 异常
+     *
+     * @param socket   蓝牙
+     * @param protocol OBD协议
+     * @param callBack 回调
      */
-    private void startObdConnection(BluetoothSocket socket,String protocol) throws IOException {
+    public void startObdConnection(BluetoothSocket socket,  CommandCallBack callBack) {
         Log.d(TAG.TAG_Activity, "正在启动OBD连接。");
         // 让我们配置连接。
         Log.d(TAG.TAG_Activity, "为连接配置排队作业。");
-        queueJob(new ObdCommandJob(new ObdResetCommand()));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-        //下面是在发送命令之前给适配器足够的时间来重置，否则可以忽略第一个启动命令。
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        queueJob(new ObdCommandJob(new EchoOffCommand()));
-
-        /*
-         * 将根据测试结果第二次发送。
-         *
-         * TODO 这可以通过仅发出而无需排队作业来完成
-         * command.run(), command.getResult() and validate the result.
-         */
-        queueJob(new ObdCommandJob(new EchoOffCommand()));
-        queueJob(new ObdCommandJob(new LineFeedOffCommand()));
-        queueJob(new ObdCommandJob(new TimeoutCommand(62)));
-        // 从首选项获取协议
-       // final String protocol = spUtil.getString(PROTOCOLS_LIST_KEY, "AUTO");
-        queueJob(new ObdCommandJob(new SelectProtocolCommand(ObdProtocols.valueOf(protocol))));
-        //返回伪数据的作业
-        queueJob(new ObdCommandJob(new AmbientAirTemperatureCommand()));
+                queueCommands();
+            }
+        }).start();
         queueCounter = 0L;
         Log.d(TAG.TAG_Activity, "初始化作业已排队。");
+        executeQueue(socket, callBack);
     }
 
+    /**
+     * 队列命令
+     */
+    private void queueCommands() {
+        for (ObdCommand Command : ObdConfig.getCommands(spUtil.getString(PROTOCOLS_LIST_KEY, "AUTO"))) {
+            if (spUtil.getBoolean(Command.getName(), true))
+                queueJob(new ObdCommandJob(Command));
+        }
+    }
 
     /**
      * 该方法将作业添加到队列，同时将其ID设置为
@@ -78,7 +94,6 @@ public class ODBUtils {
     public void queueJob(ObdCommandJob job) {
         queueCounter++;
         Log.d(TAG.TAG_Activity, "Adding job[" + queueCounter + "] to queue..");
-
         job.setId(queueCounter);
         try {
             jobsQueue.put(job);
@@ -90,12 +105,10 @@ public class ODBUtils {
     }
 
 
-
-
     /**
      * 运行队列，直到服务停止
      */
-    protected void executeQueue(BluetoothSocket bluetoothSocket) {
+    protected void executeQueue(BluetoothSocket bluetoothSocket, CommandCallBack callBack) {
         Log.d(TAG.TAG_Activity, "Executing queue..");
         while (!Thread.currentThread().isInterrupted()) {
             ObdCommandJob job = null;
@@ -140,14 +153,12 @@ public class ODBUtils {
 
             if (job != null) {
                 final ObdCommandJob job2 = job;
-               /* ctx.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // HomeFragment.stateUpdate(job2);
-                    }
-                });*/
+                callBack.upDateState(job2);
             }
         }
     }
 
+    public interface CommandCallBack {
+        void upDateState(ObdCommandJob job);
+    }
 }

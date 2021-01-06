@@ -1,17 +1,12 @@
 package com.example.obdandroid.ui.fragment;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.hardware.SensorManager;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
@@ -20,10 +15,7 @@ import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
-import android.os.PowerManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -31,34 +23,27 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
-import com.example.obdandroid.config.ObdConfig;
 import com.example.obdandroid.listener.ObdProgressListener;
 import com.example.obdandroid.listener.SocketCallBack;
-import com.example.obdandroid.service.AbstractGatewayService;
 import com.example.obdandroid.service.BtCommService;
 import com.example.obdandroid.service.CommService;
-import com.example.obdandroid.service.MockObdGatewayService;
 import com.example.obdandroid.service.ObdCommandJob;
-import com.example.obdandroid.service.ObdGatewayService;
 import com.example.obdandroid.ui.adapter.HomeAdapter;
-import com.example.obdandroid.ui.view.IosDialog;
 import com.example.obdandroid.utils.DividerGridItemDecoration;
+import com.example.obdandroid.utils.ODBUtils;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.ToastUtil;
-import com.github.pires.obd.commands.ObdCommand;
 import com.github.pires.obd.enums.AvailableCommandNames;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -99,7 +84,6 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
     private SPUtil spUtil;
     private boolean preRequisites = true;
     private boolean isServiceBound;
-    private AbstractGatewayService service;
     private BluetoothSocket bluetoothSocket;
     /**
      * 显示更新计时器
@@ -168,72 +152,33 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
             }
         }
     };
-    private final ServiceConnection serviceConn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder binder) {
-            LogE(className.toString() + " 服务绑定");
-            isServiceBound = true;
-            service = ((AbstractGatewayService.AbstractGatewayServiceBinder) binder).getService();
-            service.setContext(context);
-            LogE("开始实时数据");
-            try {
-                service.startService(mConnectedDeviceAddress, mHandler, bluetoothSocket);
-                if (preRequisites) {
-                    showToast(getString(R.string.status_bluetooth_connected));
-                }
-            } catch (IOException ioe) {
-                LogE("无法启动实时数据");
-                showToast(getString(R.string.status_bluetooth_error_connecting));
-                doUnbindService();
-            }
-        }
-
-        @Override
-        protected Object clone() throws CloneNotSupportedException {
-            return super.clone();
-        }
-
-        /**
-         * 仅在与服务的连接意外丢失时才调用此方法
-         * 而不是在客户端解除绑定时（http：developer.android.comguidecomponentsbound-services.html）
-         * 因此，当我们从服务取消绑定时，isServiceBound属性也应设置为false。
-         */
-        @Override
-        public void onServiceDisconnected(ComponentName className) {
-            LogE(className.toString() + " 服务没有绑定");
-            isServiceBound = false;
-        }
-    };
     public Map<String, String> commandResult = new HashMap<>();
     boolean mGpsIsStarted = false;
     private Location mLastLocation;
     private final Runnable mQueueCommands = new Runnable() {
         public void run() {
-            if (service != null && service.isRunning() && service.queueEmpty()) {
-                queueCommands();
-                double lat = 0;
-                double lon = 0;
-                double alt = 0;
-                final int posLen = 7;
-                if (mGpsIsStarted && mLastLocation != null) {
-                    lat = mLastLocation.getLatitude();
-                    lon = mLastLocation.getLongitude();
-                    alt = mLastLocation.getAltitude();
+            double lat = 0;
+            double lon = 0;
+            double alt = 0;
+            final int posLen = 7;
+            if (mGpsIsStarted && mLastLocation != null) {
+                lat = mLastLocation.getLatitude();
+                lon = mLastLocation.getLongitude();
+                alt = mLastLocation.getAltitude();
 
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("Lat: ");
-                    sb.append(String.valueOf(mLastLocation.getLatitude()), 0, posLen);
-                    sb.append(" Lon: ");
-                    sb.append(String.valueOf(mLastLocation.getLongitude()), 0, posLen);
-                    sb.append(" Alt: ");
-                    sb.append(mLastLocation.getAltitude());
-                    LogE(sb.toString());
-                }
-                // final String vin = spUtil.getString(VEHICLE_ID_KEY, "UNDEFINED_VIN");//汽车id
-                Map<String, String> temp = new HashMap<>(commandResult);
-                LogE("命令结果:" + JSON.toJSONString(temp));
-                commandResult.clear();
+                StringBuilder sb = new StringBuilder();
+                sb.append("Lat: ");
+                sb.append(String.valueOf(mLastLocation.getLatitude()), 0, posLen);
+                sb.append(" Lon: ");
+                sb.append(String.valueOf(mLastLocation.getLongitude()), 0, posLen);
+                sb.append(" Alt: ");
+                sb.append(mLastLocation.getAltitude());
+                LogE(sb.toString());
             }
+            // final String vin = spUtil.getString(VEHICLE_ID_KEY, "UNDEFINED_VIN");//汽车id
+            Map<String, String> temp = new HashMap<>(commandResult);
+            LogE("命令结果:" + JSON.toJSONString(temp));
+            commandResult.clear();
             new Handler().postDelayed(mQueueCommands, 1);
         }
     };
@@ -258,8 +203,8 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
         RecyclerView recycleFun = getView(R.id.recycle_Fun);
         titleBar.setTitle("汽车扫描");
         spUtil = new SPUtil(context);
-        mConnectedDeviceName = spUtil.getString(DEVICE_NAME, "");
-        mConnectedDeviceAddress = spUtil.getString(DEVICE_ADDRESS, "");
+        mConnectedDeviceName = spUtil.getString(BT_NAME_KEY, "");
+        mConnectedDeviceAddress = spUtil.getString(BT_ADDRESS_KEY, "");
         initBlueTooth();
         if (CommService.medium == CommService.MEDIUM.BLUETOOTH) {// 获取本地蓝牙适配器
             bluetoothadapter = BluetoothAdapter.getDefaultAdapter();
@@ -325,20 +270,26 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
             items[i] = (String) blueList.get(i).get("blue_name");
             itemsAddress[i] = (String) blueList.get(i).get("blue_address");
         }
-        AlertDialog.Builder singleChoiceDialog =
-                new AlertDialog.Builder(context);
-        singleChoiceDialog.setTitle("已配对蓝牙设备");
-        singleChoiceDialog.setIcon(R.drawable.icon_bluetooth);
+        for (int i = 0; i < items.length; i++) {
+            if (mConnectedDeviceName.equals(items[i])) {
+                yourChoice = i;
+            }
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("已配对蓝牙设备");
+        builder.setIcon(R.drawable.icon_bluetooth);
         // 第二个参数是默认选项，此处设置为0
-        singleChoiceDialog.setSingleChoiceItems(items, 0,
+        builder.setSingleChoiceItems(items, yourChoice,
                 (dialog, which) -> yourChoice = which);
-        singleChoiceDialog.setPositiveButton("确定",
+        builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
+        builder.setPositiveButton("确定",
                 (dialog, which) -> {
                     if (yourChoice != -1) {
                         connectBtDevice(itemsAddress[yourChoice]);
                     }
                 });
-        singleChoiceDialog.show();
+        builder.show();
     }
 
     /**
@@ -407,18 +358,6 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
     }
 
     /**
-     * 队列命令
-     */
-    private void queueCommands() {
-        if (isServiceBound) {
-            for (ObdCommand Command : ObdConfig.getCommands()) {
-                if (spUtil.getBoolean(Command.getName(), true))
-                    service.queueJob(new ObdCommandJob(Command));
-            }
-        }
-    }
-
-    /**
      * 处理建立的蓝牙连接...
      */
     @SuppressLint("StringFormatInvalid")
@@ -429,8 +368,14 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
         titleBar.setLeftTitle("ONLINE");
         titleBar.setRightIcon(R.drawable.action_connect);
         spUtil.put(CONNECT_BT_KEY, "ONLINE");
-       // preRequisites = true;
-        doBindService();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ODBUtils.getInstance(context).startObdConnection(bluetoothSocket, job -> stateUpdate(job));
+            }
+        }).start();
+
+
     }
 
     /**
@@ -441,7 +386,7 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
         titleBar.setLeftTitle("OFFLINE");
         titleBar.setRightIcon(R.drawable.action_disconnect);
         spUtil.put(CONNECT_BT_KEY, "OFFLINE");
-       // preRequisites = false;
+        // preRequisites = false;
     }
 
     /**
@@ -453,41 +398,6 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
             titleBar.setLeftTitle("OFFLINE");
             titleBar.setRightIcon(R.drawable.action_disconnect);
             spUtil.put(CONNECT_BT_KEY, "OFFLINE");
-        }
-    }
-
-    /**
-     * 绑定OBD服务
-     */
-    private void doBindService() {
-        if (!isServiceBound) {
-            LogE("绑定OBD服务");
-            Intent serviceIntent;
-            if (preRequisites) {
-                showTipDialog(getString(R.string.status_bluetooth_connecting), TipDialog.TYPE_WARNING);
-                serviceIntent = new Intent(context, ObdGatewayService.class);
-            } else {
-                showTipDialog(getString(R.string.status_bluetooth_disabled), TipDialog.TYPE_WARNING);
-                serviceIntent = new Intent(context, MockObdGatewayService.class);
-            }
-            context.bindService(serviceIntent, serviceConn, Context.BIND_AUTO_CREATE);
-        }
-    }
-
-    /**
-     * 解除OBD服务绑定
-     */
-    private void doUnbindService() {
-        if (isServiceBound) {
-            if (service.isRunning()) {
-                service.stopService();
-                if (preRequisites)
-                    showTipDialog(getString(R.string.status_bluetooth_ok), TipDialog.TYPE_FINISH);
-            }
-            LogE("解除OBD服务绑定");
-            context.unbindService(serviceConn);
-            isServiceBound = false;
-            showTipDialog(getString(R.string.status_obd_disconnected), TipDialog.TYPE_ERROR);
         }
     }
 
@@ -588,6 +498,9 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
         }
         LogE("cmdID: " + cmdID + "   cmdName: " + cmdName + "  cmdResult: " + cmdResult);
         commandResult.put(cmdID, cmdResult);
+        Map<String, String> temp = new HashMap<>(commandResult);
+        LogE("命令结果:" + JSON.toJSONString(temp));
+        // commandResult.clear();
         //updateTripStatistic(job, cmdID);
     }
 
@@ -601,24 +514,5 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
     private void stopLiveData() {
         LogE("停止获取OBD实时数据");
         gpsStop();
-        doUnbindService();
-        // releaseWakeLockIfHeld();
-        // final String devemail = prefs.getString(ConfigActivity.DEV_EMAIL_KEY, null);
-        //问题反馈
-       /* new IosDialog(context, new IosDialog.DialogClick() {
-            @Override
-            public void Confirm(android.app.AlertDialog exitDialog, boolean confirm) {
-                if (confirm){
-                    exitDialog.dismiss();
-                }
-            }
-
-            @Override
-            public void Cancel(android.app.AlertDialog exitDialog, boolean confirm) {
-                if (confirm){
-                    exitDialog.dismiss();
-                }
-            }
-        }).setSelectNegative("取消").setSelectPositive("确定").setMessage("哪里有问题?\n然后请发送日志给我们.\n发送日志?").setTitle("联系").showDialog();*/
     }
 }

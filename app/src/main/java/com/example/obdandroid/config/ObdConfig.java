@@ -1,5 +1,6 @@
 package com.example.obdandroid.config;
 
+import com.example.obdandroid.service.ObdCommandJob;
 import com.github.pires.obd.commands.ObdCommand;
 import com.github.pires.obd.commands.SpeedCommand;
 import com.github.pires.obd.commands.control.DistanceMILOnCommand;
@@ -25,10 +26,16 @@ import com.github.pires.obd.commands.pressure.BarometricPressureCommand;
 import com.github.pires.obd.commands.pressure.FuelPressureCommand;
 import com.github.pires.obd.commands.pressure.FuelRailPressureCommand;
 import com.github.pires.obd.commands.pressure.IntakeManifoldPressureCommand;
+import com.github.pires.obd.commands.protocol.EchoOffCommand;
+import com.github.pires.obd.commands.protocol.LineFeedOffCommand;
+import com.github.pires.obd.commands.protocol.ObdResetCommand;
+import com.github.pires.obd.commands.protocol.SelectProtocolCommand;
+import com.github.pires.obd.commands.protocol.TimeoutCommand;
 import com.github.pires.obd.commands.temperature.AirIntakeTemperatureCommand;
 import com.github.pires.obd.commands.temperature.AmbientAirTemperatureCommand;
 import com.github.pires.obd.commands.temperature.EngineCoolantTemperatureCommand;
 import com.github.pires.obd.enums.FuelTrim;
+import com.github.pires.obd.enums.ObdProtocols;
 
 import java.util.ArrayList;
 
@@ -37,8 +44,20 @@ import java.util.ArrayList;
  */
 public final class ObdConfig {
 
-    public static ArrayList<ObdCommand> getCommands() {
+    public static ArrayList<ObdCommand> getCommands(String protocol) {
         ArrayList<ObdCommand> cmds = new ArrayList<>();
+
+        cmds.add(new ObdResetCommand());
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        cmds.add(new EchoOffCommand());
+        cmds.add(new LineFeedOffCommand());
+        cmds.add(new TimeoutCommand(62));
+        cmds.add(new SelectProtocolCommand(ObdProtocols.valueOf(protocol)));
+
         // 操纵装置
         cmds.add(new ModuleVoltageCommand());//模块电压指令
         cmds.add(new EquivalentRatioCommand()); //当量比命令

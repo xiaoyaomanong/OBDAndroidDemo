@@ -36,6 +36,7 @@ import java.util.List;
 
 import roboguice.fragment.RoboFragment;
 
+import static com.example.obdandroid.config.Constant.PROTOCOLS_LIST_KEY;
 import static com.kongzue.dialog.v2.DialogSettings.THEME_DARK;
 import static com.kongzue.dialog.v2.DialogSettings.blur_alpha;
 import static com.kongzue.dialog.v2.DialogSettings.dialog_background_color;
@@ -79,7 +80,7 @@ public class MainActivity extends BaseActivity {
         viewPager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
         viewPager.addOnPageChangeListener(mOnPageChangeListener);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        setOBDCommand(ObdConfig.getCommands());
+        setOBDCommand(ObdConfig.getCommands(spUtil.getString(PROTOCOLS_LIST_KEY, "AUTO")));
     }
 
     private void setOBDCommand(ArrayList<ObdCommand> command) {

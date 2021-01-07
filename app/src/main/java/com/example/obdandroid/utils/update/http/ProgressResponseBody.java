@@ -1,4 +1,4 @@
-package com.example.obdandroid.utils.updatelibrary.http;
+package com.example.obdandroid.utils.update.http;
 
 import android.os.Handler;
 import android.os.Looper;

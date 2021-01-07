@@ -21,4 +21,7 @@
     <color name="color_layout">#F1F1F1</color>
     <color name="color1">#449EEF</color>
     <color name="gray_line">#F1F1F1</color>
+
+    <color name="gray_check">#f5f5f5</color>
+    <color name="switch_btn_colors">#87AADC</color>
 </resources>

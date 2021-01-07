@@ -127,5 +127,6 @@ dependencies {
     /*PictureSelector*/
     implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.3'
     implementation 'com.github.gittjy:LoadingDialog:1.0.2'
+    implementation 'com.wuxiaolong.pullloadmorerecyclerview:library:1.1.2'
 }
 

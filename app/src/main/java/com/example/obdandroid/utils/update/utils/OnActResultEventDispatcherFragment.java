@@ -1,4 +1,4 @@
-package com.example.obdandroid.utils.updatelibrary.utils;
+package com.example.obdandroid.utils.update.utils;
 
 import android.app.Fragment;
 import android.content.Intent;

@@ -1,4 +1,4 @@
-package com.example.obdandroid.utils.updatelibrary;
+package com.example.obdandroid.utils.update;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,11 +10,11 @@ import android.text.TextUtils;
 import android.util.Log;
 
 
-import com.example.obdandroid.utils.updatelibrary.http.AbsFileProgressCallback;
-import com.example.obdandroid.utils.updatelibrary.http.DownloadFileUtils;
-import com.example.obdandroid.utils.updatelibrary.utils.ActForResultCallback;
-import com.example.obdandroid.utils.updatelibrary.utils.ActResultRequest;
-import com.example.obdandroid.utils.updatelibrary.utils.MNUtils;
+import com.example.obdandroid.utils.update.http.AbsFileProgressCallback;
+import com.example.obdandroid.utils.update.http.DownloadFileUtils;
+import com.example.obdandroid.utils.update.utils.ActForResultCallback;
+import com.example.obdandroid.utils.update.utils.ActResultRequest;
+import com.example.obdandroid.utils.update.utils.MNUtils;
 
 import java.io.File;
 
@@ -232,7 +232,7 @@ public class InstallUtils {
                 // 授予目录临时共享权限
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 String authority = context.getPackageName() + ".provider";
-                apkUri = MNUpdateApkFileProvider.getUriForFile(context, authority, apkFile);
+                apkUri = CustomerFileProvider.getUriForFile(context, authority, apkFile);
             } else {
                 apkUri = Uri.fromFile(apkFile);
             }

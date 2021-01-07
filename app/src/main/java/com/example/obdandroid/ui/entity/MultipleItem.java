@@ -9,9 +9,9 @@ import com.chad.library.adapter.base.entity.MultiItemEntity;
 
 public class MultipleItem implements MultiItemEntity {
 
-    public static final int TYPE_COUNT = 1;
-    public static final int TYPE_ORDER_HEADER = 2;
-    public static final int TYPE_ORDER = 3;
+    public static final int TYPE_OBD = 1;
+    public static final int TYPE_CAR = 2;
+    public static final int TYPE_PAY = 3;
     public static final int TYPE_BALANCE = 4;
     public static final int TYPE_TOOLS_HEADER = 5;
     public static final int TYPE_TOOLS = 6;

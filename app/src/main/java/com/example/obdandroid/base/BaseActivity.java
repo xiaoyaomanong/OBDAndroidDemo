@@ -10,7 +10,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.obdandroid.R;
+import com.example.obdandroid.config.Constant;
+import com.example.obdandroid.ui.activity.LoginActivity;
+import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.utils.ActivityManager;
+import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.StringUtil;
 import com.hacknife.immersive.Immersive;
@@ -21,9 +25,9 @@ import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.Set;
 
-import static com.example.obdandroid.config.Constant.EXPIRETIME;
+import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
 import static com.example.obdandroid.config.Constant.TOKEN;
-import static com.example.obdandroid.config.Constant.USERID;
+import static com.example.obdandroid.config.Constant.USER_ID;
 
 
 /**
@@ -36,10 +40,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = BaseActivity.class.getSimpleName();
     public Context mContext;
     private final SparseArray<View> mViews = new SparseArray<>();
-    private WeakReference<Activity> weakReference = null;
     private String token;
     private String userId = "";
     private String expireTime = "";
+    private SPUtil spUtil;
+    public AppCompatActivity mActivity;
 
     //布局文件ID
     protected abstract int getContentViewId();
@@ -51,11 +56,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //将activity添加到列表中
+        ActivityManager.getInstance().addActivity(this);
         mContext = this;
-        if (weakReference == null) {
-            weakReference = new WeakReference<>(this);
-        }
-        ActivityManager.getInstance().addActivity(weakReference.get());
+        mActivity = this;
         initView();
     }
 
@@ -77,10 +80,10 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public void initView() {
         setContentView(getContentViewId());
-        SPUtil spUtil = new SPUtil(mContext);
+        spUtil = new SPUtil(mContext);
         token = spUtil.getString(TOKEN, "");
-        userId = spUtil.getString(USERID, "");
-        expireTime = spUtil.getString(EXPIRETIME, "");
+        userId = spUtil.getString(USER_ID, "");
+        expireTime = spUtil.getString(EXPIRE_TIME, "");
         if (!StringUtil.isNull(token)) {
             setToken(token);
         }
@@ -132,7 +135,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         Toast.makeText(mContext, text, Toast.LENGTH_SHORT).show();
     }
 
-
+    public AppCompatActivity getActivity() {
+        return mActivity;
+    }
     /**
      * @param resId 资源id
      *              弹吐司方法
@@ -141,6 +146,32 @@ public abstract class BaseActivity extends AppCompatActivity {
         Toast.makeText(mContext, resId, Toast.LENGTH_SHORT).show();
     }
 
+    public void dialogError(final Context context, final String msg) {
+        if (msg.equals("token失效，请重新登录")) {
+            new CustomeDialog(context, "你的账号已在其他设备登录或登录时间过长,请检查重新登录", confirm -> {
+                if (confirm) {
+                  /*  spUtil.remove(Constant.Account);
+                    spUtil.remove(Constant.Password);
+                    spUtil.remove(Constant.TOKEN);*/
+                    JumpUtil.startAct(context, LoginActivity.class);
+                    ActivityManager.getInstance().finishActivitys();
+                }
+            }).setPositiveButton("确定").setTitle("提示").show();
+        } else if (msg.equals("未知异常，请联系管理员")) {
+            new CustomeDialog(context, msg, confirm -> {
+                if (confirm) {
+                    JumpUtil.startAct(context, LoginActivity.class);
+                    ActivityManager.getInstance().finishActivitys();
+                }
+            }).setPositiveButton("确定").setTitle("提示").show();
+        } else {
+            new CustomeDialog(context, msg, confirm -> {
+                if (confirm) {
+                    finish();
+                }
+            }).setPositiveButton("确定").setTitle("提示").show();
+        }
+    }
 
     /**
      * @param list 数据集

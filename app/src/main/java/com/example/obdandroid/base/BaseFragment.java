@@ -14,11 +14,9 @@ import android.widget.Toast;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.StringUtil;
 
-import org.greenrobot.eventbus.EventBus;
-
-import static com.example.obdandroid.config.Constant.EXPIRETIME;
+import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
 import static com.example.obdandroid.config.Constant.TOKEN;
-import static com.example.obdandroid.config.Constant.USERID;
+import static com.example.obdandroid.config.Constant.USER_ID;
 
 
 /**
@@ -71,8 +69,8 @@ public abstract class BaseFragment extends Fragment {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         SPUtil spUtil = new SPUtil(getHoldingActivity());
         token = spUtil.getString(TOKEN, "");
-        userId = spUtil.getString(USERID, "");
-        expireTime = spUtil.getString(EXPIRETIME, "");
+        userId = spUtil.getString(USER_ID, "");
+        expireTime = spUtil.getString(EXPIRE_TIME, "");
         if (!StringUtil.isNull(token)) {
             setToken(token);
         }

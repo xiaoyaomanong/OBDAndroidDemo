@@ -13,13 +13,13 @@ public class Constant {
     /*================================基本参数设置=========================================*/
     public static final String ACT_FLAG = "actFlag";
     public static final String INT_FLAG = "intFlag";
-    public static final String SP_NAME = "shift";
-    public static final String ISLOGIN = "islogin";
+    public static final String SP_NAME = "OBD_shift";
+    public static final String IS_LOGIN = "isLogin";
     public static final String PLATFORM = "Android";
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     public static final String TOKEN = "token";
-    public static final String USERID = "userId";
-    public static final String EXPIRETIME = "expireTime";
+    public static final String USER_ID = "userId";
+    public static final String EXPIRE_TIME = "expireTime";
     /**
      * 蓝牙UUID
      */

@@ -6,10 +6,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.ui.entity.ResultEntity;
+import com.example.obdandroid.ui.view.CustomeDialog;
+import com.example.obdandroid.utils.DialogUtils;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
+import com.kongzue.dialog.v2.CustomDialog;
 import com.kongzue.dialog.v2.TipDialog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -29,6 +34,7 @@ public class UpdatePwdActivity extends BaseActivity {
     private EditText etNewPwd;
     private EditText etNewPwdOK;
     private Context context;
+    private DialogUtils dialogUtils;
 
     @Override
     protected int getContentViewId() {
@@ -48,6 +54,7 @@ public class UpdatePwdActivity extends BaseActivity {
         etNewPwd = findViewById(R.id.etNewPwd);
         etNewPwdOK = findViewById(R.id.etNewPwdOK);
         Button btnUpdatePwd = findViewById(R.id.btnUpdatePwd);
+        dialogUtils = new DialogUtils(context);
         btnUpdatePwd.setOnClickListener(v -> {
             if (TextUtils.isEmpty(etNewPwd.getText().toString().trim())) {
                 showTipsDialog("请输入新密码", TipDialog.TYPE_ERROR);
@@ -88,7 +95,8 @@ public class UpdatePwdActivity extends BaseActivity {
      *               修改密码
      */
     private void updatePwd(String token, String userId, String newPwd) {
-        OkHttpUtils.get().
+        dialogUtils.showProgressDialog("正在修改...");
+        OkHttpUtils.post().
                 url(SERVER_URL + UPDATE_PASSWORD_URL).
                 addParam("token", token).
                 addParam("userId", userId).
@@ -101,7 +109,18 @@ public class UpdatePwdActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("修改密码：" + response);
+                ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
+                if (entity.isSuccess()) {
+                    dialogUtils.dismiss();
+                    new CustomeDialog(context, "密码修改成功,需要重新登录！", new CustomeDialog.DialogClick() {
+                        @Override
+                        public void Confirm(boolean confirm) {
+                            if (confirm){
+
+                            }
+                        }
+                    }).setPositiveButton("确定").setTitle("提示").show();
+                }
             }
         });
     }

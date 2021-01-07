@@ -52,7 +52,7 @@ public class AppSettingActivity extends BaseActivity {
                     @Override
                     public void Confirm(AlertDialog exitDialog, boolean confirm) {
                         if (confirm) {
-                            spUtil.put(Constant.ISLOGIN, false);
+                            spUtil.put(Constant.IS_LOGIN, false);
                             JumpUtil.startAct(context, LoginActivity.class);
                             ActivityManager.getInstance().finishActivitys();
                             exitDialog.dismiss();

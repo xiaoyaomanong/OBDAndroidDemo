@@ -21,6 +21,7 @@ import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.ui.activity.OBDSettingActivity;
 import com.example.obdandroid.ui.activity.AppSettingActivity;
+import com.example.obdandroid.ui.activity.RechargeSetMealActivity;
 import com.example.obdandroid.ui.adapter.MultipleItemQuickAdapter;
 import com.example.obdandroid.ui.entity.MultipleItem;
 import com.example.obdandroid.ui.entity.UserInfoEntity;
@@ -118,12 +119,16 @@ public class PersonalFragment extends BaseFragment {
 
     private void initItemData() {
         itemDataList = new ArrayList<>();
-        multipleItem = new MultipleItem(MultipleItem.TYPE_COUNT, 5);
+        multipleItem = new MultipleItem(MultipleItem.TYPE_OBD, 5);
         multipleItem.mString2 = "type1";
         itemDataList.add(multipleItem);
 
-        multipleItem = new MultipleItem(MultipleItem.TYPE_ORDER_HEADER, 5);
+        multipleItem = new MultipleItem(MultipleItem.TYPE_CAR, 5);
         multipleItem.mString2 = "type2";
+        itemDataList.add(multipleItem);
+
+        multipleItem = new MultipleItem(MultipleItem.TYPE_PAY, 5);
+        multipleItem.mString2 = "type3";
         itemDataList.add(multipleItem);
     }
 
@@ -195,9 +200,9 @@ public class PersonalFragment extends BaseFragment {
                 case R.id.ll_my_car:
                     showToast("我的车辆");
                     break;
-              /*  case R.id.my_bands:
-                    JumpUtil.startAct(context, OBDSettingActivity.class);
-                    break;*/
+                case R.id.ll_my_pay:
+                    JumpUtil.startAct(context, RechargeSetMealActivity.class);
+                    break;
                 case R.id.ll_my_obd:
                     JumpUtil.startAct(context, OBDSettingActivity.class);
                     break;

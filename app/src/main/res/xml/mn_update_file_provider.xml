@@ -26,4 +26,7 @@
         name="mn_update_root_path"
         path="." />
 
+    <external-path
+        name="camera_photos"
+        path="." />
 </paths>

@@ -80,13 +80,6 @@ public class MainActivity extends BaseActivity {
         viewPager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
         viewPager.addOnPageChangeListener(mOnPageChangeListener);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        setOBDCommand(ObdConfig.getCommands(spUtil.getString(PROTOCOLS_LIST_KEY, "AUTO")));
-    }
-
-    private void setOBDCommand(ArrayList<ObdCommand> command) {
-        for (ObdCommand Command : command) {
-            spUtil.put(Command.getName(), true);
-        }
     }
 
     private final ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {

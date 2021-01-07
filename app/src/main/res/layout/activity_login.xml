@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:focusableInTouchMode="true">
 
     <FrameLayout
@@ -117,8 +117,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="#ffffff"
-            app:passwordToggleEnabled="true"
-            android:theme="@style/EditScreenTextInputLayoutStyle">
+            android:theme="@style/EditScreenTextInputLayoutStyle"
+            app:passwordToggleEnabled="true">
 
             <EditText
                 android:id="@+id/etPwd"
@@ -134,6 +134,34 @@
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
         </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/cb_mima"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingStart="15dp"
+                android:text="@string/Remember_password"
+                android:theme="@style/MyCheckBox"
+                tools:ignore="RtlSymmetry" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/cb_auto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingStart="15dp"
+                android:text="@string/auto_login"
+                android:theme="@style/MyCheckBox"
+                tools:ignore="RtlSymmetry" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

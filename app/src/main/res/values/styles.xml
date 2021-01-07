@@ -29,6 +29,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@drawable/good_night_img</item>
     </style>
+
     <style name="MatchMatch">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -69,7 +70,7 @@
             <flag name="italic" value="2" />
         </attr>
         <!-- 左边 -->
-        <attr name="leftTitle" format="string"/>
+        <attr name="leftTitle" format="string" />
         <!-- leftIcon 优先于 backButton -->
         <attr name="leftIcon" format="reference" />
         <attr name="leftTint" format="color" />
@@ -100,7 +101,6 @@
     </declare-styleable>
 
 
-
     <style name="darkMode" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/white</item>
         <item name="android:windowFrame">@null</item>
@@ -114,32 +114,31 @@
     </style>
 
 
-
     <!-- 仪表盘自定义属性 -->
-    <attr name="color_dial_lower" format="color"/>
-    <attr name="color_dial_middle" format="color"/>
-    <attr name="color_dial_high" format="color"/>
-    <attr name="text_size_dial" format="dimension"/>
-    <attr name="stroke_width_dial" format="dimension"/>
-    <attr name="radius_circle_dial" format="dimension"/>
-    <attr name="text_title_dial" format="string"/>
-    <attr name="text_title_size" format="dimension"/>
-    <attr name="text_title_color" format="color"/>
-    <attr name="text_size_value" format="dimension"/>
-    <attr name="animator_play_time" format="integer"/>
+    <attr name="color_dial_lower" format="color" />
+    <attr name="color_dial_middle" format="color" />
+    <attr name="color_dial_high" format="color" />
+    <attr name="text_size_dial" format="dimension" />
+    <attr name="stroke_width_dial" format="dimension" />
+    <attr name="radius_circle_dial" format="dimension" />
+    <attr name="text_title_dial" format="string" />
+    <attr name="text_title_size" format="dimension" />
+    <attr name="text_title_color" format="color" />
+    <attr name="text_size_value" format="dimension" />
+    <attr name="animator_play_time" format="integer" />
 
     <declare-styleable name="ClockView">
-        <attr name="color_dial_lower"/>
-        <attr name="color_dial_middle"/>
-        <attr name="color_dial_high"/>
-        <attr name="text_size_dial"/>
-        <attr name="stroke_width_dial"/>
-        <attr name="radius_circle_dial"/>
-        <attr name="text_title_dial"/>
-        <attr name="text_title_size"/>
-        <attr name="text_title_color"/>
-        <attr name="text_size_value"/>
-        <attr name="animator_play_time"/>
+        <attr name="color_dial_lower" />
+        <attr name="color_dial_middle" />
+        <attr name="color_dial_high" />
+        <attr name="text_size_dial" />
+        <attr name="stroke_width_dial" />
+        <attr name="radius_circle_dial" />
+        <attr name="text_title_dial" />
+        <attr name="text_title_size" />
+        <attr name="text_title_color" />
+        <attr name="text_size_value" />
+        <attr name="animator_play_time" />
     </declare-styleable>
 
 
@@ -156,6 +155,11 @@
         <!--背景透明-->
         <item name="android:backgroundDimEnabled">true</item>
         <!--模糊-->
+    </style>
+    <!--自定义CheckBox样式-->
+    <style name="MyCheckBox" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/gray_check</item>
+        <item name="colorControlActivated">@color/switch_btn_colors</item>
     </style>
 
 

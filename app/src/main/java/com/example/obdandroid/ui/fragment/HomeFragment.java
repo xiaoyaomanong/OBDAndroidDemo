@@ -82,8 +82,6 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
     private List<HashMap<String, Object>> blueList;
     private int yourChoice;
     private SPUtil spUtil;
-    private boolean preRequisites = true;
-    private boolean isServiceBound;
     private BluetoothSocket bluetoothSocket;
     /**
      * 显示更新计时器
@@ -99,13 +97,12 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
      */
     private MODE mode = MODE.OFFLINE;
 
-
     /**
      * 操作模式
      */
     public enum MODE {
-        OFFLINE,//< OFFLINE mode
-        ONLINE,    //< ONLINE mode
+        OFFLINE,    //蓝牙不在线
+        ONLINE,    //蓝牙在线
     }
 
     /**
@@ -322,11 +319,7 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
 
             Set<BluetoothDevice> devices = adapter.getBondedDevices();
             blueList = new ArrayList<>();
-            LogE("获取已经配对" + devices.size());
             for (BluetoothDevice bluetoothDevice : devices) {
-                LogE("已经配对的蓝牙设备：");
-                LogE(bluetoothDevice.getName());
-                LogE(bluetoothDevice.getAddress());
                 HashMap<String, Object> blueHashMap = new HashMap<>();
                 blueHashMap.put("blue_device", bluetoothDevice);
                 blueHashMap.put("blue_name", bluetoothDevice.getName());
@@ -439,7 +432,6 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
             }
         }
         showTipDialog(getString(R.string.status_gps_no_support), TipDialog.TYPE_WARNING);
-        LogE("无法获得GPS提供商");
     }
 
     private synchronized void gpsStart() {
@@ -483,25 +475,22 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
 
         if (job.getState().equals(ObdCommandJob.ObdCommandJobState.EXECUTION_ERROR)) {
             cmdResult = job.getCommand().getResult();
-            if (cmdResult != null && isServiceBound) {
+            if (cmdResult != null) {
                 LogE("OBD状态:" + cmdResult.toLowerCase());
             }
         } else if (job.getState().equals(ObdCommandJob.ObdCommandJobState.BROKEN_PIPE)) {
-            if (isServiceBound)
-                stopLiveData();
+            stopLiveData();
         } else if (job.getState().equals(ObdCommandJob.ObdCommandJobState.NOT_SUPPORTED)) {
             cmdResult = getString(R.string.status_obd_no_support);
         } else {
             cmdResult = job.getCommand().getFormattedResult();
-            if (isServiceBound)
-                LogE("OBD状态:" + getString(R.string.status_obd_data));
+            LogE("OBD状态:" + getString(R.string.status_obd_data));
         }
         LogE("cmdID: " + cmdID + "   cmdName: " + cmdName + "  cmdResult: " + cmdResult);
         commandResult.put(cmdID, cmdResult);
         Map<String, String> temp = new HashMap<>(commandResult);
         LogE("命令结果:" + JSON.toJSONString(temp));
-        // commandResult.clear();
-        //updateTripStatistic(job, cmdID);
+
     }
 
     public static String LookUpCommand(String txt) {

@@ -43,9 +43,9 @@ import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.obdandroid.config.APIConfig.LOGIN_URL;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
-import static com.example.obdandroid.config.Constant.EXPIRETIME;
+import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
 import static com.example.obdandroid.config.Constant.TOKEN;
-import static com.example.obdandroid.config.Constant.USERID;
+import static com.example.obdandroid.config.Constant.USER_ID;
 import static com.example.obdandroid.config.TAG.TAG_Activity;
 
 /**
@@ -127,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
         dialog = builder1.create();
         //登录
         btnSignIn.setOnClickListener(v -> {
-          /*  if (TextUtils.isEmpty(etUser.getText().toString().trim())) {
+            if (TextUtils.isEmpty(etUser.getText().toString().trim())) {
                 showTipsDialog("请输入手机号", TipDialog.TYPE_ERROR);
                 return;
             }
@@ -135,9 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                 showTipsDialog("请输入密码", TipDialog.TYPE_ERROR);
                 return;
             }
-            userLogin(etUser.getText().toString(), etPwd.getText().toString());*/
-            JumpUtil.startAct(context, MainActivity.class);
-            ActivityManager.getInstance().finishActivitys();
+            userLogin(etUser.getText().toString(), etPwd.getText().toString());
         });
         //注册
         btnSignUp.setOnClickListener(v -> JumpUtil.startAct(context, RegisterActivity.class));
@@ -178,11 +176,11 @@ public class LoginActivity extends AppCompatActivity {
                         if (entity.isSuccess()) {
                             handler.postDelayed(() -> dialog.dismiss(), 2000);
                             Log.e(TAG_Activity, "过期时间:" + AppDateUtils.dealDateFormat(entity.getData().getExpireTime()));
-                            spUtil.put(Constant.ISLOGIN, true);
+                            spUtil.put(Constant.IS_LOGIN, true);
                             handler.postDelayed(() -> {
                                 spUtil.put(TOKEN, entity.getData().getToken());
-                                spUtil.put(USERID, String.valueOf(entity.getData().getUserId()));
-                                spUtil.put(EXPIRETIME, AppDateUtils.dealDateFormat(entity.getData().getExpireTime()));
+                                spUtil.put(USER_ID, String.valueOf(entity.getData().getUserId()));
+                                spUtil.put(EXPIRE_TIME, AppDateUtils.dealDateFormat(entity.getData().getExpireTime()));
                                 JumpUtil.startAct(context, MainActivity.class);
                                 ActivityManager.getInstance().finishActivitys();
                             }, 2000);

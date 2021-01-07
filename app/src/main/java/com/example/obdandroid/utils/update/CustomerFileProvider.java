@@ -1,4 +1,4 @@
-package com.example.obdandroid.utils.updatelibrary;
+package com.example.obdandroid.utils.update;
 
 
 import android.support.v4.content.FileProvider;
@@ -12,5 +12,5 @@ import android.support.v4.content.FileProvider;
  *     version: 1.0
  * </pre>
  */
-public class MNUpdateApkFileProvider extends FileProvider {
+public class CustomerFileProvider extends FileProvider {
 }

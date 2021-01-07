@@ -16,8 +16,9 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<Multiple
 
     public MultipleItemQuickAdapter(List data) {
         super(data);
-        addItemType(MultipleItem.TYPE_COUNT, R.layout.layout_my_obd);
-        addItemType(MultipleItem.TYPE_ORDER_HEADER, R.layout.layout_my_car);
+        addItemType(MultipleItem.TYPE_OBD, R.layout.layout_my_obd);
+        addItemType(MultipleItem.TYPE_CAR, R.layout.layout_my_car);
+        addItemType(MultipleItem.TYPE_PAY, R.layout.layout_my_pay);
         //addItemType(MultipleItem.TYPE_ORDER, R.layout.layout_my_order);
         //addItemType(MultipleItem.TYPE_BALANCE, R.layout.layout_my_balance);
         // addItemType(MultipleItem.TYPE_TOOLS_HEADER, R.layout.layout_my_tools_header);
@@ -27,11 +28,14 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<Multiple
     @Override
     protected void convert(BaseViewHolder helper, MultipleItem item) {
         switch (helper.getItemViewType()) {
-            case MultipleItem.TYPE_COUNT:
+            case MultipleItem.TYPE_OBD:
                 helper.addOnClickListener(R.id.ll_my_obd);
                 break;
-            case MultipleItem.TYPE_ORDER_HEADER:
+            case MultipleItem.TYPE_CAR:
                 helper.addOnClickListener(R.id.ll_my_car);
+                break;
+            case MultipleItem.TYPE_PAY:
+                helper.addOnClickListener(R.id.ll_my_pay);
                 break;
           /*  case MultipleItem.TYPE_ORDER:
                 helper.setImageDrawable(R.id.my_order_image, ContextCompat.getDrawable(mContext, R.mipmap.ic_launcher));

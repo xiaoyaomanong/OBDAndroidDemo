@@ -26,4 +26,12 @@ public class APIConfig {
      * 修改密码
      */
     public static final String UPDATE_PASSWORD_URL = "/api/updatePwd";
+    /**
+     * 充值套餐
+     */
+    public static final String CHARGE_URL = "/api/getRechargeSetMealSettingsPageList";
+    /**
+     * 退出登录
+     */
+    public static final String LOGOUT_URL = "/api/logout";
 }

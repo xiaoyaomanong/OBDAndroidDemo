@@ -89,7 +89,7 @@ public class WelcomeActivity extends BaseFullScreenActivity implements OnNotchCa
         ivEntry = findViewById(R.id.iv_entry);
         imgBack = findViewById(R.id.img_back);
         spUtil = new SPUtil(context);
-        ISLOGIN = spUtil.getBoolean(Constant.ISLOGIN, false);
+        ISLOGIN = spUtil.getBoolean(Constant.IS_LOGIN, false);
         NotchTools.getFullScreenTools().fullScreenUseStatusForActivityOnCreate(this, this);
         Random random = new Random(SystemClock.elapsedRealtime());//SystemClock.elapsedRealtime() 从开机到现在的毫秒数（手机睡眠(sleep)的时间也包括在内）
         ivEntry.setImageResource(Imgs[random.nextInt(Imgs.length)]);
@@ -110,7 +110,7 @@ public class WelcomeActivity extends BaseFullScreenActivity implements OnNotchCa
             public void onAnimationEnd(Animator animation) {
                 if (ISLOGIN) {
                     startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
-                    WelcomeActivity.this.finish();
+                    finish();
                 } else {
                     JumpUtil.startAct(context, LoginActivity.class);
                 }

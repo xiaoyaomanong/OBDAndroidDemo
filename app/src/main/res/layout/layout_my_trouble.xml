@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/ll_my_pay"
+        android:id="@+id/ll_my_trouble"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@drawable/selector_tab"
@@ -20,7 +20,7 @@
             android:layout_height="40dp"
             android:layout_weight="0"
             android:padding="5dp"
-            android:src="@drawable/icon_pay"
+            android:src="@drawable/icon_trouble"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -29,7 +29,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:paddingStart="10dp"
-            android:text="@string/myPay"
+            android:text="@string/faultCode"
             android:textColor="@color/color_000000"
             android:textSize="@dimen/sp_12"
             tools:ignore="RtlSymmetry" />

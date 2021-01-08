@@ -7,9 +7,11 @@ import com.example.obdandroid.ui.entity.MultipleItem;
 
 import java.util.List;
 
+
 /**
- * Created by yechao on 2017/12/15.
- * Describe :
+ * 作者：Jealous
+ * 日期：2021/1/7 0007
+ * 描述：
  */
 
 public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<MultipleItem, BaseViewHolder> {
@@ -19,10 +21,7 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<Multiple
         addItemType(MultipleItem.TYPE_OBD, R.layout.layout_my_obd);
         addItemType(MultipleItem.TYPE_CAR, R.layout.layout_my_car);
         addItemType(MultipleItem.TYPE_PAY, R.layout.layout_my_pay);
-        //addItemType(MultipleItem.TYPE_ORDER, R.layout.layout_my_order);
-        //addItemType(MultipleItem.TYPE_BALANCE, R.layout.layout_my_balance);
-        // addItemType(MultipleItem.TYPE_TOOLS_HEADER, R.layout.layout_my_tools_header);
-        //addItemType(MultipleItem.TYPE_TOOLS, R.layout.layout_my_tools);
+        addItemType(MultipleItem.TYPE_TROUBLE, R.layout.layout_my_trouble);
     }
 
     @Override
@@ -37,21 +36,9 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<Multiple
             case MultipleItem.TYPE_PAY:
                 helper.addOnClickListener(R.id.ll_my_pay);
                 break;
-          /*  case MultipleItem.TYPE_ORDER:
-                helper.setImageDrawable(R.id.my_order_image, ContextCompat.getDrawable(mContext, R.mipmap.ic_launcher));
-                helper.setText(R.id.my_order_name, item.mString1);
+            case MultipleItem.TYPE_TROUBLE:
+                helper.addOnClickListener(R.id.ll_my_trouble);
                 break;
-            case MultipleItem.TYPE_BALANCE:
-                helper.setText(R.id.my_balance_text, item.mString1);
-                helper.addOnClickListener(R.id.my_balance_btn);
-                break;
-            case MultipleItem.TYPE_TOOLS_HEADER:
-                //helper.setText(R.id.tv_item_name, item.mString1);
-                break;
-            case MultipleItem.TYPE_TOOLS:
-                helper.setImageDrawable(R.id.my_tools_image, ContextCompat.getDrawable(mContext, R.mipmap.ic_launcher));
-                helper.setText(R.id.my_tools_text, item.mString1);
-                break;*/
         }
     }
 

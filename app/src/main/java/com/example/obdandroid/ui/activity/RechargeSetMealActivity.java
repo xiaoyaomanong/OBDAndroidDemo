@@ -32,13 +32,12 @@ import static com.example.obdandroid.config.APIConfig.SERVER_URL;
  */
 public class RechargeSetMealActivity extends BaseActivity {
     private Context context;
-    private TitleBar titleBarSet;
     private PullLoadMoreRecyclerView recycleMeal;
     private int pageNum = 1;
-    private int pageSize = 10;
+    private final int pageSize = 10;
     private boolean isLoadMore;
     private RechargeSetMealAdapter adapter;
-    private List<ChargeMealEntity.DataEntity> datas = new ArrayList<>();
+    private final List<ChargeMealEntity.DataEntity> datas = new ArrayList<>();
 
     @Override
     protected int getContentViewId() {
@@ -54,7 +53,7 @@ public class RechargeSetMealActivity extends BaseActivity {
     public void initView() {
         super.initView();
         context = this;
-        titleBarSet = findViewById(R.id.titleBarSet);
+        TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         recycleMeal = findViewById(R.id.recycle_meal);
         recycleMeal.setLinearLayout();
         //设置是否可以下拉刷新
@@ -69,12 +68,7 @@ public class RechargeSetMealActivity extends BaseActivity {
         recycleMeal.setFooterViewTextColor(R.color.teal_200);
         adapter = new RechargeSetMealAdapter(context);
         getChargeMeal(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), true);
-        adapter.setClickCallBack(new RechargeSetMealAdapter.OnClickCallBack() {
-            @Override
-            public void Click(ChargeMealEntity.DataEntity entity) {
-                showToast("请充值");
-            }
-        });
+        adapter.setClickCallBack(entity -> showToast("请充值"));
         recycleMeal.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
             @Override
             public void onRefresh() {

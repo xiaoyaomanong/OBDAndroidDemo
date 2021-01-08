@@ -358,9 +358,9 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
         mode = MODE.ONLINE;
         // 显示连接状态
         TipDialog.show(context, R.string.title_connected_to + mConnectedDeviceName, TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
-        titleBar.setLeftTitle("ONLINE");
+        titleBar.setLeftTitle("ON");
         titleBar.setRightIcon(R.drawable.action_connect);
-        spUtil.put(CONNECT_BT_KEY, "ONLINE");
+        spUtil.put(CONNECT_BT_KEY, "ON");
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -376,9 +376,9 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
      */
     private void onDisconnect() {
         mode = MODE.OFFLINE;
-        titleBar.setLeftTitle("OFFLINE");
+        titleBar.setLeftTitle("OFF");
         titleBar.setRightIcon(R.drawable.action_disconnect);
-        spUtil.put(CONNECT_BT_KEY, "OFFLINE");
+        spUtil.put(CONNECT_BT_KEY, "OFF");
         // preRequisites = false;
     }
 
@@ -388,9 +388,9 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
      */
     private void setDefaultMode(MODE mode) {
         if (mode.equals(MODE.OFFLINE)) {
-            titleBar.setLeftTitle("OFFLINE");
+            titleBar.setLeftTitle("OFF");
             titleBar.setRightIcon(R.drawable.action_disconnect);
-            spUtil.put(CONNECT_BT_KEY, "OFFLINE");
+            spUtil.put(CONNECT_BT_KEY, "OFF");
         }
     }
 

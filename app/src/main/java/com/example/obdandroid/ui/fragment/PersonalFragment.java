@@ -10,7 +10,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,9 +18,11 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
-import com.example.obdandroid.ui.activity.OBDSettingActivity;
 import com.example.obdandroid.ui.activity.AppSettingActivity;
+import com.example.obdandroid.ui.activity.MyVehicleActivity;
+import com.example.obdandroid.ui.activity.OBDSettingActivity;
 import com.example.obdandroid.ui.activity.RechargeSetMealActivity;
+import com.example.obdandroid.ui.activity.TroubleCodeQueryActivity;
 import com.example.obdandroid.ui.adapter.MultipleItemQuickAdapter;
 import com.example.obdandroid.ui.entity.MultipleItem;
 import com.example.obdandroid.ui.entity.UserInfoEntity;
@@ -38,7 +39,6 @@ import okhttp3.Response;
 
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.USER_INFO_URL;
-import static com.example.obdandroid.config.TAG.TAG_Activity;
 
 /**
  * 作者：Jealous
@@ -46,16 +46,20 @@ import static com.example.obdandroid.config.TAG.TAG_Activity;
  * 描述：
  */
 public class PersonalFragment extends BaseFragment {
-    private MultipleItem multipleItem = null;
     private List<MultipleItem> itemDataList;
     private MultipleItemQuickAdapter multipleItemQuickAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private Context context;
+    private CircleImageView myHeaderImage;
+    private ImageView ivVip;
+    private TextView myHeaderName;
+    private TextView myHeaderMobile;
+    private ImageView myHeaderSettings;
+    private UserInfoEntity infoEntity = new UserInfoEntity();
 
     public static PersonalFragment getInstance() {
-        PersonalFragment fragment = new PersonalFragment();
-        return fragment;
+        return new PersonalFragment();
     }
 
     @Override
@@ -69,9 +73,9 @@ public class PersonalFragment extends BaseFragment {
         swipeRefreshLayout = getView(R.id.swipeRefreshLayout);
         recyclerView = getView(R.id.recyclerView);
         initSwipeRefreshLayout();
-
         initItemData();
-        getUserInfo(getUserId(), getToken());
+        initRecyclerView();
+        initListener();
 
     }
 
@@ -93,11 +97,16 @@ public class PersonalFragment extends BaseFragment {
 
             @Override
             public void onResponse(String response, int id) {
-                Log.e(TAG_Activity, "用户信息:" + response);
                 UserInfoEntity entity = JSON.parseObject(response, UserInfoEntity.class);
                 if (entity.isSuccess()) {
-                    initRecyclerView(entity);
-                    initListener();
+                    myHeaderName.setText(entity.getData().getNickname());
+                    myHeaderMobile.setText(entity.getData().getPhoneNum());
+                    myHeaderImage.setImageBitmap(stringToBitmap(entity.getData().getHeadPortrait()));
+                    if (entity.getData().getIsVip() == 1) {
+                        ivVip.setImageResource(R.drawable.icon_vip_ok);
+                    } else {
+                        ivVip.setImageResource(R.drawable.icon_vip_no);
+                    }
                 }
             }
         });
@@ -119,7 +128,7 @@ public class PersonalFragment extends BaseFragment {
 
     private void initItemData() {
         itemDataList = new ArrayList<>();
-        multipleItem = new MultipleItem(MultipleItem.TYPE_OBD, 5);
+        MultipleItem multipleItem = new MultipleItem(MultipleItem.TYPE_OBD, 5);
         multipleItem.mString2 = "type1";
         itemDataList.add(multipleItem);
 
@@ -130,14 +139,18 @@ public class PersonalFragment extends BaseFragment {
         multipleItem = new MultipleItem(MultipleItem.TYPE_PAY, 5);
         multipleItem.mString2 = "type3";
         itemDataList.add(multipleItem);
+
+        multipleItem = new MultipleItem(MultipleItem.TYPE_TROUBLE, 5);
+        multipleItem.mString2 = "type4";
+        itemDataList.add(multipleItem);
     }
 
     @SuppressLint("NonConstantResourceId")
-    private void initRecyclerView(UserInfoEntity entity) {
+    private void initRecyclerView() {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 5);
         recyclerView.setLayoutManager(gridLayoutManager);
         multipleItemQuickAdapter = new MultipleItemQuickAdapter(itemDataList);
-        View headerView = getHeaderView(entity, view -> {
+        View headerView = getHeaderView(view -> {
             switch (view.getId()) {
                 case R.id.my_header_image:
                     showToast("你点击了头像");
@@ -151,30 +164,22 @@ public class PersonalFragment extends BaseFragment {
         recyclerView.setAdapter(multipleItemQuickAdapter);
     }
 
-
     /**
      * @param listener 点击监听事件
      * @return 头部布局
      */
     @SuppressLint("SetTextI18n")
-    private View getHeaderView(UserInfoEntity entity, View.OnClickListener listener) {
+    private View getHeaderView(View.OnClickListener listener) {
         View headerView = getLayoutInflater().inflate(R.layout.layout_my_header, (ViewGroup) recyclerView.getParent(), false);
-        CircleImageView myHeaderImage = headerView.findViewById(R.id.my_header_image);
+        myHeaderImage = headerView.findViewById(R.id.my_header_image);
+        ivVip = headerView.findViewById(R.id.ivVip);
+        myHeaderName = headerView.findViewById(R.id.my_header_name);
+        myHeaderMobile = headerView.findViewById(R.id.my_header_mobile);
+        myHeaderSettings = headerView.findViewById(R.id.my_header_settings);
         myHeaderImage.setImageResource(R.drawable.header_image);
         myHeaderImage.setOnClickListener(listener);
-        TextView myHeaderName = headerView.findViewById(R.id.my_header_name);
-        myHeaderName.setText(entity.getData().getNickname());
-        TextView myHeaderMobile = headerView.findViewById(R.id.my_header_mobile);
-        myHeaderMobile.setText(entity.getData().getPhoneNum());
-        ImageView myHeaderSettings = headerView.findViewById(R.id.my_header_settings);
-        myHeaderImage.setImageBitmap(stringToBitmap(entity.getData().getHeadPortrait()));
         myHeaderSettings.setOnClickListener(listener);
-        ImageView ivVip = headerView.findViewById(R.id.ivVip);
-        if (entity.getData().getIsVip() == 1) {
-            ivVip.setImageResource(R.drawable.icon_vip_ok);
-        } else {
-            ivVip.setImageResource(R.drawable.icon_vip_no);
-        }
+        getUserInfo(getUserId(), getToken());
         return headerView;
     }
 
@@ -198,7 +203,7 @@ public class PersonalFragment extends BaseFragment {
         multipleItemQuickAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             switch (view.getId()) {
                 case R.id.ll_my_car:
-                    showToast("我的车辆");
+                    JumpUtil.startAct(context, MyVehicleActivity.class);
                     break;
                 case R.id.ll_my_pay:
                     JumpUtil.startAct(context, RechargeSetMealActivity.class);
@@ -206,9 +211,9 @@ public class PersonalFragment extends BaseFragment {
                 case R.id.ll_my_obd:
                     JumpUtil.startAct(context, OBDSettingActivity.class);
                     break;
-               /* case R.id.my_balance_btn:
-                    showToast("立即充值");
-                    break;*/
+                case R.id.ll_my_trouble:
+                    JumpUtil.startAct(context, TroubleCodeQueryActivity.class);
+                    break;
             }
         });
     }

@@ -12,7 +12,7 @@ public class MultipleItem implements MultiItemEntity {
     public static final int TYPE_OBD = 1;
     public static final int TYPE_CAR = 2;
     public static final int TYPE_PAY = 3;
-    public static final int TYPE_BALANCE = 4;
+    public static final int TYPE_TROUBLE = 4;
     public static final int TYPE_TOOLS_HEADER = 5;
     public static final int TYPE_TOOLS = 6;
     private int itemType;

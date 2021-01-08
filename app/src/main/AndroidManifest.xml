@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="org.simalliance.openmobileapi.SMARTCARD" />
@@ -154,6 +153,8 @@
         <activity android:name=".ui.activity.OBDProtocolActivity" />
         <activity android:name=".ui.activity.UpdatePwdActivity" />
         <activity android:name=".ui.activity.RechargeSetMealActivity" />
+        <activity android:name=".ui.activity.MyVehicleActivity" />
+        <activity android:name=".ui.activity.TroubleCodeQueryActivity" />
 
     </application>
 

@@ -20,7 +20,6 @@
 
     </FrameLayout>
 
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
@@ -79,7 +78,8 @@
         android:gravity="center"
         android:text="@string/des_log"
         android:textColor="#9affffff"
-        android:textSize="10sp" />
+        android:textSize="10sp"
+        tools:ignore="SmallSp" />
 
 
     <LinearLayout
@@ -147,58 +147,63 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingStart="15dp"
+                android:paddingStart="5dp"
                 android:text="@string/Remember_password"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
                 android:theme="@style/MyCheckBox"
                 tools:ignore="RtlSymmetry" />
 
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cb_auto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingStart="15dp"
-                android:text="@string/auto_login"
-                android:theme="@style/MyCheckBox"
-                tools:ignore="RtlSymmetry" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <Button
+            <TextView
                 android:id="@+id/btnSignUp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/btn_shape_white_bg"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:fontFamily="@font/calibri"
+                android:gravity="center_vertical|right"
+                android:paddingEnd="5dp"
                 android:text="@string/sign_up"
-                android:textAllCaps="false"
-                android:textColor="#ffffff"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/btnSignIn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:background="@drawable/btn_shape_white_bg"
-                android:fontFamily="@font/calibri"
-                android:text="@string/sign_in"
-                android:textAllCaps="false"
-                android:textColor="#ffffff"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:ignore="RtlSymmetry" />
         </LinearLayout>
+
+        <!-- <Button
+             android:id="@+id/btnSignIn"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginStart="16dp"
+             android:layout_marginTop="16dp"
+             android:layout_marginBottom="8dp"
+             android:background="@drawable/btn_shape_white_bg"
+             android:fontFamily="@font/calibri"
+             android:text="@string/sign_in"
+             android:textAllCaps="false"
+             android:textColor="#ffffff"
+             android:textSize="16sp"
+             android:textStyle="bold" />-->
+
+
+        <com.example.obdandroid.ui.view.progressButton.CircularProgressButton
+            android:id="@+id/btnSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/calibri"
+            android:textColor="@color/cpb_white"
+            android:textSize="18sp"
+            app:cpb_cornerRadius="10dp"
+            app:cpb_iconComplete="@drawable/ic_action_accept"
+            app:cpb_iconError="@drawable/ic_action_cancel"
+            app:cpb_selectorComplete="@drawable/complete_state_selector"
+            app:cpb_selectorError="@drawable/error_state_selector"
+            app:cpb_selectorIdle="@drawable/idle_state_selector"
+            app:cpb_textIdle="@string/sign_in" />
 
 
         <TextView

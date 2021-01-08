@@ -4,11 +4,15 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -23,12 +27,20 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.obdandroid.R;
+import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.listener.OnSwipeTouchListener;
 import com.example.obdandroid.ui.entity.ResultEntity;
+import com.example.obdandroid.ui.entity.UserLoginEntity;
 import com.example.obdandroid.ui.view.CircleImageView;
+import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.ui.view.PhotoDialog;
+import com.example.obdandroid.ui.view.progressButton.CircularProgressButton;
+import com.example.obdandroid.utils.ActivityManager;
+import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.DisplayUtils;
+import com.example.obdandroid.utils.JumpUtil;
+import com.example.obdandroid.utils.SPUtil;
 import com.kongzue.dialog.v2.TipDialog;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -37,6 +49,7 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -49,9 +62,13 @@ import java.util.Map;
 import okhttp3.Call;
 import okhttp3.Response;
 
+import static com.example.obdandroid.config.APIConfig.LOGIN_URL;
 import static com.example.obdandroid.config.APIConfig.REGISTER_URL;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
+import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
 import static com.example.obdandroid.config.Constant.PLATFORM;
+import static com.example.obdandroid.config.Constant.TOKEN;
+import static com.example.obdandroid.config.Constant.USER_ID;
 import static com.example.obdandroid.config.TAG.TAG_Activity;
 
 /**
@@ -64,10 +81,9 @@ public class RegisterActivity extends AppCompatActivity {
     private ImageView imageView;
     private TextView textView;
     int count = 0;
-    private LinearLayout linearLayout;
     private EditText etUser;
     private EditText etPwd;
-    private Button btnSignUp;
+    private CircularProgressButton btnSignUp;
     private CircleImageView myHeaderImage;
     private EditText etNick;
     private EditText etCode;
@@ -78,8 +94,10 @@ public class RegisterActivity extends AppCompatActivity {
     private DialogUtils dialogUtils;
     private String compressPath;
     private String path = "";
+    private String headPortrait = "";
     private List<LocalMedia> selectList = new ArrayList<>();
-    private Map<String, File> files = new HashMap<>();
+    private final Map<String, File> files = new HashMap<>();
+    private SPUtil spUtil;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -92,8 +110,8 @@ public class RegisterActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_register);
         dialogUtils = new DialogUtils(context);
+        spUtil = new SPUtil(context);
         initView();
-
         myHeaderImage.setOnClickListener(v ->
                 new PhotoDialog(context, R.style.dialog, "请选取照片方式", new PhotoDialog.OnCloseListener() {
                     @Override
@@ -150,24 +168,33 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
         //注册
+        btnSignUp.setIndeterminateProgressMode(true);
         btnSignUp.setOnClickListener(v -> {
-            if (TextUtils.isEmpty(etNick.getText().toString().trim())) {
+            if (TextUtils.isEmpty(etNick.getText().toString())) {
                 showToast("请输入昵称");
                 return;
             }
-            if (TextUtils.isEmpty(etUser.getText().toString().trim())) {
+            if (TextUtils.isEmpty(etUser.getText().toString())) {
                 showToast("请输入手机号");
                 return;
             }
-            if (TextUtils.isEmpty(etPwd.getText().toString().trim())) {
+            if (TextUtils.isEmpty(etPwd.getText().toString())) {
                 showToast("请输入密码");
                 return;
             }
-            if (TextUtils.isEmpty(etCode.getText().toString().trim())) {
+            if (TextUtils.isEmpty(etCode.getText().toString())) {
                 showToast("请输入验证");
                 return;
             }
-            registerUser(imageToBase64(path),etUser.getText().toString(),etNick.getText().toString(),etPwd.getText().toString(), etCode.getText().toString());
+            if (TextUtils.isEmpty(path)) {
+                headPortrait = bitmaptoString(context, R.drawable.header_image);
+            } else {
+                headPortrait = imageToBase64(path);
+            }
+            if (btnSignUp.getProgress() == -1) {
+                btnSignUp.setProgress(0);
+            }
+            registerUser(headPortrait, etUser.getText().toString(), etNick.getText().toString(), etPwd.getText().toString(), etCode.getText().toString());
         });
     }
 
@@ -181,7 +208,6 @@ public class RegisterActivity extends AppCompatActivity {
     private void initView() {
         imageView = findViewById(R.id.imageView);
         textView = findViewById(R.id.textView);
-        linearLayout = findViewById(R.id.linearLayout);
         etUser = findViewById(R.id.etUser);
         etPwd = findViewById(R.id.etPwd);
         btnSignUp = findViewById(R.id.btnSignUp);
@@ -192,14 +218,15 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     * @param headPortrait         用户头像
-     * @param mobile               手机号
-     * @param nickname             昵称
-     * @param password             密码
-     * @param verificationCode     验证码
+     * @param headPortrait     用户头像
+     * @param mobile           手机号
+     * @param nickname         昵称
+     * @param password         密码
+     * @param verificationCode 验证码
      */
     private void registerUser(String headPortrait, String mobile, String nickname, String password, String verificationCode) {
-        dialogUtils.showProgressDialog();
+        btnSignUp.setProgress(0);
+        new Handler().postDelayed(() -> btnSignUp.setProgress(50), 1000);
         OkHttpUtils.post().url(SERVER_URL + REGISTER_URL).
                 addParam("headPortrait", headPortrait).
                 addParam("mobile", mobile).
@@ -207,26 +234,72 @@ public class RegisterActivity extends AppCompatActivity {
                 addParam("password", password).
                 addParam("registrationPlatform", PLATFORM).
                 addParam("verificationCode", verificationCode).
-                build().
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+                btnSignUp.setProgress(-1);
+                showTipsDialog(validateError(e, response), TipDialog.TYPE_ERROR);
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
+                if (TextUtils.equals(entity.getCode(), "SUCCESS")) {
+                    btnSignUp.setProgress(100);
+                    new CustomeDialog(context, "注册成功,请登录！", confirm -> {
+                        if (confirm) {
+                            userLogin(mobile, password);
+                        }
+                    }).setPositiveButton("登录").setTitle("注册提示").show();
+                } else {
+                    btnSignUp.setProgress(-1);
+                    showTipsDialog("注册失败", TipDialog.TYPE_ERROR);
+                }
+            }
+        });
+    }
+
+    /**
+     * @param mobile   手机号
+     * @param password 密码
+     *                 用户登录
+     */
+    private void userLogin(String mobile, String password) {
+        dialogUtils.showProgressDialog("正在登录！");
+        OkHttpUtils.post().url(SERVER_URL + LOGIN_URL).
+                addParam("mobile", mobile).
+                addParam("password", password).build().
                 execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Response response, Exception e, int id) {
-
+                        dialogUtils.dismiss();
+                        showTipsDialog(validateError(e, response), TipDialog.TYPE_ERROR);
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Log.e(TAG_Activity, "用户注册:" + response);
-                        ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
-                        if (TextUtils.equals(entity.getCode(), "SUCCESS")) {
-                            dialogUtils.dismiss();
-                            TipDialog.show(context, "注册成功", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
+                        UserLoginEntity entity = JSON.parseObject(response, UserLoginEntity.class);
+                        if (entity.isSuccess()) {
+                            spUtil.put(Constant.IS_LOGIN, true);
+                            spUtil.put(TOKEN, entity.getData().getToken());
+                            spUtil.put(USER_ID, String.valueOf(entity.getData().getUserId()));
+                            spUtil.put(EXPIRE_TIME, AppDateUtils.dealDateFormat(entity.getData().getExpireTime()));
+                            JumpUtil.startAct(context, MainActivity.class);
+                            ActivityManager.getInstance().finishActivitys();
                         } else {
-                            dialogUtils.dismiss();
-                            TipDialog.show(context, "注册失败", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_ERROR);
+                            showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
                         }
                     }
                 });
+    }
+
+    /**
+     * @param msg  提示信息
+     * @param type 提示类型
+     *             提示
+     */
+    private void showTipsDialog(String msg, int type) {
+        TipDialog.show(context, msg, TipDialog.SHOW_TIME_SHORT, type);
     }
 
     /**
@@ -379,5 +452,34 @@ public class RegisterActivity extends AppCompatActivity {
 
         }
         return result;
+    }
+
+    /**
+     * @param context 上下文对象
+     * @param resId   资源id
+     * @return 将Bitmap对象转换成Base64字节码
+     */
+    public String bitmaptoString(Context context, int resId) {
+        // 将Bitmap转换成字符串
+        String string = null;
+        ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+        getBitmap(context, resId).compress(Bitmap.CompressFormat.PNG, 100, bStream);
+        byte[] bytes = bStream.toByteArray();
+        string = Base64.encodeToString(bytes, Base64.DEFAULT);
+        return string;
+    }
+
+    /**
+     * @param context 上下文对象
+     * @param resId   资源id
+     * @return 将图片转换成Bitmap对象
+     */
+    public static Bitmap getBitmap(Context context, int resId) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        TypedValue value = new TypedValue();
+        context.getResources().openRawResource(resId, value);
+        options.inTargetDensity = value.density;
+        options.inScaled = false;
+        return BitmapFactory.decodeResource(context.getResources(), resId, options);
     }
 }

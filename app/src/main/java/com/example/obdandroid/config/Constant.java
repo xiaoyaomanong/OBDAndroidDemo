@@ -20,6 +20,9 @@ public class Constant {
     public static final String TOKEN = "token";
     public static final String USER_ID = "userId";
     public static final String EXPIRE_TIME = "expireTime";
+    public static final String IS_CHECK = "isCheckPwd";
+    public static final String USER_NAME = "USER_NAME";
+    public static final String PASSWORD = "PASSWORD";
     /**
      * 蓝牙UUID
      */

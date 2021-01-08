@@ -99,7 +99,7 @@
             android:layout_height="80dp"
             android:layout_gravity="center_horizontal"
             android:contentDescription="@null"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/header_image"
             app:border_color="@color/white"
             app:border_width="2dp" />
 
@@ -149,8 +149,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="#ffffff"
-            app:passwordToggleEnabled="true"
-            android:theme="@style/EditScreenTextInputLayoutStyle">
+            android:theme="@style/EditScreenTextInputLayoutStyle"
+            app:passwordToggleEnabled="true">
 
             <EditText
                 android:id="@+id/etPwd"
@@ -185,8 +185,9 @@
                     android:id="@+id/etCode"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:fontFamily="@font/calibri"
                     android:drawableStart="@drawable/icon_code"
+                    android:drawablePadding="16dp"
+                    android:fontFamily="@font/calibri"
                     android:hint="@string/hint_code"
                     android:importantForAutofill="no"
                     android:inputType="text"
@@ -206,30 +207,25 @@
                 android:textColor="@color/white" />
         </LinearLayout>
 
-
-        <LinearLayout
+        <com.example.obdandroid.ui.view.progressButton.CircularProgressButton
+            android:id="@+id/btnSignUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:fontFamily="@font/calibri"
+            android:textColor="@color/cpb_white"
+            android:textSize="18sp"
+            app:cpb_cornerRadius="10dp"
+            app:cpb_iconComplete="@drawable/ic_action_accept"
+            app:cpb_iconError="@drawable/ic_action_cancel"
+            app:cpb_selectorComplete="@drawable/complete_state_selector"
+            app:cpb_selectorError="@drawable/error_state_selector"
+            app:cpb_selectorIdle="@drawable/register_sttate_selector"
+            app:cpb_textIdle="@string/sign_up" />
 
-            <Button
-                android:id="@+id/btnSignUp"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/btn_shape_white_bg"
-                android:fontFamily="@font/calibri"
-                android:text="@string/sign_up"
-                android:textAllCaps="false"
-                android:textColor="#ffffff"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-
-        </LinearLayout>
 
     </LinearLayout>
 

@@ -5,5 +5,11 @@
         <attr name="border_width" format="dimension" />
         <attr name="border_color" format="color" />
     </declare-styleable>
-
+    <declare-styleable name="rota3DVSwithView">
+        <attr name="rotation" format="integer" />
+        <attr name="rotateV" format="boolean" />
+        <attr name="autoscroll" format="boolean" />
+        <attr name="widthRatio" format="float" />
+        <attr name="heightRatio" format="float" />
+    </declare-styleable>
 </resources>

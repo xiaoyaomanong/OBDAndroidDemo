@@ -76,4 +76,11 @@
     <string name="myPay">充值套餐</string>
     <string name="loading">正在加载...</string>
     <string name="faultCode">查询故障码</string>
+    <string name="add_car">添加车辆</string>
+    <string name="automobileBrandName">汽车品牌</string>
+    <string name="modelName">型号</string>
+    <string name="fuelType">燃油类型(#)</string>
+    <string name="transmissionType">变速箱类型</string>
+    <string name="currentMileage">当前里程(公里)</string>
+    <string name="car_base_info">车辆基础信息</string>
 </resources>

@@ -1,15 +1,22 @@
 package com.example.obdandroid.ui.activity;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.View;
 
+import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.ui.adapter.MyVehicleAdapter;
+import com.example.obdandroid.ui.entity.VehicleEntity;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -28,7 +35,10 @@ public class MyVehicleActivity extends BaseActivity {
     private PullLoadMoreRecyclerView recycleCar;
     private int pageNum = 1;
     private final int pageSize = 10;
+    private int pages;
     private boolean isLoadMore;
+    private List<VehicleEntity.DataEntity.ListEntity> datas = new ArrayList<>();
+    private MyVehicleAdapter adapter;
 
     @Override
     protected int getContentViewId() {
@@ -43,6 +53,7 @@ public class MyVehicleActivity extends BaseActivity {
     @Override
     public void initView() {
         super.initView();
+        context = this;
         titleBarSet = findViewById(R.id.titleBarSet);
         recycleCar = findViewById(R.id.recycle_Car);
         recycleCar.setLinearLayout();
@@ -56,7 +67,32 @@ public class MyVehicleActivity extends BaseActivity {
         recycleCar.setFooterViewText(getString(R.string.loading));
         //设置上拉刷新文字颜色
         recycleCar.setFooterViewTextColor(R.color.teal_200);
+        adapter = new MyVehicleAdapter(context);
         getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), true);
+        recycleCar.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
+            @Override
+            public void onRefresh() {
+                pageNum = 1;
+                getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), true);
+            }
+
+            @Override
+            public void onLoadMore() {
+                if (isLoadMore) {
+                    pageNum++;
+                    getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), false);
+                } else {
+                    //设置是否可以上拉刷新
+                    recycleCar.setPullLoadMoreCompleted();
+                }
+            }
+        });
+        adapter.setClickCallBack(new MyVehicleAdapter.OnClickCallBack() {
+            @Override
+            public void Click(VehicleEntity.DataEntity.ListEntity entity) {
+
+            }
+        });
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -87,8 +123,8 @@ public class MyVehicleActivity extends BaseActivity {
                 url(SERVER_URL + Vehicle_URL).
                 addParam("pageNum", pageNum).
                 addParam("pageSize", pageSize).
-                addParam("token", token).
-                build().execute(new StringCallback() {
+                 addParam("token", token).
+                        build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Response response, Exception e, int id) {
 
@@ -97,6 +133,27 @@ public class MyVehicleActivity extends BaseActivity {
             @Override
             public void onResponse(String response, int id) {
                 LogE("获取用户车辆列表:" + response);
+                VehicleEntity entity = JSON.parseObject(response, VehicleEntity.class);
+                if (entity.isSuccess()) {
+                    pages = entity.getData().getPages();
+                    isLoadMore = Integer.parseInt(pageNum) <= entity.getData().getPages();
+                    if (isRefresh) {
+                        adapter.setList(entity.getData().getList());
+                        recycleCar.setAdapter(adapter);
+                        // 刷新完成后调用，必须在UI线程中
+                        recycleCar.setPullLoadMoreCompleted();
+                    } else {
+                        new Handler().postDelayed(() -> getActivity().runOnUiThread(() -> {
+                            datas.clear();
+                            datas.addAll(entity.getData().getList());
+                            adapter.addFootItem(datas);
+                            // 加载更多完成后调用，必须在UI线程中
+                            recycleCar.setPullLoadMoreCompleted();
+                        }), 1000);
+                    }
+                } else {
+                    dialogError(context, entity.getMessage());
+                }
             }
         });
     }

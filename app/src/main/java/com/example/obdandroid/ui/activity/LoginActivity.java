@@ -183,9 +183,11 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(String response, int id) {
+                        Log.e(TAG_Activity,response);
                         UserLoginEntity entity = JSON.parseObject(response, UserLoginEntity.class);
                         if (entity.isSuccess()) {
                             btnSignIn.setProgress(100);
+                            Log.e(TAG_Activity,"失效时间:"+AppDateUtils.dealDateFormat(entity.getData().getExpireTime()));
                             if (cbMima.isChecked()) {
                                 //记住用户名、密码、
                                 spUtil.put(USER_NAME, mobile);

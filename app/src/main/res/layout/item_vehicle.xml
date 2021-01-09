@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/card_view">
+
+    <!-- <com.example.obdandroid.ui.view.ThreeDView.Rota3DSwithViewList
+         android:id="@+id/rota3DSwithViewList_test"
+         android:layout_width="match_parent"
+         android:layout_height="300dp"
+         android:background="#e0000000"
+         app:autoscroll="true" />-->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/car_1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvVehicleName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/gotham"
+            android:padding="8dp"
+            android:text="广汽本田-雅阁"
+            android:textColor="@color/color_000000"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</LinearLayout>

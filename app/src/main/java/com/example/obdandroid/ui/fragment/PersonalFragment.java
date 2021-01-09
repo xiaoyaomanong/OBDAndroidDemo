@@ -56,7 +56,6 @@ public class PersonalFragment extends BaseFragment {
     private TextView myHeaderName;
     private TextView myHeaderMobile;
     private ImageView myHeaderSettings;
-    private UserInfoEntity infoEntity = new UserInfoEntity();
 
     public static PersonalFragment getInstance() {
         return new PersonalFragment();

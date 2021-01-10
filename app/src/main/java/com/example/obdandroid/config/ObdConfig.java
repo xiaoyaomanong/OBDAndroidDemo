@@ -63,23 +63,22 @@ public final class ObdConfig {
 
     public static ArrayList<ObdCommand> getCommands(String protocol) {
         ArrayList<ObdCommand> cmds = new ArrayList<>();
-
         //协议
-        cmds.add(new AdaptiveTimingCommand(1));//自适应定时命令
+        cmds.add(new ObdResetCommand());//重置OBD连接。。
+        cmds.add(new ObdWarmstartCommand());//热启动OBD连接。。。
+        cmds.add(new SpacesOffCommand());//关闭空间。
+        cmds.add(new EchoOffCommand());//关掉Echo
+        cmds.add(new HeadersOffCommand());//关闭headers
+        cmds.add(new LineFeedOffCommand());//关闭换行
+        cmds.add(new SelectProtocolCommand(ObdProtocols.valueOf(protocol)));//选择要使用的协议
+       cmds.add(new AdaptiveTimingCommand(1));//自适应定时命令
         cmds.add(new AdaptiveTimingCommand(2));//自适应定时命令
         cmds.add(new AvailablePidsCommand_01_20());//检索范围为01到20的可用PID。
         cmds.add(new AvailablePidsCommand_21_40());//检索范围为21到40的可用PID。
         cmds.add(new AvailablePidsCommand_41_60());//检索范围为41到60的可用PID。
-        cmds.add(new DescribeProtocolCommand());//描述当前的协议。如果选择了协议，并且自动选项同时选中的AT DP将在单词“ AUTO”前显示协议说明。 注意描述显示实际的协议名称，而不是数字由协议设置命令使用。
-        cmds.add(new DescribeProtocolNumberCommand());//用数字描述协议。它返回一个代表当前的数字obd协议。 如果自动搜索功能也启用后，数字将以字母开头'A'。 该数字与设置obdProtocol并测试obdProtocol命令。
-        cmds.add(new EchoOffCommand());//关掉Echo
-        cmds.add(new HeadersOffCommand());//关闭headers
-        cmds.add(new LineFeedOffCommand());//关闭换行
-        cmds.add(new ObdResetCommand());//重置OBD连接。。
-        cmds.add(new ObdWarmstartCommand());//热启动OBD连接。。。
+        //cmds.add(new DescribeProtocolCommand());//描述当前的协议。如果选择了协议，并且自动选项同时选中的AT DP将在单词“ AUTO”前显示协议说明。 注意描述显示实际的协议名称，而不是数字由协议设置命令使用。
+        //cmds.add(new DescribeProtocolNumberCommand());//用数字描述协议。它返回一个代表当前的数字obd协议。 如果自动搜索功能也启用后，数字将以字母开头'A'。 该数字与设置obdProtocol并测试obdProtocol命令。
         //cmds.add(new ResetTroubleCodesCommand());//重置故障代码。。。。
-        cmds.add(new SelectProtocolCommand(ObdProtocols.valueOf(protocol)));//选择要使用的协议
-        cmds.add(new SpacesOffCommand());//关闭空间。
         cmds.add(new TimeoutCommand(62));//这将设置OBD接口的时间值（以毫秒为单位）将等待ECU的响应。 如果超过，则响应为“无数据”。
         // 操纵装置
         cmds.add(new DistanceMILOnCommand());//距离MIL命令(发动机电控系统故障报警灯)

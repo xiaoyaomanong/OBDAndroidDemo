@@ -39,6 +39,7 @@ import com.example.obdandroid.utils.DividerGridItemDecoration;
 import com.example.obdandroid.utils.ODBUtils;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.ToastUtil;
+import com.github.pires.obd.commands.ObdCommand;
 import com.github.pires.obd.enums.AvailableCommandNames;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
@@ -177,6 +178,15 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
             LogE("命令结果:" + JSON.toJSONString(temp));
             commandResult.clear();
             new Handler().postDelayed(mQueueCommands, 1);
+
+         /*   ODBUtils.getInstance(context).startObdConnection(bluetoothSocket, new ODBUtils.CommandCallBack() {
+                @Override
+                public void upDateState(ObdCommandJob job) {
+                    ///
+                    stateUpdate(job);
+                }
+            });*/
+
         }
     };
     private LocationManager mLocService;
@@ -361,14 +371,7 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
         titleBar.setLeftTitle("ON");
         titleBar.setRightIcon(R.drawable.action_connect);
         spUtil.put(CONNECT_BT_KEY, "ON");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ODBUtils.getInstance(context).startObdConnection(bluetoothSocket, job -> stateUpdate(job));
-            }
-        }).start();
-
-
+        ODBUtils.getInstance(context).startObdConnection(bluetoothSocket, this::stateUpdate);
     }
 
     /**
@@ -467,25 +470,10 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
     public void onProviderDisabled(String provider) {
     }
 
-    @Override
-    public void stateUpdate(ObdCommandJob job) {
-        final String cmdName = job.getCommand().getName();
-        String cmdResult = "";
-        final String cmdID = LookUpCommand(cmdName);
-
-        if (job.getState().equals(ObdCommandJob.ObdCommandJobState.EXECUTION_ERROR)) {
-            cmdResult = job.getCommand().getResult();
-            if (cmdResult != null) {
-                LogE("OBD状态:" + cmdResult.toLowerCase());
-            }
-        } else if (job.getState().equals(ObdCommandJob.ObdCommandJobState.BROKEN_PIPE)) {
-            stopLiveData();
-        } else if (job.getState().equals(ObdCommandJob.ObdCommandJobState.NOT_SUPPORTED)) {
-            cmdResult = getString(R.string.status_obd_no_support);
-        } else {
-            cmdResult = job.getCommand().getFormattedResult();
-            LogE("OBD状态:" + getString(R.string.status_obd_data));
-        }
+    public void stateUpdate(ObdCommand job) {
+        final String cmdName = job.getName();
+        String cmdResult = job.getResult();
+        final String cmdID =job.getName();
         LogE("cmdID: " + cmdID + "   cmdName: " + cmdName + "  cmdResult: " + cmdResult);
         commandResult.put(cmdID, cmdResult);
         Map<String, String> temp = new HashMap<>(commandResult);

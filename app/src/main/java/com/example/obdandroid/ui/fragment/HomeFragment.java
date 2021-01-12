@@ -66,7 +66,9 @@ import static com.example.obdandroid.config.Constant.GPS_UPDATE_PERIOD_KEY;
 import static com.example.obdandroid.config.Constant.MESSAGE_DEVICE_NAME;
 import static com.example.obdandroid.config.Constant.MESSAGE_STATE_CHANGE;
 import static com.example.obdandroid.config.Constant.MESSAGE_TOAST;
+import static com.example.obdandroid.config.Constant.MESSAGE_UPDATE_OBD;
 import static com.example.obdandroid.config.Constant.MESSAGE_UPDATE_VIEW;
+import static com.example.obdandroid.config.Constant.OBD_DATA;
 import static com.example.obdandroid.config.Constant.REQUEST_ENABLE_BT;
 import static com.example.obdandroid.config.Constant.TOAST;
 
@@ -144,6 +146,10 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
                         Toast.makeText(context, msg.getData().getString(TOAST),
                                 Toast.LENGTH_SHORT).show();
                         break;
+                    case MESSAGE_UPDATE_OBD:
+                        ObdCommandJob commandJob = (ObdCommandJob) msg.getData().getSerializable(OBD_DATA);
+                        stateUpdate(commandJob);
+                        break;
                 }
             } catch (Exception ex) {
                 LogE("mHandler中的错误" + ex.getMessage());
@@ -178,15 +184,6 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
             LogE("命令结果:" + JSON.toJSONString(temp));
             commandResult.clear();
             new Handler().postDelayed(mQueueCommands, 1);
-
-         /*   ODBUtils.getInstance(context).startObdConnection(bluetoothSocket, new ODBUtils.CommandCallBack() {
-                @Override
-                public void upDateState(ObdCommandJob job) {
-                    ///
-                    stateUpdate(job);
-                }
-            });*/
-
         }
     };
     private LocationManager mLocService;
@@ -371,7 +368,7 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
         titleBar.setLeftTitle("ON");
         titleBar.setRightIcon(R.drawable.action_connect);
         spUtil.put(CONNECT_BT_KEY, "ON");
-        ODBUtils.getInstance(context).startObdConnection(bluetoothSocket, this::stateUpdate);
+        ODBUtils.getInstance(context, getHoldingActivity(), mHandler).startObdConnection(bluetoothSocket);
     }
 
     /**
@@ -427,7 +424,6 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
                             break;
                     }
                 });
-                //mLocService.addGpsStatusListener(this);
                 if (mLocService.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     showToast(getString(R.string.status_gps_ready));
                     return;
@@ -470,10 +466,20 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
     public void onProviderDisabled(String provider) {
     }
 
-    public void stateUpdate(ObdCommand job) {
-        final String cmdName = job.getName();
-        String cmdResult = job.getResult();
-        final String cmdID =job.getName();
+    public void stateUpdate(ObdCommandJob job) {
+        final String cmdName = job.getCommand().getName();
+        String cmdResult = "";
+        final String cmdID = LookUpCommand(cmdName);
+
+        if (job.getState().equals(ObdCommandJob.ObdCommandJobState.EXECUTION_ERROR)) {
+            cmdResult = job.getCommand().getResult();
+        } else if (job.getState().equals(ObdCommandJob.ObdCommandJobState.BROKEN_PIPE)) {
+            stopLiveData();
+        } else if (job.getState().equals(ObdCommandJob.ObdCommandJobState.NOT_SUPPORTED)) {
+            cmdResult = "OBD不可用";
+        } else {
+            cmdResult = job.getCommand().getFormattedResult();
+        }
         LogE("cmdID: " + cmdID + "   cmdName: " + cmdName + "  cmdResult: " + cmdResult);
         commandResult.put(cmdID, cmdResult);
         Map<String, String> temp = new HashMap<>(commandResult);

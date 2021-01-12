@@ -12,4 +12,9 @@
         <attr name="widthRatio" format="float" />
         <attr name="heightRatio" format="float" />
     </declare-styleable>
+    <declare-styleable name="QuickIndexBar">
+        <attr name="font_color" format="color|reference" />
+        <attr name="selected_font_color" format="color|reference" />
+        <attr name="font_size" format="dimension|reference" />
+    </declare-styleable>
 </resources>

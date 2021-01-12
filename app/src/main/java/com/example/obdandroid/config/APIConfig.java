@@ -43,4 +43,20 @@ public class APIConfig {
      * 查询故障码
      */
     public static final String FAULT_CODE_URL = "/api/getFaultCodeDetails";
+    /**
+     * 添加车辆
+     */
+    public static final String ADD_VEHICLE_URL = "/api/addVehicle";
+    /**
+     * 获取车辆品牌
+     */
+    public static final String getAutomobileBrandList_URL = "/api/getAutomobileBrandList";
+    /**
+     * 获取品牌型号
+     */
+    public static final String getCarModelList_URL = "/api/getCarModelList";
+    /**
+     * 业务字典值
+     */
+    public static final String getVocationalDictDataListByType_URL = "/api/getVocationalDictDataListByType";
 }

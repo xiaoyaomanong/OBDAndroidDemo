@@ -156,6 +156,10 @@
         <activity android:name=".ui.activity.MyVehicleActivity" />
         <activity android:name=".ui.activity.TroubleCodeQueryActivity" />
         <activity android:name=".ui.activity.AddVehiclActivity" />
+        <activity android:name=".ui.activity.AutomobileBrandActivity" />
+        <activity android:name=".ui.activity.FuelTypeActivity" />
+        <activity android:name=".ui.activity.CarModelActivity" />
+        <activity android:name=".ui.activity.TransmissionTypeActivity" />
 
     </application>
 

@@ -49,6 +49,7 @@ public class Constant {
     public static final int MESSAGE_TOAST = 5;
     public static final int REQUEST_ENABLE_BT = 3;
     public static final int MESSAGE_UPDATE_VIEW = 7;
+    public static final int MESSAGE_UPDATE_OBD = 15;
     public static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
     /**
      * 显示更新之间的间隔时间，以表示数据更改
@@ -61,6 +62,7 @@ public class Constant {
     public static final String DEVICE_ADDRESS = "device_address";
     public static final String DEVICE_SOCKET = "device_socket";
     public static final String TOAST = "toast";
+    public static final String OBD_DATA = "obdData";
 
     public static final String OBD_UPDATE_PERIOD_KEY = "obd_update_period_preference";
     public static final String GPS_UPDATE_PERIOD_KEY = "gps_update_period_preference";

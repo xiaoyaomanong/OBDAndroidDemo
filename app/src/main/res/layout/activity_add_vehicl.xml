@@ -54,8 +54,15 @@
                     tools:ignore="RtlSymmetry" />
 
                 <TextView
+                    android:id="@+id/tvAutomobileBrandName"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:hint="@string/hint_automobileBrandName"
+                    android:textColor="@color/color_000000"
+                    android:textSize="@dimen/text_13sp"
+                    tools:ignore="RtlHardcoded" />
 
             </LinearLayout>
 
@@ -81,8 +88,15 @@
                     tools:ignore="RtlSymmetry" />
 
                 <TextView
+                    android:id="@+id/tvModelName"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:hint="@string/hint_modelName"
+                    android:textColor="@color/color_000000"
+                    android:textSize="@dimen/text_13sp"
+                    tools:ignore="RtlHardcoded" />
 
             </LinearLayout>
 
@@ -108,8 +122,15 @@
                     tools:ignore="RtlSymmetry" />
 
                 <TextView
+                    android:id="@+id/tvFuelType"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:hint="@string/hint_fuelType"
+                    android:textColor="@color/color_000000"
+                    android:textSize="@dimen/text_13sp"
+                    tools:ignore="RtlHardcoded" />
 
             </LinearLayout>
 
@@ -135,9 +156,15 @@
                     tools:ignore="RtlSymmetry" />
 
                 <TextView
+                    android:id="@+id/tvTransmissionType"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:hint="@string/hint_transmissionType"
+                    android:textColor="@color/color_000000"
+                    android:textSize="@dimen/text_13sp"
+                    tools:ignore="RtlHardcoded" />
             </LinearLayout>
 
             <TextView
@@ -161,9 +188,17 @@
                     android:textSize="@dimen/text_13sp"
                     tools:ignore="RtlSymmetry" />
 
-                <TextView
+                <EditText
+                    android:id="@+id/tvCurrentMileage"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:gravity="center_vertical|right"
+                    android:hint="@string/hint_currentMileage"
+                    android:paddingEnd="10dp"
+                    android:textColor="@color/color_000000"
+                    android:textSize="@dimen/text_13sp"
+                    tools:ignore="RtlHardcoded,RtlSymmetry,TextFields" />
 
             </LinearLayout>
 
@@ -172,6 +207,58 @@
                 android:layout_height="1dp"
                 android:background="@color/gray_light" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/bluetoothDeviceNumber"
+                    android:textColor="@color/color_000000"
+                    android:textSize="@dimen/text_13sp"
+                    tools:ignore="RtlSymmetry" />
+
+                <TextView
+                    android:id="@+id/tvBluetoothDeviceNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:hint="@string/hint_bluetoothDeviceNumber"
+                    android:textColor="@color/color_000000"
+                    android:textSize="@dimen/text_13sp"
+                    tools:ignore="RtlHardcoded" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray_light" />
+
+            <com.example.obdandroid.ui.view.progressButton.CircularProgressButton
+                android:id="@+id/btnAdd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/calibri"
+                android:textColor="@color/cpb_white"
+                android:textSize="18sp"
+                app:cpb_cornerRadius="10dp"
+                app:cpb_iconComplete="@drawable/ic_action_accept"
+                app:cpb_iconError="@drawable/ic_action_cancel"
+                app:cpb_selectorComplete="@drawable/complete_state_selector"
+                app:cpb_selectorError="@drawable/error_state_selector"
+                app:cpb_selectorIdle="@drawable/idle_state_selector"
+                app:cpb_textIdle="@string/addVehicle" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

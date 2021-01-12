@@ -14,8 +14,6 @@
     <string name="morning">Morning</string>
     <string name="good">Good </string>
     <string name="title_home">首页</string>
-    <string name="title_category">分类</string>
-    <string name="title_cart">购物车</string>
     <string name="title_my">我的</string>
     <string name="changPWD">修改密码</string>
     <string name="about">关于我们</string>
@@ -83,4 +81,20 @@
     <string name="transmissionType">变速箱类型</string>
     <string name="currentMileage">当前里程(公里)</string>
     <string name="car_base_info">车辆基础信息</string>
+    <string name="bluetoothDeviceNumber">蓝牙设备</string>
+    <string name="addVehicle">添加</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="search_contact">搜索联系人</string>
+    <string name="no_contact">没有找到联系人</string>
+    <string name="automobileBrand">车辆品牌</string>
+    <string name="hint_automobileBrandName">请选择汽车品牌</string>
+    <string name="hint_modelName">请选择型号</string>
+    <string name="hint_fuelType">请选择燃油类型</string>
+    <string name="hint_transmissionType">请选择变速箱类型</string>
+    <string name="hint_currentMileage">请输入当前里程</string>
+    <string name="hint_bluetoothDeviceNumber">请选择蓝牙设备</string>
+    <string name="carModel">品牌型号</string>
+    <string name="fuelTypeTitle">燃油类型</string>
+
 </resources>

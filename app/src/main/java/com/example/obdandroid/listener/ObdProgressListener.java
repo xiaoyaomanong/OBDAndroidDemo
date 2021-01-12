@@ -1,9 +1,9 @@
 package com.example.obdandroid.listener;
 
-import com.github.pires.obd.commands.ObdCommand;
+import com.example.obdandroid.service.ObdCommandJob;
 
 public interface ObdProgressListener {
 
-    void stateUpdate(final ObdCommand job);
+    void stateUpdate(final ObdCommandJob job);
 
 }

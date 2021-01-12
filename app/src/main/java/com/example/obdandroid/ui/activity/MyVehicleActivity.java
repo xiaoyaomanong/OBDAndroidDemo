@@ -9,6 +9,7 @@ import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.adapter.MyVehicleAdapter;
 import com.example.obdandroid.ui.entity.VehicleEntity;
+import com.example.obdandroid.utils.JumpUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
@@ -106,7 +107,7 @@ public class MyVehicleActivity extends BaseActivity {
 
             @Override
             public void onRightClick(View v) {
-
+                JumpUtil.startAct(context, AddVehiclActivity.class);
             }
         });
     }
@@ -123,8 +124,8 @@ public class MyVehicleActivity extends BaseActivity {
                 url(SERVER_URL + Vehicle_URL).
                 addParam("pageNum", pageNum).
                 addParam("pageSize", pageSize).
-                 addParam("token", token).
-                        build().execute(new StringCallback() {
+                addParam("token", token).
+                build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Response response, Exception e, int id) {
 

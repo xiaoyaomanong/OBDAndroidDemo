@@ -33,4 +33,7 @@
     <color name="cpb_green">#ff99cc00</color>
     <color name="cpb_green_dark">#ff6d9b00</color>
     <color name="cpb_white">@android:color/white</color>
+
+    <color name="common_black">#333333</color>
+    <color name="common_gray_hint">#e4e3e3</color>
 </resources>

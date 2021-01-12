@@ -84,8 +84,7 @@ public class PersonalFragment extends BaseFragment {
      *               用户信息
      */
     private void getUserInfo(String userId, String token) {
-        OkHttpUtils.get().
-                url(SERVER_URL + USER_INFO_URL).
+        OkHttpUtils.get().url(SERVER_URL + USER_INFO_URL).
                 addParam("userId", userId).
                 addParam("token", token).
                 build().execute(new StringCallback() {

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.hjq.bar.TitleBar
+        android:id="@+id/titleBarSet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barStyle="night"
+        app:lineVisible="false"
+        app:title="@string/automobileBrand" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycle_Brand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <com.example.obdandroid.ui.view.LetterSideBarView
+            android:id="@+id/letterSideBarView"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/letter_sidebar_bg" />
+
+
+        <TextView
+            android:id="@+id/indexTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/circle"
+            android:gravity="center"
+            android:scaleX="0"
+            android:scaleY="0"
+            android:textColor="@color/colorAccent"
+            android:textSize="22sp"
+            tools:ignore="RelativeOverlap" />
+    </RelativeLayout>
+</LinearLayout>

@@ -5,13 +5,15 @@ package com.example.obdandroid.service;
 
 import com.github.pires.obd.commands.ObdCommand;
 
+import java.io.Serializable;
+
 /**
  * 此类表示ObdGatewayService必须执行的工作，
  * 保持直到工作完成。 因此，是应用程序
  * ObdCommand实例的表示形式以及状态为
  * 由ObdGatewayService解释和操纵。
  */
-public class ObdCommandJob {
+public class ObdCommandJob implements Serializable {
 
     private Long _id;
     private ObdCommand _command;

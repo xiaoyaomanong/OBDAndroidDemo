@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:orientation="horizontal"
+    android:background="@color/white"
+    android:layout_marginBottom="2dp"
+    tools:ignore="UseCompoundDrawables">
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/icon_fuel_type"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tvFuelType"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/gotham"
+        android:gravity="center_vertical"
+        android:paddingStart="15dp"
+        android:textColor="@color/color_000000"
+        android:textStyle="bold"
+        tools:ignore="RtlSymmetry" />
+
+</LinearLayout>

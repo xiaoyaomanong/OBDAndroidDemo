@@ -5,6 +5,7 @@
     <string name="sign_up">注册</string>
     <string name="sign_in">登录</string>
     <string name="hint_pwd">密码</string>
+    <string name="hint_smd">验证码</string>
     <string name="hint_new_pwd">新密码</string>
     <string name="hint_new_pwd_ok">确认新密码</string>
     <string name="hint_user">手机号</string>
@@ -96,5 +97,12 @@
     <string name="hint_bluetoothDeviceNumber">请选择蓝牙设备</string>
     <string name="carModel">品牌型号</string>
     <string name="fuelTypeTitle">燃油类型</string>
+    <string name="bt_name">蓝牙设备</string>
+    <string name="text_smd_msg">用短信验证码登录</string>
+    <string name="text_pwd_msg">用密码登录</string>
+    <string name="login_version">版权所有,翻版必究</string>
+
+    <!--Copyright 版权标记符 2017-2018 MUSHINY-->
+    <string name="str_copyright">Copyright © 2021–2025 GANSU YIQIANG</string>
 
 </resources>

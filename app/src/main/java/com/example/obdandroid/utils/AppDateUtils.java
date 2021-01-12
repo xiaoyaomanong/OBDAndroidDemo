@@ -7,6 +7,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 /**
@@ -70,5 +71,11 @@ public class AppDateUtils {
     public static Date timeFormat(String day) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");//定义一个formate
         return simpleDateFormat.parse(day);
+    }
+
+    public static int isAM_PM() {
+        ////结果为“0”是上午 结果为“1”是下午
+        GregorianCalendar ca = new GregorianCalendar();
+        return ca.get(GregorianCalendar.AM_PM);
     }
 }

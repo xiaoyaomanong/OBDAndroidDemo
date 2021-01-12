@@ -137,7 +137,7 @@ public class MyVehicleActivity extends BaseActivity {
                 VehicleEntity entity = JSON.parseObject(response, VehicleEntity.class);
                 if (entity.isSuccess()) {
                     pages = entity.getData().getPages();
-                    isLoadMore = Integer.parseInt(pageNum) <= entity.getData().getPages();
+                    isLoadMore = Integer.parseInt(pageSize) <= entity.getData().getPages();
                     if (isRefresh) {
                         adapter.setList(entity.getData().getList());
                         recycleCar.setAdapter(adapter);

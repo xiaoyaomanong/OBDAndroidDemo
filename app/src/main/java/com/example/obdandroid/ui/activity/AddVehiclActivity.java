@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.ui.entity.BluetoothDeviceEntity;
 import com.example.obdandroid.ui.entity.BrandPinYinEntity;
 import com.example.obdandroid.ui.entity.CarModelEntity;
 import com.example.obdandroid.ui.entity.ResultEntity;
@@ -49,9 +50,7 @@ public class AddVehiclActivity extends BaseActivity {
     private TextView tvBluetoothDeviceNumber;
     private CircularProgressButton btnAdd;
     private String automobileBrandId;
-    private String automobileBrandName;
     private String modelId;
-    private String modelName;
     private String fuelType;
     private String transmissionType;
 
@@ -77,27 +76,41 @@ public class AddVehiclActivity extends BaseActivity {
         tvCurrentMileage = findViewById(R.id.tvCurrentMileage);
         tvBluetoothDeviceNumber = findViewById(R.id.tvBluetoothDeviceNumber);
         btnAdd = findViewById(R.id.btnAdd);
+        //选择汽车品牌
         tvAutomobileBrandName.setOnClickListener(v -> {
             Intent intent = new Intent(context, AutomobileBrandActivity.class);
             startActivityForResult(intent, 102);
             ((Activity) context).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);//下往上推出效果
         });
+        //选择型号
         tvModelName.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(automobileBrandId)) {
+                showTipsDialog("请选择汽车品牌", TipDialog.TYPE_WARNING);
+                return;
+            }
             Intent intent = new Intent(context, CarModelActivity.class);
+            intent.putExtra("automobileBrandId", automobileBrandId);
             startActivityForResult(intent, 102);
             ((Activity) context).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);//下往上推出效果
         });
+        //选择燃油类型
         tvFuelType.setOnClickListener(v -> {
             Intent intent = new Intent(context, FuelTypeActivity.class);
             startActivityForResult(intent, 102);
             ((Activity) context).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);//下往上推出效果
         });
+        //选择变速箱类型
         tvTransmissionType.setOnClickListener(v -> {
             Intent intent = new Intent(context, TransmissionTypeActivity.class);
             startActivityForResult(intent, 102);
             ((Activity) context).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);//下往上推出效果
         });
-
+        //选择绑定的蓝牙设备
+        tvBluetoothDeviceNumber.setOnClickListener(v -> {
+            Intent intent = new Intent(context, BluetoothDeviceActivity.class);
+            startActivityForResult(intent, 102);
+            ((Activity) context).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);//下往上推出效果
+        });
         btnAdd.setIndeterminateProgressMode(true);
         btnAdd.setOnClickListener(v -> {
             if (TextUtils.isEmpty(tvAutomobileBrandName.getText().toString())) {
@@ -118,10 +131,6 @@ public class AddVehiclActivity extends BaseActivity {
             }
             if (TextUtils.isEmpty(tvCurrentMileage.getText().toString())) {
                 showTipsDialog("请输入当前里程", TipDialog.TYPE_ERROR);
-                return;
-            }
-            if (TextUtils.isEmpty(tvCurrentMileage.getText().toString())) {
-                showTipsDialog("请选择蓝牙设备", TipDialog.TYPE_ERROR);
                 return;
             }
             if (btnAdd.getProgress() == -1) {
@@ -221,26 +230,46 @@ public class AddVehiclActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 102) {
             if (resultCode == 101) {
-                BrandPinYinEntity entity = (BrandPinYinEntity) data.getSerializableExtra("automobileBrand");
-                automobileBrandId = String.valueOf(entity.getAutomobileBrandId());
-                automobileBrandName = entity.getName();
+                BrandPinYinEntity entity = null;
+                if (data != null) {
+                    entity = (BrandPinYinEntity) data.getSerializableExtra("automobileBrand");
+                }
+                if (entity != null) {
+                    automobileBrandId = String.valueOf(entity.getAutomobileBrandId());
+                }
+                String automobileBrandName = entity.getName();
                 tvAutomobileBrandName.setText(automobileBrandName);
             }
             if (resultCode == 100) {
-                CarModelEntity.DataEntity entity = (CarModelEntity.DataEntity) data.getSerializableExtra("model");
-                tvModelName.setText(entity.getName());
-                modelId = String.valueOf(entity.getCarModelId());
-                modelName = entity.getName();
+                CarModelEntity.DataEntity entity = null;
+                if (data != null) {
+                    entity = (CarModelEntity.DataEntity) data.getSerializableExtra("model");
+                }
+                tvModelName.setText(entity != null ? entity.getName() : null);
+                modelId = String.valueOf(entity != null ? entity.getCarModelId() : 0);
             }
             if (resultCode == 99) {
-                VocationalDictDataListEntity.DataEntity entity = (VocationalDictDataListEntity.DataEntity) data.getSerializableExtra("fuelType");
+                VocationalDictDataListEntity.DataEntity entity = null;
+                if (data != null) {
+                    entity = (VocationalDictDataListEntity.DataEntity) data.getSerializableExtra("fuelType");
+                }
                 fuelType = String.valueOf(entity.getTypeId());
                 tvFuelType.setText(entity.getValue());
             }
             if (resultCode == 98) {
-                VocationalDictDataListEntity.DataEntity entity = (VocationalDictDataListEntity.DataEntity) data.getSerializableExtra("transmissionType");
+                VocationalDictDataListEntity.DataEntity entity = null;
+                if (data != null) {
+                    entity = (VocationalDictDataListEntity.DataEntity) data.getSerializableExtra("transmissionType");
+                }
                 transmissionType = String.valueOf(entity.getTypeId());
                 tvTransmissionType.setText(entity.getValue());
+            }
+            if (resultCode == 97) {
+                BluetoothDeviceEntity entity = null;
+                if (data != null) {
+                    entity = (BluetoothDeviceEntity) data.getSerializableExtra("bluetoothDeviceNumber");
+                }
+                tvBluetoothDeviceNumber.setText(entity != null ? entity.getBlue_name() : "null");
             }
         }
     }

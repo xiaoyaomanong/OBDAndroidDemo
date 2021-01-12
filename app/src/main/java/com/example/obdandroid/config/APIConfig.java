@@ -20,6 +20,14 @@ public class APIConfig {
      */
     public static final String LOGIN_URL = "/api/login";
     /**
+     * 发送短信验证码
+     */
+    public static final String sendSMSVerificationCode_URL = "/api/sendSMSVerificationCode";
+    /**
+     * 验证验证码
+     */
+    public static final String verifySMSVerificationCode_URL = "/api/verifySMSVerificationCode";
+    /**
      * 退出登录
      */
     public static final String LOGOUT_URL = "/api/logout";

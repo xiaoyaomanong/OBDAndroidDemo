@@ -1,6 +1,7 @@
 package com.example.obdandroid.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -497,5 +498,20 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
     private void stopLiveData() {
         LogE("停止获取OBD实时数据");
         gpsStop();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ENABLE_BT) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (!TextUtils.isEmpty(mConnectedDeviceAddress)) {
+                    connectBtDevice(mConnectedDeviceAddress);
+                } else {
+                    setDefaultMode(mode);
+                    TipDialog.show(context, getString(R.string.text_bluetooth_error_connecting), TipDialog.SHOW_TIME_LONG, TipDialog.TYPE_WARNING);
+                }
+            }
+        }
     }
 }

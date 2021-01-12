@@ -8,6 +8,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -18,7 +21,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +32,7 @@ import com.example.obdandroid.R;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.listener.OnSwipeTouchListener;
 import com.example.obdandroid.ui.entity.ResultEntity;
+import com.example.obdandroid.ui.entity.SMSVerificationCodeEntity;
 import com.example.obdandroid.ui.entity.UserLoginEntity;
 import com.example.obdandroid.ui.view.CircleImageView;
 import com.example.obdandroid.ui.view.CustomeDialog;
@@ -37,6 +40,7 @@ import com.example.obdandroid.ui.view.PhotoDialog;
 import com.example.obdandroid.ui.view.progressButton.CircularProgressButton;
 import com.example.obdandroid.utils.ActivityManager;
 import com.example.obdandroid.utils.AppDateUtils;
+import com.example.obdandroid.utils.CountDownTimerUtils;
 import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.DisplayUtils;
 import com.example.obdandroid.utils.JumpUtil;
@@ -58,6 +62,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -65,6 +71,8 @@ import okhttp3.Response;
 import static com.example.obdandroid.config.APIConfig.LOGIN_URL;
 import static com.example.obdandroid.config.APIConfig.REGISTER_URL;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
+import static com.example.obdandroid.config.APIConfig.sendSMSVerificationCode_URL;
+import static com.example.obdandroid.config.APIConfig.verifySMSVerificationCode_URL;
 import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
 import static com.example.obdandroid.config.Constant.PLATFORM;
 import static com.example.obdandroid.config.Constant.TOKEN;
@@ -98,6 +106,19 @@ public class RegisterActivity extends AppCompatActivity {
     private List<LocalMedia> selectList = new ArrayList<>();
     private final Map<String, File> files = new HashMap<>();
     private SPUtil spUtil;
+    private TextInputLayout textLayout;
+    private CountDownTimerUtils mCountDownTimerUtils;
+    private String taskID;
+    @SuppressLint("HandlerLeak")
+    private final Handler handler = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            if (msg.arg1 == 1) {
+                taskID = msg.obj.toString();
+            }
+        }
+    };
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -112,6 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
         dialogUtils = new DialogUtils(context);
         spUtil = new SPUtil(context);
         initView();
+        setBackGround();
         myHeaderImage.setOnClickListener(v ->
                 new PhotoDialog(context, R.style.dialog, "请选取照片方式", new PhotoDialog.OnCloseListener() {
                     @Override
@@ -132,9 +154,97 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     }
                 }).show());
+        mCountDownTimerUtils = new CountDownTimerUtils(btnCode, context, 60000, 1000);
+        btnCode.setOnClickListener(v -> sendSMSVerificationCode(etUser.getText().toString()));
+        //注册
+        btnSignUp.setIndeterminateProgressMode(true);
+        btnSignUp.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(etNick.getText().toString())) {
+                showToast("请输入昵称");
+                return;
+            }
+            if (TextUtils.isEmpty(etUser.getText().toString())) {
+                showToast("请输入手机号");
+                return;
+            }
+            if (!isMobileNO(etUser.getText().toString())) {
+                showTipsDialog("请输入有效的手机号码！", TipDialog.TYPE_ERROR);
+                return;
+            }
+            if (TextUtils.isEmpty(etPwd.getText().toString())) {
+                showToast("请输入密码");
+                return;
+            }
+          /*  if (isPassword(etPwd.getText().toString())) {
+                showToast("请输入正确的密码格式");
+                textLayout.setError("6-16位数字字母混合,不能全为数字,不能全为字母");
+                return;
+            }*/
+            if (TextUtils.isEmpty(etCode.getText().toString())) {
+                showToast("请输入验证码");
+                return;
+            }
+            if (TextUtils.isEmpty(path)) {
+                headPortrait = bitmaptoString(context, R.drawable.header_image);
+            } else {
+                headPortrait = imageToBase64(path);
+            }
+            if (btnSignUp.getProgress() == -1) {
+                btnSignUp.setProgress(0);
+            }
+            verifySMSVerificationCode(taskID, etUser.getText().toString(), etCode.getText().toString(), headPortrait, etNick.getText().toString());
+        });
+    }
+
+    /**
+     * @param msg 内筒
+     *            提示信息
+     */
+    private void showToast(String msg) {
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @param mobiles 手机号
+     * @return 校验手机号
+     */
+    public boolean isMobileNO(String mobiles) {
+        //"[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，
+        //"\\d{9}"代表后面是可以是0～9的数字，有9位。
+        String telRegex = "[1][3456789]\\d{9}";
+        if (TextUtils.isEmpty(mobiles)) return false;
+        else return mobiles.matches(telRegex);
+    }
+
+    /**
+     * @param password 密码
+     * @return 必须包含小写字母，数字，可以是字母数字下划线组成并且长度是6到16
+     */
+    public boolean isPassword(String password) {
+        String regex = "^(?=.*?[a-z])(?=.*?[0-9])[a-zA-Z0-9_]{6,16}$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(password);
+        boolean isMatch = m.matches();
+        Log.i(TAG_Activity, "isPassword: 是否密码正则匹配" + isMatch);
+        return isMatch;
+    }
+
+    /**
+     * 设置背景
+     */
+    @SuppressLint("ClickableViewAccessibility")
+    private void setBackGround() {
+        if (AppDateUtils.isAM_PM() == 1) {//下午
+            imageView.setImageResource(R.drawable.good_night_img);
+            textView.setText("Night");
+            count = 1;
+        } else {//早上
+            imageView.setImageResource(R.drawable.good_morning_img);
+            textView.setText("Morning");
+            count = 0;
+        }
         imageView.setOnTouchListener(new OnSwipeTouchListener(context) {
             public void onSwipeTop() {
-
             }
 
             @SuppressLint("SetTextI18n")
@@ -167,39 +277,6 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
-        //注册
-        btnSignUp.setIndeterminateProgressMode(true);
-        btnSignUp.setOnClickListener(v -> {
-            if (TextUtils.isEmpty(etNick.getText().toString())) {
-                showToast("请输入昵称");
-                return;
-            }
-            if (TextUtils.isEmpty(etUser.getText().toString())) {
-                showToast("请输入手机号");
-                return;
-            }
-            if (TextUtils.isEmpty(etPwd.getText().toString())) {
-                showToast("请输入密码");
-                return;
-            }
-            if (TextUtils.isEmpty(etCode.getText().toString())) {
-                showToast("请输入验证");
-                return;
-            }
-            if (TextUtils.isEmpty(path)) {
-                headPortrait = bitmaptoString(context, R.drawable.header_image);
-            } else {
-                headPortrait = imageToBase64(path);
-            }
-            if (btnSignUp.getProgress() == -1) {
-                btnSignUp.setProgress(0);
-            }
-            registerUser(headPortrait, etUser.getText().toString(), etNick.getText().toString(), etPwd.getText().toString(), etCode.getText().toString());
-        });
-    }
-
-    private void showToast(String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -215,6 +292,68 @@ public class RegisterActivity extends AppCompatActivity {
         etNick = findViewById(R.id.etNick);
         etCode = findViewById(R.id.etCode);
         btnCode = findViewById(R.id.btn_code);
+        textLayout = findViewById(R.id.textLayout);
+    }
+
+    /**
+     * @param mobile 手机号
+     *               发送短信验证码
+     */
+    private void sendSMSVerificationCode(String mobile) {
+        mCountDownTimerUtils.start();
+        OkHttpUtils.post().url(SERVER_URL + sendSMSVerificationCode_URL).
+                addParam("mobile", mobile).
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                Log.e(TAG_Activity, "发送短信验证码：" + response);
+                SMSVerificationCodeEntity entity = JSON.parseObject(response, SMSVerificationCodeEntity.class);
+                if (entity.isSuccess()) {
+                    showTipsDialog("验证码发送成功", TipDialog.TYPE_FINISH);
+                    Message message = new Message();
+                    message.arg1 = 1;
+                    message.obj = entity.getData().getTaskID();
+                    handler.sendMessage(message);
+                    mCountDownTimerUtils.onFinish();
+
+                }
+            }
+        });
+    }
+
+    /**
+     * @param taskID           短信验证码id
+     * @param mobile           手机号
+     * @param verificationCode 验证码
+     *                         校验短信验证码
+     */
+    private void verifySMSVerificationCode(String taskID, String mobile, String verificationCode, String headPortrait, String nickname) {
+        btnSignUp.setProgress(0);
+        new Handler().postDelayed(() -> btnSignUp.setProgress(50), 3000);
+        OkHttpUtils.post().url(SERVER_URL + verifySMSVerificationCode_URL).
+                addParam("taskID", taskID).
+                addParam("mobile", mobile).
+                addParam("verificationCode", verificationCode).
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                Log.e(TAG_Activity, "校验短信验证码：" + response);
+                ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
+                if (entity.isSuccess()) {
+                    registerUser(headPortrait, mobile, nickname, etPwd.getText().toString(), verificationCode, taskID);
+                }
+            }
+        });
     }
 
     /**
@@ -224,9 +363,7 @@ public class RegisterActivity extends AppCompatActivity {
      * @param password         密码
      * @param verificationCode 验证码
      */
-    private void registerUser(String headPortrait, String mobile, String nickname, String password, String verificationCode) {
-        btnSignUp.setProgress(0);
-        new Handler().postDelayed(() -> btnSignUp.setProgress(50), 1000);
+    private void registerUser(String headPortrait, String mobile, String nickname, String password, String verificationCode, String taskID) {
         OkHttpUtils.post().url(SERVER_URL + REGISTER_URL).
                 addParam("headPortrait", headPortrait).
                 addParam("mobile", mobile).
@@ -234,6 +371,7 @@ public class RegisterActivity extends AppCompatActivity {
                 addParam("password", password).
                 addParam("registrationPlatform", PLATFORM).
                 addParam("verificationCode", verificationCode).
+                addParam("taskID", taskID).
                 build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Response response, Exception e, int id) {
@@ -248,7 +386,7 @@ public class RegisterActivity extends AppCompatActivity {
                     btnSignUp.setProgress(100);
                     new CustomeDialog(context, "注册成功,请登录！", confirm -> {
                         if (confirm) {
-                            userLogin(mobile, password);
+                            userLogin(mobile, password, "1", "", taskID);
                         }
                     }).setPositiveButton("登录").setTitle("注册提示").show();
                 } else {
@@ -264,33 +402,36 @@ public class RegisterActivity extends AppCompatActivity {
      * @param password 密码
      *                 用户登录
      */
-    private void userLogin(String mobile, String password) {
+    private void userLogin(String mobile, String password, String loginType, String verificationCode, String taskID) {
         dialogUtils.showProgressDialog("正在登录！");
         OkHttpUtils.post().url(SERVER_URL + LOGIN_URL).
                 addParam("mobile", mobile).
-                addParam("password", password).build().
-                execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Response response, Exception e, int id) {
-                        dialogUtils.dismiss();
-                        showTipsDialog(validateError(e, response), TipDialog.TYPE_ERROR);
-                    }
+                addParam("password", password).
+                addParam("loginType", loginType).
+                addParam("verificationCode", verificationCode).
+                addParam("taskID", taskID).
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+                dialogUtils.dismiss();
+                showTipsDialog(validateError(e, response), TipDialog.TYPE_ERROR);
+            }
 
-                    @Override
-                    public void onResponse(String response, int id) {
-                        UserLoginEntity entity = JSON.parseObject(response, UserLoginEntity.class);
-                        if (entity.isSuccess()) {
-                            spUtil.put(Constant.IS_LOGIN, true);
-                            spUtil.put(TOKEN, entity.getData().getToken());
-                            spUtil.put(USER_ID, String.valueOf(entity.getData().getUserId()));
-                            spUtil.put(EXPIRE_TIME, AppDateUtils.dealDateFormat(entity.getData().getExpireTime()));
-                            JumpUtil.startAct(context, MainActivity.class);
-                            ActivityManager.getInstance().finishActivitys();
-                        } else {
-                            showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
-                        }
-                    }
-                });
+            @Override
+            public void onResponse(String response, int id) {
+                UserLoginEntity entity = JSON.parseObject(response, UserLoginEntity.class);
+                if (entity.isSuccess()) {
+                    spUtil.put(Constant.IS_LOGIN, true);
+                    spUtil.put(TOKEN, entity.getData().getToken());
+                    spUtil.put(USER_ID, String.valueOf(entity.getData().getUserId()));
+                    spUtil.put(EXPIRE_TIME, AppDateUtils.dealDateFormat(entity.getData().getExpireTime()));
+                    JumpUtil.startAct(context, MainActivity.class);
+                    ActivityManager.getInstance().finishActivitys();
+                } else {
+                    showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
+                }
+            }
+        });
     }
 
     /**
@@ -339,12 +480,6 @@ public class RegisterActivity extends AppCompatActivity {
                 .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
                 .cropCompressQuality(90)// 裁剪压缩质量 默认100
                 .minimumCompressSize(100)// 小于100kb的图片不压缩
-                //.cropWH()// 裁剪宽高比，设置如果大于图片本身宽高则无效
-                //.rotateEnabled(true) // 裁剪是否可旋转图片
-                //.scaleEnabled(true)// 裁剪是否可放大缩小图片
-                //.videoQuality()// 视频录制质量 0 or 1
-                //.videoSecond()//显示多少秒以内的视频or音频也可适用
-                //.recordVideoSecond()//录制视频秒数 默认60s
                 .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
 
     }
@@ -379,11 +514,6 @@ public class RegisterActivity extends AppCompatActivity {
                 .previewEggs(false)//预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
                 .cropCompressQuality(90)// 裁剪压缩质量 默认为100
                 .minimumCompressSize(100)// 小于100kb的图片不压缩
-                //.cropWH()// 裁剪宽高比，设置如果大于图片本身宽高则无效
-                //.rotateEnabled() // 裁剪是否可旋转图片
-                //.scaleEnabled()// 裁剪是否可放大缩小图片
-                //.videoQuality()// 视频录制质量 0 or 1
-                //.videoSecond()////显示多少秒以内的视频or音频也可适用
                 .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
     }
 

@@ -1,19 +1,17 @@
 package com.example.obdandroid.ui.adapter;
 
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.obdandroid.R;
-import com.example.obdandroid.ui.entity.BluetoothEntity;
+import com.example.obdandroid.ui.entity.BluetoothDeviceEntity;
 
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -23,16 +21,14 @@ import java.util.List;
  * 描述：
  */
 public class BluetoothSimpleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private Context context;
-    private LayoutInflater inflater;
+    private final LayoutInflater inflater;
     private OnClickCallBack clickCallBack;
-    private List<HashMap<String, Object>> list;
+    private List<BluetoothDeviceEntity> list;
     ;
     private final int EMPTY_VIEW = 0;//空页面
     private final int NOT_EMPTY_VIEW = 1;//正常页面
 
     public BluetoothSimpleAdapter(Context context) {
-        this.context = context;
         inflater = LayoutInflater.from(context);
     }
 
@@ -40,16 +36,19 @@ public class BluetoothSimpleAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.clickCallBack = clickCallBack;
     }
 
-    public void setList(List<HashMap<String, Object>> list) {
+    public void setList(List<BluetoothDeviceEntity> list) {
         this.list = list;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder result;
         if (EMPTY_VIEW == viewType) {
-            return new EmptyViewHolder(inflater.inflate(R.layout.stub_empty, parent, false));
+            result = new EmptyViewHolder(inflater.inflate(R.layout.stub_empty, parent, false));
+        } else {
+            result = new MyViewHolder(inflater.inflate(R.layout.devices, parent, false));
         }
-        return new MyViewHolder(inflater.inflate(R.layout.devices, parent, false));
+        return result;
     }
 
     @Override
@@ -60,10 +59,9 @@ public class BluetoothSimpleAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             viewHolder.mEmptyTextView.setText("附近没有蓝牙");
         } else if (NOT_EMPTY_VIEW == itemViewType) {
             final MyViewHolder holder1 = (MyViewHolder) holder;
-            holder1.device = (BluetoothDevice) list.get(position).get("blue_device");
-            holder1.tvDeviceName.setText((String) list.get(position).get("blue_name"));
-            holder1.tvStatue.setText((String) list.get(position).get("blue_address"));
-            holder1.card_view.setOnClickListener(v -> clickCallBack.Click((BluetoothDevice) list.get(position).get("blue_device")));
+            holder1.tvDeviceName.setText(list.get(position).getBlue_name());
+            holder1.tvStatue.setText(list.get(position).getBlue_address());
+            holder1.card_view.setOnClickListener(v -> clickCallBack.Click(list.get(position)));
         }
     }
 
@@ -94,10 +92,9 @@ public class BluetoothSimpleAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         View itemView;
-        public BluetoothDevice device;//不是用来显示，用来在item点击时返回连接对象
-        private TextView tvDeviceName;
-        private TextView tvStatue;
-        private LinearLayout card_view;
+        private final TextView tvDeviceName;
+        private final TextView tvStatue;
+        private final CardView card_view;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -108,8 +105,8 @@ public class BluetoothSimpleAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
-    public class EmptyViewHolder extends RecyclerView.ViewHolder {
-        private TextView mEmptyTextView;
+    public static class EmptyViewHolder extends RecyclerView.ViewHolder {
+        private final TextView mEmptyTextView;
 
         public EmptyViewHolder(View itemView) {
             super(itemView);
@@ -118,6 +115,6 @@ public class BluetoothSimpleAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public interface OnClickCallBack {
-        void Click(BluetoothDevice device);
+        void Click(BluetoothDeviceEntity device);
     }
 }

@@ -30,7 +30,6 @@ import static com.example.obdandroid.config.APIConfig.getCarModelList_URL;
  */
 public class CarModelActivity extends BaseActivity {
     private Context context;
-    private TitleBar titleBarSet;
     private RecyclerView recycleCarModel;
     private CarModelAdapter adapter;
 
@@ -48,13 +47,14 @@ public class CarModelActivity extends BaseActivity {
     public void initView() {
         super.initView();
         context = this;
-        titleBarSet = findViewById(R.id.titleBarSet);
+        String automobileBrandId = getIntent().getStringExtra("automobileBrandId");
+        TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         recycleCarModel = findViewById(R.id.recycle_carModel);
         LinearLayoutManager manager = new LinearLayoutManager(context);
         manager.setOrientation(OrientationHelper.VERTICAL);
         recycleCarModel.setLayoutManager(manager);
         adapter = new CarModelAdapter(context);
-        getCarModelList(getToken(), "1347111731436064772");
+        getCarModelList(getToken(), "1347111731436064772");//"1347111731436064772"
         adapter.setClickCallBack(entity -> {
             Intent intent = new Intent();
             intent.putExtra("model", entity);

@@ -213,7 +213,7 @@ public class AutomobileBrandActivity extends BaseActivity {
                 holder.setText(R.id.indexTv, currentWord);
                 holder.setText(R.id.userNameTv, entity.getName());
                 if (TextUtils.isEmpty(entity.getLogo())) {
-                    holder.setImageResoucrce(R.id.iv_car_lable, R.drawable.icon_car_lable);
+                    holder.setImageResoucrce(R.id.iv_car_lable, R.drawable.icon_car_def);
                 } else {
                     holder.setImageBitMap(R.id.iv_car_lable, stringToBitmap(entity.getLogo()));
                 }

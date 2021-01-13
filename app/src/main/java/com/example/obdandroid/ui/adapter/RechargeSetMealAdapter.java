@@ -132,7 +132,7 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
-    public class EmptyViewHolder extends RecyclerView.ViewHolder {
+    public static class EmptyViewHolder extends RecyclerView.ViewHolder {
         private final TextView mEmptyTextView;
 
         public EmptyViewHolder(View itemView) {

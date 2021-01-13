@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_080707"
     android:orientation="vertical">
 
     <com.hjq.bar.TitleBar
@@ -27,12 +28,13 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@color/graye4"
+                android:background="@color/color_2c2c2c"
                 android:fontFamily="@font/calibri"
                 android:gravity="center_vertical"
                 android:paddingStart="10dp"
                 android:text="@string/car_base_info"
-                android:textColor="@color/color_000000"
+                android:textColor="@color/white"
+                android:textColorHint="@color/gray_check"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 tools:ignore="RtlSymmetry" />
@@ -49,7 +51,7 @@
                     android:gravity="center_vertical"
                     android:paddingStart="@dimen/dp_10"
                     android:text="@string/automobileBrandName"
-                    android:textColor="@color/color_000000"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_13sp"
                     tools:ignore="RtlSymmetry" />
 
@@ -60,7 +62,8 @@
                     android:drawableEnd="@drawable/icon_next"
                     android:gravity="center_vertical|right"
                     android:hint="@string/hint_automobileBrandName"
-                    android:textColor="@color/color_000000"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
                     android:textSize="@dimen/text_13sp"
                     tools:ignore="RtlHardcoded" />
 
@@ -68,7 +71,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:background="@color/gray_light" />
 
             <LinearLayout
@@ -83,7 +86,7 @@
                     android:gravity="center_vertical"
                     android:paddingStart="@dimen/dp_10"
                     android:text="@string/modelName"
-                    android:textColor="@color/color_000000"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_13sp"
                     tools:ignore="RtlSymmetry" />
 
@@ -94,7 +97,8 @@
                     android:drawableEnd="@drawable/icon_next"
                     android:gravity="center_vertical|right"
                     android:hint="@string/hint_modelName"
-                    android:textColor="@color/color_000000"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
                     android:textSize="@dimen/text_13sp"
                     tools:ignore="RtlHardcoded" />
 
@@ -102,7 +106,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:background="@color/gray_light" />
 
             <LinearLayout
@@ -117,7 +121,7 @@
                     android:gravity="center_vertical"
                     android:paddingStart="@dimen/dp_10"
                     android:text="@string/fuelType"
-                    android:textColor="@color/color_000000"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_13sp"
                     tools:ignore="RtlSymmetry" />
 
@@ -128,7 +132,8 @@
                     android:drawableEnd="@drawable/icon_next"
                     android:gravity="center_vertical|right"
                     android:hint="@string/hint_fuelType"
-                    android:textColor="@color/color_000000"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
                     android:textSize="@dimen/text_13sp"
                     tools:ignore="RtlHardcoded" />
 
@@ -136,7 +141,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:background="@color/gray_light" />
 
             <LinearLayout
@@ -151,7 +156,7 @@
                     android:gravity="center_vertical"
                     android:paddingStart="@dimen/dp_10"
                     android:text="@string/transmissionType"
-                    android:textColor="@color/color_000000"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_13sp"
                     tools:ignore="RtlSymmetry" />
 
@@ -162,14 +167,15 @@
                     android:drawableEnd="@drawable/icon_next"
                     android:gravity="center_vertical|right"
                     android:hint="@string/hint_transmissionType"
-                    android:textColor="@color/color_000000"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
                     android:textSize="@dimen/text_13sp"
                     tools:ignore="RtlHardcoded" />
             </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:background="@color/gray_light" />
 
             <LinearLayout
@@ -184,7 +190,7 @@
                     android:gravity="center_vertical"
                     android:paddingStart="@dimen/dp_10"
                     android:text="@string/currentMileage"
-                    android:textColor="@color/color_000000"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_13sp"
                     tools:ignore="RtlSymmetry" />
 
@@ -193,10 +199,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
                     android:gravity="center_vertical|right"
                     android:hint="@string/hint_currentMileage"
-                    android:paddingEnd="10dp"
-                    android:textColor="@color/color_000000"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
                     android:textSize="@dimen/text_13sp"
                     tools:ignore="RtlHardcoded,RtlSymmetry,TextFields" />
 
@@ -204,7 +211,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:background="@color/gray_light" />
 
             <LinearLayout
@@ -219,7 +226,7 @@
                     android:gravity="center_vertical"
                     android:paddingStart="@dimen/dp_10"
                     android:text="@string/bluetoothDeviceNumber"
-                    android:textColor="@color/color_000000"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_13sp"
                     tools:ignore="RtlSymmetry" />
 
@@ -230,7 +237,8 @@
                     android:drawableEnd="@drawable/icon_next"
                     android:gravity="center_vertical|right"
                     android:hint="@string/hint_bluetoothDeviceNumber"
-                    android:textColor="@color/color_000000"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
                     android:textSize="@dimen/text_13sp"
                     tools:ignore="RtlHardcoded" />
 
@@ -238,7 +246,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:background="@color/gray_light" />
 
             <com.example.obdandroid.ui.view.progressButton.CircularProgressButton
@@ -257,7 +265,7 @@
                 app:cpb_iconError="@drawable/ic_action_cancel"
                 app:cpb_selectorComplete="@drawable/complete_state_selector"
                 app:cpb_selectorError="@drawable/error_state_selector"
-                app:cpb_selectorIdle="@drawable/btn_state_selector"
+                app:cpb_selectorIdle="@drawable/idle_state_selector"
                 app:cpb_textIdle="@string/addVehicle" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

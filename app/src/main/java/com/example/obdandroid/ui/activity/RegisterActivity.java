@@ -88,7 +88,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Context context;
     private ImageView imageView;
     private TextView textView;
-    int count = 0;
+    private int count = 0;
     private EditText etUser;
     private EditText etPwd;
     private CircularProgressButton btnSignUp;
@@ -175,11 +175,11 @@ public class RegisterActivity extends AppCompatActivity {
                 showToast("请输入密码");
                 return;
             }
-          /*  if (isPassword(etPwd.getText().toString())) {
+            if (isPassword(etPwd.getText().toString())) {
                 showToast("请输入正确的密码格式");
-                textLayout.setError("6-16位数字字母混合,不能全为数字,不能全为字母");
+                textLayout.setError("必须包含小写字母，数字，可以是字母数字下划线组成并且长度是6到16");
                 return;
-            }*/
+            }
             if (TextUtils.isEmpty(etCode.getText().toString())) {
                 showToast("请输入验证码");
                 return;

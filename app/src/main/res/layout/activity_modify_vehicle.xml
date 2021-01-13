@@ -1,0 +1,737 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_080707"
+    android:orientation="vertical">
+
+    <com.hjq.bar.TitleBar
+        android:id="@+id/titleBarSet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barStyle="night"
+        app:lineVisible="false"
+        app:title="车辆信息" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/color_2c2c2c"
+                android:fontFamily="@font/calibri"
+                android:gravity="center_vertical"
+                android:paddingStart="10dp"
+                android:text="@string/car_base_info"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold"
+                tools:ignore="RtlSymmetry" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/automobileBrandName"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <TextView
+                    android:id="@+id/tvAutomobileBrandName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:text="@string/hint_automobileBrandName"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/modelName"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <TextView
+                    android:id="@+id/tvModelName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:hint="@string/hint_modelName"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/fuelType"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <TextView
+                    android:id="@+id/tvFuelType"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:hint="@string/hint_fuelType"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/transmissionType"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <TextView
+                    android:id="@+id/tvTransmissionType"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:hint="@string/hint_transmissionType"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/currentMileage"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <TextView
+                    android:id="@+id/tvCurrentMileage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:hint="@string/hint_currentMileage"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry,TextFields" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/icon_ok"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:paddingEnd="5dp"
+                    android:text="@string/VehicleStatusName"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <TextView
+                    android:id="@+id/tvVehicleStatusName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:text="@string/VehicleStatusName"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/icon_ok"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:paddingEnd="5dp"
+                    android:text="@string/bluetoothDeviceNumber"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_13sp"
+                    tools:ignore="RtlSymmetry" />
+
+                <TextView
+                    android:id="@+id/tvBluetoothDeviceNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:hint="@string/hint_bluetoothDeviceNumber"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/text_13sp"
+                    tools:ignore="RtlHardcoded" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/color_2c2c2c"
+                android:fontFamily="@font/calibri"
+                android:gravity="center_vertical"
+                android:paddingStart="10dp"
+                android:text="@string/car_expand_info"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold"
+                tools:ignore="RtlSymmetry" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/EngineDisplacement"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <TextView
+                    android:id="@+id/tvEngineDisplacement"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:gravity="center_vertical|right"
+                    android:paddingEnd="10dp"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/EngineNumber"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <EditText
+                    android:id="@+id/tvEngineNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:hint="@string/hint_EngineNumber"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/FuelCost"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <EditText
+                    android:id="@+id/tvFuelCost"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:textColor="@color/white"
+                    android:hint="@string/hint_FuelCost"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/GrossVehicleWeight"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <EditText
+                    android:id="@+id/tvGrossVehicleWeight"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:textColor="@color/white"
+                    android:hint="@string/hint_GrossVehicleWeight"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/LastMaintenanceDate"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <EditText
+                    android:id="@+id/tvLastMaintenanceDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:paddingEnd="10dp"
+                    android:text="@string/LastMaintenanceMileage"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <EditText
+                    android:id="@+id/tvLastMaintenanceMileage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/LicensePlateNumber"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <EditText
+                    android:id="@+id/tvLicensePlateNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/MaintenanceInterval"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <EditText
+                    android:id="@+id/tvMaintenanceInterval"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/MaintenanceMileageInterval"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <EditText
+                    android:id="@+id/tvMaintenanceMileageInterval"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/TankCapacity"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <EditText
+                    android:id="@+id/tvTankCapacity"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/VehiclePurchaseDate"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <EditText
+                    android:id="@+id/tvVehiclePurchaseDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light"
+                tools:ignore="TooManyViews" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal"
+                tools:ignore="TooManyViews">
+
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/YearManufacture"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry,TooManyViews" />
+
+                <EditText
+                    android:id="@+id/tvYearManufacture"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:gravity="center_vertical|right"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

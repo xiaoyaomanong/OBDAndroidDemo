@@ -185,7 +185,7 @@ public class AddVehiclActivity extends BaseActivity {
                                     String modelName, String fuelType, String transmissionType, String currentMileage,
                                     String bluetoothDeviceNumber, String token) {
         btnAdd.setProgress(0);
-        new Handler().postDelayed(() -> btnAdd.setProgress(50), 1000);
+        new Handler().postDelayed(() -> btnAdd.setProgress(50), 3000);
         OkHttpUtils.post().
                 url(SERVER_URL + ADD_VEHICLE_URL).
                 addParam("token", token).
@@ -253,7 +253,9 @@ public class AddVehiclActivity extends BaseActivity {
                 if (data != null) {
                     entity = (VocationalDictDataListEntity.DataEntity) data.getSerializableExtra("fuelType");
                 }
-                fuelType = String.valueOf(entity.getTypeId());
+                if (entity != null) {
+                    fuelType = String.valueOf(entity.getVocationalDictDataId());
+                }
                 tvFuelType.setText(entity.getValue());
             }
             if (resultCode == 98) {
@@ -261,7 +263,7 @@ public class AddVehiclActivity extends BaseActivity {
                 if (data != null) {
                     entity = (VocationalDictDataListEntity.DataEntity) data.getSerializableExtra("transmissionType");
                 }
-                transmissionType = String.valueOf(entity.getTypeId());
+                transmissionType = String.valueOf(entity != null ? entity.getVocationalDictDataId() : 0);
                 tvTransmissionType.setText(entity.getValue());
             }
             if (resultCode == 97) {

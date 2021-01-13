@@ -275,6 +275,7 @@ public class VehicleEntity {
             private long modelId;
             private String modelName;
             private long fuelType;
+            private String logo;
             private String fuelTypeName;
             private String vehicleName;
             private long transmissionType;
@@ -294,6 +295,14 @@ public class VehicleEntity {
             private String lastMaintenanceMileage;
             private long maintenanceInterval;
             private String maintenanceMileageInterval;
+
+            public String getLogo() {
+                return logo;
+            }
+
+            public void setLogo(String logo) {
+                this.logo = logo;
+            }
 
             public long getVehicleId() {
                 return vehicleId;

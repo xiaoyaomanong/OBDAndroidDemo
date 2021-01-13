@@ -1,36 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:id="@+id/card_view">
-
-    <!-- <com.example.obdandroid.ui.view.ThreeDView.Rota3DSwithViewList
-         android:id="@+id/rota3DSwithViewList_test"
-         android:layout_width="match_parent"
-         android:layout_height="300dp"
-         android:background="#e0000000"
-         app:autoscroll="true" />-->
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/car_1" />
+    android:foreground="?attr/selectableItemBackground"
+    android:layout_marginBottom="3dp"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="10dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="false"
+    app:contentPadding="3dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvVehicleName"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/gotham"
-            android:padding="8dp"
-            android:text="广汽本田-雅阁"
-            android:textColor="@color/color_000000"
-            android:textStyle="bold" />
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/id_cb_vehicleIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:button="@drawable/select_check_bg"
+                android:focusable="false"
+                android:paddingStart="10dp"
+                android:textColor="@color/color_000000"
+                android:fontFamily="@font/calibri"
+                android:textSize="@dimen/sp_14"
+                tools:ignore="RtlSymmetry,SpUsage" />
+
+            <TextView
+                android:id="@+id/tv_licensePlateNumber"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:fontFamily="@font/gotham"
+                android:gravity="center"
+                android:background="@drawable/bg_car_num"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivLogo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/header_image"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvAutomobileBrandName"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/calibri"
+                    android:gravity="center_vertical"
+                    android:paddingStart="5dp"
+                    android:textColor="@color/color_000000"
+                    android:textSize="@dimen/sp_14"
+                    tools:ignore="NestedWeights,RtlSymmetry" />
+
+                <TextView
+                    android:id="@+id/tvFuelTypeName"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/calibri"
+                    android:gravity="center_vertical"
+                    android:paddingStart="5dp"
+                    android:textColor="@color/color_000000"
+                    android:textSize="@dimen/sp_14"
+                    tools:ignore="RtlSymmetry" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:id="@+id/ivObd"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/icon_obd_bind_no"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/tvObd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/gotham"
+                    android:padding="5dp"
+                    android:textSize="@dimen/sp_12"
+                    android:textColor="@color/red" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_next"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+
+</android.support.v7.widget.CardView>

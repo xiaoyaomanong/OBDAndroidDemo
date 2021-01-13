@@ -84,6 +84,8 @@ public class PersonalFragment extends BaseFragment {
      *               用户信息
      */
     private void getUserInfo(String userId, String token) {
+        LogE("userId:" + userId);
+        LogE("token:" + token);
         OkHttpUtils.get().url(SERVER_URL + USER_INFO_URL).
                 addParam("userId", userId).
                 addParam("token", token).
@@ -99,7 +101,9 @@ public class PersonalFragment extends BaseFragment {
                 if (entity.isSuccess()) {
                     myHeaderName.setText(entity.getData().getNickname());
                     myHeaderMobile.setText(entity.getData().getPhoneNum());
-                    myHeaderImage.setImageBitmap(stringToBitmap(entity.getData().getHeadPortrait()));
+                    if (entity.getData().getHeadPortrait().length() > 0) {
+                        myHeaderImage.setImageBitmap(stringToBitmap(entity.getData().getHeadPortrait()));
+                    }
                     if (entity.getData().getIsVip() == 1) {
                         ivVip.setImageResource(R.drawable.icon_vip_ok);
                     } else {
@@ -217,17 +221,11 @@ public class PersonalFragment extends BaseFragment {
     }
 
     /**
-     * @param string Base64图片
+     * @param base64Data Base64图片
      * @return Base64转换图片
      */
-    public static Bitmap stringToBitmap(String string) {
-        Bitmap bitmap = null;
-        try {
-            byte[] bitmapArray = Base64.decode(string.split(",")[1], Base64.DEFAULT);
-            bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bitmap;
+    public static Bitmap stringToBitmap(String base64Data) {
+        byte[] bytes = Base64.decode(base64Data, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
 }

@@ -12,7 +12,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:contentDescription="@null"
-        android:src="@mipmap/ic_launcher"
+        android:src="@drawable/header_image"
         app:border_color="@color/white"
         app:border_width="2dp" />
 

@@ -3,7 +3,7 @@ package com.example.obdandroid.config;
 /**
  * 作者：Jealous
  * 日期：2021/1/5 0005
- * 描述：
+ * 描述：接口
  */
 public class APIConfig {
     /**
@@ -63,6 +63,18 @@ public class APIConfig {
      * 获取品牌型号
      */
     public static final String getCarModelList_URL = "/api/getCarModelList";
+    /**
+     * 获取用户车辆详情
+     */
+    public static final String getVehicleInfoById_URL = "/api/getVehicleInfoById";
+    /**
+     * 绑定蓝牙
+     */
+    public static final String bindingVehicle_URL = "/api/bindingVehicle";
+    /**
+     * 修改车辆信息
+     */
+    public static final String modifyVehicle_URL = "/api/modifyVehicle";
     /**
      * 业务字典值
      */

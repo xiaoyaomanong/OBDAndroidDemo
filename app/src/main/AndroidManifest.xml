@@ -161,6 +161,9 @@
         <activity android:name=".ui.activity.CarModelActivity" />
         <activity android:name=".ui.activity.TransmissionTypeActivity" />
         <activity android:name=".ui.activity.BluetoothDeviceActivity" />
+        <activity android:name=".ui.activity.VehicleInfoActivity" />
+        <activity android:name=".ui.activity.BindBluetoothDeviceActivity" />
+        <activity android:name=".ui.activity.ModifyVehicleActivity" />
 
     </application>
 

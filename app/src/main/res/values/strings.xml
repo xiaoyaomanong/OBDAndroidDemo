@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">车管家</string>
+    <string name="app_name">Ai车检</string>
     <string name="onMain">立即体验</string>
     <string name="forgot_password">忘记密码?</string>
     <string name="sign_up">注册</string>
@@ -104,5 +104,23 @@
 
     <!--Copyright 版权标记符 2017-2018 MUSHINY-->
     <string name="str_copyright">Copyright © 2021–2025 GANSU YIQIANG</string>
+    <string name="car_expand_info">车辆扩展信息</string>
+    <string name="EngineDisplacement">引擎排气量/排量(升)</string>
+    <string name="EngineNumber">发动机号</string>
+    <string name="FuelCost">油价</string>
+    <string name="GrossVehicleWeight">汽车总重(KG)</string>
+    <string name="LastMaintenanceDate">上次保养日期</string>
+    <string name="LastMaintenanceMileage">上次保养里程(公里)</string>
+    <string name="LicensePlateNumber">车牌号</string>
+    <string name="MaintenanceInterval">保养时间间隔(月)</string>
+    <string name="MaintenanceMileageInterval">保养里程间隔(公里)</string>
+    <string name="TankCapacity">油箱容量(升)</string>
+    <string name="VehiclePurchaseDate">车辆购置日期</string>
+    <string name="VehicleStatusName">车辆状态</string>
+    <string name="YearManufacture">出厂年份</string>
+    <string name="logo">Logo</string>
+    <string name="hint_EngineNumber">请输入发动机号码</string>
+    <string name="hint_FuelCost">请输入油价</string>
+    <string name="hint_GrossVehicleWeight">请输入汽车总重(KG)</string>
 
 </resources>

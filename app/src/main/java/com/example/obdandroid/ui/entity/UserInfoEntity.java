@@ -75,6 +75,7 @@ public class UserInfoEntity {
         private String remainingUsageNum;
         private String startValidity;
         private String endValidity;
+        private boolean isTheDeviceBound;
 
         public long getUserId() {
             return userId;
@@ -154,6 +155,14 @@ public class UserInfoEntity {
 
         public void setEndValidity(String endValidity) {
             this.endValidity = endValidity;
+        }
+
+        public boolean isTheDeviceBound() {
+            return isTheDeviceBound;
+        }
+
+        public void setTheDeviceBound(boolean theDeviceBound) {
+            isTheDeviceBound = theDeviceBound;
         }
     }
 }

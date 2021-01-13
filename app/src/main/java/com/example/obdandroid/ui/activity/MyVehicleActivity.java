@@ -88,12 +88,7 @@ public class MyVehicleActivity extends BaseActivity {
                 }
             }
         });
-        adapter.setClickCallBack(new MyVehicleAdapter.OnClickCallBack() {
-            @Override
-            public void Click(VehicleEntity.DataEntity.ListEntity entity) {
-
-            }
-        });
+        adapter.setClickCallBack(entity -> JumpUtil.startActToData(context, VehicleInfoActivity.class, String.valueOf(entity.getVehicleId()), 0));
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {

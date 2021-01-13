@@ -21,7 +21,6 @@
 
     </FrameLayout>
 
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
@@ -118,8 +117,7 @@
                 android:drawablePadding="16dp"
                 android:fontFamily="@font/calibri"
                 android:hint="@string/hint_nick"
-                android:importantForAutofill="no"
-                android:inputType="textEmailAddress"
+                android:inputType="text"
                 android:maxLines="1"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
@@ -139,8 +137,7 @@
                 android:drawablePadding="16dp"
                 android:fontFamily="@font/calibri"
                 android:hint="@string/hint_user"
-                android:importantForAutofill="no"
-                android:inputType="number"
+                android:inputType="phone"
                 android:maxLines="1"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
@@ -191,8 +188,7 @@
                     android:drawablePadding="16dp"
                     android:fontFamily="@font/calibri"
                     android:hint="@string/hint_code"
-                    android:importantForAutofill="no"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:maxLines="1"
                     android:textColor="@android:color/white"
                     android:textSize="16sp" />

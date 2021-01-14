@@ -53,6 +53,7 @@ public class AddVehiclActivity extends BaseActivity {
     private String modelId;
     private String fuelType;
     private String transmissionType;
+    private String bluetoothDeviceNumber;
 
     @Override
     protected int getContentViewId() {
@@ -207,7 +208,6 @@ public class AddVehiclActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("添加车辆信息:" + response);
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
                     btnAdd.setProgress(100);
@@ -271,7 +271,8 @@ public class AddVehiclActivity extends BaseActivity {
                 if (data != null) {
                     entity = (BluetoothDeviceEntity) data.getSerializableExtra("bluetoothDeviceNumber");
                 }
-                tvBluetoothDeviceNumber.setText(entity != null ? entity.getBlue_name() : "null");
+                bluetoothDeviceNumber= entity != null ? entity.getBlue_address() : "";
+                tvBluetoothDeviceNumber.setText(entity != null ? entity.getBlue_name() : "");
             }
         }
     }

@@ -276,6 +276,7 @@ public class VehicleEntity {
             private String modelName;
             private long fuelType;
             private String logo;
+            private String bluetoothDeviceNumber;
             private String fuelTypeName;
             private String vehicleName;
             private long transmissionType;
@@ -295,6 +296,14 @@ public class VehicleEntity {
             private String lastMaintenanceMileage;
             private long maintenanceInterval;
             private String maintenanceMileageInterval;
+
+            public String getBluetoothDeviceNumber() {
+                return bluetoothDeviceNumber;
+            }
+
+            public void setBluetoothDeviceNumber(String bluetoothDeviceNumber) {
+                this.bluetoothDeviceNumber = bluetoothDeviceNumber;
+            }
 
             public String getLogo() {
                 return logo;

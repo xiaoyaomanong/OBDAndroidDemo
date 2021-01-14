@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:orientation="horizontal"
-    android:background="@color/white"
+    android:background="@color/color_2c2c2c"
     android:layout_marginBottom="2dp"
     tools:ignore="UseCompoundDrawables">
 
@@ -22,7 +22,7 @@
         android:fontFamily="@font/gotham"
         android:gravity="center_vertical"
         android:paddingStart="15dp"
-        android:textColor="@color/color_000000"
+        android:textColor="@color/white"
         android:textStyle="bold"
         tools:ignore="RtlSymmetry" />
 

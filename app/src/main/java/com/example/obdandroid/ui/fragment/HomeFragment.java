@@ -241,7 +241,6 @@ public class HomeFragment extends BaseFragment implements ObdProgressListener, L
         recycleFun.addItemDecoration(new DividerGridItemDecoration(context));
         HomeAdapter homeAdapter = new HomeAdapter(context);
         recycleFun.setAdapter(homeAdapter);
-
         homeAdapter.setClickCallBack(name -> {
 
         });

@@ -3,15 +3,12 @@ package com.example.obdandroid.ui.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
@@ -22,10 +19,11 @@ import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.adapter.commonAdapter.CommonRecycleAdapter;
 import com.example.obdandroid.ui.adapter.commonAdapter.CommonViewHolder;
 import com.example.obdandroid.ui.adapter.commonAdapter.DefaultItemDecoration;
-import com.example.obdandroid.ui.adapter.commonAdapter.ItemClickListener;
 import com.example.obdandroid.ui.entity.AutomobileBrandEntity;
 import com.example.obdandroid.ui.entity.BrandPinYinEntity;
 import com.example.obdandroid.ui.view.LetterSideBarView;
+import com.example.obdandroid.utils.BitMapUtils;
+import com.example.obdandroid.utils.DialogUtils;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -53,8 +51,8 @@ public class AutomobileBrandActivity extends BaseActivity {
     private final Handler mHandler = new Handler();
     private boolean isScale = false;
     private Context context;
-    private AutomobileBrandAdapter adapter;
     private static final int COMPLETED = 0;
+    private DialogUtils dialogUtils;
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
         @Override
@@ -62,18 +60,15 @@ public class AutomobileBrandActivity extends BaseActivity {
             if (msg.what == COMPLETED) {
                 //排序
                 Collections.sort(mList);
-                adapter = new AutomobileBrandAdapter(context, mList, R.layout.person_recycler_item);
+                AutomobileBrandAdapter adapter = new AutomobileBrandAdapter(context, mList, R.layout.person_recycler_item);
                 recycleBrand.setAdapter(adapter);
                 recycleBrand.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
                 recycleBrand.addItemDecoration(new DefaultItemDecoration(context, R.drawable.default_item));
-                adapter.setItemClickListener(new ItemClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        Intent intent = new Intent();
-                        intent.putExtra("automobileBrand", mList.get(position));
-                        setResult(101, intent);
-                        finish();
-                    }
+                adapter.setItemClickListener(position -> {
+                    Intent intent = new Intent();
+                    intent.putExtra("automobileBrand", mList.get(position));
+                    setResult(101, intent);
+                    finish();
                 });
             }
         }
@@ -97,6 +92,7 @@ public class AutomobileBrandActivity extends BaseActivity {
         LetterSideBarView letterSideBarView = findViewById(R.id.letterSideBarView);
         indexTv = findViewById(R.id.indexTv);
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
+        dialogUtils = new DialogUtils(context);
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -126,9 +122,13 @@ public class AutomobileBrandActivity extends BaseActivity {
     }
 
 
+    /**
+     * @param token 用户token
+     *              获取车辆品牌
+     */
     private void getAutomobileBrandList(String token) {
-        OkHttpUtils.get().
-                url(SERVER_URL + getAutomobileBrandList_URL).
+        dialogUtils.showProgressDialog();
+        OkHttpUtils.get().url(SERVER_URL + getAutomobileBrandList_URL).
                 addParam("token", token).
                 build().execute(new StringCallback() {
             @Override
@@ -138,10 +138,12 @@ public class AutomobileBrandActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
+                LogE("获取车辆品牌：" + response);
                 AutomobileBrandEntity entity = JSON.parseObject(response, AutomobileBrandEntity.class);
                 if (entity.isSuccess()) {
                     initRv(entity.getData());
                 } else {
+                    dialogUtils.dismiss();
                     dialogError(context, entity.getMessage());
                 }
             }
@@ -186,6 +188,7 @@ public class AutomobileBrandActivity extends BaseActivity {
                 BrandPinYinEntity person = new BrandPinYinEntity(list.get(i).getName(), list.get(i).getAutomobileBrandId(), list.get(i).getLogo(), list.get(i).getBrandType());
                 mList.add(person);
             }
+            dialogUtils.dismiss();
             //处理完成后给handler发送消息
             Message msg = new Message();
             msg.what = COMPLETED;
@@ -215,24 +218,9 @@ public class AutomobileBrandActivity extends BaseActivity {
                 if (TextUtils.isEmpty(entity.getLogo())) {
                     holder.setImageResoucrce(R.id.iv_car_lable, R.drawable.icon_car_def);
                 } else {
-                    holder.setImageBitMap(R.id.iv_car_lable, stringToBitmap(entity.getLogo()));
+                    holder.setImageBitMap(R.id.iv_car_lable, BitMapUtils.stringToBitmap(entity.getLogo()));
                 }
             }
         }
-    }
-
-    /**
-     * @param string Base64图片
-     * @return Base64转换图片
-     */
-    public static Bitmap stringToBitmap(String string) {
-        Bitmap bitmap = null;
-        try {
-            byte[] bitmapArray = Base64.decode(string.split(",")[1], Base64.DEFAULT);
-            bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bitmap;
     }
 }

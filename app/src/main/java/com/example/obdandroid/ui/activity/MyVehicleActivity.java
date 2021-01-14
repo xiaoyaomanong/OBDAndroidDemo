@@ -32,13 +32,11 @@ import static com.example.obdandroid.config.APIConfig.Vehicle_URL;
  */
 public class MyVehicleActivity extends BaseActivity {
     private Context context;
-    private TitleBar titleBarSet;
     private PullLoadMoreRecyclerView recycleCar;
     private int pageNum = 1;
     private final int pageSize = 10;
-    private int pages;
     private boolean isLoadMore;
-    private List<VehicleEntity.DataEntity.ListEntity> datas = new ArrayList<>();
+    private final List<VehicleEntity.DataEntity.ListEntity> datas = new ArrayList<>();
     private MyVehicleAdapter adapter;
 
     @Override
@@ -55,7 +53,7 @@ public class MyVehicleActivity extends BaseActivity {
     public void initView() {
         super.initView();
         context = this;
-        titleBarSet = findViewById(R.id.titleBarSet);
+        TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         recycleCar = findViewById(R.id.recycle_Car);
         recycleCar.setLinearLayout();
         //设置是否可以下拉刷新
@@ -69,19 +67,19 @@ public class MyVehicleActivity extends BaseActivity {
         //设置上拉刷新文字颜色
         recycleCar.setFooterViewTextColor(R.color.teal_200);
         adapter = new MyVehicleAdapter(context);
-        getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), true);
+        getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), true);
         recycleCar.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
             @Override
             public void onRefresh() {
                 pageNum = 1;
-                getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), true);
+                getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(),  getUserId(), true);
             }
 
             @Override
             public void onLoadMore() {
                 if (isLoadMore) {
                     pageNum++;
-                    getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), false);
+                    getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(),  getUserId(), false);
                 } else {
                     //设置是否可以上拉刷新
                     recycleCar.setPullLoadMoreCompleted();
@@ -114,12 +112,13 @@ public class MyVehicleActivity extends BaseActivity {
      * @param isRefresh 是否刷新
      *                  获取用户车辆列表
      */
-    private void getVehiclePageList(String pageNum, String pageSize, String token, final boolean isRefresh) {
+    private void getVehiclePageList(String pageNum, String pageSize, String token, String appUserId, final boolean isRefresh) {
         OkHttpUtils.get().
                 url(SERVER_URL + Vehicle_URL).
                 addParam("pageNum", pageNum).
                 addParam("pageSize", pageSize).
                 addParam("token", token).
+                addParam("appUserId", appUserId).
                 build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Response response, Exception e, int id) {
@@ -128,10 +127,8 @@ public class MyVehicleActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("获取用户车辆列表:" + response);
                 VehicleEntity entity = JSON.parseObject(response, VehicleEntity.class);
                 if (entity.isSuccess()) {
-                    pages = entity.getData().getPages();
                     isLoadMore = Integer.parseInt(pageSize) <= entity.getData().getPages();
                     if (isRefresh) {
                         adapter.setList(entity.getData().getList());
@@ -153,5 +150,4 @@ public class MyVehicleActivity extends BaseActivity {
             }
         });
     }
-
 }

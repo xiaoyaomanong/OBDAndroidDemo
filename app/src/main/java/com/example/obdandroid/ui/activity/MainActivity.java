@@ -111,7 +111,7 @@ public class MainActivity extends BaseActivity {
                     viewPager.setCurrentItem(0);
                     return true;
                 case R.id.navigation_my:
-                    viewPager.setCurrentItem(3);
+                    viewPager.setCurrentItem(1);
                     return true;
             }
             return false;

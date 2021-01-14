@@ -46,7 +46,7 @@ public class LetterSideBarView extends View {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setTextSize(DensityUtil.sp2px(this.getContext(), 14));
-        mPaint.setColor(Color.BLACK);
+        mPaint.setColor(Color.WHITE);
     }
 
     @Override
@@ -72,12 +72,11 @@ public class LetterSideBarView extends View {
             if (mLetters[i].equals(mTouchLetter) && mCurrentIsTouch) {
                 mPaint.setTextSize(DensityUtil.sp2px(mContext, 18));
                 mPaint.setColor(Color.RED);
-                canvas.drawText(letter, x, baseLine, mPaint);
             } else {
                 mPaint.setTextSize(DensityUtil.sp2px(mContext, 14));
-                mPaint.setColor(Color.BLACK);
-                canvas.drawText(letter, x, baseLine, mPaint);
+                mPaint.setColor(Color.WHITE);
             }
+            canvas.drawText(letter, x, baseLine, mPaint);
         }
     }
 
@@ -119,5 +118,4 @@ public class LetterSideBarView extends View {
     public void setOnSideBarTouchListener(SideBarTouchListener touchListener) {
         this.mTouchListener = touchListener;
     }
-
 }

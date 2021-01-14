@@ -54,7 +54,7 @@ public class CarModelActivity extends BaseActivity {
         manager.setOrientation(OrientationHelper.VERTICAL);
         recycleCarModel.setLayoutManager(manager);
         adapter = new CarModelAdapter(context);
-        getCarModelList(getToken(), "1347111731436064772");//"1347111731436064772"
+        getCarModelList(getToken(), automobileBrandId);//"1347111731436064772"
         adapter.setClickCallBack(entity -> {
             Intent intent = new Intent();
             intent.putExtra("model", entity);

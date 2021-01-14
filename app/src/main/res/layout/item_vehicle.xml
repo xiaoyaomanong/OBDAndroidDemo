@@ -5,45 +5,44 @@
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="3dp"
     android:foreground="?attr/selectableItemBackground"
-    android:layout_marginBottom="3dp"
-    app:cardCornerRadius="2dp"
+    app:cardCornerRadius="5dp"
     app:cardElevation="10dp"
     app:cardPreventCornerOverlap="true"
-    app:cardUseCompatPadding="false"
-    app:contentPadding="3dp">
+    app:cardUseCompatPadding="false">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/color_2c2c2c"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <CheckBox
+            <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/id_cb_vehicleIndex"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@null"
-                android:button="@drawable/select_check_bg"
-                android:focusable="false"
-                android:paddingStart="10dp"
-                android:textColor="@color/color_000000"
                 android:fontFamily="@font/calibri"
-                android:textSize="@dimen/sp_14"
-                tools:ignore="RtlSymmetry,SpUsage" />
+                android:paddingStart="10dp"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:theme="@style/MyCheckBox"
+                tools:ignore="RtlSymmetry" />
 
             <TextView
                 android:id="@+id/tv_licensePlateNumber"
                 android:layout_width="150dp"
-                android:layout_height="match_parent"
+                android:layout_height="35dp"
                 android:layout_marginStart="20dp"
+                android:background="@drawable/bg_car_num"
                 android:fontFamily="@font/gotham"
                 android:gravity="center"
-                android:background="@drawable/bg_car_num"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_12" />
         </LinearLayout>
@@ -77,7 +76,7 @@
                     android:fontFamily="@font/calibri"
                     android:gravity="center_vertical"
                     android:paddingStart="5dp"
-                    android:textColor="@color/color_000000"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/sp_14"
                     tools:ignore="NestedWeights,RtlSymmetry" />
 
@@ -89,7 +88,7 @@
                     android:fontFamily="@font/calibri"
                     android:gravity="center_vertical"
                     android:paddingStart="5dp"
-                    android:textColor="@color/color_000000"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/sp_14"
                     tools:ignore="RtlSymmetry" />
 
@@ -116,8 +115,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/gotham"
                     android:padding="5dp"
-                    android:textSize="@dimen/sp_12"
-                    android:textColor="@color/red" />
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/sp_12" />
 
             </LinearLayout>
 

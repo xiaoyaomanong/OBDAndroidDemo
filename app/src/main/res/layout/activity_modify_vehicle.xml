@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         app:barStyle="night"
         app:lineVisible="false"
-        app:title="车辆信息" />
+        app:title="完善车辆信息" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -64,7 +64,7 @@
                     android:gravity="center_vertical|right"
                     android:text="@string/hint_automobileBrandName"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/gray_check"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlHardcoded,RtlSymmetry" />
 
@@ -100,7 +100,7 @@
                     android:gravity="center_vertical|right"
                     android:hint="@string/hint_modelName"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/gray_check"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlHardcoded,RtlSymmetry" />
 
@@ -136,7 +136,7 @@
                     android:gravity="center_vertical|right"
                     android:hint="@string/hint_fuelType"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/gray_check"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlHardcoded,RtlSymmetry" />
 
@@ -172,7 +172,7 @@
                     android:gravity="center_vertical|right"
                     android:hint="@string/hint_transmissionType"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/gray_check"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlHardcoded,RtlSymmetry" />
             </LinearLayout>
@@ -198,7 +198,7 @@
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlSymmetry" />
 
-                <TextView
+                <EditText
                     android:id="@+id/tvCurrentMileage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -207,7 +207,7 @@
                     android:gravity="center_vertical|right"
                     android:hint="@string/hint_currentMileage"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/gray_check"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlHardcoded,RtlSymmetry,TextFields" />
 
@@ -245,7 +245,7 @@
                     android:gravity="center_vertical|right"
                     android:text="@string/VehicleStatusName"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/gray_check"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlHardcoded,RtlSymmetry" />
 
@@ -281,7 +281,7 @@
                     android:drawableEnd="@drawable/icon_next"
                     android:gravity="center_vertical|right"
                     android:hint="@string/hint_bluetoothDeviceNumber"
-                    android:textColorHint="@color/gray_check"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/text_13sp"
                     tools:ignore="RtlHardcoded" />
 
@@ -321,15 +321,16 @@
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlSymmetry" />
 
-                <TextView
+                <EditText
                     android:id="@+id/tvEngineDisplacement"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@null"
                     android:gravity="center_vertical|right"
-                    android:paddingEnd="10dp"
+                    android:drawableEnd="@drawable/icon_next"
+                    android:hint="@string/hint_EngineDisplacement"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/gray_check"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlHardcoded,RtlSymmetry" />
 
@@ -365,9 +366,9 @@
                     android:gravity="center_vertical|right"
                     android:hint="@string/hint_EngineNumber"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/gray_check"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
-                    tools:ignore="RtlHardcoded,RtlSymmetry" />
+                    tools:ignore="RtlHardcoded,RtlSymmetry,TextFields" />
 
             </LinearLayout>
 
@@ -399,9 +400,9 @@
                     android:background="@null"
                     android:drawableEnd="@drawable/icon_next"
                     android:gravity="center_vertical|right"
-                    android:textColor="@color/white"
                     android:hint="@string/hint_FuelCost"
-                    android:textColorHint="@color/gray_check"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlHardcoded,RtlSymmetry" />
 
@@ -435,9 +436,9 @@
                     android:background="@null"
                     android:drawableEnd="@drawable/icon_next"
                     android:gravity="center_vertical|right"
-                    android:textColor="@color/white"
                     android:hint="@string/hint_GrossVehicleWeight"
-                    android:textColorHint="@color/gray_check"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlHardcoded,RtlSymmetry" />
 
@@ -464,15 +465,16 @@
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlSymmetry" />
 
-                <EditText
+                <TextView
                     android:id="@+id/tvLastMaintenanceDate"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@null"
                     android:drawableEnd="@drawable/icon_next"
                     android:gravity="center_vertical|right"
+                    android:hint="@string/hint_LastMaintenanceDate"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/gray_check"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlHardcoded,RtlSymmetry" />
 
@@ -507,8 +509,9 @@
                     android:background="@null"
                     android:drawableEnd="@drawable/icon_next"
                     android:gravity="center_vertical|right"
+                    android:hint="@string/hint_LastMaintenanceMileage"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/gray_check"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlHardcoded,RtlSymmetry" />
 
@@ -542,8 +545,9 @@
                     android:background="@null"
                     android:drawableEnd="@drawable/icon_next"
                     android:gravity="center_vertical|right"
+                    android:hint="@string/hint_LicensePlateNumber"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/gray_check"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlHardcoded,RtlSymmetry" />
 
@@ -577,8 +581,9 @@
                     android:background="@null"
                     android:drawableEnd="@drawable/icon_next"
                     android:gravity="center_vertical|right"
+                    android:hint="@string/hint_MaintenanceInterval"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/gray_check"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlHardcoded,RtlSymmetry" />
 
@@ -612,8 +617,9 @@
                     android:background="@null"
                     android:drawableEnd="@drawable/icon_next"
                     android:gravity="center_vertical|right"
+                    android:hint="@string/hint_MaintenanceMileageInterval"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/gray_check"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlHardcoded,RtlSymmetry" />
 
@@ -647,8 +653,9 @@
                     android:background="@null"
                     android:drawableEnd="@drawable/icon_next"
                     android:gravity="center_vertical|right"
+                    android:hint="@string/hint_TankCapacity"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/gray_check"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlHardcoded,RtlSymmetry" />
 
@@ -675,15 +682,16 @@
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlSymmetry" />
 
-                <EditText
+                <TextView
                     android:id="@+id/tvVehiclePurchaseDate"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@null"
                     android:drawableEnd="@drawable/icon_next"
                     android:gravity="center_vertical|right"
+                    android:hint="@string/hint_VehiclePurchaseDate"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/gray_check"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlHardcoded,RtlSymmetry" />
 
@@ -719,8 +727,9 @@
                     android:background="@null"
                     android:drawableEnd="@drawable/icon_next"
                     android:gravity="center_vertical|right"
+                    android:hint="@string/hint_YearManufacture"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/gray_check"
+                    android:textColorHint="@color/textInputLayout"
                     android:textSize="@dimen/sp_12"
                     tools:ignore="RtlHardcoded,RtlSymmetry" />
 

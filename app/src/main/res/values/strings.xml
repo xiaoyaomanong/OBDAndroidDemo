@@ -93,7 +93,7 @@
     <string name="hint_modelName">请选择型号</string>
     <string name="hint_fuelType">请选择燃油类型</string>
     <string name="hint_transmissionType">请选择变速箱类型</string>
-    <string name="hint_currentMileage">请输入当前里程</string>
+    <string name="hint_currentMileage">请输入当前里程(公里)</string>
     <string name="hint_bluetoothDeviceNumber">请选择蓝牙设备</string>
     <string name="carModel">品牌型号</string>
     <string name="fuelTypeTitle">燃油类型</string>
@@ -102,7 +102,6 @@
     <string name="text_pwd_msg">用密码登录</string>
     <string name="login_version">版权所有,翻版必究</string>
 
-    <!--Copyright 版权标记符 2017-2018 MUSHINY-->
     <string name="str_copyright">Copyright © 2021–2025 GANSU YIQIANG</string>
     <string name="car_expand_info">车辆扩展信息</string>
     <string name="EngineDisplacement">引擎排气量/排量(升)</string>
@@ -122,5 +121,14 @@
     <string name="hint_EngineNumber">请输入发动机号码</string>
     <string name="hint_FuelCost">请输入油价</string>
     <string name="hint_GrossVehicleWeight">请输入汽车总重(KG)</string>
+    <string name="hint_LastMaintenanceDate">请选择上次保养日期</string>
+    <string name="hint_LastMaintenanceMileage">请输入上次保养里程(公里)</string>
+    <string name="hint_LicensePlateNumber">请输入车牌号</string>
+    <string name="hint_MaintenanceInterval">请输入保养时间间隔(月)</string>
+    <string name="hint_MaintenanceMileageInterval">请输入保养里程间隔(公里)</string>
+    <string name="hint_TankCapacity">请输入油箱容量(升)</string>
+    <string name="hint_VehiclePurchaseDate">请选择车辆购置日期</string>
+    <string name="hint_YearManufacture">请选择出厂年份</string>
+    <string name="hint_EngineDisplacement">请输入引擎排气量/排量(升)</string>
 
 </resources>

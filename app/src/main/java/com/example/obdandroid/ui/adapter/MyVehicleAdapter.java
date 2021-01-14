@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -78,7 +79,7 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 holder1.tvObd.setTextColor(context.getResources().getColor(R.color.red));
             } else {
                 holder1.ivObd.setImageResource(R.drawable.icon_obd_bind);
-                holder1.tvObd.setTextColor(context.getResources().getColor(R.color.color_000000));
+                holder1.tvObd.setTextColor(context.getResources().getColor(R.color.white));
             }
             holder1.tvObd.setText(list.get(position).getVehicleStatusName());
             holder1.id_cb_vehicleIndex.setText("第" + (position + 1) + "辆车");
@@ -118,7 +119,7 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         View itemView;
-        private final CheckBox id_cb_vehicleIndex;
+        private final AppCompatCheckBox id_cb_vehicleIndex;
         private final TextView tv_licensePlateNumber;
         private final ImageView ivLogo;
         private final TextView tvAutomobileBrandName;

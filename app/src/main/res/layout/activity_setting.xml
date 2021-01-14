@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_080707"
     android:orientation="vertical">
 
     <com.hjq.bar.TitleBar
@@ -44,7 +45,7 @@
                 android:gravity="center_vertical|left"
                 android:paddingStart="10dp"
                 android:text="@string/changPWD"
-                android:textColor="@color/color_000000"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_size"
                 tools:ignore="RtlHardcoded" />
 
@@ -76,7 +77,7 @@
                 android:gravity="center_vertical|left"
                 android:paddingLeft="10dp"
                 android:text="@string/faceback"
-                android:textColor="@color/color_000000"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_size"
                 tools:ignore="RtlHardcoded" />
 
@@ -106,7 +107,7 @@
                 android:gravity="center_vertical|left"
                 android:paddingLeft="10dp"
                 android:text="@string/version"
-                android:textColor="@color/color_000000"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_size" />
 
             <ImageView
@@ -134,8 +135,9 @@
                 android:gravity="center_vertical|left"
                 android:paddingStart="10dp"
                 android:text="@string/about"
-                android:textColor="@color/color_000000"
-                android:textSize="@dimen/text_size" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size"
+                tools:ignore="RtlHardcoded" />
 
             <ImageView
                 android:layout_width="30dp"
@@ -163,14 +165,15 @@
                 android:gravity="center_vertical|left"
                 android:paddingStart="10dp"
                 android:text="@string/exit_login"
-                android:textColor="@color/color_000000"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_size"
                 tools:ignore="RtlHardcoded,RtlSymmetry" />
 
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_next" />
+                android:src="@drawable/icon_next"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
     </LinearLayout>
 

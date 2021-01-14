@@ -87,6 +87,7 @@ public class VehicleInfoEntity {
         private long automobileBrandId;
         private String automobileBrandName;
         private String logo;
+        private String bluetoothDeviceNumber;
         private long modelId;
         private String modelName;
         private long fuelType;
@@ -109,6 +110,14 @@ public class VehicleInfoEntity {
         private String lastMaintenanceMileage;
         private int maintenanceInterval;
         private double maintenanceMileageInterval;
+
+        public String getBluetoothDeviceNumber() {
+            return bluetoothDeviceNumber;
+        }
+
+        public void setBluetoothDeviceNumber(String bluetoothDeviceNumber) {
+            this.bluetoothDeviceNumber = bluetoothDeviceNumber;
+        }
 
         public long getVehicleId() {
             return vehicleId;

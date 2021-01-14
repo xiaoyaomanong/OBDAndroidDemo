@@ -9,12 +9,12 @@
         android:id="@+id/indexTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/common_gray_hint"
+        android:background="@color/color_2c2c2c"
         android:fontFamily="@font/calibri"
         android:paddingStart="8dp"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
-        android:textColor="#333333"
+        android:textColor="@color/white"
         android:textSize="12sp"
         android:visibility="visible"
         tools:ignore="RtlSymmetry" />
@@ -22,6 +22,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/color_080707"
         android:orientation="horizontal"
         tools:ignore="UseCompoundDrawables">
 
@@ -39,7 +40,7 @@
             android:layout_height="40dp"
             android:fontFamily="@font/gotham"
             android:padding="8dp"
-            android:textColor="#333333"
+            android:textColor="@color/white"
             android:textSize="16sp" />
     </LinearLayout>
 

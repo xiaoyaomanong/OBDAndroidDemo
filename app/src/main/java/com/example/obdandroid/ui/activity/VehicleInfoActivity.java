@@ -16,6 +16,7 @@ import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleImageView;
 import com.example.obdandroid.utils.BitMapUtils;
 import com.example.obdandroid.utils.DialogUtils;
+import com.example.obdandroid.utils.JumpUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -109,7 +110,9 @@ public class VehicleInfoActivity extends BaseActivity {
 
             @Override
             public void onRightClick(View v) {
-
+                Intent intent = new Intent(context, ModifyVehicleActivity.class);
+                intent.putExtra("vehicleId", vehicleId);
+                startActivity(intent);
             }
         });
     }
@@ -132,6 +135,7 @@ public class VehicleInfoActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
+                LogE("获取用户车辆详情:"+response);
                 VehicleInfoEntity entity = JSON.parseObject(response, VehicleInfoEntity.class);
                 if (entity.isSuccess()) {
                     dialogUtils.dismiss();

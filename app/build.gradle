@@ -89,6 +89,7 @@ allprojects {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+    implementation project(path: ':obd-reader')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })

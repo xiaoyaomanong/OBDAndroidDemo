@@ -3,6 +3,7 @@ package com.example.obdandroid.ui.activity;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,16 +12,19 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +33,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.obdandroid.R;
+import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.listener.OnSwipeTouchListener;
 import com.example.obdandroid.ui.entity.ResultEntity;
@@ -45,6 +50,7 @@ import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.DisplayUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
+import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -84,11 +90,8 @@ import static com.example.obdandroid.config.TAG.TAG_Activity;
  * 日期：2020/12/23 0023
  * 描述：
  */
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends BaseActivity {
     private Context context;
-    private ImageView imageView;
-    private TextView textView;
-    private int count = 0;
     private EditText etUser;
     private EditText etPwd;
     private CircularProgressButton btnSignUp;
@@ -96,6 +99,11 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText etNick;
     private EditText etCode;
     private Button btnCode;
+    private TitleBar titleBarSet;
+    private LinearLayout layoutRegisterCode;
+    private CircularProgressButton btnSignUpAgree;
+    private LinearLayout layoutRegisterInfo;
+    private TextView tvSex;
     private int themeId;
     private final int chooseMode = PictureMimeType.ofImage();
     private final int maxSelectNum = 1;
@@ -109,6 +117,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputLayout textLayout;
     private CountDownTimerUtils mCountDownTimerUtils;
     private String taskID;
+    private String[] sexArry = new String[]{"不告诉你", "女", "男"};// 性别选择
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
         @Override
@@ -120,20 +129,37 @@ public class RegisterActivity extends AppCompatActivity {
         }
     };
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int getContentViewId() {
+        return R.layout.activity_register;
+    }
+
+    @Override
+    protected int getFragmentContentId() {
+        return 0;
+    }
+
+    @Override
+    public void initView() {
+        super.initView();
         context = this;
         themeId = R.style.picture_default_style;
         DisplayUtils.getInstance(context);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_register);
+        etUser = findViewById(R.id.etUser);
+        etPwd = findViewById(R.id.etPwd);
+        btnSignUp = findViewById(R.id.btnSignUp);
+        myHeaderImage = findViewById(R.id.my_header_image);
+        etNick = findViewById(R.id.etNick);
+        etCode = findViewById(R.id.etCode);
+        btnCode = findViewById(R.id.btn_code);
+        textLayout = findViewById(R.id.textLayout);
+        titleBarSet = findViewById(R.id.titleBarSet);
+        layoutRegisterCode = findViewById(R.id.layoutRegisterCode);
+        btnSignUpAgree = findViewById(R.id.btnSignUpAgree);
+        layoutRegisterInfo = findViewById(R.id.layoutRegisterInfo);
+        tvSex = findViewById(R.id.tvSex);
         dialogUtils = new DialogUtils(context);
         spUtil = new SPUtil(context);
-        initView();
-        setBackGround();
         myHeaderImage.setOnClickListener(v ->
                 new PhotoDialog(context, R.style.dialog, "请选取照片方式", new PhotoDialog.OnCloseListener() {
                     @Override
@@ -155,7 +181,32 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 }).show());
         mCountDownTimerUtils = new CountDownTimerUtils(btnCode, context, 60000, 1000);
-        btnCode.setOnClickListener(v -> sendSMSVerificationCode(etUser.getText().toString()));
+        btnCode.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(etUser.getText().toString())) {
+                showToast("请输入手机号");
+                return;
+            }
+            sendSMSVerificationCode(etUser.getText().toString());
+        });
+        btnSignUpAgree.setIndeterminateProgressMode(true);
+        btnSignUpAgree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(etUser.getText().toString())) {
+                    showToast("请输入手机号");
+                    return;
+                }
+                if (TextUtils.isEmpty(etCode.getText().toString())) {
+                    showToast("请输入验证码");
+                    return;
+                }
+                if (btnSignUpAgree.getProgress() == -1) {
+                    btnSignUpAgree.setProgress(0);
+                }
+                verifySMSVerificationCode(taskID, etUser.getText().toString(), etCode.getText().toString());
+            }
+        });
+        tvSex.setOnClickListener(v -> showSexChooseDialog(tvSex));
         //注册
         btnSignUp.setIndeterminateProgressMode(true);
         btnSignUp.setOnClickListener(v -> {
@@ -192,16 +243,26 @@ public class RegisterActivity extends AppCompatActivity {
             if (btnSignUp.getProgress() == -1) {
                 btnSignUp.setProgress(0);
             }
-            verifySMSVerificationCode(taskID, etUser.getText().toString(), etCode.getText().toString(), headPortrait, etNick.getText().toString());
+            registerUser(headPortrait, etUser.getText().toString(), etNick.getText().toString(), etPwd.getText().toString(), etCode.getText().toString(), taskID);
         });
     }
 
     /**
-     * @param msg 内筒
-     *            提示信息
+     * @param changeSex 性别显示控件
+     *                  选择性别
      */
-    private void showToast(String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    private void showSexChooseDialog(TextView changeSex) {
+        AlertDialog.Builder builder3 = new AlertDialog.Builder(this);// 自定义对话框
+        builder3.setSingleChoiceItems(sexArry, 0, new DialogInterface.OnClickListener() {// 2默认的选中
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {// which是被选中的位置
+                // showToast(which+"");
+                changeSex.setText(sexArry[which]);
+                dialog.dismiss();// 随便点击一个item消失对话框，不用点击确认取消
+            }
+        });
+        builder3.show();// 让弹出框显示
     }
 
     /**
@@ -230,72 +291,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     * 设置背景
-     */
-    @SuppressLint("ClickableViewAccessibility")
-    private void setBackGround() {
-        if (AppDateUtils.isAM_PM() == 1) {//下午
-            imageView.setImageResource(R.drawable.good_night_img);
-            textView.setText("Night");
-            count = 1;
-        } else {//早上
-            imageView.setImageResource(R.drawable.good_morning_img);
-            textView.setText("Morning");
-            count = 0;
-        }
-        imageView.setOnTouchListener(new OnSwipeTouchListener(context) {
-            public void onSwipeTop() {
-            }
-
-            @SuppressLint("SetTextI18n")
-            public void onSwipeRight() {
-                if (count == 0) {
-                    imageView.setImageResource(R.drawable.good_night_img);
-                    textView.setText("Night");
-                    count = 1;
-                } else {
-                    imageView.setImageResource(R.drawable.good_morning_img);
-                    textView.setText("Morning");
-                    count = 0;
-                }
-            }
-
-            @SuppressLint("SetTextI18n")
-            public void onSwipeLeft() {
-                if (count == 0) {
-                    imageView.setImageResource(R.drawable.good_night_img);
-                    textView.setText("Night");
-                    count = 1;
-                } else {
-                    imageView.setImageResource(R.drawable.good_morning_img);
-                    textView.setText("Morning");
-                    count = 0;
-                }
-            }
-
-            public void onSwipeBottom() {
-
-            }
-        });
-    }
-
-    /**
-     * 初始化控件
-     */
-    private void initView() {
-        imageView = findViewById(R.id.imageView);
-        textView = findViewById(R.id.textView);
-        etUser = findViewById(R.id.etUser);
-        etPwd = findViewById(R.id.etPwd);
-        btnSignUp = findViewById(R.id.btnSignUp);
-        myHeaderImage = findViewById(R.id.my_header_image);
-        etNick = findViewById(R.id.etNick);
-        etCode = findViewById(R.id.etCode);
-        btnCode = findViewById(R.id.btn_code);
-        textLayout = findViewById(R.id.textLayout);
-    }
-
-    /**
      * @param mobile 手机号
      *               发送短信验证码
      */
@@ -311,7 +306,6 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                Log.e(TAG_Activity, "发送短信验证码：" + response);
                 SMSVerificationCodeEntity entity = JSON.parseObject(response, SMSVerificationCodeEntity.class);
                 if (entity.isSuccess()) {
                     showTipsDialog("验证码发送成功", TipDialog.TYPE_FINISH);
@@ -332,9 +326,9 @@ public class RegisterActivity extends AppCompatActivity {
      * @param verificationCode 验证码
      *                         校验短信验证码
      */
-    private void verifySMSVerificationCode(String taskID, String mobile, String verificationCode, String headPortrait, String nickname) {
-        btnSignUp.setProgress(0);
-        new Handler().postDelayed(() -> btnSignUp.setProgress(50), 3000);
+    private void verifySMSVerificationCode(String taskID, String mobile, String verificationCode) {
+        btnSignUpAgree.setProgress(0);
+        new Handler().postDelayed(() -> btnSignUpAgree.setProgress(50), 3000);
         OkHttpUtils.post().url(SERVER_URL + verifySMSVerificationCode_URL).
                 addParam("taskID", taskID).
                 addParam("mobile", mobile).
@@ -347,10 +341,14 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                Log.e(TAG_Activity, "校验短信验证码：" + response);
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
-                    registerUser(headPortrait, mobile, nickname, etPwd.getText().toString(), verificationCode, taskID);
+                    btnSignUpAgree.setProgress(100);
+                    layoutRegisterCode.setVisibility(View.GONE);
+                    layoutRegisterInfo.setVisibility(View.VISIBLE);
+                } else {
+                    btnSignUpAgree.setProgress(-1);
+                    showTipsDialog("验证码校验失败", TipDialog.TYPE_ERROR);
                 }
             }
         });
@@ -364,6 +362,8 @@ public class RegisterActivity extends AppCompatActivity {
      * @param verificationCode 验证码
      */
     private void registerUser(String headPortrait, String mobile, String nickname, String password, String verificationCode, String taskID) {
+        btnSignUp.setProgress(0);
+        new Handler().postDelayed(() -> btnSignUp.setProgress(50), 3000);
         OkHttpUtils.post().url(SERVER_URL + REGISTER_URL).
                 addParam("headPortrait", headPortrait).
                 addParam("mobile", mobile).

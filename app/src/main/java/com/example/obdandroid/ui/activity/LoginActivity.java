@@ -1,30 +1,22 @@
 package com.example.obdandroid.ui.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
+import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.Constant;
-import com.example.obdandroid.config.TAG;
-import com.example.obdandroid.listener.OnSwipeTouchListener;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.entity.SMSVerificationCodeEntity;
 import com.example.obdandroid.ui.entity.UserLoginEntity;
@@ -39,10 +31,6 @@ import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
-import java.util.GregorianCalendar;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -52,7 +40,6 @@ import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN;
 import static com.example.obdandroid.config.APIConfig.LOGIN_URL;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.sendSMSVerificationCode_URL;
@@ -70,11 +57,8 @@ import static com.example.obdandroid.config.TAG.TAG_Activity;
  * 日期：2020/12/22 0022
  * 描述：
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
     private Context context;
-    private ImageView imageView;
-    private TextView textView;
-    private int count = 0;
     private EditText etUser;
     private EditText etPwd;
     private TextView btnSignUp;
@@ -90,38 +74,63 @@ public class LoginActivity extends AppCompatActivity {
     private int loginType = 1;
     private String taskID;
     private CountDownTimerUtils mCountDownTimerUtils;
+    private TextView tvTitle;
+    private LinearLayout layoutLogin;
+    private TextView tvVersion;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int getContentViewId() {
+        return R.layout.activity_login;
+    }
+
+    @Override
+    protected int getFragmentContentId() {
+        return 0;
+    }
+
+    @Override
+    public void initView() {
+        super.initView();
         context = this;
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(FLAG_FULLSCREEN, FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_login);
-        initView();
+        etUser = findViewById(R.id.etUser);
+        etPwd = findViewById(R.id.etPwd);
+        btnSignUp = findViewById(R.id.btnSignUp);
+        btnSignIn = findViewById(R.id.btnSignIn);
+        tvForget = findViewById(R.id.tvForget);
+        cbMima = findViewById(R.id.cb_mima);
+        textLayout = findViewById(R.id.textLayout);
+        tvOtherLogin = findViewById(R.id.tvOtherLogin);
+        etCode = findViewById(R.id.etCode);
+        btnCode = findViewById(R.id.btn_code);
+        layoutCode = findViewById(R.id.layoutCode);
+        tvTitle = findViewById(R.id.tv_title);
+        tvVersion = findViewById(R.id.tvVersion);
+
         spUtil = new SPUtil(context);
         String OtherLogin = spUtil.getString("OtherLogin", getString(R.string.text_pwd_msg));
         tvOtherLogin.setText(OtherLogin);
-        setBackGround();
         getPermission();
-        if (OtherLogin.contains("密码")) {//验证码登录
+        if (OtherLogin.contains("账号")) {//验证码登录
             cbMima.setVisibility(View.INVISIBLE);
             textLayout.setVisibility(View.GONE);
             layoutCode.setVisibility(View.VISIBLE);
+            tvTitle.setText("短信快捷登录");
             loginType = 2;
         } else {//密码登录
             cbMima.setVisibility(View.VISIBLE);
             layoutCode.setVisibility(View.GONE);
             textLayout.setVisibility(View.VISIBLE);
             loginType = 1;
+            tvTitle.setText("账号密码登录");
         }
         tvOtherLogin.setOnClickListener(v -> {
-            if (tvOtherLogin.getText().toString().contains("密码")) {//密码登录
+            if (tvOtherLogin.getText().toString().contains("账号")) {//密码登录
                 cbMima.setVisibility(View.VISIBLE);
                 textLayout.setVisibility(View.VISIBLE);
                 layoutCode.setVisibility(View.GONE);
                 tvOtherLogin.setText(getString(R.string.text_smd_msg));
                 spUtil.put("OtherLogin", getString(R.string.text_smd_msg));
+                tvTitle.setText("账号密码登录");
                 loginType = 1;
             } else {//验证码登录
                 cbMima.setVisibility(View.INVISIBLE);
@@ -129,6 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                 layoutCode.setVisibility(View.VISIBLE);
                 tvOtherLogin.setText(getString(R.string.text_pwd_msg));
                 spUtil.put("OtherLogin", getString(R.string.text_pwd_msg));
+                tvTitle.setText("短信快捷登录");
                 loginType = 2;
             }
         });
@@ -143,7 +153,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         btnSignIn.setIndeterminateProgressMode(true);
         btnSignIn.setOnClickListener(v -> {
-            Log.e(TAG_Activity, "loginType：" + loginType);
             if (loginType == 1) {
                 loginPwd();
             } else {
@@ -163,56 +172,6 @@ public class LoginActivity extends AppCompatActivity {
         btnSignUp.setOnClickListener(v -> JumpUtil.startAct(context, RegisterActivity.class));
         //记住密码 监听记住密码多选框按钮事件
         cbMima.setOnCheckedChangeListener((buttonView, isChecked) -> spUtil.put(IS_CHECK, cbMima.isChecked()));
-    }
-
-    /**
-     * 设置背景
-     */
-    @SuppressLint("ClickableViewAccessibility")
-    private void setBackGround() {
-        if (AppDateUtils.isAM_PM() == 1) {//下午
-            imageView.setImageResource(R.drawable.good_night_img);
-            textView.setText("Night");
-            count = 1;
-        } else {//早上
-            imageView.setImageResource(R.drawable.good_morning_img);
-            textView.setText("Morning");
-            count = 0;
-        }
-        imageView.setOnTouchListener(new OnSwipeTouchListener(context) {
-            public void onSwipeTop() {
-            }
-
-            @SuppressLint("SetTextI18n")
-            public void onSwipeRight() {
-                if (count == 0) {
-                    imageView.setImageResource(R.drawable.good_night_img);
-                    textView.setText("Night");
-                    count = 1;
-                } else {
-                    imageView.setImageResource(R.drawable.good_morning_img);
-                    textView.setText("Morning");
-                    count = 0;
-                }
-            }
-
-            @SuppressLint("SetTextI18n")
-            public void onSwipeLeft() {
-                if (count == 0) {
-                    imageView.setImageResource(R.drawable.good_night_img);
-                    textView.setText("Night");
-                    count = 1;
-                } else {
-                    imageView.setImageResource(R.drawable.good_morning_img);
-                    textView.setText("Morning");
-                    count = 0;
-                }
-            }
-
-            public void onSwipeBottom() {
-
-            }
-        });
     }
 
     /**
@@ -238,7 +197,7 @@ public class LoginActivity extends AppCompatActivity {
         if (btnSignIn.getProgress() == -1) {
             btnSignIn.setProgress(0);
         }
-        userLogin(userNameValue, passwordValue, "1", "","");
+        userLogin(userNameValue, passwordValue, "1", "", "");
     }
 
     /**
@@ -278,24 +237,6 @@ public class LoginActivity extends AppCompatActivity {
         else return mobiles.matches(telRegex);
     }
 
-    /**
-     * 初始化控件
-     */
-    private void initView() {
-        imageView = findViewById(R.id.imageView);
-        textView = findViewById(R.id.textView);
-        etUser = findViewById(R.id.etUser);
-        etPwd = findViewById(R.id.etPwd);
-        btnSignUp = findViewById(R.id.btnSignUp);
-        btnSignIn = findViewById(R.id.btnSignIn);
-        tvForget = findViewById(R.id.tvForget);
-        cbMima = findViewById(R.id.cb_mima);
-        textLayout = findViewById(R.id.textLayout);
-        tvOtherLogin = findViewById(R.id.tvOtherLogin);
-        etCode = findViewById(R.id.etCode);
-        btnCode = findViewById(R.id.btn_code);
-        layoutCode = findViewById(R.id.layoutCode);
-    }
 
     /**
      * @param mobile           手机号
@@ -304,7 +245,7 @@ public class LoginActivity extends AppCompatActivity {
      * @param verificationCode 验证码
      *                         用户登录
      */
-    private void userLogin(String mobile, String password, String loginType, String verificationCode,String taskID) {
+    private void userLogin(String mobile, String password, String loginType, String verificationCode, String taskID) {
         btnSignIn.setProgress(0);
         new Handler().postDelayed(() -> btnSignIn.setProgress(50), 3000);
         OkHttpUtils.post().url(SERVER_URL + LOGIN_URL).
@@ -393,7 +334,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.e(TAG_Activity, "校验短信验证码：" + response);
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
-                    userLogin(mobile, "", "2", verificationCode,taskID);
+                    userLogin(mobile, "", "2", verificationCode, taskID);
                 }
             }
         });

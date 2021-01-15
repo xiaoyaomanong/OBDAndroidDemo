@@ -1,6 +1,5 @@
 package com.example.obdandroid.config;
 
-import com.example.obdandroid.service.ObdCommandJob;
 import com.github.pires.obd.commands.ObdCommand;
 import com.github.pires.obd.commands.SpeedCommand;
 import com.github.pires.obd.commands.control.DistanceMILOnCommand;

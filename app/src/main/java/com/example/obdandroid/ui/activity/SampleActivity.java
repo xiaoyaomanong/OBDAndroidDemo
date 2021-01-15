@@ -1,5 +1,6 @@
 package com.example.obdandroid.ui.activity;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -53,7 +54,8 @@ public class SampleActivity extends AppCompatActivity {
         registerReceiver(mObdReaderReceiver, intentFilter);
 
         //启动服务，该服务将在后台执行连接，并执行命令，直到您停止
-        startService(new Intent(this, ObdReaderService.class));
+        Intent intent=new Intent(this, ObdReaderService.class);
+        startService(intent);
     }
 
     /**
@@ -97,5 +99,4 @@ public class SampleActivity extends AppCompatActivity {
         // 这将停止后台线程，如果任何运行立即。
         ObdPreferences.get(this).setServiceRunningStatus(false);
     }
-
 }

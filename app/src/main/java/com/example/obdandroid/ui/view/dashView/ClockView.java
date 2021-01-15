@@ -1,4 +1,4 @@
-package com.example.obdandroid.ui.view;
+package com.example.obdandroid.ui.view.dashView;
 
 import android.animation.ValueAnimator;
 import android.content.Context;

@@ -1,131 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_080707"
     android:focusableInTouchMode="true"
+    android:orientation="vertical"
     tools:context=".ui.activity.RegisterActivity">
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/good_morning_img"
-            tools:ignore="ContentDescription" />
-
-    </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <com.hjq.bar.TitleBar
+        android:id="@+id/titleBarSet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/gotham"
-                android:text="@string/good"
-                android:textColor="#ffffff"
-                android:textSize="32sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/gotham"
-                android:text="@string/morning"
-                android:textColor="#ffffff"
-                android:textSize="32sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="2dp"
-                android:background="#deff00" />
-
-        </LinearLayout>
-
-    </LinearLayout>
+        app:barStyle="night"
+        app:lineVisible="false"
+        app:title="" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="4dp"
-        android:fontFamily="@font/calibri"
-        android:gravity="center"
-        android:text="@string/des_log"
-        android:textColor="#9affffff"
-        android:textSize="10sp"
-        tools:ignore="SmallSp" />
-
-
-    <LinearLayout
-        android:id="@+id/layoutLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="32dp"
+        android:fontFamily="@font/gotham"
+        android:padding="15dp"
+        android:text="@string/register_title"
+        android:textColor="@color/white"
+        android:textSize="25sp" />
+
+    <LinearLayout
+        android:id="@+id/layoutRegisterCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginTop="30dp"
         android:paddingLeft="32dp"
-        android:paddingRight="32dp">
-
-        <com.example.obdandroid.ui.view.CircleImageView
-            android:id="@+id/my_header_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center_horizontal"
-            android:contentDescription="@null"
-            android:src="@drawable/header_image"
-            app:border_color="@color/white"
-            app:border_width="2dp" />
+        android:paddingRight="32dp"
+        android:visibility="visible">
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColorHint="#ffffff"
-            android:theme="@style/EditScreenTextInputLayoutStyle">
-
-            <EditText
-                android:id="@+id/etNick"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableStart="@drawable/ic_nick_white_24dp"
-                android:drawablePadding="16dp"
-                android:fontFamily="@font/calibri"
-                android:hint="@string/hint_nick"
-                android:inputType="text"
-                android:maxLines="1"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:textColorHint="#ffffff"
             android:theme="@style/EditScreenTextInputLayoutStyle">
 
@@ -143,38 +56,15 @@
                 android:textSize="16sp" />
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/textLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColorHint="#ffffff"
-            android:theme="@style/EditScreenTextInputLayoutStyle"
-            app:passwordToggleEnabled="true">
-
-            <EditText
-                android:id="@+id/etPwd"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableStart="@drawable/ic_lock_white_24dp"
-                android:drawablePadding="16dp"
-                android:fontFamily="@font/calibri"
-                android:hint="@string/hint_pwd"
-                android:importantForAutofill="no"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
-        </android.support.design.widget.TextInputLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_weight="1"
                 android:orientation="horizontal"
                 android:textColorHint="#ffffff"
@@ -206,12 +96,10 @@
         </LinearLayout>
 
         <com.example.obdandroid.ui.view.progressButton.CircularProgressButton
-            android:id="@+id/btnSignUp"
+            android:id="@+id/btnSignUpAgree"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/calibri"
             android:textColor="@color/cpb_white"
@@ -221,7 +109,140 @@
             app:cpb_iconError="@drawable/ic_action_cancel"
             app:cpb_selectorComplete="@drawable/complete_state_selector"
             app:cpb_selectorError="@drawable/error_state_selector"
-            app:cpb_selectorIdle="@drawable/register_sttate_selector"
+            app:cpb_selectorIdle="@drawable/idle_state_selector"
+            app:cpb_textIdle="@string/hint_agree" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/calibri"
+                android:padding="5dp"
+                android:text="@string/agree_content"
+                android:textColor="@color/cpb_white"
+                android:textSize="@dimen/sp_12" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/calibri"
+                android:padding="5dp"
+                android:text="@string/register_protocol"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/sp_12" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutRegisterInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:visibility="gone">
+
+        <com.example.obdandroid.ui.view.CircleImageView
+            android:id="@+id/my_header_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@null"
+            android:src="@drawable/icon_header_man"
+            app:border_color="@color/white"
+            app:border_width="2dp" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:textColorHint="#ffffff"
+            android:theme="@style/EditScreenTextInputLayoutStyle">
+
+            <EditText
+                android:id="@+id/etNick"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableStart="@drawable/ic_nick_white_24dp"
+                android:drawablePadding="16dp"
+                android:fontFamily="@font/calibri"
+                android:hint="@string/hint_nick"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:textColorHint="#ffffff"
+            android:theme="@style/EditScreenTextInputLayoutStyle"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/white">
+
+            <EditText
+                android:id="@+id/etPwd"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableStart="@drawable/ic_lock_white_24dp"
+                android:drawablePadding="16dp"
+                android:fontFamily="@font/calibri"
+                android:hint="@string/hint_pwd"
+                android:importantForAutofill="no"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/tvSex"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:drawableStart="@drawable/icon_sex"
+                android:drawableEnd="@drawable/icon_next"
+                android:drawablePadding="16dp"
+                android:fontFamily="@font/calibri"
+                android:gravity="center_vertical"
+                android:hint="@string/hint_sex"
+                android:textColorHint="@android:color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/textInputLayout" />
+        </LinearLayout>
+
+        <com.example.obdandroid.ui.view.progressButton.CircularProgressButton
+            android:id="@+id/btnSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/calibri"
+            android:textColor="@color/cpb_white"
+            android:textSize="18sp"
+            app:cpb_cornerRadius="10dp"
+            app:cpb_iconComplete="@drawable/ic_action_accept"
+            app:cpb_iconError="@drawable/ic_action_cancel"
+            app:cpb_selectorComplete="@drawable/complete_state_selector"
+            app:cpb_selectorError="@drawable/error_state_selector"
+            app:cpb_selectorIdle="@drawable/idle_state_selector"
             app:cpb_textIdle="@string/sign_up" />
 
 
@@ -230,9 +251,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/layoutLogin"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:gravity="center_horizontal|bottom"
+        android:orientation="vertical"
+        android:paddingBottom="10dp">
 
         <com.example.obdandroid.ui.view.CircleImageView
             android:layout_width="60dp"
@@ -259,4 +280,4 @@
             android:textColor="@color/white" />
 
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

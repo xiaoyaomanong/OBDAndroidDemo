@@ -1,102 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusableInTouchMode="true">
-
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/good_morning_img"
-            tools:ignore="ContentDescription" />
-
-    </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/gotham"
-                android:text="@string/good"
-                android:textColor="#ffffff"
-                android:textSize="32sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/gotham"
-                android:text="@string/morning"
-                android:textColor="#ffffff"
-                android:textSize="32sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="2dp"
-                android:background="#deff00" />
-
-        </LinearLayout>
-
-    </LinearLayout>
+    android:background="@color/color_080707"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="4dp"
-        android:fontFamily="@font/calibri"
-        android:gravity="center"
-        android:text="@string/des_log"
-        android:textColor="#9affffff"
-        android:textSize="10sp"
-        tools:ignore="SmallSp" />
-
-
-    <LinearLayout
-        android:id="@+id/layoutLogin"
+        android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="32dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/gotham"
+        android:paddingStart="20dp"
+        android:text="@string/login_title"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        tools:ignore="RtlSymmetry" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="30dp"
+        android:layout_weight="1"
         android:orientation="vertical"
         android:paddingLeft="32dp"
         android:paddingRight="32dp">
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:textColorHint="#ffffff"
-            android:theme="@style/EditScreenTextInputLayoutStyle">
+            android:theme="@style/EditScreenTextInputLayoutStyle"
+            app:hintEnabled="false">
 
             <EditText
                 android:id="@+id/etUser"
@@ -116,10 +55,12 @@
         <android.support.design.widget.TextInputLayout
             android:id="@+id/textLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:textColorHint="#ffffff"
             android:theme="@style/EditScreenTextInputLayoutStyle"
-            app:passwordToggleEnabled="true">
+            app:hintEnabled="false"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/white">
 
             <EditText
                 android:id="@+id/etPwd"
@@ -128,10 +69,8 @@
                 android:autofillHints=""
                 android:drawableStart="@drawable/ic_lock_white_24dp"
                 android:drawablePadding="16dp"
-                android:fontFamily="@font/calibri"
                 android:hint="@string/hint_pwd"
                 android:inputType="textPassword"
-                android:maxLines="1"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
         </android.support.design.widget.TextInputLayout>
@@ -139,17 +78,17 @@
         <LinearLayout
             android:id="@+id/layoutCode"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_weight="1"
-                android:orientation="horizontal"
                 android:textColorHint="#ffffff"
-                android:theme="@style/EditScreenTextInputLayoutStyle">
+                android:theme="@style/EditScreenTextInputLayoutStyle"
+                app:hintEnabled="false">
 
                 <EditText
                     android:id="@+id/etCode"
@@ -197,28 +136,13 @@
                 android:theme="@style/MyCheckBox"
                 tools:ignore="RtlSymmetry" />
 
-            <TextView
-                android:id="@+id/tvOtherLogin"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:fontFamily="@font/calibri"
-                android:gravity="center_vertical|right"
-                android:paddingEnd="5dp"
-                android:text="@string/text_smd_msg"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                tools:ignore="RtlHardcoded,RtlSymmetry" />
         </LinearLayout>
 
         <com.example.obdandroid.ui.view.progressButton.CircularProgressButton
             android:id="@+id/btnSignIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/calibri"
             android:textColor="@color/cpb_white"
@@ -238,13 +162,13 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/btnSignUp"
+                android:id="@+id/tvOtherLogin"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/calibri"
                 android:gravity="center"
-                android:text="@string/sign_up"
+                android:text="@string/text_smd_msg"
                 android:textAlignment="center"
                 android:textColor="#ffffff"
                 android:textSize="16sp" />
@@ -258,17 +182,32 @@
                 android:gravity="center"
                 android:text="@string/forgot_password"
                 android:textAlignment="center"
-                android:textColor="#ffffff"
+                android:textColor="@color/blue"
                 android:textSize="16sp" />
         </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/layoutLogin"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|bottom"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dp_10">
+
+        <TextView
+            android:id="@+id/btnSignUp"
+            android:layout_width="160dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/button_shape"
+            android:fontFamily="@font/calibri"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/hint_sign_up"
+            android:textAlignment="center"
+            android:textColor="#ffffff"
+            android:textSize="14sp" />
 
         <com.example.obdandroid.ui.view.CircleImageView
             android:layout_width="60dp"
@@ -295,4 +234,4 @@
             android:textColor="@color/white" />
 
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

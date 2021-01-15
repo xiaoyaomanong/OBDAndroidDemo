@@ -16,6 +16,7 @@ import com.sohrab.obd.reader.obdCommand.fuel.FindFuelTypeCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.IntakeManifoldPressureCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.AirIntakeTemperatureCommand;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -24,7 +25,7 @@ import java.util.UUID;
  * Created by sohrab on 30/11/2017.
  */
 
-public class TripRecord implements DefineObdReader {
+public class TripRecord implements DefineObdReader, Serializable {
     private static Context sContext;
     int MINUS_ONE = -1;
     private static final int SPEED_GAP = 20;
@@ -629,7 +630,7 @@ public class TripRecord implements DefineObdReader {
         return mIgnitionMonitor;
     }
 
-   private ArrayList<ObdCommand> mObdCommandArrayList;
+    private ArrayList<ObdCommand> mObdCommandArrayList;
 
     public ArrayList<ObdCommand> getmObdCommandArrayList() {
 

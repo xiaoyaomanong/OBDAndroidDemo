@@ -49,7 +49,6 @@ import com.sohrab.obd.reader.utils.LogUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Set;
 
 import app.com.android_obd_reader.R;
 
@@ -57,43 +56,31 @@ import app.com.android_obd_reader.R;
 /**
  * created by sohrab 01/12/2017
  * <p>
- * Service for managing connection and data communication with a OBD-2 in background and update data to RealTime screen.
- * It connects paired OBD-2 Or wait until paired.
- * Once it is paired, try to connect with Bluetooth Socket along with some specific OBD-2 command,
- * if connected, fetch data until OBD-2 disconnected and if somehow,
- * it disconnected then go to connect and this is in loop until user quit from App.
+ * 用于管理与后台OBD-2的连接和数据通信，并将数据更新到实时屏幕的服务。
+ * 它连接配对的OBD-2或等待配对。
+ * 配对后，试着用蓝牙插座和一些特定的OBD-2命令连接，
  */
 
 public class ObdReaderService extends IntentService implements DefineObdReader {
     private static final String TAG = "ObdReaderService";
-    // receive when OBD-2 connected
-
-
+    //OBD-2连接时接收
     public final static char PID_STATUS_SUCCESS = '1';
     public final static int DEVICE_NOT_PAIRED = 1;
     public final static int OBD_NOT_RESPONDING = 2;
     public final static int OBD_CONNECTED = 3;
     public final static int INIT_OBD = 4;
 
-
     //   private static final int NOTIFICATION_ID = 101;
     private static final int DELAY_FIFTEEN_SECOND = 15000;
     private static final int DELAY_TWO_SECOND = 2000;
-    // this is used to find TroubleCode if true. This is used in InspectionActivity where fault is shown.
+    // 如果为true，则用于查找TroubleCode。这用于显示故障的检查活动。
     public boolean mIsFaultCodeRead = true;
     private final IBinder mBinder = new LocalBinder();
-    //   private int mLastNotificationType;
-    // name of OBD
-    private String OBD_SMALL = "obd";
-    private String OBD_CAPS = "OBD";
-    private String V_LINK = "V-LINK";
     private BluetoothManager mBluetoothManager;//Bluetooth Manager
     private BluetoothAdapter mBluetoothAdapter;//Bluetooth adapter
     private BluetoothSocket mSocket;
-    //set OBD-2 connection status
+    //设置OBD-2连接状态
     private boolean isConnected;
-    // private NotificationCompat.Builder mNotificationBuilder;
-    //  private NotificationManager mNotificationManager;
     private boolean mIsRunningSuccess;
     private Intent mIntent = new Intent(ACTION_READ_OBD_REAL_TIME_DATA);
     private char[] mSupportedPids;
@@ -108,130 +95,101 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
-
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         LogUtils.i("onHandleIntent" + "Thread is :: " + Thread.currentThread().getId());
-
-        // setUpAsForeground();
+        BluetoothDevice bluetoothDevice = intent.getExtras().getParcelable("device");
+        LogUtils.i("onHandleIntent" + "Thread is :: " + bluetoothDevice.getAddress());
         if (initiateConnection()) {
             if (!isEnable()) {
                 enableBlutooth();
             }
-            findObdDevicesAndConnect();
+            findObdDevicesAndConnect(bluetoothDevice);
         }
 
         LogUtils.i("onHandleIntent bottom");
-        //  mNotificationManager.cancel(NOTIFICATION_ID);
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(false);
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
         TripRecord.getTripRecode(this).clear();
     }
 
     /**
-     * This method is recursively called until service stopped.
+     * 递归调用此方法，直到服务停止。
      */
-    private void findObdDevicesAndConnect() {
-
+    private void findObdDevicesAndConnect(BluetoothDevice bluetoothDevice) {
         if (!isConnected) {
-            findPairedDevices();
+            findPairedDevices(bluetoothDevice);
         }
-
         if (isConnected) {
             executeCommand();
         }
-
         if (ObdPreferences.get(getApplicationContext()).getServiceRunningStatus()) {
             LogUtils.i("findObdDevicesAndConnect()");
-            findObdDevicesAndConnect();
+            findObdDevicesAndConnect(bluetoothDevice);
         }
-
     }
 
     /**
-     * find paired OBD-2 devices in loop until found and connected or service stopped.
+     * 在循环中查找成对的OBD-2设备，直到找到并连接或服务停止。
      */
-    private void findPairedDevices() {
-
-        while (!isConnected && ObdPreferences.get(getApplicationContext()).getServiceRunningStatus()) {
-            if (mBluetoothAdapter != null) {
-                boolean deviceFound = false;
-
-                Set<BluetoothDevice> bluetoothDevices = mBluetoothAdapter.getBondedDevices();
-                for (BluetoothDevice device : bluetoothDevices) {
-                    if (device != null) {
-                        String name = device.getName();
-                        if (name != null && (name.contains(OBD_SMALL) || name.contains(OBD_CAPS) || name.toUpperCase().contains(V_LINK))) {
-                            try {
-                                connectOBDDevice(device);
-                            } catch (Exception e) {
-                                LogUtils.i("connectOBDDevice return Exception :: " +e.getMessage());
-                            }
-                            deviceFound = true;
-                            break;
-                        }
+    private void findPairedDevices(BluetoothDevice device) {
+        if (mBluetoothAdapter != null) {
+            if (device != null) {
+                String name = device.getName();
+                String v_LINK = "V-LINK";
+                String OBD_CAPS = "OBD";//OBD名称
+                String OBD_SMALL = "obd";
+                if (name != null && (name.contains(OBD_SMALL) || name.contains(OBD_CAPS) || name.toUpperCase().contains(v_LINK))) {
+                    try {
+                        sendBroadcast(ACTION_OBD_CONNECTION_STATUS, "正在连接OBD蓝牙设备...");
+                        connectOBDDevice(device);
+                    } catch (Exception e) {
+                        LogUtils.i("connectOBDDevice 返回异常: " + e.getMessage());
                     }
-
-                }
-
-                if (!deviceFound) {
-                  /*  if (mLastNotificationType != DEVICE_NOT_PAIRED) {
-                        mLastNotificationType = DEVICE_NOT_PAIRED;
-                        updateNotification(getString(R.string.waiting_for_obd));
-                    }*/
-                    sendBroadcast(ACTION_OBD_CONNECTION_STATUS, getString(R.string.waiting_for_obd));
+                }else {
+                    sendBroadcast(ACTION_OBD_CONNECTION_STATUS, "未检测到OBD设备...");
                 }
             }
         }
     }
 
     /**
-     * connects specified bluetooth OBD device with Bluetooth Socket.
-     * if bluetooth socked connected then use some init OBD-2 command to initialize,
-     * if command response is success, then we assume connection is established and ready to fetch data.
+     * 将指定的蓝牙车载诊断设备与蓝牙插座连接。
+     * 如果蓝牙已连接，则使用init OBD-2命令初始化，
      *
-     * @param device
-     * @throws Exception
+     * @param device OBD蓝牙设备
+     * @throws Exception 异常
      */
     public void connectOBDDevice(final BluetoothDevice device) throws Exception {
-
         try {
             mSocket = (BluetoothSocket) device.getClass().getMethod("createInsecureRfcommSocket", new Class[]{int.class}).invoke(device, 1);
         } catch (Exception e) {
-            // e.printStackTrace();
             LogUtils.i("createInsecureRfcommSocket failed");
             closeSocket();
         }
-
         if (mSocket != null) {
             try {
                 mBluetoothAdapter.cancelDiscovery();
                 Thread.sleep(500);
                 mSocket.connect();
                 LogUtils.i("Socket connected");
+                ObdPreferences.get(getApplicationContext()).setBlueToothDeviceAddress(device.getAddress());
+                ObdPreferences.get(getApplicationContext()).setBlueToothDeviceName(device.getName());
             } catch (Exception e) {
                 LogUtils.i("Socket connection  exception :: " + e.getMessage());
-                //   e.printStackTrace();
                 closeSocket();
             }
-
             boolean isSockedConnected = mSocket.isConnected();
             if (isSockedConnected) {
                 try {
                     Thread.sleep(DELAY_TWO_SECOND);
-                  /*  if (mLastNotificationType != INIT_OBD) {
-                        mLastNotificationType = INIT_OBD;
-                        updateNotification(getString(R.string.connecting_to_ecu));
-                    }*/
-                    LogUtils.i("Executing reset command in new Thread :: " + Thread.currentThread().getId());
+                    LogUtils.i("在新线程中执行reset命令 :: " + Thread.currentThread().getId());
                     final Thread newThread = new Thread(new Runnable() {
                         @Override
                         public void run() {
                             try {
-
-                                // this thread is required because in Headunit command.run method block infinitly ,
-                                // therefore this thread life is maximum 15 second so that block can be handled.
+                                // 此线程是必需的，因为在Headunit中命令.run方法无限块，因此，线程的最长寿命为15秒，这样就可以处理块了。
                                 mIsRunningSuccess = false;
                                 new ObdResetCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                                 Thread.sleep(1000);
@@ -244,83 +202,60 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
                                 new SpacesOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                                 Thread.sleep(200);
                                 new TimeoutCommand(125).run(mSocket.getInputStream(), mSocket.getOutputStream());
-                                //  updateNotification(getString(R.string.searching_protocol));
                                 Thread.sleep(200);
                                 new SelectProtocolCommand(ObdProtocols.AUTO).run(mSocket.getInputStream(), mSocket.getOutputStream());
                                 Thread.sleep(200);
                                 new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-                                //  updateNotification(getString(R.string.searching_supported_sensor));
                                 Thread.sleep(200);
                                 mIsRunningSuccess = true;
-                                // checkPid0To20(true);
 
                             } catch (Exception e) {
                                 mIsRunningSuccess = false;
-                                LogUtils.i("In new thread reset command  exception :: " + e != null ? e.getMessage() : "");
+                                LogUtils.i("在新线程中重置命令异常:: " + e != null ? e.getMessage() : "");
                             }
-
                         }
                     });
-
                     newThread.start();
                     newThread.join(DELAY_FIFTEEN_SECOND);
-                    LogUtils.i("Thread wake to check reset command status  i.e  :: " + Thread.currentThread().getId() + ",  mIsRunningSuccess :: " + mIsRunningSuccess);
+                    LogUtils.i("线程唤醒以检查重置命令状态  i.e  :: " + Thread.currentThread().getId() + ",  mIsRunningSuccess :: " + mIsRunningSuccess);
                     isSockedConnected = mIsRunningSuccess;
-
                 } catch (Exception e) {
-                    LogUtils.i(" reset command Exception  :: " + e.getMessage());
+                    LogUtils.i(" 重置命令异常  :: " + e.getMessage());
                     isSockedConnected = false;
                 }
-
             }
 
             if (mSocket != null && mSocket.isConnected() && isSockedConnected) {
                 setConnection(false);
-               /* if (mLastNotificationType != OBD_CONNECTED) {
-                    mLastNotificationType = OBD_CONNECTED;
-                    updateNotification(getString(R.string.connected_ok));
-                }
-*/
             } else {
                 if (mSupportedPids != null && mSupportedPids.length == 32) {
 
                     if ((mSupportedPids[12] != PID_STATUS_SUCCESS) || (mSupportedPids[11] != PID_STATUS_SUCCESS)) {
-                        // speed pid not supportedsupported
-                        // updateNotification(getString(R.string.unable_to_connect));
+                        // 不支持速度PID
                         sendBroadcast(ACTION_OBD_CONNECTION_STATUS, getString(R.string.unable_to_connect));
                         return;
                     }
                 }
-
                 sendBroadcast(ACTION_OBD_CONNECTION_STATUS, getString(R.string.obd2_adapter_not_responding));
-/*
-                if (mLastNotificationType != OBD_NOT_RESPONDING) {
-                    mLastNotificationType = OBD_NOT_RESPONDING;
-                    updateNotification(getString(R.string.obd2_adapter_not_responding));
-                }
-*/
             }
         }
-
     }
 
 
     /**
-     * Once OBD-2 connected, this method will execute to fetch data continuously until OBD disconnected or Service stopped.
+     * 一旦OBD-2连接，此方法将执行以连续获取数据，直到OBD断开或服务停止。
      */
     private void executeCommand() {
-        LogUtils.i("executing commands thread is :: " + Thread.currentThread().getId());
+        LogUtils.i("执行命令线程是 :: " + Thread.currentThread().getId());
         TripRecord tripRecord = TripRecord.getTripRecode(this);
         ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfiguration.getmObdCommands().clone();
         int count = 0;
         while (mSocket != null && mSocket.isConnected() && commands.size() > count && isConnected && ObdPreferences.get(getApplicationContext()).getServiceRunningStatus()) {
-
             ObdCommand command = commands.get(count);
             try {
-
-                LogUtils.i("command run :: " + command.getName());
+                LogUtils.i("命令运行:: " + command.getName());
                 command.run(mSocket.getInputStream(), mSocket.getOutputStream());
-                LogUtils.i("result is :: " + command.getFormattedResult() + " :: name is :: " + command.getName());
+                LogUtils.i("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
                 tripRecord.updateTrip(command.getName(), command);
                 if (mIsFaultCodeRead) {
                     try {
@@ -332,42 +267,32 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
                         e.printStackTrace();
                     }
                 }
-
                 if (mIntent == null)
                     mIntent = new Intent(ACTION_READ_OBD_REAL_TIME_DATA);
                 sendBroadcast(mIntent);
 
             } catch (Exception e) {
-                LogUtils.i("execute command Exception  :: " + e.getMessage());
+                LogUtils.i("执行命令异常  :: " + e.getMessage());
 
                 if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
-                    LogUtils.i("command Exception  :: " + e.getMessage());
+                    LogUtils.i("命令异常  :: " + e.getMessage());
                     setDisconnection();
-/*
-                    if (mLastNotificationType != OBD_NOT_RESPONDING) {
-                        mLastNotificationType = OBD_NOT_RESPONDING;
-                        updateNotification(getString(R.string.obd2_adapter_not_responding));
-                    }
-*/
                 }
             }
             count++;
             if (count == commands.size()) {
                 count = 0;
             }
-
         }
-
-        // exit loop means connection lost, so set connection status false
+        // 退出循环意味着连接丢失，所以将连接状态设置为false
         isConnected = false;
-
     }
 
     /**
-     * send broadcast with specific action and data
+     * 发送带有特定动作和数据的广播
      *
-     * @param action
-     * @param data
+     * @param action 特定动作
+     * @param data   数据
      */
     private void sendBroadcast(final String action, String data) {
         final Intent intent = new Intent(action);
@@ -376,9 +301,9 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
     }
 
     /**
-     * send broadcast with specific action
+     * 发送带有特定操作的广播
      *
-     * @param action
+     * @param action 特定动作
      */
     private void broadcastUpdate(final String action) {
         final Intent intent = new Intent(action);
@@ -388,47 +313,37 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
     @Override
     public void onCreate() {
         super.onCreate();
-        //fetchLocation();
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(true);
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
-        //   mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         LogUtils.i("Service Created :: ");
     }
 
 
     /**
-     * check whether this devices support bluetooth
-     *
-     * @return
+     * @return 检查此设备是否支持蓝牙
      */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     protected boolean initiateConnection() {
         boolean isBlueToothSupported = getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH);
         boolean isInitialized = initialize();
-
         if (!isBlueToothSupported || !isInitialized) {
             Toast.makeText(this, getString(R.string.bluetooth_unsupported), Toast.LENGTH_SHORT).show();
             return false;
         }
-
         return true;
     }
 
     /**
-     * check BluetoothServices available in this device or not
-     *
-     * @return
+     * @return 检查此设备中是否有可用的BluetoothServices
      */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public boolean initialize() {
         if (mBluetoothManager == null) {
             mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
             if (mBluetoothManager == null) {
-
                 return false;
             }
         }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             mBluetoothAdapter = mBluetoothManager.getAdapter();
         } else {
@@ -437,59 +352,10 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
         return mBluetoothAdapter != null;
     }
 
-    // display foreground service notification.
-/*
-    private void setUpAsForeground() {
-
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, NotificationDummyActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        | Intent.FLAG_ACTIVITY_SINGLE_TOP
-                ), 0);
-
-
-        mNotificationBuilder = new NotificationCompat.Builder(this)
-                .setContentTitle(getString(R.string.app_name))
-                .setContentText(getString(R.string.waiting_for_obd))
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(contentIntent);
-
-        startForeground(NOTIFICATION_ID, mNotificationBuilder.build());
-    }
-*/
-
-   /* *//**
-     * Updates the notification.
-     *//*
-    private void updateNotification(String text) {
-        mNotificationBuilder.setContentText(text);
-        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
-    }
-*/
-
-    /**
-     * Updates the notification.
-     */
-/*
-    public void updateNotificationString() {
-        String text = "";
-        if (mLastNotificationType == OBD_CONNECTED) {
-            text = getString(R.string.connected_ok);
-        } else if (mLastNotificationType == OBD_NOT_RESPONDING) {
-            text = getString(R.string.obd2_adapter_not_responding);
-        }
-        if (mLastNotificationType == DEVICE_NOT_PAIRED) {
-            text = getString(R.string.waiting_for_obd);
-        }
-        mNotificationBuilder.setContentTitle(getString(R.string.app_name));
-        mNotificationBuilder.setContentText(text);
-        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
-    }
-*/
     @Override
     public void onDestroy() {
         super.onDestroy();
         LogUtils.i("service onDestroy");
-        //mNotificationManager.cancel(NOTIFICATION_ID);
         closeSocket();
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(false);
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
@@ -511,9 +377,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
     }
 
     /**
-     * check whether Bluetooth is enable or not
-     *
-     * @return
+     * @return 检查蓝牙是否开启
      */
     public boolean isEnable() {
         if (mBluetoothAdapter == null)
@@ -523,9 +387,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
     }
 
     /**
-     * enable bluetooth without user interaction
-     *
-     * @return
+     * @return 无需用户交互即可启用蓝牙
      */
     public boolean enableBlutooth() {
         if (mBluetoothAdapter != null)
@@ -540,39 +402,28 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
 
     }
 
-    /*Method used to set device disconnected state through the application...*/
+    /*通过应用程序设置设备断开状态的方法...*/
     public void setDisconnection() {
-/*
-        if (mLastNotificationType != OBD_NOT_RESPONDING) {
-            mLastNotificationType = OBD_NOT_RESPONDING;
-            updateNotification(getString(R.string.obd2_adapter_not_responding));
-        }
-*/
-
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
         isConnected = false;
         closeSocket();
         LogUtils.i("socket disconnected :: ");
-      //  broadcastUpdate(ACTION_OBD_DISCONNECTED);
         sendBroadcast(ACTION_OBD_CONNECTION_STATUS, getString(R.string.connect_lost));
     }
 
-    /*Method used to set device connected state through the application...*/
+    /*通过应用程序设置设备连接状态的方法...*/
     private void setConnection(boolean isFromBle) {
-
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(true);
         isConnected = true;
-       // sendBroadcast(ACTION_OBD_CONNECTED, String.valueOf(isFromBle));
         sendBroadcast(ACTION_OBD_CONNECTION_STATUS, getString(R.string.obd_connected));
     }
 
     /**
-     * create Binder instance used to return in onBind method
+     * 创建用于在onBind方法中返回的绑定器实例
      */
     public class LocalBinder extends Binder {
         public ObdReaderService getService() {
             return ObdReaderService.this;
         }
     }
-
 }

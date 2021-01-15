@@ -30,19 +30,19 @@ public class ObdPreferences implements PreferencesConstants {
     }
 
     /**
-     *
      * @return: instance of ObdPreferences
      */
     public static ObdPreferences get(Context context) {
         if (mInstance == null) {
             init(context);
-          //  ObdReaderApplication.getInstance().initPreferences();
+            //  ObdReaderApplication.getInstance().initPreferences();
         }
         return mInstance;
     }
 
     /**
      * static method to create instance of ObdPreferences
+     *
      * @param context
      * @return instance of ObdPreferences
      */
@@ -72,8 +72,6 @@ public class ObdPreferences implements PreferencesConstants {
     }
 
 
-
-
     public boolean getIsOBDconnected() {
         return mPrefs.getBoolean(IS_OBD_CONNECTED, false);
     }
@@ -88,6 +86,22 @@ public class ObdPreferences implements PreferencesConstants {
 
     public void setServiceRunningStatus(boolean status) {
         mEditor.putBoolean(SERVICE_RUNNING_STATUS, status).commit();
+    }
+
+    public void setBlueToothDeviceName(String deviceName) {
+        mEditor.putString(BT_NAME_KEY, deviceName).commit();
+    }
+
+    public void setBlueToothDeviceAddress(String deviceAddress) {
+        mEditor.putString(BT_ADDRESS_KEY, deviceAddress).commit();
+    }
+
+    public String getBlueToothDeviceName() {
+        return mPrefs.getString(BT_NAME_KEY, "");
+    }
+
+    public String getBlueToothDeviceAddress() {
+        return mPrefs.getString(BT_ADDRESS_KEY, "");
     }
 
     /**

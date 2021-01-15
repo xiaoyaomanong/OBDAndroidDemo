@@ -21,22 +21,17 @@ import android.widget.Toast;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
-import com.example.obdandroid.config.ObdConfig;
 import com.example.obdandroid.ui.adapter.SimpleFragmentPagerAdapter;
 import com.example.obdandroid.ui.fragment.HomeFragment;
 import com.example.obdandroid.ui.fragment.PersonalFragment;
 import com.example.obdandroid.utils.ActivityManager;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.StringUtil;
-import com.github.pires.obd.commands.ObdCommand;
 import com.kongzue.dialog.util.BlurView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import roboguice.fragment.RoboFragment;
-
-import static com.example.obdandroid.config.Constant.PROTOCOLS_LIST_KEY;
 import static com.kongzue.dialog.v2.DialogSettings.THEME_DARK;
 import static com.kongzue.dialog.v2.DialogSettings.blur_alpha;
 import static com.kongzue.dialog.v2.DialogSettings.dialog_background_color;

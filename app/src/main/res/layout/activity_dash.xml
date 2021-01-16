@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_080707"
+    android:orientation="vertical">
+
+    <com.example.obdandroid.ui.view.dashView.DashboardView
+        android:id="@+id/dashboard_view_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:bgColor="@color/color_2c2c2c"
+        app:arcColor="@color/blue"
+        app:textColor="@color/white"
+        app:stripeMode="outer"
+        app:bigSliceCount="12"
+        app:headerRadius="50dp"
+        app:headerTitle="kW"
+        app:maxValue="180"
+        app:measureTextSize="10sp"
+        app:radius="110dp"
+        app:realTimeValue="120"
+        app:startAngle="170"
+        app:stripeWidth="30dp"
+        app:sweepAngle="200"/>
+
+</LinearLayout>

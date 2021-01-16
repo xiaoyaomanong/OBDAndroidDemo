@@ -84,9 +84,7 @@ public class DashboardView extends View {
 
     public DashboardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DashboardView, defStyleAttr, 0);
-
         mRadius = a.getDimensionPixelSize(R.styleable.DashboardView_radius, dpToPx(80));
         mStartAngle = a.getInteger(R.styleable.DashboardView_startAngle, 180);
         mSweepAngle = a.getInteger(R.styleable.DashboardView_sweepAngle, 180);
@@ -270,7 +268,6 @@ public class DashboardView extends View {
             if (widthMode == MeasureSpec.AT_MOST)
                 mViewHeight = Math.min(mViewHeight, widthSize);
         }
-
         setMeasuredDimension(mViewWidth, mViewHeight);
     }
 

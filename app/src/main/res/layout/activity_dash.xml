@@ -4,25 +4,65 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_080707"
+    android:gravity="center_horizontal"
     android:orientation="vertical">
 
     <com.example.obdandroid.ui.view.dashView.DashboardView
         android:id="@+id/dashboard_view_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:bgColor="@color/color_2c2c2c"
         app:arcColor="@color/blue"
-        app:textColor="@color/white"
-        app:stripeMode="outer"
-        app:bigSliceCount="12"
+        app:bgColor="@color/color_2c2c2c"
+        app:bigSliceCount="8"
         app:headerRadius="50dp"
-        app:headerTitle="kW"
-        app:maxValue="180"
+        app:headerTitle="km/h"
+        app:maxValue="240"
         app:measureTextSize="10sp"
         app:radius="110dp"
         app:realTimeValue="120"
         app:startAngle="170"
+        app:stripeMode="outer"
         app:stripeWidth="30dp"
-        app:sweepAngle="200"/>
+        app:sweepAngle="200"
+        app:textColor="@color/white" />
+
+    <com.example.obdandroid.ui.view.dashView.DashboardView
+        android:id="@+id/dashboard_view_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:arcColor="@color/blue"
+        app:bgColor="@color/color_2c2c2c"
+        app:bigSliceCount="8"
+        app:headerRadius="50dp"
+        app:headerTitle="rpmx1000"
+        app:maxValue="8"
+        app:measureTextSize="10sp"
+        app:radius="110dp"
+        app:realTimeValue="120"
+        app:startAngle="170"
+        app:stripeMode="outer"
+        app:stripeWidth="30dp"
+        app:sweepAngle="200"
+        app:textColor="@color/white" />
+
+    <com.example.obdandroid.ui.view.dashView.DashboardView
+        android:id="@+id/dashboard_view_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:arcColor="@color/blue"
+        app:bgColor="@color/color_2c2c2c"
+        app:bigSliceCount="8"
+        app:headerRadius="50dp"
+        app:headerTitle="kW"
+        app:maxValue="180"
+        app:minValue="-60"
+        app:measureTextSize="10sp"
+        app:radius="110dp"
+        app:realTimeValue="120"
+        app:startAngle="180"
+        app:stripeMode="outer"
+        app:stripeWidth="30dp"
+        app:sweepAngle="179"
+        app:textColor="@color/white" />
 
 </LinearLayout>

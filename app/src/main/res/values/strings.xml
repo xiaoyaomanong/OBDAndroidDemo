@@ -136,5 +136,10 @@
     <string name="agree_content">提交注册即表示您已阅读并同意</string>
     <string name="register_protocol">《用户注册协议》</string>
     <string name="hint_sex">性别</string>
+    <string name="home_add_car"></string>
+    <string name="home_more_dash">更多仪表盘</string>
+    <string name="home_average_speed">平均时速</string>
+    <string name="home_high_speed">最高时速</string>
+    <string name="home_low_speed">最低时速</string>
 
 </resources>

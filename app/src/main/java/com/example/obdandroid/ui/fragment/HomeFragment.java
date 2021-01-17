@@ -17,11 +17,13 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.ui.adapter.HomeAdapter;
+import com.example.obdandroid.ui.view.dashView.DashboardView;
 import com.example.obdandroid.utils.DividerGridItemDecoration;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.ToastUtil;
@@ -55,6 +57,9 @@ public class HomeFragment extends BaseFragment {
     private List<HashMap<String, Object>> blueList;
     private int yourChoice;
     private SPUtil spUtil;
+    private TextView tvContent;
+    private TextView tvHighSpeed;
+    private  DashboardView dashSpeed;
     private static String mConnectedDeviceName = null;
     private static String mConnectedDeviceAddress = null;
 
@@ -73,7 +78,11 @@ public class HomeFragment extends BaseFragment {
     public void initView(View view, Bundle savedInstanceState) {
         context = getHoldingActivity();
         titleBar = getView(R.id.titleBar);
-        RecyclerView recycleFun = getView(R.id.recycle_Fun);
+        RecyclerView recycleCar = getView(R.id.recycleCar);
+        RecyclerView recycleContent = getView(R.id.recycleContent);
+         dashSpeed = getView(R.id.dashSpeed);
+        tvContent = getView(R.id.tv_content);
+        tvHighSpeed = getView(R.id.tvHighSpeed);
         titleBar.setTitle("汽车扫描");
         spUtil = new SPUtil(context);
         mConnectedDeviceName = ObdPreferences.get(context).getBlueToothDeviceName();
@@ -91,12 +100,11 @@ public class HomeFragment extends BaseFragment {
         initBlueTooth();
         checkBlueTooth(mConnectedDeviceAddress);
         // 设置数据更新计时器
-        GridLayoutManager manager = new GridLayoutManager(context, 2);
+        GridLayoutManager manager = new GridLayoutManager(context, 5);
         manager.setOrientation(OrientationHelper.VERTICAL);
-        recycleFun.setLayoutManager(manager);
-        recycleFun.addItemDecoration(new DividerGridItemDecoration(context));
+        recycleCar.setLayoutManager(manager);
         HomeAdapter homeAdapter = new HomeAdapter(context);
-        recycleFun.setAdapter(homeAdapter);
+        recycleCar.setAdapter(homeAdapter);
         homeAdapter.setClickCallBack(name -> {
 
         });
@@ -270,6 +278,7 @@ public class HomeFragment extends BaseFragment {
      * 接收OBD连接状态和实时数据的广播接收器
      */
     private final BroadcastReceiver mObdReaderReceiver = new BroadcastReceiver() {
+        @SuppressLint("SetTextI18n")
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -291,6 +300,9 @@ public class HomeFragment extends BaseFragment {
             } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA)) {
                 TripRecord tripRecord = TripRecord.getTripRecode(context);
                 LogE("实时数据:" + tripRecord.toString());
+                tvContent.setText(tripRecord.toString());
+                tvHighSpeed.setText(tripRecord.getSpeedMax()+" km/h");
+                dashSpeed.setRealTimeValue(tripRecord.getSpeed());
                 // 在这里，您可以使用getter方法从TripRecord获取实时数据，如
                 //tripRecord.getSpeed();
                 //tripRecord.getEngineRpm();

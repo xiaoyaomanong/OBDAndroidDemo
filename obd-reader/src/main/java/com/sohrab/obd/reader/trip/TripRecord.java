@@ -91,7 +91,7 @@ public class TripRecord implements DefineObdReader, Serializable {
     private float mIdlingFuelConsumption = 0.0f;
     private String mFuelLevel;
     private long mLastTimeStamp;
-    private float mFuelTypeValue = 14.7f; // default is Gasoline fuel ratio
+    private float mFuelTypeValue = 14.7f; //默认值为汽油燃油比
     private float mDrivingMaf;
     private int mDrivingMafCount;
     private float mIdleMaf;
@@ -170,20 +170,16 @@ public class TripRecord implements DefineObdReader, Serializable {
     private void findRapidAccAndDeclTimes(Integer currentSpeed) {
         if (speed == -1)
             return;
-
         if (System.currentTimeMillis() - mLastTimeStamp > 1000) {
 
             int speedDiff = currentSpeed - mSecondAgoSpeed;
             boolean acceleration = speedDiff > 0;
-
             if (Math.abs(speedDiff) > SPEED_GAP) {
-
                 if (acceleration)
                     mRapidAccTimes++;
                 else
                     mRapidDeclTimes++;
             }
-
             mSecondAgoSpeed = currentSpeed;
             mLastTimeStamp = System.currentTimeMillis();
         }

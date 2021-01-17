@@ -3,22 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_080707"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:gravity="center"
         android:orientation="vertical"
         tools:ignore="UseCompoundDrawables">
 
-        <ImageView
+        <com.example.obdandroid.ui.view.CircleImageView
             android:id="@+id/ivName"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/icon_jqxt"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -26,6 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
+            android:fontFamily="@font/gotham"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_14" />
     </LinearLayout>

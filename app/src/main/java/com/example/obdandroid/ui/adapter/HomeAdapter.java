@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.obdandroid.R;
+import com.example.obdandroid.ui.view.CircleImageView;
 
 /**
  * 作者：Jealous
@@ -18,11 +19,13 @@ import com.example.obdandroid.R;
  * 描述：
  */
 public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private Context context;
-    private LayoutInflater inflater;
+    private final Context context;
+    private final LayoutInflater inflater;
     private OnClickCallBack clickCallBack;
-    private final String[] list = {"故障代码", "冷却系统", "电瓶电压", "排放系统", "引擎系统", "进气系统"};
-    private final int[] resImg = {R.drawable.icon_trouble_codes, R.drawable.iocn_lqxt, R.drawable.icon_press, R.drawable.icon_pqxt, R.drawable.icon_engine, R.drawable.icon_jqxt};
+    private final String[] list = {"大众", "本田", "别克", "丰田", "宝马", "日产", "奥迪", "奔驰", "马自达", "更多"};
+    private final int[] resImg = {R.drawable.icon_dz, R.drawable.icon_bt, R.drawable.icon_bk, R.drawable.icon_ft,
+            R.drawable.icon_bm, R.drawable.icon_rc, R.drawable.icon_audi, R.drawable.icon_bc, R.drawable.icon_mzd,
+            R.drawable.icon_car_more};
     private final int EMPTY_VIEW = 0;//空页面
     private final int NOT_EMPTY_VIEW = 1;//正常页面
 
@@ -84,9 +87,9 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         View itemView;
-        private ImageView ivName;
-        private TextView tvName;
-        private LinearLayout card_view;
+        private final CircleImageView ivName;
+        private final TextView tvName;
+        private final LinearLayout card_view;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -98,7 +101,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public class EmptyViewHolder extends RecyclerView.ViewHolder {
-        private TextView mEmptyTextView;
+        private final TextView mEmptyTextView;
 
         public EmptyViewHolder(View itemView) {
             super(itemView);

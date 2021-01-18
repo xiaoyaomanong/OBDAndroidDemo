@@ -1,11 +1,7 @@
-plugins {
-    id 'com.android.application'
-}
+apply plugin: 'com.android.application'
 
 android {
     useLibrary 'org.apache.http.legacy'
-
-
     packagingOptions {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
@@ -17,15 +13,21 @@ android {
     buildToolsVersion "30.0.3"
     defaultConfig {
         applicationId "com.example.obdandroid"
+        applicationId "app.example.estateapp"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"
-
+        versionName "01"
+        //版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
+        flavorDimensions "versionCode"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         renderscriptTargetApi 21
         renderscriptSupportModeEnabled true
         multiDexEnabled true
-        testInstrumentationRunner "android.test.runner.AndroidJUnitRunner"
+        //X5兼容64位手机
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+        }
     }
     dexOptions {
         javaMaxHeapSize "4g"
@@ -35,6 +37,7 @@ android {
                 '--set-max-idx-number=60000'//每个包内方法数上限
         ]
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -51,30 +54,32 @@ android {
         // 防止在发布的时候出现因MissingTranslation导致Build Failed!
         disable 'MissingTranslation'
     }
-
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
+            java.srcDirs = ['src/main/java']
         }
     }
+
     android.applicationVariants.all {
         variant ->
             variant.outputs.all {
                 //这里修改apk文件名
-                outputFileName = "CarScanner_v${defaultConfig.versionName}_${buildType.name}_${releaseTime()}.apk"
+                outputFileName = "Ai车检_v${defaultConfig.versionName}_${buildType.name}_${releaseTime()}.apk"
             }
     }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+    android {
+        //支持java1.8
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
     }
 }
 
 static def releaseTime() {
     return new Date().format("yyMMdd", TimeZone.getTimeZone("UTC"))
 }
-
 
 repositories {
     flatDir {
@@ -130,5 +135,11 @@ dependencies {
     implementation 'com.wuxiaolong.pullloadmorerecyclerview:library:1.1.2'
     implementation files('libs/pinyin4j-2.5.0.jar')
     implementation project(':obd-reader')
+
+    // 沉浸式状态栏（根据自己需求进行添加）
+// 基础依赖包，必须要依赖
+    implementation 'com.gyf.immersionbar:immersionbar:3.0.0'
+// fragment快速实现（可选）
+    implementation 'com.gyf.immersionbar:immersionbar-components:3.0.0'
 }
 

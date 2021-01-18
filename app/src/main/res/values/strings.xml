@@ -141,5 +141,11 @@
     <string name="home_average_speed">平均时速</string>
     <string name="home_high_speed">最高时速</string>
     <string name="home_low_speed">最低时速</string>
+    <string name="home_current_speed">当前时速</string>
+    <string name="speed_unit">km/h</string>
+    <string name="title_check">检测</string>
+    <string name="title_msg">消息</string>
+    <string name="check_title">全车检测</string>
+    <string name="start_check">开始检测</string>
 
 </resources>

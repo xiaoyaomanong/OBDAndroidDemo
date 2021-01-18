@@ -3,6 +3,8 @@ package com.sohrab.obd.reader.obdCommand;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.sohrab.obd.reader.enums.FuelTrim;
+import com.sohrab.obd.reader.obdCommand.control.CommandedEGRCommand;
 import com.sohrab.obd.reader.obdCommand.control.DistanceMILOnCommand;
 import com.sohrab.obd.reader.obdCommand.control.DistanceSinceCCCommand;
 import com.sohrab.obd.reader.obdCommand.control.DtcNumberCommand;
@@ -25,11 +27,13 @@ import com.sohrab.obd.reader.obdCommand.fuel.AirFuelRatioCommand;
 import com.sohrab.obd.reader.obdCommand.fuel.ConsumptionRateCommand;
 import com.sohrab.obd.reader.obdCommand.fuel.FindFuelTypeCommand;
 import com.sohrab.obd.reader.obdCommand.fuel.FuelLevelCommand;
+import com.sohrab.obd.reader.obdCommand.fuel.FuelSystemStatusCommand;
 import com.sohrab.obd.reader.obdCommand.fuel.FuelTrimCommand;
 import com.sohrab.obd.reader.obdCommand.fuel.WidebandAirFuelRatioCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.BarometricPressureCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelPressureCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureCommand;
+import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureManifoldVacuumCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.IntakeManifoldPressureCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.DescribeProtocolCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.DescribeProtocolNumberCommand;
@@ -60,62 +64,64 @@ public class ObdConfiguration {
             return;
         }
 
-        Toast.makeText(context, "you can not add command after ObdReaderService started!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "无法在ObdReaderService启动后添加命令!", Toast.LENGTH_SHORT).show();
     }
 
     private static void getDefaultObdCommand() {
         mObdCommands = new ArrayList<>();
 
-        mObdCommands.add(new SpeedCommand());
-        mObdCommands.add(new RPMCommand());
-        mObdCommands.add(new RuntimeCommand());
-        mObdCommands.add(new MassAirFlowCommand());
+        mObdCommands.add(new SpeedCommand());//"01 0D"
+        mObdCommands.add(new RPMCommand());//"01 0C"
+        mObdCommands.add(new RuntimeCommand());//"01 1F" 引擎运行时间
+        mObdCommands.add(new MassAirFlowCommand());//"01 10"//空气流量感测器（MAF）空气流率
 
         //Pressure
-        mObdCommands.add(new IntakeManifoldPressureCommand());
-        mObdCommands.add(new BarometricPressureCommand());
-        mObdCommands.add(new FuelPressureCommand());
-        mObdCommands.add(new FuelRailPressureCommand());
+        mObdCommands.add(new IntakeManifoldPressureCommand());//"01 0B"
+        mObdCommands.add(new BarometricPressureCommand());//"01 33"
+        mObdCommands.add(new FuelPressureCommand());//"01 0A"
+        mObdCommands.add(new FuelRailPressureCommand());//"01 23"
+        mObdCommands.add(new FuelRailPressureManifoldVacuumCommand());//"01 22"高压共轨压力（相对进气歧管真空）
 
         //Tempereture
-        mObdCommands.add(new AirIntakeTemperatureCommand());
-        mObdCommands.add(new AmbientAirTemperatureCommand());
-        mObdCommands.add(new EngineCoolantTemperatureCommand());
-        mObdCommands.add(new OilTempCommand());
+        mObdCommands.add(new AirIntakeTemperatureCommand());//"01 0F"
+        mObdCommands.add(new AmbientAirTemperatureCommand());//"01 46"
+        mObdCommands.add(new EngineCoolantTemperatureCommand());//"01 05"//发动机冷媒温度
+        mObdCommands.add(new OilTempCommand());//"01 5C"
 
         //Fuel
-        mObdCommands.add(new FindFuelTypeCommand());
-        mObdCommands.add(new ConsumptionRateCommand());
-        mObdCommands.add(new FuelLevelCommand());
-        mObdCommands.add(new FuelTrimCommand());
-        mObdCommands.add(new AirFuelRatioCommand());
-        mObdCommands.add(new WidebandAirFuelRatioCommand());
+        mObdCommands.add(new FindFuelTypeCommand());//"01 51"
+        mObdCommands.add(new ConsumptionRateCommand());//"01 5E"
+        mObdCommands.add(new FuelLevelCommand());//"01 2F"
+        mObdCommands.add(new FuelTrimCommand(FuelTrim.SHORT_TERM_BANK_1));//"01 06"
+        mObdCommands.add(new FuelTrimCommand(FuelTrim.LONG_TERM_BANK_1));//"01 07"
+        mObdCommands.add(new FuelTrimCommand(FuelTrim.LONG_TERM_BANK_2));//"01 08"
+        mObdCommands.add(new FuelTrimCommand(FuelTrim.SHORT_TERM_BANK_2));//"01 09"
+        mObdCommands.add(new AirFuelRatioCommand());//"01 44"
+        mObdCommands.add(new WidebandAirFuelRatioCommand());//"01 34"
+        mObdCommands.add(new FuelSystemStatusCommand());//"01 03"
 
         //control
-        mObdCommands.add(new DistanceMILOnCommand());
-        mObdCommands.add(new DistanceSinceCCCommand());
-        mObdCommands.add(new DtcNumberCommand());
-        mObdCommands.add(new EquivalentRatioCommand());
-        mObdCommands.add(new IgnitionMonitorCommand());
-        mObdCommands.add(new ModuleVoltageCommand());
-        mObdCommands.add(new TimingAdvanceCommand());
-        mObdCommands.add(new VinCommand());
+        mObdCommands.add(new DistanceMILOnCommand());//"01 21"故障指示灯（MIL）亮时行驶的距离
+        mObdCommands.add(new DistanceSinceCCCommand());//"01 31"
+        mObdCommands.add(new DtcNumberCommand());//"01 01"
+        mObdCommands.add(new EquivalentRatioCommand());//"01 44"
+        mObdCommands.add(new IgnitionMonitorCommand());//"AT IGN"
+        mObdCommands.add(new ModuleVoltageCommand());//"01 42"
+        mObdCommands.add(new TimingAdvanceCommand());//"01 0E"
+        mObdCommands.add(new VinCommand());//"09 02"
+        mObdCommands.add(new CommandedEGRCommand());//"01 2C"
         //Trouble codes
-        mObdCommands.add(new TroubleCodesCommand());
-        mObdCommands.add(new PermanentTroubleCodesCommand());
-        mObdCommands.add(new PendingTroubleCodesCommand());
-
-
+        mObdCommands.add(new TroubleCodesCommand());//"03"
+        mObdCommands.add(new PermanentTroubleCodesCommand());//"0A"
+        mObdCommands.add(new PendingTroubleCodesCommand());//"07"
         //engine
-        mObdCommands.add(new AbsoluteLoadCommand());
-        mObdCommands.add(new LoadCommand());
-        mObdCommands.add(new OilTempCommand());
-        mObdCommands.add(new ThrottlePositionCommand());
+        mObdCommands.add(new AbsoluteLoadCommand());//"01 43"
+        mObdCommands.add(new LoadCommand());//"01 04"
+        mObdCommands.add(new OilTempCommand());//"01 5C"
+        mObdCommands.add(new ThrottlePositionCommand());//"01 11"
 
         //protocol
-        mObdCommands.add(new DescribeProtocolCommand());
-        mObdCommands.add(new DescribeProtocolNumberCommand());
-
-
+        mObdCommands.add(new DescribeProtocolCommand());//"AT DP"
+        mObdCommands.add(new DescribeProtocolNumberCommand());//"AT DPN"
     }
 }

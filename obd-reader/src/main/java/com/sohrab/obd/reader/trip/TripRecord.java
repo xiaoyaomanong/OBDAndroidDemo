@@ -51,6 +51,7 @@ public class TripRecord implements DefineObdReader, Serializable {
     private final static String ENGINE_LOAD = "Engine Load";
     private final static String THROTTLE_POS = "Throttle Position";
     private final static String FUEL_CONSUMPTION_RATE = "Fuel Consumption Rate";
+    private final static String FUEL_SYSTEM_STATUS = "Fuel System Status";
     private final static String TIMING_ADVANCE = "Timing Advance";
     private final static String PERMANENT_TROUBLE_CODES = "Permanent Trouble Codes";
     private final static String PENDING_TROUBLE_CODES = "Pending Trouble Codes";
@@ -59,6 +60,7 @@ public class TripRecord implements DefineObdReader, Serializable {
     private final static String CONTROL_MODULE_VOLTAGE = "Control Module Power Supply ";
     private final static String ENGINE_FUEL_RATE = "Engine Fuel Rate";
     private final static String FUEL_RAIL_PRESSURE = "Fuel Rail Pressure";
+    private final static String FUEL_RAIL_PRESSURE_manifold = "Fuel Rail Pressure relative to manifold vacuum";
     private final static String VIN = "Vehicle Identification Number (VIN)";
     private final static String DISTANCE_TRAVELED_MIL_ON = "Distance traveled with MIL on";
     private final static String DTC_NUMBER = "Diagnostic Trouble Codes";
@@ -71,6 +73,7 @@ public class TripRecord implements DefineObdReader, Serializable {
     private final static String DESCRIBE_PROTOCOL = "Describe protocol";
     private final static String DESCRIBE_PROTOCOL_NUMBER = "Describe protocol number";
     private final static String IGNITION_MONITOR = "Ignition monitor";
+    private final static String Commanded_EGR = "Commanded EGR";
 
     private Integer engineRpmMax = 0;
     private String engineRpm;
@@ -109,8 +112,10 @@ public class TripRecord implements DefineObdReader, Serializable {
     private String mEngineCoolantTemp;
     private String mEngineOilTemp;
     private String mFuelConsumptionRate;
+    private String mFuelSystemStatus;
     private String mEngineFuelRate;
     private String mFuelPressure;
+    private String mCommandedEGR;
     private String mEngineLoad;
     private String mBarometricPressure;
     private String mThrottlePos;
@@ -121,6 +126,7 @@ public class TripRecord implements DefineObdReader, Serializable {
     private String mDistanceTraveledAfterCodesCleared;
     private String mControlModuleVoltage;
     private String mFuelRailPressure;
+    private String mFuelRailPressurevacuum;
     private String mVehicleIdentificationNumber;
     private String mDistanceTraveledMilOn;
     private String mDtcNumber;
@@ -348,7 +354,6 @@ public class TripRecord implements DefineObdReader, Serializable {
             case FUEL_LEVEL:
                 mFuelLevel = command.getFormattedResult();
                 break;
-
             case FUEL_TYPE:
                 if (ObdPreferences.get(sContext.getApplicationContext()).getFuelType() == 0)
                     getFuelTypeValue(command.getFormattedResult());
@@ -383,6 +388,9 @@ public class TripRecord implements DefineObdReader, Serializable {
             case FUEL_CONSUMPTION_RATE:
                 mFuelConsumptionRate = command.getFormattedResult();
                 break;
+            case FUEL_SYSTEM_STATUS:
+                mFuelSystemStatus = command.getFormattedResult();
+                break;
 
             case ENGINE_FUEL_RATE:
                 mEngineFuelRate = command.getFormattedResult();
@@ -391,10 +399,12 @@ public class TripRecord implements DefineObdReader, Serializable {
             case FUEL_PRESSURE:
                 mFuelPressure = command.getFormattedResult();
                 break;
-
-
             case ENGINE_LOAD:
                 mEngineLoad = command.getFormattedResult();
+                break;
+
+            case Commanded_EGR:
+                mCommandedEGR = command.getFormattedResult();
                 break;
 
             case BAROMETRIC_PRESSURE:
@@ -432,7 +442,9 @@ public class TripRecord implements DefineObdReader, Serializable {
             case FUEL_RAIL_PRESSURE:
                 mFuelRailPressure = command.getFormattedResult();
                 break;
-
+            case FUEL_RAIL_PRESSURE_manifold:
+                mFuelRailPressurevacuum = command.getFormattedResult();
+                break;
             case VIN:
                 mVehicleIdentificationNumber = command.getFormattedResult();
                 break;
@@ -534,12 +546,20 @@ public class TripRecord implements DefineObdReader, Serializable {
         return mFuelConsumptionRate;
     }
 
+    public String getmFuelSystemStatus() {
+        return mFuelSystemStatus;
+    }
+
     public String getmEngineFuelRate() {
         return mEngineFuelRate;
     }
 
     public String getmFuelPressure() {
         return mFuelPressure;
+    }
+
+    public String getmCommandedEGR() {
+        return mCommandedEGR;
     }
 
     public String getmEngineLoad() {
@@ -580,6 +600,10 @@ public class TripRecord implements DefineObdReader, Serializable {
 
     public String getmFuelRailPressure() {
         return mFuelRailPressure;
+    }
+
+    public String getmFuelRailPressurevacuum() {
+        return mFuelRailPressurevacuum;
     }
 
     public String getmVehicleIdentificationNumber() {
@@ -682,14 +706,17 @@ public class TripRecord implements DefineObdReader, Serializable {
                 "\n" + AvailableCommandNames.INTAKE_MANIFOLD_PRESSURE.getValue() + ":  " + mIntakePressure + " kpa" +
                 "\n" + AvailableCommandNames.AIR_INTAKE_TEMP.getValue() + ":  " + mIntakeAirTemp + " C" +
                 "\n" + AvailableCommandNames.FUEL_CONSUMPTION_RATE.getValue() + ":  " + mFuelConsumptionRate + " L/h" +
+                "\n" + AvailableCommandNames.FUEL_SYSTEM_STATUS.getValue() + ":  " + mFuelSystemStatus +
+                "\n" + AvailableCommandNames.THROTTLE_POS.getValue() + ":  " + mRelThottlePos +"%"+
                 "\n" + AvailableCommandNames.FUEL_LEVEL.getValue() + ":  " + mFuelLevel +
-                "\n" + AvailableCommandNames.FUEL_PRESSURE.getValue() + ":  " + mFuelPressure +
+                "\n" + AvailableCommandNames.FUEL_PRESSURE.getValue() + ":  " + mFuelPressure +" kPa"+
+                "\n" + AvailableCommandNames.FUEL_RAIL_PRESSURE_manifold.getValue() + ":  " + mFuelRailPressurevacuum +" kPa"+
+                "\n" + AvailableCommandNames.FUEL_RAIL_PRESSURE.getValue() + ":  " + mFuelRailPressure +" kPa"+
+                "\n" + AvailableCommandNames.Commanded_EGR.getValue() + ":  " + mCommandedEGR +
                 "\n" + AvailableCommandNames.ENGINE_FUEL_RATE.getValue() + ":  " + mEngineFuelRate +
                 "\n" + AvailableCommandNames.ENGINE_COOLANT_TEMP.getValue() + ":  " + mEngineCoolantTemp +
                 "\n" + AvailableCommandNames.ENGINE_LOAD.getValue() + ":  " + mEngineLoad +
                 "\n" + AvailableCommandNames.ENGINE_OIL_TEMP.getValue() + ":  " + mEngineOilTemp +
-
-
                 "\n" + AvailableCommandNames.BAROMETRIC_PRESSURE.getValue() + ":  " + mBarometricPressure +
                 "\n" + AvailableCommandNames.AIR_FUEL_RATIO.getValue() + ":  " + mAirFuelRatio +
                 "\n" + AvailableCommandNames.WIDEBAND_AIR_FUEL_RATIO.getValue() + ":  " + mWideBandAirFuelRatio +

@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:backButton="false"
-        app:barStyle="night"
+        app:barStyle="ripple"
         app:leftColor="@color/white"
         app:rightColor="#0033FF"
         app:rightIcon="@drawable/action_connect"
@@ -118,98 +118,90 @@
                         app:textColor="@color/white" />
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="0.5"
+                            android:fontFamily="@font/calibri"
+                            android:gravity="center"
+                            android:paddingTop="@dimen/dp_10"
+                            android:paddingBottom="@dimen/dp_10"
+                            android:text="@string/home_current_speed"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12" />
+
+                        <com.example.obdandroid.ui.view.PhilText
+                            android:id="@+id/tvCurrentSpeed"
+                            android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:fontFamily="@font/calibri"
                             android:gravity="center"
-                            android:text="@string/home_average_speed"
-                            android:textSize="@dimen/sp_12"
-                            android:textColor="@color/white" />
+                            android:textColor="@android:color/holo_green_dark" />
 
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
-                            android:background="@color/gray_light"
-                            tools:ignore="Suspicious0dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
                             android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_weight="0.5"
                             android:fontFamily="@font/calibri"
                             android:gravity="center"
-                            android:text="@string/home_high_speed"
-                            android:textSize="@dimen/sp_12"
-                            android:textColor="@color/white" />
+                            android:text="@string/speed_unit"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12" />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
-                            android:background="@color/gray_light"
-                            tools:ignore="Suspicious0dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:fontFamily="@font/calibri"
-                            android:gravity="center"
-                            android:text="@string/home_low_speed"
-                            android:textSize="@dimen/sp_12"
-                            android:textColor="@color/white" />
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="0.5dp"
                         android:layout_height="match_parent"
+                        android:layout_marginTop="35dp"
+                        android:layout_marginBottom="35dp"
+                        android:background="@color/gray_light"
+                        tools:ignore="Suspicious0dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_weight="0.5"
                             android:fontFamily="@font/calibri"
                             android:gravity="center"
-                            android:textColor="@color/white" />
+                            android:paddingTop="@dimen/dp_10"
+                            android:paddingBottom="@dimen/dp_10"
+                            android:text="@string/home_high_speed"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12" />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
-                            android:background="@color/gray_light"
-                            tools:ignore="Suspicious0dp" />
-
-                        <TextView
+                        <com.example.obdandroid.ui.view.PhilText
                             android:id="@+id/tvHighSpeed"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:fontFamily="@font/calibri"
                             android:gravity="center"
-                            android:textColor="@color/white" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
-                            android:background="@color/gray_light"
-                            tools:ignore="Suspicious0dp" />
+                            android:textColor="@android:color/holo_green_dark" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_weight="0.5"
                             android:fontFamily="@font/calibri"
                             android:gravity="center"
-                            android:textColor="@color/white" />
-
+                            android:text="@string/speed_unit"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12" />
                     </LinearLayout>
-
 
                 </LinearLayout>
 
@@ -239,7 +231,7 @@
                     android:id="@+id/recycleContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scrollbars="none"/>
+                    android:scrollbars="none" />
 
                 <TextView
                     android:id="@+id/tv_content"

@@ -28,6 +28,7 @@ import com.example.obdandroid.ui.entity.MultipleItem;
 import com.example.obdandroid.ui.entity.UserInfoEntity;
 import com.example.obdandroid.ui.view.CircleImageView;
 import com.example.obdandroid.utils.JumpUtil;
+import com.gyf.immersionbar.ImmersionBar;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 

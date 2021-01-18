@@ -44,4 +44,30 @@
         <attr name="bgColor" format="color"/> <!--背景颜色-->
     </declare-styleable>
 
+    <!--扩散圆颜色-->
+    <attr name="circle_out_color" format="color"/>
+    <!--中心圆颜色-->
+    <attr name="circle_in_Color" format="color"/>
+    <!--中心圆图片-->
+    <attr name="circle_in_image" format="reference"/>
+    <!--中心圆半径-->
+    <attr name="circle_radius" format="float"/>
+    <!--扩散圆宽度,值越小越宽-->
+    <attr name="circle_width" format="integer"/>
+    <!--最大扩散宽度-->
+    <attr name="max_width" format="integer"/>
+    <!--扩散速度，值越大越快-->
+    <attr name="speed" format="integer"/>
+
+    <declare-styleable name="CircleView">
+        <attr name="circle_out_color"/>
+        <attr name="circle_in_Color"/>
+        <attr name="circle_in_image"/>
+        <attr name="circle_radius"/>
+        <attr name="circle_width"/>
+        <attr name="max_width"/>
+        <attr name="speed"/>
+    </declare-styleable>
+
+
 </resources>

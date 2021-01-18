@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.hjq.bar.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/color_bar"
+        app:backButton="false"
+        app:barStyle="ripple"
+        app:title="@string/check_title" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="450dp"
+                android:background="@drawable/shape_gradient">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!--  <com.example.obdandroid.ui.view.SpreadView
+                          android:id="@+id/spreadView"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:gravity="center_horizontal"
+                          app:spread_center_color="#3061E4"
+                          app:spread_delay_milliseconds="35"
+                          app:spread_distance="5"
+                          app:spread_max_radius="90"
+                          app:spread_radius="150"
+                          app:spread_spread_color="@color/white" />-->
+
+                    <com.example.obdandroid.ui.view.CircleWelComeView
+                        android:id="@+id/circleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        app:circle_in_Color="#3061E4"
+                        app:circle_in_image="@android:drawable/ic_menu_search"
+                        app:circle_out_color="@color/white"
+                        app:circle_radius="150"
+                        app:circle_width="5"
+                        app:max_width="500"
+                        app:speed="2" />
+
+                    <TextView
+                        android:id="@+id/btStart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="25dp"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@font/calibri"
+                        android:text="@string/start_check"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+            </LinearLayout>
+        </FrameLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

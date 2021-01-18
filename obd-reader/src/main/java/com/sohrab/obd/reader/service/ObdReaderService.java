@@ -95,20 +95,17 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        LogUtils.i("onHandleIntent" + "Thread is :: " + Thread.currentThread().getId());
         BluetoothDevice bluetoothDevice = intent.getExtras().getParcelable("device");
-        LogUtils.i("onHandleIntent" + "Thread is :: " + bluetoothDevice.getAddress());
         if (initiateConnection()) {
             if (!isEnable()) {
                 enableBlutooth();
             }
             findObdDevicesAndConnect(bluetoothDevice);
         }
-
-        LogUtils.i("onHandleIntent bottom");
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(false);
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
         TripRecord.getTripRecode(this).clear();
@@ -134,7 +131,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
      * 在循环中查找成对的OBD-2设备，直到找到并连接或服务停止。
      */
     private void findPairedDevices(BluetoothDevice device) {
-        if (mBluetoothAdapter != null) {
+        if (mBluetoothAdapter != null & !isConnected) {
             if (device != null) {
                 String name = device.getName();
                 String v_LINK = "V-LINK";
@@ -147,7 +144,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
                     } catch (Exception e) {
                         LogUtils.i("connectOBDDevice 返回异常: " + e.getMessage());
                     }
-                }else {
+                } else {
                     sendBroadcast(ACTION_OBD_CONNECTION_STATUS, "未检测到OBD设备...");
                 }
             }

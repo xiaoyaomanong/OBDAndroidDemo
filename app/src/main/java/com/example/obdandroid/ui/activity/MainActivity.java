@@ -23,10 +23,13 @@ import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.adapter.SimpleFragmentPagerAdapter;
 import com.example.obdandroid.ui.fragment.HomeFragment;
+import com.example.obdandroid.ui.fragment.MsgFragment;
 import com.example.obdandroid.ui.fragment.PersonalFragment;
+import com.example.obdandroid.ui.fragment.VehicleCheckFragment;
 import com.example.obdandroid.utils.ActivityManager;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.StringUtil;
+import com.gyf.immersionbar.ImmersionBar;
 import com.kongzue.dialog.util.BlurView;
 
 import java.util.ArrayList;
@@ -71,6 +74,8 @@ public class MainActivity extends BaseActivity {
         navigation = findViewById(R.id.navigation);
         spUtil = new SPUtil(context);
         fragments.add(HomeFragment.getInstance());
+        fragments.add(VehicleCheckFragment.getInstance());
+        fragments.add(MsgFragment.getInstance());
         fragments.add(PersonalFragment.getInstance());
         viewPager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
         viewPager.addOnPageChangeListener(mOnPageChangeListener);
@@ -86,6 +91,18 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onPageSelected(int position) {
             navigation.getMenu().getItem(position).setChecked(true);
+            switch (position){
+                case 0:
+                case 2:
+                case 3:
+                    ImmersionBar.with(MainActivity.this).statusBarColor(R.color.black)
+                            .fitsSystemWindows(true).init();
+                    break;
+                case 1:
+                    ImmersionBar.with(MainActivity.this).statusBarColor(R.color.color_bar)
+                            .fitsSystemWindows(true).init();
+                    break;
+            }
         }
 
         @Override
@@ -104,9 +121,24 @@ public class MainActivity extends BaseActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     viewPager.setCurrentItem(0);
+                    ImmersionBar.with(MainActivity.this).statusBarColor(R.color.black)
+                            .fitsSystemWindows(true).init();
+                    return true;
+                case R.id.navigation_check:
+                    viewPager.setCurrentItem(1);
+                    //沉浸式状态栏
+                    ImmersionBar.with(MainActivity.this).statusBarColor(R.color.color_bar)
+                            .fitsSystemWindows(true).init();
+                    return true;
+                case R.id.navigation_msg:
+                    viewPager.setCurrentItem(2);
+                    ImmersionBar.with(MainActivity.this).statusBarColor(R.color.black)
+                            .fitsSystemWindows(true).init();
                     return true;
                 case R.id.navigation_my:
-                    viewPager.setCurrentItem(1);
+                    viewPager.setCurrentItem(3);
+                    ImmersionBar.with(MainActivity.this).statusBarColor(R.color.black)
+                            .fitsSystemWindows(true).init();
                     return true;
             }
             return false;

@@ -26,7 +26,7 @@ public enum FuelType {
     BIFUEL_CNG(0x0D, "Biodiesel + Natural Gas"),
     BIFUEL_PROPANE(0x0E, "Biodiesel + Propane"),
     BIFUEL_ELECTRIC(0x0F, "Biodiesel + Electric"),
-    BIFUEL_GASOLINE_ELECTRIC(0x10, "Biodiesel + Gasoline/Electric"),
+    BIFUEL_GASOLINE_ELECTRIC(0x10, "Biodiesel + Gasoline/Electric"),//Bifuel running electric and combustion engine
     HYBRID_GASOLINE(0x11, "Hybrid Gasoline"),
     HYBRID_ETHANOL(0x12, "Hybrid Ethanol"),
     HYBRID_DIESEL(0x13, "Hybrid Diesel"),

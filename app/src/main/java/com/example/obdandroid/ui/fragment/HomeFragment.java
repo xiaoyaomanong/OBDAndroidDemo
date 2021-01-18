@@ -1,6 +1,7 @@
 package com.example.obdandroid.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -10,6 +11,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -22,11 +25,14 @@ import android.widget.Toast;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
+import com.example.obdandroid.service.BtCommService;
+import com.example.obdandroid.service.CommService;
 import com.example.obdandroid.ui.adapter.HomeAdapter;
 import com.example.obdandroid.ui.view.dashView.DashboardView;
 import com.example.obdandroid.utils.DividerGridItemDecoration;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.ToastUtil;
+import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
@@ -35,13 +41,21 @@ import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
 import com.sohrab.obd.reader.service.ObdReaderService;
 import com.sohrab.obd.reader.trip.TripRecord;
 
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
+import static com.example.obdandroid.config.Constant.DEVICE_NAME;
+import static com.example.obdandroid.config.Constant.MESSAGE_DEVICE_NAME;
+import static com.example.obdandroid.config.Constant.MESSAGE_STATE_CHANGE;
+import static com.example.obdandroid.config.Constant.MESSAGE_TOAST;
+import static com.example.obdandroid.config.Constant.MESSAGE_UPDATE_VIEW;
 import static com.example.obdandroid.config.Constant.REQUEST_ENABLE_BT;
+import static com.example.obdandroid.config.Constant.TOAST;
 import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_OBD_CONNECTION_STATUS;
 import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_READ_OBD_REAL_TIME_DATA;
 
@@ -59,7 +73,7 @@ public class HomeFragment extends BaseFragment {
     private SPUtil spUtil;
     private TextView tvContent;
     private TextView tvHighSpeed;
-    private  DashboardView dashSpeed;
+    private DashboardView dashSpeed;
     private static String mConnectedDeviceName = null;
     private static String mConnectedDeviceAddress = null;
 
@@ -80,23 +94,13 @@ public class HomeFragment extends BaseFragment {
         titleBar = getView(R.id.titleBar);
         RecyclerView recycleCar = getView(R.id.recycleCar);
         RecyclerView recycleContent = getView(R.id.recycleContent);
-         dashSpeed = getView(R.id.dashSpeed);
+        dashSpeed = getView(R.id.dashSpeed);
         tvContent = getView(R.id.tv_content);
         tvHighSpeed = getView(R.id.tvHighSpeed);
         titleBar.setTitle("汽车扫描");
         spUtil = new SPUtil(context);
         mConnectedDeviceName = ObdPreferences.get(context).getBlueToothDeviceName();
         mConnectedDeviceAddress = ObdPreferences.get(context).getBlueToothDeviceAddress();
-        /*
-         *  配置obd：在arrayList中添加所需命令并设置为ObdConfiguration。
-         *  如果您没有设置任何命令或传递null，那么将请求所有命令OBD command。   *
-         */
-        ObdConfiguration.setmObdCommands(context, null);//传递null意味着我们现在正在执行所有OBD命令，但是您应该添加必需的命令以便像上面注释的行一样快速检索。
-
-
-        // 设定每升汽油价格，以便计算汽油成本。默认值为7$/l
-        float gasPrice = 7; // 每升，你应该根据你的要求初始化。
-        ObdPreferences.get(context).setGasPrice(gasPrice);
         initBlueTooth();
         checkBlueTooth(mConnectedDeviceAddress);
         // 设置数据更新计时器
@@ -158,7 +162,6 @@ public class HomeFragment extends BaseFragment {
                 });
         builder.show();
     }
-
 
     /**
      * 初始化蓝牙
@@ -301,7 +304,7 @@ public class HomeFragment extends BaseFragment {
                 TripRecord tripRecord = TripRecord.getTripRecode(context);
                 LogE("实时数据:" + tripRecord.toString());
                 tvContent.setText(tripRecord.toString());
-                tvHighSpeed.setText(tripRecord.getSpeedMax()+" km/h");
+                tvHighSpeed.setText(tripRecord.getSpeedMax() + " km/h");
                 dashSpeed.setRealTimeValue(tripRecord.getSpeed());
                 // 在这里，您可以使用getter方法从TripRecord获取实时数据，如
                 //tripRecord.getSpeed();

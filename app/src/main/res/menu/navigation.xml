@@ -9,6 +9,18 @@
         app:showAsAction="ifRoom"
         android:title="@string/title_home" />
     <item
+        android:id="@+id/navigation_check"
+        android:icon="@drawable/icon_home_check"
+        android:enabled="true"
+        app:showAsAction="ifRoom"
+        android:title="@string/title_check" />
+    <item
+        android:id="@+id/navigation_msg"
+        android:icon="@drawable/icon_home_msg"
+        android:enabled="true"
+        app:showAsAction="ifRoom"
+        android:title="@string/title_msg" />
+    <item
         android:id="@+id/navigation_my"
         android:icon="@drawable/ic_my"
         android:enabled="true"

@@ -214,7 +214,7 @@ public class HomeFragment extends BaseFragment {
             connectBtDevice(blueToothDeviceAddress);
         } else {
             setDefaultMode();
-            TipDialog.show(context, getString(R.string.text_bluetooth_error_connecting), TipDialog.SHOW_TIME_LONG, TipDialog.TYPE_WARNING);
+            showToast(getString(R.string.text_bluetooth_error_connecting));
         }
     }
 
@@ -334,7 +334,7 @@ public class HomeFragment extends BaseFragment {
                     connectBtDevice(mConnectedDeviceAddress);
                 } else {
                     setDefaultMode();
-                    TipDialog.show(context, getString(R.string.text_bluetooth_error_connecting), TipDialog.SHOW_TIME_LONG, TipDialog.TYPE_WARNING);
+                    showToast(getString(R.string.text_bluetooth_error_connecting));
                 }
             }
         }

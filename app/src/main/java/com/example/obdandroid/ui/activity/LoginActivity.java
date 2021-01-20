@@ -263,6 +263,7 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
+                LogE("用户登录:" + response);
                 UserLoginEntity entity = JSON.parseObject(response, UserLoginEntity.class);
                 if (entity.isSuccess()) {
                     btnSignIn.setProgress(100);

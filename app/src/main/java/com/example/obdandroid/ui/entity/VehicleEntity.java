@@ -296,6 +296,15 @@ public class VehicleEntity {
             private String lastMaintenanceMileage;
             private long maintenanceInterval;
             private String maintenanceMileageInterval;
+            private boolean isSelected; //自定义列表是否选中的标识
+
+            public boolean isSelected() {
+                return isSelected;
+            }
+
+            public void setSelected(boolean selected) {
+                isSelected = selected;
+            }
 
             public String getBluetoothDeviceNumber() {
                 return bluetoothDeviceNumber;

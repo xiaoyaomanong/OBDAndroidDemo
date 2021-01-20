@@ -27,6 +27,7 @@ import com.example.obdandroid.ui.fragment.MsgFragment;
 import com.example.obdandroid.ui.fragment.PersonalFragment;
 import com.example.obdandroid.ui.fragment.VehicleCheckFragment;
 import com.example.obdandroid.utils.ActivityManager;
+import com.example.obdandroid.utils.GalleryTransformer;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.StringUtil;
 import com.gyf.immersionbar.ImmersionBar;
@@ -81,6 +82,8 @@ public class MainActivity extends BaseActivity {
         fragments.add(PersonalFragment.getInstance());
         viewPager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
         viewPager.addOnPageChangeListener(mOnPageChangeListener);
+        viewPager.setOffscreenPageLimit(4);
+        viewPager.setPageTransformer(true, new GalleryTransformer());
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
@@ -93,7 +96,7 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onPageSelected(int position) {
             navigation.getMenu().getItem(position).setChecked(true);
-            switch (position){
+            switch (position) {
                 case 0:
                 case 2:
                 case 3:
@@ -146,6 +149,7 @@ public class MainActivity extends BaseActivity {
             return false;
         }
     };
+
 
     /**
      * 退出提示

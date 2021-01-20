@@ -16,6 +16,7 @@ import com.hjq.bar.initializer.LightBarInitializer;
 import com.kongzue.dialog.v2.DialogSettings;
 
 import static com.kongzue.dialog.v2.DialogSettings.STYLE_IOS;
+import static com.kongzue.dialog.v2.DialogSettings.THEME_DARK;
 import static com.kongzue.dialog.v2.DialogSettings.THEME_LIGHT;
 
 /**

@@ -20,7 +20,10 @@ import com.example.obdandroid.R;
 import com.example.obdandroid.ui.entity.VehicleEntity;
 import com.example.obdandroid.utils.BitMapUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 作者：Jealous
@@ -34,6 +37,9 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private OnClickCallBack clickCallBack;
     private final int EMPTY_VIEW = 0;//空页面
     private final int NOT_EMPTY_VIEW = 1;//正常页面
+    private int mSelectedPos = 0;   //实现单选，保存当前选中的position
+    //这个是checkbox的Hashmap集合
+    private HashMap<Integer, Boolean> map;
 
     public MyVehicleAdapter(Context context) {
         this.context = context;
@@ -46,6 +52,24 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void setList(List<VehicleEntity.DataEntity.ListEntity> list) {
         this.list = list;
+        map = new HashMap<>();
+        for (int i = 0; i < 30; i++) {
+            map.put(i, false);
+        }
+    }
+
+    /**
+     * 单选
+     *
+     * @param postion
+     */
+    public void singlesel(int postion) {
+        Set<Map.Entry<Integer, Boolean>> entries = map.entrySet();
+        for (Map.Entry<Integer, Boolean> entry : entries) {
+            entry.setValue(false);
+        }
+        map.put(postion, true);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -58,7 +82,7 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         int itemViewType = getItemViewType(position);
         if (EMPTY_VIEW == itemViewType) {
             EmptyViewHolder viewHolder = (EmptyViewHolder) holder;
@@ -88,7 +112,16 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             } else {
                 holder1.ivLogo.setImageBitmap(BitMapUtils.stringToBitmap(list.get(position).getLogo()));
             }
-            holder1.card_view.setOnClickListener(v -> clickCallBack.Click(list.get(position)));
+            holder1.id_cb_vehicleIndex.setChecked(map.get(position));
+            holder1.id_cb_vehicleIndex.setOnClickListener(v -> {
+                map.put(position, !map.get(position));
+                //刷新适配器
+                notifyDataSetChanged();
+                //单选
+                singlesel(position);
+                clickCallBack.select(list.get(position));
+            });
+            holder1.card_view.setOnClickListener(v -> clickCallBack.click(list.get(position)));
         }
     }
 
@@ -152,7 +185,8 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public interface OnClickCallBack {
-        void Click(VehicleEntity.DataEntity.ListEntity entity);
+        void click(VehicleEntity.DataEntity.ListEntity entity);
+        void select(VehicleEntity.DataEntity.ListEntity entity);
     }
 
     public void addFootItem(List<VehicleEntity.DataEntity.ListEntity> lists) {

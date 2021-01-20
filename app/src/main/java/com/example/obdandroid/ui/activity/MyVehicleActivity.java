@@ -10,6 +10,7 @@ import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.adapter.MyVehicleAdapter;
 import com.example.obdandroid.ui.entity.VehicleEntity;
 import com.example.obdandroid.utils.JumpUtil;
+import com.example.obdandroid.utils.SPUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
@@ -38,6 +39,7 @@ public class MyVehicleActivity extends BaseActivity {
     private boolean isLoadMore;
     private final List<VehicleEntity.DataEntity.ListEntity> datas = new ArrayList<>();
     private MyVehicleAdapter adapter;
+    private SPUtil spUtil;
 
     @Override
     protected int getContentViewId() {
@@ -55,6 +57,7 @@ public class MyVehicleActivity extends BaseActivity {
         context = this;
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         recycleCar = findViewById(R.id.recycle_Car);
+        spUtil = new SPUtil(context);
         recycleCar.setLinearLayout();
         //设置是否可以下拉刷新
         recycleCar.setPullRefreshEnable(true);
@@ -72,21 +75,32 @@ public class MyVehicleActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 pageNum = 1;
-                getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(),  getUserId(), true);
+                getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), true);
             }
 
             @Override
             public void onLoadMore() {
                 if (isLoadMore) {
                     pageNum++;
-                    getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(),  getUserId(), false);
+                    getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), false);
                 } else {
                     //设置是否可以上拉刷新
                     recycleCar.setPullLoadMoreCompleted();
                 }
             }
         });
-        adapter.setClickCallBack(entity -> JumpUtil.startActToData(context, VehicleInfoActivity.class, String.valueOf(entity.getVehicleId()), 0));
+        adapter.setClickCallBack(new MyVehicleAdapter.OnClickCallBack() {
+            @Override
+            public void click(VehicleEntity.DataEntity.ListEntity entity) {
+                JumpUtil.startActToData(context, VehicleInfoActivity.class, String.valueOf(entity.getVehicleId()), 0);
+            }
+
+            @Override
+            public void select(VehicleEntity.DataEntity.ListEntity entity) {
+                spUtil.remove("vehicleId");
+                spUtil.put("vehicleId", String.valueOf(entity.getVehicleId()));
+            }
+        });
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -104,6 +118,7 @@ public class MyVehicleActivity extends BaseActivity {
             }
         });
     }
+
 
     /**
      * @param pageNum   页号

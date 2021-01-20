@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -21,28 +22,19 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/color_080707">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="450dp"
-                android:background="@drawable/shape_gradient">
+                android:background="@drawable/shape_gradient"
+                tools:ignore="UselessParent">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <!--  <com.example.obdandroid.ui.view.SpreadView
-                          android:id="@+id/spreadView"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:gravity="center_horizontal"
-                          app:spread_center_color="#3061E4"
-                          app:spread_delay_milliseconds="35"
-                          app:spread_distance="5"
-                          app:spread_max_radius="90"
-                          app:spread_radius="150"
-                          app:spread_spread_color="@color/white" />-->
+                    android:layout_height="wrap_content"
+                    tools:ignore="UselessParent">
 
                     <com.example.obdandroid.ui.view.CircleWelComeView
                         android:id="@+id/circleView"
@@ -50,20 +42,20 @@
                         android:layout_height="match_parent"
                         android:layout_centerInParent="true"
                         app:circle_in_Color="#3061E4"
-                        app:circle_in_image="@android:drawable/ic_menu_search"
                         app:circle_out_color="@color/white"
-                        app:circle_radius="150"
+                        app:circle_radius="180"
                         app:circle_width="5"
                         app:max_width="500"
                         app:speed="2" />
 
                     <TextView
                         android:id="@+id/btStart"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="25dp"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
                         android:layout_centerInParent="true"
                         android:fontFamily="@font/calibri"
+                        android:gravity="center"
+                        android:padding="25dp"
                         android:text="@string/start_check"
                         android:textColor="@color/white"
                         android:textSize="16sp"
@@ -71,6 +63,28 @@
                 </RelativeLayout>
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="380dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/shape_obd_bg">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycleCheckContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="5dp"
+                    android:scrollbars="none">
+
+                </android.support.v7.widget.RecyclerView>
+            </LinearLayout>
+
+
         </FrameLayout>
     </android.support.v4.widget.NestedScrollView>
 

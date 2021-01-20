@@ -54,7 +54,11 @@ public class AppSettingActivity extends BaseActivity {
                         if (confirm) {
                             spUtil.put(Constant.IS_LOGIN, false);
                             JumpUtil.startAct(context, LoginActivity.class);
-                            ActivityManager.getInstance().finishActivitys();
+                            try {
+                                ActivityManager.getInstance().finishActivitys();
+                            } catch (Exception e) {
+                                LogE("该服务未注册");
+                            }
                             exitDialog.dismiss();
                         }
                     }

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:layout_marginBottom="2dp"
+    android:background="@color/color_2c2c2c"
+    android:orientation="horizontal"
+    tools:ignore="UseCompoundDrawables">
+
+    <ImageView
+        android:id="@+id/ivName"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:padding="3dp"
+        android:src="@drawable/icon_fdjfh"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tvCheckName"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:fontFamily="@font/gotham"
+        android:gravity="center_vertical"
+        android:paddingStart="15dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
+        tools:ignore="RtlSymmetry" />
+
+    <com.example.obdandroid.ui.view.progressButton.CircularProgressButton
+        android:id="@+id/btnCheck"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/calibri"
+        android:textColor="@color/cpb_white"
+        android:textSize="@dimen/text_8dp"
+        app:cpb_iconComplete="@drawable/icon_check_right"
+        app:cpb_iconError="@drawable/icon_check_error"
+        app:cpb_selectorComplete="@drawable/check_state_selector"
+        app:cpb_selectorError="@drawable/check_state_selector"
+        app:cpb_selectorIdle="@drawable/check_state_selector"
+        app:cpb_textIdle="正在检测" />
+
+
+</LinearLayout>

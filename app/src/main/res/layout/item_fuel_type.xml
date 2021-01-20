@@ -12,7 +12,7 @@
     <ImageView
         android:layout_width="30dp"
         android:layout_height="match_parent"
-        android:src="@drawable/icon_fuel_type"
+        android:src="@drawable/icon_fuel_type_record"
         tools:ignore="ContentDescription" />
 
     <TextView

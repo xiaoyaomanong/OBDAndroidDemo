@@ -32,23 +32,26 @@
             tools:ignore="UselessLeaf">
 
             <LinearLayout
+                android:id="@+id/layoutAddCar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:background="@drawable/bg_black"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:drawableStart="@drawable/icon_car"
                     android:drawableEnd="@drawable/icon_next"
-                    android:fontFamily="@font/calibri"
+                    android:fontFamily="@font/gotham"
                     android:gravity="center_vertical"
                     android:paddingStart="10dp"
                     android:text="   选择添加我的车辆"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/sp_14" />
+                    android:textSize="16sp"
+                    tools:ignore="RtlSymmetry" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycleCar"
@@ -58,6 +61,106 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/layoutCar"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_black"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <com.example.obdandroid.ui.view.CircleImageView
+                    android:id="@+id/ivCarLogo"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/icon_bm" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvAutomobileBrandName"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center_vertical"
+                        android:paddingStart="15dp"
+                        android:text="宝马"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        tools:ignore="NestedWeights" />
+
+                    <TextView
+                        android:id="@+id/tvModelName"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center_vertical"
+                        android:paddingStart="15dp"
+                        android:textColor="@color/gray"
+                        android:textSize="@dimen/sp_12" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_next"
+                    tools:ignore="ContentDescription" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutOBD"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_black"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/tv_obd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="15dp"
+                    android:text="OBD 未绑定"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:visibility="gone"
+                    tools:ignore="NestedWeights" />
+
+                <TextView
+                    android:id="@+id/tv_home_obd_tip"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/icon_no"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical|right"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="5dp"
+                    android:text="将OBD插入车辆并连接"
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/sp_12" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_next"
+                    tools:ignore="ContentDescription" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -75,12 +178,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="60dp"
                         android:drawableStart="@drawable/icon_dash"
-                        android:fontFamily="@font/calibri"
+                        android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="10dp"
                         android:text="   仪表功能"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/sp_14" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -110,7 +213,7 @@
                         app:maxValue="240"
                         app:measureTextSize="10sp"
                         app:radius="110dp"
-                        app:realTimeValue="120"
+                        app:realTimeValue="0"
                         app:startAngle="170"
                         app:stripeMode="outer"
                         app:stripeWidth="5dp"
@@ -142,7 +245,8 @@
                             android:layout_weight="1"
                             android:fontFamily="@font/calibri"
                             android:gravity="center"
-                            android:textColor="@android:color/holo_green_dark" />
+                            android:text="0"
+                            android:textColor="@color/white" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -190,7 +294,8 @@
                             android:layout_weight="1"
                             android:fontFamily="@font/calibri"
                             android:gravity="center"
-                            android:textColor="@android:color/holo_green_dark" />
+                            android:text="0"
+                            android:textColor="@color/white" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -230,7 +335,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycleContent"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:scrollbars="none" />
 
                 <TextView
@@ -240,7 +345,8 @@
                     android:fontFamily="@font/calibri"
                     android:gravity="center"
                     android:textColor="@color/white"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 

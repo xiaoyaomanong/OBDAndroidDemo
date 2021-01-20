@@ -25,7 +25,7 @@ public enum AvailableCommandNames {
     PERMANENT_TROUBLE_CODES("Permanent Trouble Codes"),
     FUEL_LEVEL("Fuel Level"),
     FUEL_TYPE("Fuel Type"),
-    FUEL_SYSTEM_STATUS("Freeze DTC"),
+    FUEL_SYSTEM_STATUS("fuel system status"),
     FUEL_CONSUMPTION_RATE("Fuel Consumption Rate"),
     TIMING_ADVANCE("Timing Advance"),
     DTC_NUMBER("Diagnostic Trouble Codes"),

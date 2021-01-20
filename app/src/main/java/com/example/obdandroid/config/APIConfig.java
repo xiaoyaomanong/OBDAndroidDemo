@@ -7,10 +7,10 @@ package com.example.obdandroid.config;
  */
 public class APIConfig {
     /**
-     * AP服务器地址
+     * APP服务器地址
      */
-    //public static final String SERVER_URL = "http://192.168.0.188:8088";
-    public static final String SERVER_URL = "http://47.92.146.15:1021";
+    public static final String SERVER_URL = "http://192.168.0.188:8088";
+    //public static final String SERVER_URL = "http://47.92.146.15:1021";
     /**
      * 注册接口
      */
@@ -79,4 +79,12 @@ public class APIConfig {
      * 业务字典值
      */
     public static final String getVocationalDictDataListByType_URL = "/api/getVocationalDictDataListByType";
+    /**
+     * 获取用户检测记录列表
+     */
+    public static final String getTestRecordPageList_URL = "/api/getTestRecordPageList";
+    /**
+     * 添加检测信息
+     */
+    public static final String addTestRecord_URL = "/api/addTestRecord";
 }

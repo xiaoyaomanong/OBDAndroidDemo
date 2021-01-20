@@ -145,6 +145,9 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
                         LogUtils.i("connectOBDDevice 返回异常: " + e.getMessage());
                     }
                 } else {
+                    isConnected = false;
+                    ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(false);
+                    ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
                     sendBroadcast(ACTION_OBD_CONNECTION_STATUS, "未检测到OBD设备...");
                 }
             }
@@ -205,10 +208,9 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
                                 new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                                 Thread.sleep(200);
                                 mIsRunningSuccess = true;
-
                             } catch (Exception e) {
                                 mIsRunningSuccess = false;
-                                LogUtils.i("在新线程中重置命令异常:: " + e != null ? e.getMessage() : "");
+                                LogUtils.i("在新线程中重置命令异常:: " + e.getMessage());
                             }
                         }
                     });
@@ -221,9 +223,8 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
                     isSockedConnected = false;
                 }
             }
-
             if (mSocket != null && mSocket.isConnected() && isSockedConnected) {
-                setConnection(false);
+                setConnection();
             } else {
                 if (mSupportedPids != null && mSupportedPids.length == 32) {
 
@@ -270,7 +271,6 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
 
             } catch (Exception e) {
                 LogUtils.i("执行命令异常  :: " + e.getMessage());
-
                 if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
                     LogUtils.i("命令异常  :: " + e.getMessage());
                     setDisconnection();
@@ -360,7 +360,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
     }
 
     /**
-     * close Bluetooth Socket
+     * 关闭蓝牙插座
      */
     private void closeSocket() {
         LogUtils.i("socket closed :: ");
@@ -399,7 +399,9 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
 
     }
 
-    /*通过应用程序设置设备断开状态的方法...*/
+    /**
+     * 通过应用程序设置设备断开状态的方法
+     */
     public void setDisconnection() {
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
         isConnected = false;
@@ -408,8 +410,10 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
         sendBroadcast(ACTION_OBD_CONNECTION_STATUS, getString(R.string.connect_lost));
     }
 
-    /*通过应用程序设置设备连接状态的方法...*/
-    private void setConnection(boolean isFromBle) {
+    /**
+     * 通过应用程序设置设备连接状态的方法
+     */
+    private void setConnection() {
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(true);
         isConnected = true;
         sendBroadcast(ACTION_OBD_CONNECTION_STATUS, getString(R.string.obd_connected));

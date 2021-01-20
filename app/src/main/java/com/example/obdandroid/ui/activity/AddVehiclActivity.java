@@ -179,7 +179,6 @@ public class AddVehiclActivity extends BaseActivity {
      * @param currentMileage        当前里程(公里)
      * @param bluetoothDeviceNumber 蓝牙设备号
      * @param token                 用户Token
-     *                              <p>
      *                              添加车辆信息
      */
     private void getVehiclePageList(String appUserId, String automobileBrandId, String automobileBrandName, String modelId,

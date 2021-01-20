@@ -138,7 +138,6 @@ public class AutomobileBrandActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("获取车辆品牌：" + response);
                 AutomobileBrandEntity entity = JSON.parseObject(response, AutomobileBrandEntity.class);
                 if (entity.isSuccess()) {
                     initRv(entity.getData());

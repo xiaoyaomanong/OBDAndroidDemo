@@ -8,9 +8,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -90,6 +92,8 @@ public class HomeFragment extends BaseFragment {
     private static String mConnectedDeviceName = null;
     private static String mConnectedDeviceAddress = null;
     private TestRecordAdapter recordAdapter;
+    private LocalBroadcastManager lm;
+    private TestReceiver testReceiver;
 
 
     public static HomeFragment getInstance() {
@@ -127,7 +131,8 @@ public class HomeFragment extends BaseFragment {
         initBlueTooth();
         checkBlueTooth();
         registerOBDReceiver();
-        getUserInfo(getUserId(), getToken());
+        initReceiver();
+        getUserInfo(getUserId(), getToken(), spUtil.getString("vehicleId", ""));
         // 设置数据更新计时器
         GridLayoutManager manager = new GridLayoutManager(context, 5);
         manager.setOrientation(OrientationHelper.VERTICAL);
@@ -165,7 +170,7 @@ public class HomeFragment extends BaseFragment {
      * @param token  接口令牌
      *               用户信息
      */
-    private void getUserInfo(String userId, String token) {
+    private void getUserInfo(String userId, String token, String vehicleId) {
         OkHttpUtils.get().url(SERVER_URL + USER_INFO_URL).
                 addParam("userId", userId).
                 addParam("token", token).
@@ -183,7 +188,7 @@ public class HomeFragment extends BaseFragment {
                         layoutAddCar.setVisibility(View.GONE);
                         layoutCar.setVisibility(View.VISIBLE);
                         layoutOBD.setVisibility(View.VISIBLE);
-                        getVehicleInfoById(getToken(), spUtil.getString("vehicleId", ""));
+                        getVehicleInfoById(getToken(), vehicleId);
                     } else {
                         layoutAddCar.setVisibility(View.VISIBLE);
                         layoutCar.setVisibility(View.GONE);
@@ -222,11 +227,15 @@ public class HomeFragment extends BaseFragment {
                     }
                     if (entity.getData().getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
                         tvHomeObdTip.setText("将OBD插入车辆并连接");
-                        tvHomeObdTip.setCompoundDrawables(getResources().getDrawable(R.drawable.icon_no), null, null, null);
+                        Drawable drawable = context.getResources().getDrawable(R.drawable.icon_no);
+                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                        tvHomeObdTip.setCompoundDrawables(drawable, null, null, null);
                         tvObd.setText("OBD 未绑定");
                     } else {
                         tvHomeObdTip.setText(entity.getData().getBluetoothDeviceNumber());
-                        tvHomeObdTip.setCompoundDrawables(getResources().getDrawable(R.drawable.icon_ok), null, null, null);
+                        Drawable drawable = context.getResources().getDrawable(R.drawable.icon_ok);
+                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                        tvHomeObdTip.setCompoundDrawables(drawable, null, null, null);
                         tvObd.setText("OBD 已绑定");
                     }
                 }
@@ -452,6 +461,25 @@ public class HomeFragment extends BaseFragment {
         }
     };
 
+    private void initReceiver() {
+        //获取实例
+        lm = LocalBroadcastManager.getInstance(context);
+        IntentFilter intentFilter = new IntentFilter("com.android.ObdCar");
+        testReceiver = new TestReceiver();
+        //绑定
+        lm.registerReceiver(testReceiver, intentFilter);
+
+    }
+
+    private class TestReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String vehicleId = intent.getStringExtra(Intent.EXTRA_TEXT);
+            getUserInfo(getUserId(), getToken(), vehicleId);
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -461,6 +489,8 @@ public class HomeFragment extends BaseFragment {
         } catch (Exception e) {
             LogE("33333");
         }
+        //解绑
+        lm.unregisterReceiver(testReceiver);
         //停止服务
         context.stopService(new Intent(context, ObdReaderService.class));
         // 这将停止后台线程，如果任何运行立即。

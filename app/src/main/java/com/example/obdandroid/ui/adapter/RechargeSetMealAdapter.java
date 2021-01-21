@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.obdandroid.R;
@@ -24,7 +25,6 @@ import java.util.List;
  * 描述：
  */
 public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final Context context;
     private final LayoutInflater inflater;
     private List<ChargeMealEntity.DataEntity> list;
     private OnClickCallBack clickCallBack;
@@ -32,7 +32,6 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private final int NOT_EMPTY_VIEW = 1;//正常页面
 
     public RechargeSetMealAdapter(Context context) {
-        this.context = context;
         inflater = LayoutInflater.from(context);
     }
 
@@ -61,27 +60,23 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             holder.mEmptyTextView.setText("暂无数据");
         } else if (NOT_EMPTY_VIEW == itemViewType) {
             final MyViewHolder holder = (MyViewHolder) viewHolder;
-            try {
-                holder.tvEffectiveDays.setText("有效期至:" + AppDateUtils.addDate(AppDateUtils.getTodayDateTime(), list.get(position).getEffectiveDays()));
-            } catch (ParseException e) {
-                e.printStackTrace();
+            //充值套餐类型(1 数量 2 时间) ,
+            if (list.get(position).getRechargeSetMeaType() == 1) {
+                holder.tvEffectiveDays.setText("使用次数:" + list.get(position).getRechargeSetMeaNum());
+            } else {
+                try {
+                    holder.tvEffectiveDays.setText("有效期至:" + AppDateUtils.addDate(AppDateUtils.getTodayDateTime(), list.get(position).getEffectiveDays()));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
             if (TextUtils.isEmpty(list.get(position).getRechargeSetMeaName())) {
                 holder.tvRechargeSetMeaName.setVisibility(View.GONE);
             } else {
                 holder.tvRechargeSetMeaName.setText(list.get(position).getRechargeSetMeaName());
             }
-            holder.tvRechargeSetMeaExplain.setText(list.get(position).getRechargeSetMeaExplain());
+            holder.tvBindingDeviceNum.setText("1个OBD终端 | 绑定" + list.get(position).getBindingDeviceNum() + "台车");
             holder.tvRechargeSetMeaAmount.setText("￥" + list.get(position).getRechargeSetMeaAmount());
-            switch (list.get(position).getRechargeSetMeaType()) {
-                case 1:
-                    holder.vipType.setImageResource(R.drawable.vip);
-                    break;
-                case 2:
-                    holder.vipType.setImageResource(R.drawable.vip1);
-                    break;
-            }
-
             holder.card_view.setOnClickListener(v -> clickCallBack.Click(list.get(position)));
         }
     }
@@ -116,9 +111,8 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         private final TextView tvRechargeSetMeaName;
         private final TextView tvEffectiveDays;
         private final TextView tvRechargeSetMeaAmount;
-        private final TextView tvRechargeSetMeaExplain;
-        private final ImageView vipType;
-        private final CardView card_view;
+        private final TextView tvBindingDeviceNum;
+        private final LinearLayout card_view;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -126,9 +120,8 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             tvRechargeSetMeaName = itemView.findViewById(R.id.tvRechargeSetMeaName);
             tvEffectiveDays = itemView.findViewById(R.id.tvEffectiveDays);
             tvRechargeSetMeaAmount = itemView.findViewById(R.id.tvRechargeSetMeaAmount);
-            tvRechargeSetMeaExplain = itemView.findViewById(R.id.tvRechargeSetMeaExplain);
+            tvBindingDeviceNum = itemView.findViewById(R.id.tvBindingDeviceNum);
             card_view = itemView.findViewById(R.id.card_view);
-            vipType = itemView.findViewById(R.id.vipType);
         }
     }
 

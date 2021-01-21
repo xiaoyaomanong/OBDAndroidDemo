@@ -19,6 +19,7 @@
     <color name="red">#ff0000</color>
     <color name="color_000000">#000000</color>
     <color name="color_2c2c2c">#1c1c1e</color>
+    <color name="color_2C2B30">#2C2B30</color>
     <color name="color_080707">#131313</color>
     <color name="color_layout">#F1F1F1</color>
     <color name="color1">#449EEF</color>
@@ -50,4 +51,8 @@
     <color name="color_bar">#2E62F3</color>
     <color name="outColor">#8a8a8a</color>
     <color name="inColor">#660D92DD</color>
+    <color name="black_line">#262628</color>
+    <color name="btn_add_car">#4D3B25</color>
+    <color name="btn_integral">#6383D6</color>
+    <color name="color_E0AA79">#E0AA79</color>
 </resources>

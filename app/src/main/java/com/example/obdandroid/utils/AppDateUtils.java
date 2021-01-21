@@ -20,6 +20,14 @@ public class AppDateUtils {
     public static final String FORMAT_T = "yyyy-MM-dd'T'HH:mm:ss";
     public static final String FORMAT_Z = "EEE MMM dd HH:mm:ss Z yyyy";
 
+
+    /* HH:mm:ss*/
+    public static String getTodayDateTimeHms() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+                Locale.getDefault());
+        return format.format(new Date());
+    }
+
     /**
      * 处理时间格式 2019-11-28T06:52:09.724+0000 为 yyyy-MM-dd HH:mm:ss
      */

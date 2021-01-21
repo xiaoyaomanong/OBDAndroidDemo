@@ -1,7 +1,10 @@
 package com.example.obdandroid.ui.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
@@ -35,11 +38,12 @@ public class MyVehicleActivity extends BaseActivity {
     private Context context;
     private PullLoadMoreRecyclerView recycleCar;
     private int pageNum = 1;
-    private final int pageSize = 10;
+    private int pageSize = 10;
     private boolean isLoadMore;
     private final List<VehicleEntity.DataEntity.ListEntity> datas = new ArrayList<>();
     private MyVehicleAdapter adapter;
     private SPUtil spUtil;
+    private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
 
     @Override
     protected int getContentViewId() {
@@ -69,6 +73,7 @@ public class MyVehicleActivity extends BaseActivity {
         recycleCar.setFooterViewText(getString(R.string.loading));
         //设置上拉刷新文字颜色
         recycleCar.setFooterViewTextColor(R.color.teal_200);
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);                   //广播变量管理器获
         adapter = new MyVehicleAdapter(context);
         getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), true);
         recycleCar.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
@@ -99,6 +104,9 @@ public class MyVehicleActivity extends BaseActivity {
             public void select(VehicleEntity.DataEntity.ListEntity entity) {
                 spUtil.remove("vehicleId");
                 spUtil.put("vehicleId", String.valueOf(entity.getVehicleId()));
+                Intent intent = new Intent("com.android.ObdCar");//创建发送广播的Action
+                intent.putExtra(Intent.EXTRA_TEXT, String.valueOf(entity.getVehicleId()));//发送携带的数据
+                mLocalBroadcastManager.sendBroadcast(intent);                               //发送本地广播
             }
         });
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
@@ -114,7 +122,8 @@ public class MyVehicleActivity extends BaseActivity {
 
             @Override
             public void onRightClick(View v) {
-                JumpUtil.startAct(context, AddVehiclActivity.class);
+                Intent intent = new Intent(context, AddVehiclActivity.class);
+                startActivityForResult(intent, 11);
             }
         });
     }
@@ -164,5 +173,17 @@ public class MyVehicleActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 11) {
+            if (resultCode == 10) {
+                pageNum = 1;
+                pageSize = 10;
+                getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), true);
+            }
+        }
     }
 }

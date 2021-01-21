@@ -1,11 +1,13 @@
 package com.example.obdandroid.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -16,7 +18,6 @@ import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleImageView;
 import com.example.obdandroid.utils.BitMapUtils;
 import com.example.obdandroid.utils.DialogUtils;
-import com.example.obdandroid.utils.JumpUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -35,28 +36,30 @@ import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
  */
 public class VehicleInfoActivity extends BaseActivity {
     private Context context;
-    private CircleImageView ivBind;
-    private ImageView ivLogo;
+    private DialogUtils dialogUtils;
+    private String vehicleId;
+    private TitleBar titleBarSet;
+    private CircleImageView ivLogo;
     private TextView tvAutomobileBrandName;
     private TextView tvModelName;
+    private TextView tvObd;
+    private TextView tvHomeObdTip;
     private TextView tvFuelType;
     private TextView tvTransmissionType;
     private TextView tvCurrentMileage;
-    private TextView tvVehicleStatusName;
-    private TextView tvEngineDisplacement;
+    private TextView tvVehiclePurchaseDate;
     private TextView tvEngineNumber;
+    private TextView tvLicensePlateNumber;
+    private TextView tvEngineDisplacement;
     private TextView tvFuelCost;
     private TextView tvGrossVehicleWeight;
     private TextView tvLastMaintenanceDate;
     private TextView tvLastMaintenanceMileage;
-    private TextView tvLicensePlateNumber;
     private TextView tvMaintenanceInterval;
     private TextView tvMaintenanceMileageInterval;
     private TextView tvTankCapacity;
-    private TextView tvVehiclePurchaseDate;
     private TextView tvYearManufacture;
-    private DialogUtils dialogUtils;
-    private String vehicleId;
+    private LinearLayout layoutBind;
 
     @Override
     protected int getContentViewId() {
@@ -73,27 +76,28 @@ public class VehicleInfoActivity extends BaseActivity {
         super.initView();
         context = this;
         vehicleId = getIntent().getStringExtra(Constant.ACT_FLAG);
-        TitleBar titleBarSet = findViewById(R.id.titleBarSet);
-        ivBind = findViewById(R.id.ivBind);
+        titleBarSet = findViewById(R.id.titleBarSet);
         ivLogo = findViewById(R.id.ivLogo);
         tvAutomobileBrandName = findViewById(R.id.tvAutomobileBrandName);
         tvModelName = findViewById(R.id.tvModelName);
+        tvObd = findViewById(R.id.tv_obd);
+        tvHomeObdTip = findViewById(R.id.tv_home_obd_tip);
         tvFuelType = findViewById(R.id.tvFuelType);
         tvTransmissionType = findViewById(R.id.tvTransmissionType);
         tvCurrentMileage = findViewById(R.id.tvCurrentMileage);
-        tvVehicleStatusName = findViewById(R.id.tvVehicleStatusName);
-        tvEngineDisplacement = findViewById(R.id.tvEngineDisplacement);
+        tvVehiclePurchaseDate = findViewById(R.id.tvVehiclePurchaseDate);
         tvEngineNumber = findViewById(R.id.tvEngineNumber);
+        tvLicensePlateNumber = findViewById(R.id.tvLicensePlateNumber);
+        tvEngineDisplacement = findViewById(R.id.tvEngineDisplacement);
         tvFuelCost = findViewById(R.id.tvFuelCost);
         tvGrossVehicleWeight = findViewById(R.id.tvGrossVehicleWeight);
         tvLastMaintenanceDate = findViewById(R.id.tvLastMaintenanceDate);
         tvLastMaintenanceMileage = findViewById(R.id.tvLastMaintenanceMileage);
-        tvLicensePlateNumber = findViewById(R.id.tvLicensePlateNumber);
         tvMaintenanceInterval = findViewById(R.id.tvMaintenanceInterval);
         tvMaintenanceMileageInterval = findViewById(R.id.tvMaintenanceMileageInterval);
         tvTankCapacity = findViewById(R.id.tvTankCapacity);
-        tvVehiclePurchaseDate = findViewById(R.id.tvVehiclePurchaseDate);
         tvYearManufacture = findViewById(R.id.tvYearManufacture);
+        layoutBind = findViewById(R.id.layoutBind);
         titleBarSet.setRightTitle("修改");
         dialogUtils = new DialogUtils(context);
         getVehicleInfoById(getToken(), vehicleId);
@@ -148,14 +152,22 @@ public class VehicleInfoActivity extends BaseActivity {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void setViewData(VehicleInfoEntity.DataEntity entity) {
-        if (entity.getVehicleStatus() == 1) {
-            ivBind.setVisibility(View.VISIBLE);
-            tvVehicleStatusName.setTextColor(getResources().getColor(R.color.red));
+        if (entity.getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
+            tvObd.setText("  OBD 未绑定");
+            tvHomeObdTip.setText("OBD 设备序列号");
+            Drawable drawable = context.getResources().getDrawable(R.drawable.icon_no);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            tvObd.setCompoundDrawables(drawable, null, null, null);
         } else {
-            ivBind.setVisibility(View.GONE);
-            tvVehicleStatusName.setTextColor(getResources().getColor(R.color.cpb_blue_dark));
+            tvObd.setText("  OBD 已绑定");
+            tvHomeObdTip.setText(entity.getBluetoothDeviceNumber());
+            Drawable drawable = context.getResources().getDrawable(R.drawable.icon_ok);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            tvObd.setCompoundDrawables(drawable, null, null, null);
         }
+
         if (TextUtils.isEmpty(entity.getLogo())) {
             ivLogo.setImageResource(R.drawable.icon_car_def);
         } else {
@@ -166,7 +178,6 @@ public class VehicleInfoActivity extends BaseActivity {
         tvFuelType.setText(checkNull(entity.getFuelTypeName()));
         tvTransmissionType.setText(checkNull(entity.getTransmissionTypeName()));
         tvCurrentMileage.setText(String.valueOf(entity.getCurrentMileage()));
-        tvVehicleStatusName.setText(checkNull(entity.getVehicleStatusName()));
         tvEngineDisplacement.setText(checkNull(entity.getEngineDisplacement()));
         tvEngineNumber.setText(checkNull(entity.getEngineNumber()));
         tvFuelCost.setText(checkNull(entity.getFualCost()));
@@ -179,7 +190,7 @@ public class VehicleInfoActivity extends BaseActivity {
         tvTankCapacity.setText(checkNull(entity.getTankCapacity()));
         tvVehiclePurchaseDate.setText(checkNull(entity.getVehiclePurchaseDate()));
         tvYearManufacture.setText(checkNull(entity.getYearManufacture()));
-        ivBind.setOnClickListener(v -> {
+        layoutBind.setOnClickListener(v -> {
             Intent intent = new Intent(context, BindBluetoothDeviceActivity.class);
             intent.putExtra("vehicleId", String.valueOf(entity.getVehicleId()));
             startActivityForResult(intent, 100);

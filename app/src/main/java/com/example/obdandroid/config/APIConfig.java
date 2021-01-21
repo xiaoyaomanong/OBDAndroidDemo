@@ -9,8 +9,8 @@ public class APIConfig {
     /**
      * APP服务器地址
      */
-    public static final String SERVER_URL = "http://192.168.0.188:8088";
-    //public static final String SERVER_URL = "http://47.92.146.15:1021";
+    //public static final String SERVER_URL = "http://192.168.0.188:8088";
+    public static final String SERVER_URL = "http://47.92.146.15:1021";
     /**
      * 注册接口
      */
@@ -87,4 +87,12 @@ public class APIConfig {
      * 添加检测信息
      */
     public static final String addTestRecord_URL = "/api/addTestRecord";
+    /**
+     * 获取常用车辆
+     */
+    public static final String getCommonBrandList_URL = "/api/getCommonBrandList";
+    /**
+     * 添加购买套餐记录
+     */
+    public static final String addRechargeRecord_URL = "/api/addRechargeRecord";
 }

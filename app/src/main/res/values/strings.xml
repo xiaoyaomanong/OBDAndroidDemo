@@ -75,7 +75,7 @@
     <string name="confirm">确定</string>
     <string name="Remember_password">记住密码</string>
     <string name="auto_login">自动登录</string>
-    <string name="myPay">充值套餐</string>
+    <string name="myPay">服务购买</string>
     <string name="loading">正在加载...</string>
     <string name="faultCode">查询故障码</string>
     <string name="add_car">添加车辆</string>
@@ -147,5 +147,11 @@
     <string name="title_msg">消息</string>
     <string name="check_title">全车检测</string>
     <string name="start_check">开始检测</string>
+    <string name="my">我的</string>
+    <string name="help">使用帮助</string>
+    <string name="history_record">历史记录</string>
+    <string name="buy_history">购买记录</string>
+    <string name="update">修改</string>
+    <string name="buy">立即购买</string>
 
 </resources>

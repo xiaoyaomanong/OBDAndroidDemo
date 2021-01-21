@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -14,11 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.ui.entity.VehicleEntity;
 import com.example.obdandroid.utils.BitMapUtils;
+import com.example.obdandroid.utils.SPUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,10 +43,14 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private int mSelectedPos = 0;   //实现单选，保存当前选中的position
     //这个是checkbox的Hashmap集合
     private HashMap<Integer, Boolean> map;
+    private SPUtil spUtil;
+    private String vehicleId;
 
     public MyVehicleAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
+        spUtil = new SPUtil(context);
+        vehicleId = spUtil.getString("vehicleId", "");
     }
 
     public void setClickCallBack(OnClickCallBack clickCallBack) {
@@ -53,8 +60,12 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void setList(List<VehicleEntity.DataEntity.ListEntity> list) {
         this.list = list;
         map = new HashMap<>();
-        for (int i = 0; i < 30; i++) {
-            map.put(i, false);
+        for (int i = 0; i < list.size(); i++) {
+            if (vehicleId.equals(String.valueOf(list.get(i).getVehicleId()))) {
+                map.put(i, true);
+            } else {
+                map.put(i, false);
+            }
         }
     }
 
@@ -90,27 +101,22 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         } else if (NOT_EMPTY_VIEW == itemViewType) {
             final MyViewHolder holder1 = (MyViewHolder) holder;
             holder1.tvAutomobileBrandName.setText(list.get(position).getVehicleName());
-            if (TextUtils.isEmpty(list.get(position).getLicensePlateNumber())) {
-                holder1.tv_licensePlateNumber.setText("无车牌号");
+            holder1.tvModelName.setText(list.get(position).getModelName());
+            if (list.get(position).getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
+                holder1.tvOBDState.setText("  OBD 未绑定");
+                Drawable drawable = context.getResources().getDrawable(R.drawable.icon_no);
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                holder1.tvOBDState.setCompoundDrawables(drawable, null, null, null);
             } else {
-                holder1.tv_licensePlateNumber.setText(list.get(position).getLicensePlateNumber());
+                holder1.tvOBDState.setText("  OBD 已绑定");
+                Drawable drawable = context.getResources().getDrawable(R.drawable.icon_ok);
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                holder1.tvOBDState.setCompoundDrawables(drawable, null, null, null);
             }
-            String FuelTypeName = TextUtils.isEmpty(list.get(position).getFuelTypeName()) ? "未知" : list.get(position).getFuelTypeName();
-            String EngineDisplacement = TextUtils.isEmpty(list.get(position).getEngineDisplacement()) ? "未知" : list.get(position).getEngineDisplacement();
-            holder1.tvFuelTypeName.setText(FuelTypeName + "  " + EngineDisplacement);
-            if (list.get(position).getVehicleStatus() == 1) {
-                holder1.ivObd.setImageResource(R.drawable.icon_obd_bind_no);
-                holder1.tvObd.setTextColor(context.getResources().getColor(R.color.red));
-            } else {
-                holder1.ivObd.setImageResource(R.drawable.icon_obd_bind);
-                holder1.tvObd.setTextColor(context.getResources().getColor(R.color.white));
-            }
-            holder1.tvObd.setText(list.get(position).getVehicleStatusName());
-            holder1.id_cb_vehicleIndex.setText("第" + (position + 1) + "辆车");
             if (TextUtils.isEmpty(list.get(position).getLogo())) {
-                holder1.ivLogo.setImageResource(R.drawable.icon_car_def);
+                holder1.ivCarLogo.setImageResource(R.drawable.icon_car_def);
             } else {
-                holder1.ivLogo.setImageBitmap(BitMapUtils.stringToBitmap(list.get(position).getLogo()));
+                holder1.ivCarLogo.setImageBitmap(BitMapUtils.stringToBitmap(list.get(position).getLogo()));
             }
             holder1.id_cb_vehicleIndex.setChecked(map.get(position));
             holder1.id_cb_vehicleIndex.setOnClickListener(v -> {
@@ -153,24 +159,20 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     static class MyViewHolder extends RecyclerView.ViewHolder {
         View itemView;
         private final AppCompatCheckBox id_cb_vehicleIndex;
-        private final TextView tv_licensePlateNumber;
-        private final ImageView ivLogo;
+        private final ImageView ivCarLogo;
         private final TextView tvAutomobileBrandName;
-        private final TextView tvFuelTypeName;
-        private final ImageView ivObd;
-        private final TextView tvObd;
-        private final CardView card_view;
+        private final TextView tvModelName;
+        private final TextView tvOBDState;
+        private final LinearLayout card_view;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
             id_cb_vehicleIndex = itemView.findViewById(R.id.id_cb_vehicleIndex);
-            tv_licensePlateNumber = itemView.findViewById(R.id.tv_licensePlateNumber);
-            ivLogo = itemView.findViewById(R.id.ivLogo);
+            ivCarLogo = itemView.findViewById(R.id.ivCarLogo);
             tvAutomobileBrandName = itemView.findViewById(R.id.tvAutomobileBrandName);
-            tvFuelTypeName = itemView.findViewById(R.id.tvFuelTypeName);
-            ivObd = itemView.findViewById(R.id.ivObd);
-            tvObd = itemView.findViewById(R.id.tvObd);
+            tvModelName = itemView.findViewById(R.id.tvModelName);
+            tvOBDState = itemView.findViewById(R.id.tvOBDState);
             card_view = itemView.findViewById(R.id.card_view);
         }
     }
@@ -186,6 +188,7 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public interface OnClickCallBack {
         void click(VehicleEntity.DataEntity.ListEntity entity);
+
         void select(VehicleEntity.DataEntity.ListEntity entity);
     }
 

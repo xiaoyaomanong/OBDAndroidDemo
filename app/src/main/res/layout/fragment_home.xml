@@ -64,7 +64,7 @@
             <LinearLayout
                 android:id="@+id/layoutCar"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="80dp"
                 android:layout_margin="10dp"
                 android:background="@drawable/bg_black"
                 android:gravity="center_vertical"
@@ -94,8 +94,13 @@
                         android:text="宝马"
                         android:textColor="@color/white"
                         android:textSize="18sp"
-                        tools:ignore="NestedWeights" />
-
+                        tools:ignore="NestedWeights,RtlSymmetry" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@color/black_line" />
                     <TextView
                         android:id="@+id/tvModelName"
                         android:layout_width="match_parent"
@@ -104,7 +109,7 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="15dp"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/gray_light"
                         android:textSize="@dimen/sp_12" />
 
                 </LinearLayout>
@@ -120,11 +125,12 @@
             <LinearLayout
                 android:id="@+id/layoutOBD"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="65dp"
                 android:layout_margin="10dp"
                 android:background="@drawable/bg_black"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
 
                 <TextView
@@ -137,8 +143,7 @@
                     android:text="OBD 未绑定"
                     android:textColor="@color/white"
                     android:textSize="16sp"
-                    android:visibility="gone"
-                    tools:ignore="NestedWeights" />
+                    tools:ignore="NestedWeights,RtlSymmetry" />
 
                 <TextView
                     android:id="@+id/tv_home_obd_tip"
@@ -150,9 +155,9 @@
                     android:gravity="center_vertical|right"
                     android:paddingStart="10dp"
                     android:paddingEnd="5dp"
-                    android:text="将OBD插入车辆并连接"
-                    android:textColor="@color/gray"
-                    android:textSize="@dimen/sp_12" />
+                    android:textColor="@color/gray_light"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -183,7 +188,8 @@
                         android:paddingStart="10dp"
                         android:text="   仪表功能"
                         android:textColor="@color/white"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        tools:ignore="RtlSymmetry" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -194,7 +200,8 @@
                         android:paddingStart="10dp"
                         android:text="@string/home_more_dash"
                         android:textColor="@color/gray"
-                        android:textSize="@dimen/sp_14" />
+                        android:textSize="@dimen/sp_14"
+                        tools:ignore="RtlHardcoded,RtlSymmetry" />
                 </LinearLayout>
 
                 <LinearLayout

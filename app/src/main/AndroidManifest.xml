@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.READ_SMS" />
 
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="org.simalliance.openmobileapi.SMARTCARD" />
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -30,20 +29,15 @@
 
     <uses-feature android:name="android.hardware.camera2.full" />
 
-    <uses-permission android:name="cn.swiftpass.spay.permission.MMOAUTH_CALLBACK" />
-    <uses-permission android:name="cn.swiftpass.spay.permission.MM_MESSAGE" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
-    <uses-permission android:name="xvtian.gai.receiver" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
 
     <!--支付权限-->
-
-    <permission android:name="info.zhegui.receiver.RECEIVE" />
 
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />

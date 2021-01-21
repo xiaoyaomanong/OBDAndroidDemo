@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.sohrab.obd.reader.service;
 
 import android.app.IntentService;
@@ -33,7 +17,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.sohrab.obd.reader.application.ObdPreferences;
-import com.sohrab.obd.reader.constants.DefineObdReader;
+import com.sohrab.obd.reader.constants.DefineObdTwoReader;
 import com.sohrab.obd.reader.enums.ObdProtocols;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
@@ -52,25 +36,15 @@ import java.util.ArrayList;
 
 import app.com.android_obd_reader.R;
 
-
 /**
- * created by sohrab 01/12/2017
- * <p>
- * 用于管理与后台OBD-2的连接和数据通信，并将数据更新到实时屏幕的服务。
- * 它连接配对的OBD-2或等待配对。
- * 配对后，试着用蓝牙插座和一些特定的OBD-2命令连接，
+ * 作者：Jealous
+ * 日期：2021/1/21
+ * 描述：
  */
-
-public class ObdReaderService extends IntentService implements DefineObdReader {
-    private static final String TAG = "ObdReaderService";
+public class ObdTwoReaderService extends IntentService implements DefineObdTwoReader {
+    private static final String TAG = "ObdTwoReaderService";
     //OBD-2连接时接收
-    public final static char PID_STATUS_SUCCESS = '1';
-    public final static int DEVICE_NOT_PAIRED = 1;
-    public final static int OBD_NOT_RESPONDING = 2;
-    public final static int OBD_CONNECTED = 3;
-    public final static int INIT_OBD = 4;
-
-    //   private static final int NOTIFICATION_ID = 101;
+    public final static char PID_STATUS_SUCCESS = '2';
     private static final int DELAY_FIFTEEN_SECOND = 15000;
     private static final int DELAY_TWO_SECOND = 2000;
     // 如果为true，则用于查找TroubleCode。这用于显示故障的检查活动。
@@ -82,12 +56,12 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
     //设置OBD-2连接状态
     private boolean isConnected;
     private boolean mIsRunningSuccess;
-    private Intent mIntent = new Intent(ACTION_READ_OBD_REAL_TIME_DATA);
+    private Intent mIntent = new Intent(ACTION_READ_OBD_REAL_TIME_DATA_CAR);
     private char[] mSupportedPids;
 
-    public ObdReaderService() {
-        super("ObdReaderService");
-        LogUtils.i("ObdReaderService");
+    public ObdTwoReaderService() {
+        super("ObdTwoReaderService");
+        LogUtils.i("ObdTwoReaderService");
     }
 
     @Nullable
@@ -135,7 +109,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
                 String OBD_SMALL = "obd";
                 if (name != null && (name.contains(OBD_SMALL) || name.contains(OBD_CAPS) || name.toUpperCase().contains(v_LINK))) {
                     try {
-                        sendBroadcast(ACTION_OBD_CONNECTION_STATUS, "正在连接OBD蓝牙设备...");
+                        sendBroadcast(ACTION_OBD_CONNECTION_STATUS_CAR, "正在连接OBD蓝牙设备...");
                         connectOBDDevice(device);
                     } catch (Exception e) {
                         LogUtils.i("connectOBDDevice 返回异常: " + e.getMessage());
@@ -144,7 +118,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
                     isConnected = false;
                     ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(false);
                     ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
-                    sendBroadcast(ACTION_OBD_CONNECTION_STATUS, "未检测到OBD设备...");
+                    sendBroadcast(ACTION_OBD_CONNECTION_STATUS_CAR, "未检测到OBD设备...");
                 }
             }
         }
@@ -226,11 +200,11 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
 
                     if ((mSupportedPids[12] != PID_STATUS_SUCCESS) || (mSupportedPids[11] != PID_STATUS_SUCCESS)) {
                         // 不支持速度PID
-                        sendBroadcast(ACTION_OBD_CONNECTION_STATUS, getString(R.string.unable_to_connect));
+                        sendBroadcast(ACTION_OBD_CONNECTION_STATUS_CAR, getString(R.string.unable_to_connect));
                         return;
                     }
                 }
-                sendBroadcast(ACTION_OBD_CONNECTION_STATUS, getString(R.string.obd2_adapter_not_responding));
+                sendBroadcast(ACTION_OBD_CONNECTION_STATUS_CAR, getString(R.string.obd2_adapter_not_responding));
             }
         }
     }
@@ -269,7 +243,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
             }
         }
         if (mIntent == null)
-            mIntent = new Intent(ACTION_READ_OBD_REAL_TIME_DATA);
+            mIntent = new Intent(ACTION_READ_OBD_REAL_TIME_DATA_CAR);
         sendBroadcast(mIntent);
         // 退出循环意味着连接丢失，所以将连接状态设置为false
         isConnected = false;
@@ -283,7 +257,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
      */
     private void sendBroadcast(final String action, String data) {
         final Intent intent = new Intent(action);
-        intent.putExtra(ObdReaderService.INTENT_OBD_EXTRA_DATA, data);
+        intent.putExtra(ObdTwoReaderService.INTENT_OBD_EXTRA_DATA_CAR, data);
         sendBroadcast(intent);
     }
 
@@ -397,7 +371,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
         isConnected = false;
         closeSocket();
         LogUtils.i("socket disconnected :: ");
-        sendBroadcast(ACTION_OBD_CONNECTION_STATUS, getString(R.string.connect_lost));
+        sendBroadcast(ACTION_OBD_CONNECTION_STATUS_CAR, getString(R.string.connect_lost));
     }
 
     /**
@@ -406,15 +380,15 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
     private void setConnection() {
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(true);
         isConnected = true;
-        sendBroadcast(ACTION_OBD_CONNECTION_STATUS, getString(R.string.obd_connected));
+        sendBroadcast(ACTION_OBD_CONNECTION_STATUS_CAR, getString(R.string.obd_connected));
     }
 
     /**
      * 创建用于在onBind方法中返回的绑定器实例
      */
     public class LocalBinder extends Binder {
-        public ObdReaderService getService() {
-            return ObdReaderService.this;
+        public ObdTwoReaderService getService() {
+            return ObdTwoReaderService.this;
         }
     }
 }

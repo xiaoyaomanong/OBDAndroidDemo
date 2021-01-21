@@ -23,19 +23,18 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
-import com.example.obdandroid.listener.CallEndListener;
 import com.example.obdandroid.ui.adapter.VehicleCheckAdapter;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.view.CircleWelComeView;
+import com.example.obdandroid.utils.SPUtil;
 import com.hjq.bar.TitleBar;
-import com.kongzue.dialog.v2.DialogSettings;
 import com.kongzue.dialog.v2.Notification;
 import com.kongzue.dialog.v2.TipDialog;
 import com.sohrab.obd.reader.application.ObdPreferences;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
-import com.sohrab.obd.reader.service.ObdReaderService;
+import com.sohrab.obd.reader.service.ObdTwoReaderService;
 import com.sohrab.obd.reader.trip.OBDTripEntity;
-import com.sohrab.obd.reader.trip.TripRecord;
+import com.sohrab.obd.reader.trip.TripTwoRecord;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -46,9 +45,8 @@ import okhttp3.Response;
 
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.addTestRecord_URL;
-import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
-import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_OBD_CONNECTION_STATUS;
-import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_READ_OBD_REAL_TIME_DATA;
+import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_OBD_CONNECTION_STATUS_CAR;
+import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_READ_OBD_REAL_TIME_DATA_CAR;
 
 /**
  * 作者：Jealous
@@ -64,6 +62,7 @@ public class VehicleCheckFragment extends BaseFragment {
     private static String mConnectedDeviceAddress = null;
     private VehicleCheckAdapter adapter;
     private RecyclerView recycleCheckContent;
+    private SPUtil spUtil;
 
     public static VehicleCheckFragment getInstance() {
         return new VehicleCheckFragment();
@@ -83,9 +82,10 @@ public class VehicleCheckFragment extends BaseFragment {
         recycleCheckContent = getView(R.id.recycleCheckContent);
         mConnectedDeviceName = ObdPreferences.get(context).getBlueToothDeviceName();
         mConnectedDeviceAddress = ObdPreferences.get(context).getBlueToothDeviceAddress();
+        spUtil=new SPUtil(context);
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ACTION_READ_OBD_REAL_TIME_DATA);
-        intentFilter.addAction(ACTION_OBD_CONNECTION_STATUS);
+        intentFilter.addAction(ACTION_READ_OBD_REAL_TIME_DATA_CAR);
+        intentFilter.addAction(ACTION_OBD_CONNECTION_STATUS_CAR);
         context.registerReceiver(mObdReaderReceiver, intentFilter);
         LinearLayoutManager manager = new LinearLayoutManager(context);
         manager.setOrientation(OrientationHelper.VERTICAL);
@@ -151,6 +151,7 @@ public class VehicleCheckFragment extends BaseFragment {
 
             @Override
             public void onResponse(String response, int id) {
+                LogE("添加检测信息:"+response);
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
 
@@ -188,7 +189,7 @@ public class VehicleCheckFragment extends BaseFragment {
      */
     private void startServiceOBD(BluetoothDevice bluetoothDevice) {
         //启动服务，该服务将在后台执行连接，并执行命令，直到您停止
-        Intent intent = new Intent(context, ObdReaderService.class);
+        Intent intent = new Intent(context, ObdTwoReaderService.class);
         intent.putExtra("device", bluetoothDevice);
         context.startService(intent);
     }
@@ -215,27 +216,26 @@ public class VehicleCheckFragment extends BaseFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(ACTION_OBD_CONNECTION_STATUS)) {
-                String connectionStatusMsg = intent.getStringExtra(ObdReaderService.INTENT_OBD_EXTRA_DATA);
+            if (action.equals(ACTION_OBD_CONNECTION_STATUS_CAR)) {
+                String connectionStatusMsg = intent.getStringExtra(ObdTwoReaderService.INTENT_OBD_EXTRA_DATA_CAR);
                 Toast.makeText(context, connectionStatusMsg, Toast.LENGTH_SHORT).show();
                 if (connectionStatusMsg.equals(getString(R.string.obd_connected))) {
                     //OBD连接在OBD连接之后做什么
                     onConnect();
                 } else if (connectionStatusMsg.equals(getString(R.string.connect_lost))) {
-                    showTipDialog("连接OBD失败", TipDialog.TYPE_ERROR);
                     //OBD断开连接断开后做什么
                     onDisconnect();
                 } else {
-                    showTipDialog(connectionStatusMsg, TipDialog.TYPE_WARNING);
                     // 在这里您可以检查OBD连接和配对状态
                 }
-            } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA)) {
-                TripRecord tripRecord = TripRecord.getTripRecode(context);
+            } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA_CAR)) {
+                TripTwoRecord TripTwoRecord = com.sohrab.obd.reader.trip.TripTwoRecord.getTripTwoRecode(context);
                 if (circleView.isDiffuse()) {
                     circleView.stop();
                     btStart.setText("检测完成");
                 }
-                showResult(tripRecord.getTripMap());
+                showResult(TripTwoRecord.getTripMap());
+                addTestRecord(spUtil.getString("vehicleId", ""),JSON.toJSONString(TripTwoRecord.getOBDJson()),getUserId(),getToken());
             }
         }
     };
@@ -255,7 +255,7 @@ public class VehicleCheckFragment extends BaseFragment {
         }
 
         //停止服务
-        context.stopService(new Intent(context, ObdReaderService.class));
+        context.stopService(new Intent(context, ObdTwoReaderService.class));
         // 这将停止后台线程，如果任何运行立即。
         ObdPreferences.get(context).setServiceRunningStatus(false);
     }

@@ -9,9 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -375,7 +373,7 @@ public class HomeFragment extends BaseFragment {
      */
     @SuppressLint("StringFormatInvalid")
     private void onConnect() {
-        TipDialog.show(context, R.string.title_connected_to + mConnectedDeviceName, TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
+        TipDialog.show(context, getString(R.string.title_connected_to) + mConnectedDeviceName, TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
         titleBar.setLeftTitle("已连接");
         titleBar.setRightIcon(R.drawable.action_connect);
         spUtil.put(CONNECT_BT_KEY, "ON");
@@ -435,27 +433,24 @@ public class HomeFragment extends BaseFragment {
             String action = intent.getAction();
             if (action.equals(ACTION_OBD_CONNECTION_STATUS)) {
                 String connectionStatusMsg = intent.getStringExtra(ObdReaderService.INTENT_OBD_EXTRA_DATA);
-                LogE("connectionStatusMsg:" + connectionStatusMsg);
                 Toast.makeText(context, connectionStatusMsg, Toast.LENGTH_SHORT).show();
                 if (connectionStatusMsg.equals(getString(R.string.obd_connected))) {
                     //OBD连接在OBD连接之后做什么
                     onConnect();
                 } else if (connectionStatusMsg.equals(getString(R.string.connect_lost))) {
-                    showTipDialog("连接OBD失败", TipDialog.TYPE_ERROR);
                     //OBD断开连接断开后做什么
                     onDisconnect();
                 } else if (connectionStatusMsg.contains("未检测到OBD设备")) {
                     onDisconnect();
                 } else {
                     // 在这里您可以检查OBD连接和配对状态
-                    showTipDialog(connectionStatusMsg, TipDialog.TYPE_WARNING);
                 }
             } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA)) {
                 TripRecord tripRecord = TripRecord.getTripRecode(context);
                 LogE("实时数据:" + tripRecord.toString());
                 tvContent.setText(tripRecord.toString());
-                tvHighSpeed.setText(tripRecord.getSpeedMax() + " km/h");
-                tvCurrentSpeed.setText(tripRecord.getSpeed() + " km/h");
+                tvHighSpeed.setText(String.valueOf(tripRecord.getSpeedMax()));
+                tvCurrentSpeed.setText(String.valueOf(tripRecord.getSpeed()));
                 dashSpeed.setRealTimeValue(tripRecord.getSpeed());
             }
         }

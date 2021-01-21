@@ -64,7 +64,7 @@ android {
         variant ->
             variant.outputs.all {
                 //这里修改apk文件名
-                outputFileName = "Ai车检_v${defaultConfig.versionName}_${buildType.name}_${releaseTime()}.apk"
+                outputFileName = "Aiv${defaultConfig.versionName}_${buildType.name}_${releaseTime()}.apk"
             }
     }
     android {

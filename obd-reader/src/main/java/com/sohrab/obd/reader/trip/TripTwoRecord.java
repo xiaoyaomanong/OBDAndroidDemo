@@ -1,11 +1,10 @@
 package com.sohrab.obd.reader.trip;
 
-
 import android.content.Context;
 import android.text.TextUtils;
 
 import com.sohrab.obd.reader.application.ObdPreferences;
-import com.sohrab.obd.reader.constants.DefineObdReader;
+import com.sohrab.obd.reader.constants.DefineObdTwoReader;
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
 import com.sohrab.obd.reader.enums.FuelType;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
@@ -24,12 +23,12 @@ import java.util.UUID;
 
 import app.com.android_obd_reader.R;
 
-
 /**
- * Created by sohrab on 30/11/2017.
+ * 作者：Jealous
+ * 日期：2021/1/21
+ * 描述：
  */
-
-public class TripRecord implements DefineObdReader, Serializable {
+public class TripTwoRecord implements DefineObdTwoReader, Serializable {
     private static Context sContext;
     int MINUS_ONE = -1;
     private static final int SPEED_GAP = 20;
@@ -84,7 +83,7 @@ public class TripRecord implements DefineObdReader, Serializable {
     private Integer speed = -1;
     private Integer speedMax = 0;
     private String engineRuntime;
-    private static TripRecord sInstance;
+    private static TripTwoRecord sInstance;
     private long tripStartTime;
     private float idlingDuration;
     private float drivingDuration;
@@ -146,15 +145,15 @@ public class TripRecord implements DefineObdReader, Serializable {
     private String mIgnitionMonitor;
 
 
-    private TripRecord() {
+    private TripTwoRecord() {
         tripStartTime = System.currentTimeMillis();
         mTripIdentifier = UUID.randomUUID().toString();
     }
 
-    public static TripRecord getTripRecode(Context context) {
+    public static TripTwoRecord getTripTwoRecode(Context context) {
         sContext = context;
         if (sInstance == null)
-            sInstance = new TripRecord();
+            sInstance = new TripTwoRecord();
         return sInstance;
     }
 

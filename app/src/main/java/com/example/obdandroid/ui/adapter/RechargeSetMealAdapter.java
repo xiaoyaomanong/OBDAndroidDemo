@@ -2,13 +2,12 @@ package com.example.obdandroid.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v7.widget.CardView;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -44,7 +43,7 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (EMPTY_VIEW == viewType) {
             return new EmptyViewHolder(inflater.inflate(R.layout.stub_empty, parent, false));
         }

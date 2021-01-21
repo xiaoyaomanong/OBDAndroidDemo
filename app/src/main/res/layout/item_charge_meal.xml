@@ -27,7 +27,6 @@
             android:fontFamily="@font/calibri"
             android:gravity="center_vertical"
             android:paddingStart="10dp"
-            android:text="体验次数"
             android:textColor="@color/color_E0AA79"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -40,7 +39,6 @@
             android:layout_weight="1"
             android:gravity="center_vertical|right"
             android:paddingEnd="@dimen/dp_10"
-            android:text="￥99"
             android:textColor="@color/red"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -60,7 +58,6 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/dp_10"
-            android:text="1个OBD终端 | 绑定1台车"
             android:textColor="@color/color_E0AA79"
             android:textSize="@dimen/sp_12"
             tools:ignore="NestedWeights,RtlSymmetry" />
@@ -72,7 +69,6 @@
             android:layout_weight="1"
             android:gravity="center_vertical|right"
             android:paddingEnd="@dimen/dp_10"
-            android:text="有效期：7天"
             android:textColor="@color/color_E0AA79"
             android:textSize="@dimen/sp_12"
             tools:ignore="RtlHardcoded,RtlSymmetry" />

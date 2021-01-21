@@ -39,7 +39,9 @@ public class AppDateUtils {
             DateFormat df = new SimpleDateFormat(FORMAT_T);
             Date date = df.parse(oldDate);
             SimpleDateFormat df1 = new SimpleDateFormat(FORMAT_Z, Locale.UK);
-            date1 = df1.parse(date.toString());
+            if (date != null) {
+                date1 = df1.parse(date.toString());
+            }
             df2 = new SimpleDateFormat(FORMAT);
         } catch (Exception e) {
             e.printStackTrace();

@@ -47,8 +47,8 @@ public class RechargeSetMealActivity extends BaseActivity {
     private com.example.obdandroid.ui.view.progressButton.CircularProgressButton btnBuy;
     private String rechargeSetMealSettingsId="";
     private String rechargetAmount="";
-    private String paymentChannels="1";
-    private String rechargeStatus="1";
+    private final String paymentChannels="1";
+    private final String rechargeStatus="1";
 
     @Override
     protected int getContentViewId() {
@@ -171,9 +171,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                 if (entity.isSuccess()) {
                     btnBuy.setProgress(100);
                     new CustomeDialog(context, "购买套餐成功！", confirm -> {
-                        if (confirm) {
 
-                        }
                     }).setPositiveButton("确定").setTitle("支付").show();
                 } else {
                     btnBuy.setProgress(-1);

@@ -12,6 +12,7 @@ import com.example.obdandroid.ui.adapter.RechargeSetMealAdapter;
 import com.example.obdandroid.ui.entity.ChargeMealEntity;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
+import com.example.obdandroid.ui.view.progressButton.CircularProgressButton;
 import com.example.obdandroid.utils.AppDateUtils;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
@@ -44,7 +45,7 @@ public class RechargeSetMealActivity extends BaseActivity {
     private boolean isLoadMore;
     private RechargeSetMealAdapter adapter;
     private final List<ChargeMealEntity.DataEntity> datas = new ArrayList<>();
-    private com.example.obdandroid.ui.view.progressButton.CircularProgressButton btnBuy;
+    private CircularProgressButton btnBuy;
     private String rechargeSetMealSettingsId="";
     private String rechargetAmount="";
     private final String paymentChannels="1";
@@ -100,6 +101,7 @@ public class RechargeSetMealActivity extends BaseActivity {
             }
         });
         adapter.setClickCallBack(entity -> {
+            LogE("33333");
             rechargeSetMealSettingsId = String.valueOf(entity.getRechargeSetMealSettingsId());
             rechargetAmount = String.valueOf(entity.getRechargeSetMeaAmount());
         });

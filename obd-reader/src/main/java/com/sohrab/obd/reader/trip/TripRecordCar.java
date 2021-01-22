@@ -28,7 +28,7 @@ import app.com.android_obd_reader.R;
  * 日期：2021/1/21
  * 描述：
  */
-public class TripTwoRecord implements DefineObdTwoReader, Serializable {
+public class TripRecordCar implements DefineObdTwoReader, Serializable {
     private static Context sContext;
     int MINUS_ONE = -1;
     private static final int SPEED_GAP = 20;
@@ -83,7 +83,7 @@ public class TripTwoRecord implements DefineObdTwoReader, Serializable {
     private Integer speed = -1;
     private Integer speedMax = 0;
     private String engineRuntime;
-    private static TripTwoRecord sInstance;
+    private static TripRecordCar sInstance;
     private long tripStartTime;
     private float idlingDuration;
     private float drivingDuration;
@@ -145,15 +145,15 @@ public class TripTwoRecord implements DefineObdTwoReader, Serializable {
     private String mIgnitionMonitor;
 
 
-    private TripTwoRecord() {
+    private TripRecordCar() {
         tripStartTime = System.currentTimeMillis();
         mTripIdentifier = UUID.randomUUID().toString();
     }
 
-    public static TripTwoRecord getTripTwoRecode(Context context) {
+    public static TripRecordCar getTripTwoRecode(Context context) {
         sContext = context;
         if (sInstance == null)
-            sInstance = new TripTwoRecord();
+            sInstance = new TripRecordCar();
         return sInstance;
     }
 

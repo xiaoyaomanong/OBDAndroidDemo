@@ -95,4 +95,12 @@ public class APIConfig {
      * 添加购买套餐记录
      */
     public static final String addRechargeRecord_URL = "/api/addRechargeRecord";
+    /**
+     * 获取用户购买套餐记录列表
+     */
+    public static final String getRechargeRecordPageList_URL = "/api/getRechargeRecordPageList";
+    /**
+     * 添加意见反馈
+     */
+    public static final String addFeedback_URL = "/api/addFeedback";
 }

@@ -69,13 +69,14 @@
                 android:background="@drawable/bg_black"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:visibility="gone">
+                android:visibility="visible">
 
-                <com.example.obdandroid.ui.view.CircleImageView
+                <ImageView
                     android:id="@+id/ivCarLogo"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/icon_bm" />
+                    android:background="@null"
+                    android:tint="@color/white" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -95,12 +96,14 @@
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         tools:ignore="NestedWeights,RtlSymmetry" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="20dp"
                         android:background="@color/black_line" />
+
                     <TextView
                         android:id="@+id/tvModelName"
                         android:layout_width="match_parent"
@@ -343,17 +346,8 @@
                     android:id="@+id/recycleContent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="15dp"
                     android:scrollbars="none" />
-
-                <TextView
-                    android:id="@+id/tv_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/calibri"
-                    android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:visibility="gone" />
 
             </LinearLayout>
 

@@ -1,11 +1,14 @@
 package com.example.obdandroid.ui.adapter.commonAdapter;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 /**
  * Created by zhiwenyan on 5/25/17.
@@ -63,12 +66,23 @@ public class CommonViewHolder extends RecyclerView.ViewHolder {
      * 本地图片
      *
      * @param viewId
-     * @param resourceId
      * @return
      */
     public CommonViewHolder setImageBitMap(int viewId, Bitmap bitmap) {
         ImageView iv = getView(viewId);
         iv.setImageBitmap(bitmap);
+        return this;
+    }
+
+    /**
+     * 本地图片
+     *
+     * @param viewId
+     * @return
+     */
+    public CommonViewHolder setImageUrl(int viewId, Context context, String path) {
+        ImageView iv = getView(viewId);
+        Glide.with(context).load(path).into(iv);
         return this;
     }
 
@@ -91,7 +105,7 @@ public class CommonViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    abstract static class HolderImageLoader {
+    public abstract static class HolderImageLoader {
         private String path;
 
         public HolderImageLoader(String path) {

@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.ui.entity.VehicleEntity;
 import com.example.obdandroid.utils.BitMapUtils;
@@ -28,28 +29,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.example.obdandroid.config.APIConfig.SERVER_URL;
+
 /**
  * 作者：Jealous
  * 日期：2021/1/9 0009
  * 描述：
  */
 public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private Context context;
+    private final Context context;
     private final LayoutInflater inflater;
     private List<VehicleEntity.DataEntity.ListEntity> list;
     private OnClickCallBack clickCallBack;
     private final int EMPTY_VIEW = 0;//空页面
     private final int NOT_EMPTY_VIEW = 1;//正常页面
-    private int mSelectedPos = 0;   //实现单选，保存当前选中的position
-    //这个是checkbox的Hashmap集合
     private HashMap<Integer, Boolean> map;
-    private SPUtil spUtil;
-    private String vehicleId;
+    private final String vehicleId;
 
     public MyVehicleAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
-        spUtil = new SPUtil(context);
+        SPUtil spUtil = new SPUtil(context);
         vehicleId = spUtil.getString("vehicleId", "");
     }
 
@@ -116,7 +116,7 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (TextUtils.isEmpty(list.get(position).getLogo())) {
                 holder1.ivCarLogo.setImageResource(R.drawable.icon_car_def);
             } else {
-                holder1.ivCarLogo.setImageBitmap(BitMapUtils.stringToBitmap(list.get(position).getLogo()));
+                Glide.with(context).load(SERVER_URL+list.get(position).getLogo()).into(holder1.ivCarLogo);
             }
             holder1.id_cb_vehicleIndex.setChecked(map.get(position));
             holder1.id_cb_vehicleIndex.setOnClickListener(v -> {

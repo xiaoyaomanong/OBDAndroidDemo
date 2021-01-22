@@ -25,13 +25,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.activity.AppSettingActivity;
+import com.example.obdandroid.ui.activity.FeedbackActivity;
 import com.example.obdandroid.ui.activity.LoginActivity;
 import com.example.obdandroid.ui.activity.MyVehicleActivity;
 import com.example.obdandroid.ui.activity.OBDSettingActivity;
+import com.example.obdandroid.ui.activity.RechargeRecordActivity;
 import com.example.obdandroid.ui.activity.RechargeSetMealActivity;
 import com.example.obdandroid.ui.activity.TroubleCodeQueryActivity;
 import com.example.obdandroid.ui.adapter.MultipleItemQuickAdapter;
@@ -127,6 +130,8 @@ public class PersonalFragment extends BaseFragment {
         getVehicleInfoById(getToken(), spUtil.getString("vehicleId", ""));
 
         layoutGo.setOnClickListener(v -> JumpUtil.startAct(context, RechargeSetMealActivity.class));
+        llBuyHistory.setOnClickListener(v -> JumpUtil.startAct(context, RechargeRecordActivity.class));
+        llFaceBack.setOnClickListener(v -> JumpUtil.startAct(context, FeedbackActivity.class));
         //退出账户
         btnLogout.setOnClickListener(v ->
                 new IosDialog(context, new IosDialog.DialogClick() {
@@ -222,9 +227,10 @@ public class PersonalFragment extends BaseFragment {
                 VehicleInfoEntity entity = JSON.parseObject(response, VehicleInfoEntity.class);
                 if (entity.isSuccess()) {
                     tvAutomobileBrandName.setText(entity.getData().getAutomobileBrandName());
-                    tvModelName.setText(TextUtils.isEmpty(entity.getData().getModelName())?"":entity.getData().getModelName());
+                    tvModelName.setText(TextUtils.isEmpty(entity.getData().getModelName()) ? "" : entity.getData().getModelName());
                     if (!TextUtils.isEmpty(entity.getData().getLogo())) {
-                        ivCarLogo.setImageBitmap(BitMapUtils.stringToBitmap(entity.getData().getLogo()));
+                        Glide.with(context).load(SERVER_URL+entity.getData().getLogo()).into(ivCarLogo);
+                        //ivCarLogo.setImageBitmap(BitMapUtils.stringToBitmap(entity.getData().getLogo()));
                     }
                     if (entity.getData().getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
                         tvOBDState.setText("  OBD 未绑定");

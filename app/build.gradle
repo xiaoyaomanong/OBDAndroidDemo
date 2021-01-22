@@ -64,7 +64,7 @@ android {
         variant ->
             variant.outputs.all {
                 //这里修改apk文件名
-                outputFileName = "Aiv${defaultConfig.versionName}_${buildType.name}_${releaseTime()}.apk"
+                outputFileName = "Ai车检v${defaultConfig.versionName}_${buildType.name}_${releaseTime()}.apk"
             }
     }
     android {
@@ -133,6 +133,10 @@ dependencies {
     implementation 'com.github.gittjy:LoadingDialog:1.0.2'
     implementation 'com.wuxiaolong.pullloadmorerecyclerview:library:1.1.2'
     implementation files('libs/pinyin4j-2.5.0.jar')
+    implementation files('libs/httpclient-4.3.5.jar')
+    implementation files('libs/httpclient-cache-4.3.5.jar')
+    implementation files('libs/httpcore-4.3.2.jar')
+    implementation files('libs/httpmime-4.3.5.jar')
     implementation project(':obd-reader')
 
     // 沉浸式状态栏（根据自己需求进行添加）
@@ -140,7 +144,5 @@ dependencies {
     implementation 'com.gyf.immersionbar:immersionbar:3.0.0'
 // fragment快速实现（可选）
     implementation 'com.gyf.immersionbar:immersionbar-components:3.0.0'
-
-    implementation 'cn.yc:ExpandLib:1.0.1'
 }
 

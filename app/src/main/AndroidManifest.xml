@@ -158,7 +158,8 @@
         <activity android:name=".ui.activity.VehicleInfoActivity" />
         <activity android:name=".ui.activity.BindBluetoothDeviceActivity" />
         <activity android:name=".ui.activity.ModifyVehicleActivity" />
-        <activity android:name=".ui.activity.SampleActivity" />
+        <activity android:name=".ui.activity.RechargeRecordActivity" />
+        <activity android:name=".ui.activity.FeedbackActivity" />
 
     </application>
 

@@ -18,11 +18,13 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.ui.adapter.HomeAdapter;
@@ -80,7 +82,7 @@ public class HomeFragment extends BaseFragment {
     private PhilText tvCurrentSpeed;
     private RecyclerView recycleContent;
     private LinearLayout layoutCar;
-    private CircleImageView ivCarLogo;
+    private ImageView ivCarLogo;
     private TextView tvAutomobileBrandName;
     private TextView tvModelName;
     private LinearLayout layoutOBD;
@@ -92,7 +94,6 @@ public class HomeFragment extends BaseFragment {
     private TestRecordAdapter recordAdapter;
     private LocalBroadcastManager lm;
     private TestReceiver testReceiver;
-
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -221,7 +222,8 @@ public class HomeFragment extends BaseFragment {
                     tvAutomobileBrandName.setText(entity.getData().getAutomobileBrandName());
                     tvModelName.setText(entity.getData().getModelName());
                     if (!TextUtils.isEmpty(entity.getData().getLogo())) {
-                        ivCarLogo.setImageBitmap(BitMapUtils.stringToBitmap(entity.getData().getLogo()));
+                        Glide.with(context).load(SERVER_URL+entity.getData().getLogo()).into(ivCarLogo);
+                       // ivCarLogo.setImageBitmap(BitMapUtils.stringToBitmap(entity.getData().getLogo()));
                     }
                     if (entity.getData().getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
                         tvHomeObdTip.setText("将OBD插入车辆并连接");
@@ -433,7 +435,6 @@ public class HomeFragment extends BaseFragment {
             String action = intent.getAction();
             if (action.equals(ACTION_OBD_CONNECTION_STATUS)) {
                 String connectionStatusMsg = intent.getStringExtra(ObdReaderService.INTENT_OBD_EXTRA_DATA);
-                Toast.makeText(context, connectionStatusMsg, Toast.LENGTH_SHORT).show();
                 if (connectionStatusMsg.equals(getString(R.string.obd_connected))) {
                     //OBD连接在OBD连接之后做什么
                     onConnect();

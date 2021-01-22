@@ -73,6 +73,15 @@ public class ChargeMealEntity {
         private int bindingDeviceNum;
         private String rechargeSetMeaExplain;
         private int effectiveDays;
+        private boolean checked = false;
+
+        public boolean isChecked() {
+            return checked;
+        }
+
+        public void setChecked(boolean checked) {
+            this.checked = checked;
+        }
 
         public long getRechargeSetMealSettingsId() {
             return rechargeSetMealSettingsId;

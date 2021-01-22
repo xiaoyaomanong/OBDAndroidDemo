@@ -28,7 +28,7 @@ import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.SelectProtocolCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
-import com.sohrab.obd.reader.trip.TripRecord;
+import com.sohrab.obd.reader.trip.TripRecordCar;
 import com.sohrab.obd.reader.utils.LogUtils;
 
 import java.io.IOException;
@@ -82,7 +82,7 @@ public class ObdTwoReaderService extends IntentService implements DefineObdTwoRe
         }
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(false);
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
-        TripRecord.getTripRecode(this).clear();
+        TripRecordCar.getTripTwoRecode(this).clear();
     }
 
     /**
@@ -215,7 +215,7 @@ public class ObdTwoReaderService extends IntentService implements DefineObdTwoRe
      */
     private void executeCommand() {
         LogUtils.i("执行命令线程是 :: " + Thread.currentThread().getId());
-        TripRecord tripRecord = TripRecord.getTripRecode(this);
+        TripRecordCar TripTwoRecord = TripRecordCar.getTripTwoRecode(this);
         ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfiguration.getmObdCommands().clone();
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
@@ -223,12 +223,12 @@ public class ObdTwoReaderService extends IntentService implements DefineObdTwoRe
                 LogUtils.i("命令运行:: " + command.getName());
                 command.run(mSocket.getInputStream(), mSocket.getOutputStream());
                 LogUtils.i("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
-                tripRecord.updateTrip(command.getName(), command);
+                TripTwoRecord.updateTrip(command.getName(), command);
                 if (mIsFaultCodeRead) {
                     try {
                         TroubleCodesCommand troubleCodesCommand = new TroubleCodesCommand();
                         troubleCodesCommand.run(mSocket.getInputStream(), mSocket.getOutputStream());
-                        tripRecord.updateTrip(troubleCodesCommand.getName(), troubleCodesCommand);
+                        TripTwoRecord.updateTrip(troubleCodesCommand.getName(), troubleCodesCommand);
                         mIsFaultCodeRead = false;
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -320,7 +320,7 @@ public class ObdTwoReaderService extends IntentService implements DefineObdTwoRe
         closeSocket();
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(false);
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
-        TripRecord.getTripRecode(this).clear();
+        TripRecordCar.getTripTwoRecode(this).clear();
     }
 
     /**

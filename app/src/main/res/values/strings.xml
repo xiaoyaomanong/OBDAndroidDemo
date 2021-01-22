@@ -153,5 +153,11 @@
     <string name="buy_history">购买记录</string>
     <string name="update">修改</string>
     <string name="buy">立即购买</string>
+    <string name="recharge_record">购买记录</string>
+    <string name="submit">提交</string>
+    <string name="hint_feedback">输入你的反馈内容</string>
+    <string name="hint_contact">QQ,微信,手机号(非必填)</string>
+    <string name="text_contact">联系方式</string>
+    <string name="msg_center">消息中心</string>
 
 </resources>

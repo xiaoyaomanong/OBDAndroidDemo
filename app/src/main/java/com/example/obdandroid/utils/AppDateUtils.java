@@ -17,6 +17,7 @@ import java.util.Locale;
  */
 public class AppDateUtils {
     public static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String FORMAT_ONE = "yyyy-MM-dd";
     public static final String FORMAT_T = "yyyy-MM-dd'T'HH:mm:ss";
     public static final String FORMAT_Z = "EEE MMM dd HH:mm:ss Z yyyy";
 
@@ -43,6 +44,23 @@ public class AppDateUtils {
                 date1 = df1.parse(date.toString());
             }
             df2 = new SimpleDateFormat(FORMAT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return df2.format(date1);
+    }
+
+    public static String dealDateFormatYMD(String oldDate) {
+        Date date1 = null;
+        DateFormat df2 = null;
+        try {
+            DateFormat df = new SimpleDateFormat(FORMAT_T);
+            Date date = df.parse(oldDate);
+            SimpleDateFormat df1 = new SimpleDateFormat(FORMAT_Z, Locale.UK);
+            if (date != null) {
+                date1 = df1.parse(date.toString());
+            }
+            df2 = new SimpleDateFormat(FORMAT_ONE);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -8,38 +8,33 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.obdandroid.R;
-import com.example.obdandroid.ui.entity.ChargeMealEntity;
+import com.example.obdandroid.ui.entity.RechargeRecordEntity;
 import com.example.obdandroid.utils.AppDateUtils;
 
-import java.text.ParseException;
 import java.util.List;
 
 /**
  * 作者：Jealous
- * 日期：2021/1/7 0007
+ * 日期：2021/1/22 0022
  * 描述：
  */
-public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RechargeRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final Context context;
     private final LayoutInflater inflater;
-    private List<ChargeMealEntity.DataEntity> list;
-    private OnClickCallBack clickCallBack;
+    private List<RechargeRecordEntity.DataEntity.ListEntity> list;
     private final int EMPTY_VIEW = 0;//空页面
     private final int NOT_EMPTY_VIEW = 1;//正常页面
-    private int selectedPosition = -5; //默认一个参数
 
-    public RechargeSetMealAdapter(Context context) {
+    public RechargeRecordAdapter(Context context) {
+        this.context = context;
         inflater = LayoutInflater.from(context);
     }
 
-    public void setClickCallBack(OnClickCallBack clickCallBack) {
-        this.clickCallBack = clickCallBack;
-    }
 
-    public void setList(List<ChargeMealEntity.DataEntity> list) {
+    public void setList(List<RechargeRecordEntity.DataEntity.ListEntity> list) {
         this.list = list;
     }
 
@@ -48,7 +43,7 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         if (EMPTY_VIEW == viewType) {
             return new EmptyViewHolder(inflater.inflate(R.layout.stub_empty, parent, false));
         }
-        return new MyViewHolder(inflater.inflate(R.layout.item_charge_meal, parent, false));
+        return new MyViewHolder(inflater.inflate(R.layout.item_charge_record, parent, false));
     }
 
     @SuppressLint("SetTextI18n")
@@ -60,41 +55,23 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             holder.mEmptyTextView.setText("暂无数据");
         } else if (NOT_EMPTY_VIEW == itemViewType) {
             final MyViewHolder holder = (MyViewHolder) viewHolder;
-            //充值套餐类型(1 数量 2 时间) ,
-            if (list.get(position).getRechargeSetMeaType() == 1) {
-                holder.tvEffectiveDays.setText("使用次数:" + list.get(position).getRechargeSetMeaNum());
-            } else {
-                try {
-                    holder.tvEffectiveDays.setText("有效期至:" + AppDateUtils.addDate(AppDateUtils.getTodayDateTime(), list.get(position).getEffectiveDays()));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
+            holder.tvRechargeTime.setText("购买时间: " + AppDateUtils.dealDateFormatYMD(list.get(position).getRechargeTime()));
             if (TextUtils.isEmpty(list.get(position).getRechargeSetMeaName())) {
                 holder.tvRechargeSetMeaName.setText("");
             } else {
                 holder.tvRechargeSetMeaName.setText(list.get(position).getRechargeSetMeaName());
             }
-            holder.tvBindingDeviceNum.setText("1个OBD终端 | 绑定" + list.get(position).getBindingDeviceNum() + "台车");
-            holder.tvRechargeSetMeaAmount.setText("￥" + list.get(position).getRechargeSetMeaAmount());
-
-            if (list.get(position).isChecked()) {
-                holder.card_view.setBackgroundResource(R.drawable.bg_charge_ok);
+            holder.tvRechargeStatusName.setText(list.get(position).getRechargeStatusName());
+            if (list.get(position).getRechargeStatusName().equals("成功")) {
+                holder.tvRechargeStatusName.setTextColor(context.getResources().getColor(R.color.gray_light_d));
             } else {
-                holder.card_view.setBackgroundResource(R.drawable.bg_charge);
+                holder.tvRechargeStatusName.setTextColor(context.getResources().getColor(R.color.red));
             }
-            holder.itemView.setOnClickListener(view -> {
-                setIsChecked(position);
-                clickCallBack.Click(list.get(position));
-            });
-        }
-    }
 
-    private void setIsChecked(int position) {
-        for (int i = 0; i < list.size(); i++) {
-            list.get(i).setChecked(i == position);
+            holder.tvPaymentChannelsName.setText("支付渠道: " + list.get(position).getPaymentChannelsName());
+            holder.tvRechargetAmount.setText("￥"+list.get(position).getRechargetAmount());
+
         }
-        notifyDataSetChanged();
     }
 
     @Override
@@ -124,20 +101,20 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         View itemView;
+        private final TextView tvRechargeTime;
+        private final TextView tvRechargeStatusName;
+        private final TextView tvPaymentChannelsName;
         private final TextView tvRechargeSetMeaName;
-        private final TextView tvEffectiveDays;
-        private final TextView tvRechargeSetMeaAmount;
-        private final TextView tvBindingDeviceNum;
-        private final LinearLayout card_view;
+        private final TextView tvRechargetAmount;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
+            tvRechargeTime = itemView.findViewById(R.id.tvRechargeTime);
+            tvPaymentChannelsName = itemView.findViewById(R.id.tvPaymentChannelsName);
+            tvRechargeStatusName = itemView.findViewById(R.id.tvRechargeStatusName);
             tvRechargeSetMeaName = itemView.findViewById(R.id.tvRechargeSetMeaName);
-            tvEffectiveDays = itemView.findViewById(R.id.tvEffectiveDays);
-            tvRechargeSetMeaAmount = itemView.findViewById(R.id.tvRechargeSetMeaAmount);
-            tvBindingDeviceNum = itemView.findViewById(R.id.tvBindingDeviceNum);
-            card_view = itemView.findViewById(R.id.card_view);
+            tvRechargetAmount = itemView.findViewById(R.id.tvRechargetAmount);
         }
     }
 
@@ -150,11 +127,8 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
-    public interface OnClickCallBack {
-        void Click(ChargeMealEntity.DataEntity entity);
-    }
 
-    public void addFootItem(List<ChargeMealEntity.DataEntity> lists) {
+    public void addFootItem(List<RechargeRecordEntity.DataEntity.ListEntity> lists) {
         list.addAll(lists);
         notifyDataSetChanged();
     }

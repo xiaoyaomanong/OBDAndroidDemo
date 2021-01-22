@@ -34,7 +34,7 @@ import com.sohrab.obd.reader.application.ObdPreferences;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
 import com.sohrab.obd.reader.service.ObdTwoReaderService;
 import com.sohrab.obd.reader.trip.OBDTripEntity;
-import com.sohrab.obd.reader.trip.TripTwoRecord;
+import com.sohrab.obd.reader.trip.TripRecordCar;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -55,11 +55,8 @@ import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_READ_OBD_RE
  */
 public class VehicleCheckFragment extends BaseFragment {
     private Context context;
-    private TitleBar titleBar;
     private CircleWelComeView circleView;
     private TextView btStart;
-    private static String mConnectedDeviceName = null;
-    private static String mConnectedDeviceAddress = null;
     private VehicleCheckAdapter adapter;
     private RecyclerView recycleCheckContent;
     private SPUtil spUtil;
@@ -76,13 +73,10 @@ public class VehicleCheckFragment extends BaseFragment {
     @Override
     public void initView(View view, Bundle savedInstanceState) {
         context = getHoldingActivity();
-        titleBar = getView(R.id.titleBar);
         circleView = getView(R.id.circleView);
         btStart = getView(R.id.btStart);
         recycleCheckContent = getView(R.id.recycleCheckContent);
-        mConnectedDeviceName = ObdPreferences.get(context).getBlueToothDeviceName();
-        mConnectedDeviceAddress = ObdPreferences.get(context).getBlueToothDeviceAddress();
-        spUtil=new SPUtil(context);
+        spUtil = new SPUtil(context);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ACTION_READ_OBD_REAL_TIME_DATA_CAR);
         intentFilter.addAction(ACTION_OBD_CONNECTION_STATUS_CAR);
@@ -99,14 +93,15 @@ public class VehicleCheckFragment extends BaseFragment {
         float gasPrice = 7; // 每升，你应该根据你的要求初始化。
         ObdPreferences.get(context).setGasPrice(gasPrice);
         btStart.setOnClickListener(v -> {
+            btStart.setText("开始检测");
             circleView.start();
-            if (!TextUtils.isEmpty(mConnectedDeviceAddress)) {
-                connectBtDevice(mConnectedDeviceAddress);
+            if (!TextUtils.isEmpty(ObdPreferences.get(context).getBlueToothDeviceAddress())) {
+                connectBtDevice(ObdPreferences.get(context).getBlueToothDeviceAddress());
             } else {
                 new Handler().postDelayed(() -> {
                     if (circleView.isDiffuse()) {
                         circleView.stop();
-                        btStart.setText("检测完成");
+                        btStart.setText("检测失败");
                     }
                     showResult(null);
                     showToast(getString(R.string.text_bluetooth_error_connecting));
@@ -151,10 +146,9 @@ public class VehicleCheckFragment extends BaseFragment {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("添加检测信息:"+response);
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
-
+                    showToast("检测信息上传完成");
                 }
             }
         });
@@ -197,8 +191,9 @@ public class VehicleCheckFragment extends BaseFragment {
     /**
      * 处理建立的蓝牙连接...
      */
-    private void onConnect() {
-        Notification.show(context, 2, R.drawable.icon_bm, "宝马", "测试测测测测测测", Notification.SHOW_TIME_LONG, Notification.TYPE_NORMAL);
+    private void onConnect(String msg) {
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+        Notification.show(context, 2, R.drawable.icon_bm, "宝马", msg, Notification.SHOW_TIME_LONG, Notification.TYPE_NORMAL);
     }
 
     /**
@@ -218,10 +213,9 @@ public class VehicleCheckFragment extends BaseFragment {
             String action = intent.getAction();
             if (action.equals(ACTION_OBD_CONNECTION_STATUS_CAR)) {
                 String connectionStatusMsg = intent.getStringExtra(ObdTwoReaderService.INTENT_OBD_EXTRA_DATA_CAR);
-                Toast.makeText(context, connectionStatusMsg, Toast.LENGTH_SHORT).show();
                 if (connectionStatusMsg.equals(getString(R.string.obd_connected))) {
                     //OBD连接在OBD连接之后做什么
-                    onConnect();
+                    onConnect(connectionStatusMsg);
                 } else if (connectionStatusMsg.equals(getString(R.string.connect_lost))) {
                     //OBD断开连接断开后做什么
                     onDisconnect();
@@ -229,13 +223,13 @@ public class VehicleCheckFragment extends BaseFragment {
                     // 在这里您可以检查OBD连接和配对状态
                 }
             } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA_CAR)) {
-                TripTwoRecord TripTwoRecord = com.sohrab.obd.reader.trip.TripTwoRecord.getTripTwoRecode(context);
+                TripRecordCar TripTwoRecord = TripRecordCar.getTripTwoRecode(context);
                 if (circleView.isDiffuse()) {
                     circleView.stop();
                     btStart.setText("检测完成");
                 }
                 showResult(TripTwoRecord.getTripMap());
-                addTestRecord(spUtil.getString("vehicleId", ""),JSON.toJSONString(TripTwoRecord.getOBDJson()),getUserId(),getToken());
+                addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(TripTwoRecord.getOBDJson()), getUserId(), getToken());
             }
         }
     };

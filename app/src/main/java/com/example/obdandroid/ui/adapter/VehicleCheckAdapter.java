@@ -58,7 +58,7 @@ public class VehicleCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         int itemViewType = getItemViewType(position);
         if (EMPTY_VIEW == itemViewType) {
             EmptyViewHolder viewHolder = (EmptyViewHolder) holder;
-            viewHolder.mEmptyTextView.setText("暂无数据");
+            viewHolder.mEmptyTextView.setText("请连接OBD设备,进行检测");
         } else if (NOT_EMPTY_VIEW == itemViewType) {
             final MyViewHolder holder1 = (MyViewHolder) holder;
             holder1.ivName.setImageResource(list.get(position).getResId());
@@ -71,7 +71,7 @@ public class VehicleCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             } else {
                 new Handler().postDelayed(() -> holder1.btnCheck.setProgress(100), 1000);
             }
-          //  holder1.card_view.setOnClickListener(v -> clickCallBack.Click(list.get(position)));
+            //  holder1.card_view.setOnClickListener(v -> clickCallBack.Click(list.get(position)));
         }
     }
 

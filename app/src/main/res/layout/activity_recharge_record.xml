@@ -7,16 +7,15 @@
     android:orientation="vertical">
 
     <com.hjq.bar.TitleBar
-        android:id="@+id/titleBar"
+        android:id="@+id/titleBarSet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/color_080707"
-        app:backButton="false"
-        app:barStyle="ripple"
-        app:title="@string/msg_center" />
+        app:barStyle="night"
+        app:lineVisible="false"
+        app:title="@string/recharge_record" />
 
     <com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
-        android:id="@+id/recycle_Remind"
+        android:id="@+id/recycle_recharge_record"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">

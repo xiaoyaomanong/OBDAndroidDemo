@@ -14,6 +14,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.adapter.commonAdapter.CommonRecycleAdapter;
@@ -217,7 +218,8 @@ public class AutomobileBrandActivity extends BaseActivity {
                 if (TextUtils.isEmpty(entity.getLogo())) {
                     holder.setImageResoucrce(R.id.iv_car_lable, R.drawable.icon_car_def);
                 } else {
-                    holder.setImageBitMap(R.id.iv_car_lable, BitMapUtils.stringToBitmap(entity.getLogo()));
+                   // Glide.with(context).load(entity.getLogo()).into(holder1.ivCarLogo);
+                    holder.setImageUrl(R.id.iv_car_lable, context,SERVER_URL+entity.getLogo());
                 }
             }
         }

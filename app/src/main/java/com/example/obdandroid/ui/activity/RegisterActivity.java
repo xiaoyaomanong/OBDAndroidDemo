@@ -80,9 +80,11 @@ import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.sendSMSVerificationCode_URL;
 import static com.example.obdandroid.config.APIConfig.verifySMSVerificationCode_URL;
 import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
+import static com.example.obdandroid.config.Constant.PASSWORD;
 import static com.example.obdandroid.config.Constant.PLATFORM;
 import static com.example.obdandroid.config.Constant.TOKEN;
 import static com.example.obdandroid.config.Constant.USER_ID;
+import static com.example.obdandroid.config.Constant.USER_NAME;
 import static com.example.obdandroid.config.TAG.TAG_Activity;
 
 /**
@@ -117,7 +119,9 @@ public class RegisterActivity extends BaseActivity {
     private TextInputLayout textLayout;
     private CountDownTimerUtils mCountDownTimerUtils;
     private String taskID;
-    private String[] sexArry = new String[]{"不告诉你", "女", "男"};// 性别选择
+    private String sex;
+    private int index = 0;
+    private String[] sexArry = new String[]{"保密", "男", "女"};// 性别选择
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
         @Override
@@ -189,22 +193,19 @@ public class RegisterActivity extends BaseActivity {
             sendSMSVerificationCode(etUser.getText().toString());
         });
         btnSignUpAgree.setIndeterminateProgressMode(true);
-        btnSignUpAgree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (TextUtils.isEmpty(etUser.getText().toString())) {
-                    showToast("请输入手机号");
-                    return;
-                }
-                if (TextUtils.isEmpty(etCode.getText().toString())) {
-                    showToast("请输入验证码");
-                    return;
-                }
-                if (btnSignUpAgree.getProgress() == -1) {
-                    btnSignUpAgree.setProgress(0);
-                }
-                verifySMSVerificationCode(taskID, etUser.getText().toString(), etCode.getText().toString());
+        btnSignUpAgree.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(etUser.getText().toString())) {
+                showToast("请输入手机号");
+                return;
             }
+            if (TextUtils.isEmpty(etCode.getText().toString())) {
+                showToast("请输入验证码");
+                return;
+            }
+            if (btnSignUpAgree.getProgress() == -1) {
+                btnSignUpAgree.setProgress(0);
+            }
+            verifySMSVerificationCode(taskID, etUser.getText().toString(), etCode.getText().toString());
         });
         tvSex.setOnClickListener(v -> showSexChooseDialog(tvSex));
         //注册
@@ -226,7 +227,7 @@ public class RegisterActivity extends BaseActivity {
                 showToast("请输入密码");
                 return;
             }
-            if (isPassword(etPwd.getText().toString())) {
+            if (!isPassword(etPwd.getText().toString())) {
                 showToast("请输入正确的密码格式");
                 textLayout.setError("必须包含小写字母，数字，可以是字母数字下划线组成并且长度是6到16");
                 return;
@@ -243,7 +244,7 @@ public class RegisterActivity extends BaseActivity {
             if (btnSignUp.getProgress() == -1) {
                 btnSignUp.setProgress(0);
             }
-            registerUser(headPortrait, etUser.getText().toString(), etNick.getText().toString(), etPwd.getText().toString(), etCode.getText().toString(), taskID);
+            registerUser(headPortrait, etUser.getText().toString(), etNick.getText().toString(), etPwd.getText().toString(), sex, etCode.getText().toString(), taskID);
         });
     }
 
@@ -253,14 +254,12 @@ public class RegisterActivity extends BaseActivity {
      */
     private void showSexChooseDialog(TextView changeSex) {
         AlertDialog.Builder builder3 = new AlertDialog.Builder(this);// 自定义对话框
-        builder3.setSingleChoiceItems(sexArry, 0, new DialogInterface.OnClickListener() {// 2默认的选中
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {// which是被选中的位置
-                // showToast(which+"");
-                changeSex.setText(sexArry[which]);
-                dialog.dismiss();// 随便点击一个item消失对话框，不用点击确认取消
-            }
+        // 2默认的选中
+        builder3.setSingleChoiceItems(sexArry, index, (dialog, which) -> {// which是被选中的位置
+            sex = String.valueOf(sex);
+            index = which;
+            changeSex.setText(sexArry[which]);
+            dialog.dismiss();// 随便点击一个item消失对话框，不用点击确认取消
         });
         builder3.show();// 让弹出框显示
     }
@@ -361,7 +360,7 @@ public class RegisterActivity extends BaseActivity {
      * @param password         密码
      * @param verificationCode 验证码
      */
-    private void registerUser(String headPortrait, String mobile, String nickname, String password, String verificationCode, String taskID) {
+    private void registerUser(String headPortrait, String mobile, String nickname, String password, String sex, String verificationCode, String taskID) {
         btnSignUp.setProgress(0);
         new Handler().postDelayed(() -> btnSignUp.setProgress(50), 3000);
         OkHttpUtils.post().url(SERVER_URL + REGISTER_URL).
@@ -372,6 +371,7 @@ public class RegisterActivity extends BaseActivity {
                 addParam("registrationPlatform", PLATFORM).
                 addParam("verificationCode", verificationCode).
                 addParam("taskID", taskID).
+                addParam("sex", sex).
                 build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Response response, Exception e, int id) {
@@ -422,6 +422,8 @@ public class RegisterActivity extends BaseActivity {
                 UserLoginEntity entity = JSON.parseObject(response, UserLoginEntity.class);
                 if (entity.isSuccess()) {
                     spUtil.put(Constant.IS_LOGIN, true);
+                    spUtil.put(USER_NAME, mobile);
+                    spUtil.put(PASSWORD, password);
                     spUtil.put(TOKEN, entity.getData().getToken());
                     spUtil.put(USER_ID, String.valueOf(entity.getData().getUserId()));
                     spUtil.put(EXPIRE_TIME, AppDateUtils.dealDateFormat(entity.getData().getExpireTime()));

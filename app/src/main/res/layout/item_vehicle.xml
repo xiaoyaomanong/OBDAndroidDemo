@@ -20,9 +20,9 @@
             android:id="@+id/ivCarLogo"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:background="@null"
             android:padding="5dp"
-            android:src="@drawable/icon_bm"
-            tools:ignore="ContentDescription" />
+            android:tint="@color/white"  />
 
         <LinearLayout
             android:layout_width="0dp"

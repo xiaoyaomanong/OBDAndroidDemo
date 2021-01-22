@@ -6,69 +6,69 @@ package com.sohrab.obd.reader.trip;
  * 描述：
  */
 public class OBDJsonTripEntity {
-    private String speed;
-    private String engineRpm;
+    private String Speed;
+    private String EngineRpm;
     private String IdlingDuration;
     private String DrivingDuration;
-    private String speedMax;
-    private String engineRpmMax;
-    private String mRapidDeclTimes;
-    private String mRapidAccTimes;
-    private String mIdleMaf;
-    private String mDrivingMaf;
-    private String mInsFuelConsumption;
-    private String mDrivingFuelConsumption;
-    private String mIdlingFuelConsumption;
-    private String mIgnitionMonitor;
-    private String mDescribeProtocolNumber;
-    private String mDescribeProtocol;
-    private String mWideBandAirFuelRatio;
-    private String mAirFuelRatio;
-    private String mEngineOilTemp;
+    private String SpeedMax;
+    private String EngineRpmMax;
+    private String RapidDeclTimes;
+    private String RapidAccTimes;
+    private String IdleMaf;
+    private String DrivingMaf;
+    private String InsFuelConsumption;
+    private String DrivingFuelConsumption;
+    private String IdlingFuelConsumption;
+    private String IgnitionMonitor;
+    private String DescribeProtocolNumber;
+    private String DescribeProtocol;
+    private String WideBandAirFuelRatio;
+    private String AirFuelRatio;
+    private String EngineOilTemp;
     private String RmCommandedEGR;
-    private String mAbsLoad;
-    private String mDistanceTraveledMilOn;
-    private String mVehicleIdentificationNumber;
-    private String mFuelRailPressurevacuum;
-    private String mFuelRailPressure;
-    private String mEngineFuelRate;
-    private String mControlModuleVoltage;
-    private String mDistanceTraveledAfterCodesCleared;
-    private String mEquivRatio;
-    private String mDtcNumber;
-    private String mTimingAdvance;
-    private String mFuelConsumptionRate;
-    private String mFuelSystemStatus;
-    private String mFuelTypeValue;
-    private String mFuelLevel;
-    private String mPermanentTroubleCode;
-    private String mPendingTroubleCode;
-    private String mFaultCodes;
-    private String mRelThottlePos;
-    private String mMassAirFlow;
-    private String engineRuntime;
-    private String mEngineLoad;
-    private String mIntakePressure;
-    private String mFuelPressure;
-    private String mBarometricPressure;
-    private String mEngineCoolantTemp;
-    private String mAmbientAirTemp;
-    private String mIntakeAirTemp;
+    private String AbsLoad;
+    private String DistanceTraveledMilOn;
+    private String VehicleIdentificationNumber;
+    private String FuelRailPressurevacuum;
+    private String FuelRailPressure;
+    private String EngineFuelRate;
+    private String ControlModuleVoltage;
+    private String DistanceTraveledAfterCodesCleared;
+    private String EquivRatio;
+    private String DtcNumber;
+    private String TimingAdvance;
+    private String FuelConsumptionRate;
+    private String FuelSystemStatus;
+    private String FuelTypeValue;
+    private String FuelLevel;
+    private String PermanentTroubleCode;
+    private String PendingTroubleCode;
+    private String FaultCodes;
+    private String RelThottlePos;
+    private String MassAirFlow;
+    private String EngineRuntime;
+    private String EngineLoad;
+    private String IntakePressure;
+    private String FuelPressure;
+    private String BarometricPressure;
+    private String EngineCoolantTemp;
+    private String AmbientAirTemp;
+    private String IntakeAirTemp;
 
     public String getSpeed() {
-        return speed;
+        return Speed;
     }
 
     public void setSpeed(String speed) {
-        this.speed = speed;
+        Speed = speed;
     }
 
     public String getEngineRpm() {
-        return engineRpm;
+        return EngineRpm;
     }
 
     public void setEngineRpm(String engineRpm) {
-        this.engineRpm = engineRpm;
+        EngineRpm = engineRpm;
     }
 
     public String getIdlingDuration() {
@@ -88,123 +88,123 @@ public class OBDJsonTripEntity {
     }
 
     public String getSpeedMax() {
-        return speedMax;
+        return SpeedMax;
     }
 
     public void setSpeedMax(String speedMax) {
-        this.speedMax = speedMax;
+        SpeedMax = speedMax;
     }
 
     public String getEngineRpmMax() {
-        return engineRpmMax;
+        return EngineRpmMax;
     }
 
     public void setEngineRpmMax(String engineRpmMax) {
-        this.engineRpmMax = engineRpmMax;
+        EngineRpmMax = engineRpmMax;
     }
 
-    public String getmRapidDeclTimes() {
-        return mRapidDeclTimes;
+    public String getRapidDeclTimes() {
+        return RapidDeclTimes;
     }
 
-    public void setmRapidDeclTimes(String mRapidDeclTimes) {
-        this.mRapidDeclTimes = mRapidDeclTimes;
+    public void setRapidDeclTimes(String rapidDeclTimes) {
+        RapidDeclTimes = rapidDeclTimes;
     }
 
-    public String getmRapidAccTimes() {
-        return mRapidAccTimes;
+    public String getRapidAccTimes() {
+        return RapidAccTimes;
     }
 
-    public void setmRapidAccTimes(String mRapidAccTimes) {
-        this.mRapidAccTimes = mRapidAccTimes;
+    public void setRapidAccTimes(String rapidAccTimes) {
+        RapidAccTimes = rapidAccTimes;
     }
 
-    public String getmIdleMaf() {
-        return mIdleMaf;
+    public String getIdleMaf() {
+        return IdleMaf;
     }
 
-    public void setmIdleMaf(String mIdleMaf) {
-        this.mIdleMaf = mIdleMaf;
+    public void setIdleMaf(String idleMaf) {
+        IdleMaf = idleMaf;
     }
 
-    public String getmDrivingMaf() {
-        return mDrivingMaf;
+    public String getDrivingMaf() {
+        return DrivingMaf;
     }
 
-    public void setmDrivingMaf(String mDrivingMaf) {
-        this.mDrivingMaf = mDrivingMaf;
+    public void setDrivingMaf(String drivingMaf) {
+        DrivingMaf = drivingMaf;
     }
 
-    public String getmInsFuelConsumption() {
-        return mInsFuelConsumption;
+    public String getInsFuelConsumption() {
+        return InsFuelConsumption;
     }
 
-    public void setmInsFuelConsumption(String mInsFuelConsumption) {
-        this.mInsFuelConsumption = mInsFuelConsumption;
+    public void setInsFuelConsumption(String insFuelConsumption) {
+        InsFuelConsumption = insFuelConsumption;
     }
 
-    public String getmDrivingFuelConsumption() {
-        return mDrivingFuelConsumption;
+    public String getDrivingFuelConsumption() {
+        return DrivingFuelConsumption;
     }
 
-    public void setmDrivingFuelConsumption(String mDrivingFuelConsumption) {
-        this.mDrivingFuelConsumption = mDrivingFuelConsumption;
+    public void setDrivingFuelConsumption(String drivingFuelConsumption) {
+        DrivingFuelConsumption = drivingFuelConsumption;
     }
 
-    public String getmIdlingFuelConsumption() {
-        return mIdlingFuelConsumption;
+    public String getIdlingFuelConsumption() {
+        return IdlingFuelConsumption;
     }
 
-    public void setmIdlingFuelConsumption(String mIdlingFuelConsumption) {
-        this.mIdlingFuelConsumption = mIdlingFuelConsumption;
+    public void setIdlingFuelConsumption(String idlingFuelConsumption) {
+        IdlingFuelConsumption = idlingFuelConsumption;
     }
 
-    public String getmIgnitionMonitor() {
-        return mIgnitionMonitor;
+    public String getIgnitionMonitor() {
+        return IgnitionMonitor;
     }
 
-    public void setmIgnitionMonitor(String mIgnitionMonitor) {
-        this.mIgnitionMonitor = mIgnitionMonitor;
+    public void setIgnitionMonitor(String ignitionMonitor) {
+        IgnitionMonitor = ignitionMonitor;
     }
 
-    public String getmDescribeProtocolNumber() {
-        return mDescribeProtocolNumber;
+    public String getDescribeProtocolNumber() {
+        return DescribeProtocolNumber;
     }
 
-    public void setmDescribeProtocolNumber(String mDescribeProtocolNumber) {
-        this.mDescribeProtocolNumber = mDescribeProtocolNumber;
+    public void setDescribeProtocolNumber(String describeProtocolNumber) {
+        DescribeProtocolNumber = describeProtocolNumber;
     }
 
-    public String getmDescribeProtocol() {
-        return mDescribeProtocol;
+    public String getDescribeProtocol() {
+        return DescribeProtocol;
     }
 
-    public void setmDescribeProtocol(String mDescribeProtocol) {
-        this.mDescribeProtocol = mDescribeProtocol;
+    public void setDescribeProtocol(String describeProtocol) {
+        DescribeProtocol = describeProtocol;
     }
 
-    public String getmWideBandAirFuelRatio() {
-        return mWideBandAirFuelRatio;
+    public String getWideBandAirFuelRatio() {
+        return WideBandAirFuelRatio;
     }
 
-    public void setmWideBandAirFuelRatio(String mWideBandAirFuelRatio) {
-        this.mWideBandAirFuelRatio = mWideBandAirFuelRatio;
+    public void setWideBandAirFuelRatio(String wideBandAirFuelRatio) {
+        WideBandAirFuelRatio = wideBandAirFuelRatio;
     }
 
-    public String getmAirFuelRatio() {
-        return mAirFuelRatio;
+    public String getAirFuelRatio() {
+        return AirFuelRatio;
     }
 
-    public void setmAirFuelRatio(String mAirFuelRatio) {
-        this.mAirFuelRatio = mAirFuelRatio;
+    public void setAirFuelRatio(String airFuelRatio) {
+        AirFuelRatio = airFuelRatio;
     }
 
-    public String getmEngineOilTemp() {
-        return mEngineOilTemp;
+    public String getEngineOilTemp() {
+        return EngineOilTemp;
     }
 
-    public void setmEngineOilTemp(String mEngineOilTemp) {
-        this.mEngineOilTemp = mEngineOilTemp;
+    public void setEngineOilTemp(String engineOilTemp) {
+        EngineOilTemp = engineOilTemp;
     }
 
     public String getRmCommandedEGR() {
@@ -215,227 +215,227 @@ public class OBDJsonTripEntity {
         RmCommandedEGR = rmCommandedEGR;
     }
 
-    public String getmAbsLoad() {
-        return mAbsLoad;
+    public String getAbsLoad() {
+        return AbsLoad;
     }
 
-    public void setmAbsLoad(String mAbsLoad) {
-        this.mAbsLoad = mAbsLoad;
+    public void setAbsLoad(String absLoad) {
+        AbsLoad = absLoad;
     }
 
-    public String getmDistanceTraveledMilOn() {
-        return mDistanceTraveledMilOn;
+    public String getDistanceTraveledMilOn() {
+        return DistanceTraveledMilOn;
     }
 
-    public void setmDistanceTraveledMilOn(String mDistanceTraveledMilOn) {
-        this.mDistanceTraveledMilOn = mDistanceTraveledMilOn;
+    public void setDistanceTraveledMilOn(String distanceTraveledMilOn) {
+        DistanceTraveledMilOn = distanceTraveledMilOn;
     }
 
-    public String getmVehicleIdentificationNumber() {
-        return mVehicleIdentificationNumber;
+    public String getVehicleIdentificationNumber() {
+        return VehicleIdentificationNumber;
     }
 
-    public void setmVehicleIdentificationNumber(String mVehicleIdentificationNumber) {
-        this.mVehicleIdentificationNumber = mVehicleIdentificationNumber;
+    public void setVehicleIdentificationNumber(String vehicleIdentificationNumber) {
+        VehicleIdentificationNumber = vehicleIdentificationNumber;
     }
 
-    public String getmFuelRailPressurevacuum() {
-        return mFuelRailPressurevacuum;
+    public String getFuelRailPressurevacuum() {
+        return FuelRailPressurevacuum;
     }
 
-    public void setmFuelRailPressurevacuum(String mFuelRailPressurevacuum) {
-        this.mFuelRailPressurevacuum = mFuelRailPressurevacuum;
+    public void setFuelRailPressurevacuum(String fuelRailPressurevacuum) {
+        FuelRailPressurevacuum = fuelRailPressurevacuum;
     }
 
-    public String getmFuelRailPressure() {
-        return mFuelRailPressure;
+    public String getFuelRailPressure() {
+        return FuelRailPressure;
     }
 
-    public void setmFuelRailPressure(String mFuelRailPressure) {
-        this.mFuelRailPressure = mFuelRailPressure;
+    public void setFuelRailPressure(String fuelRailPressure) {
+        FuelRailPressure = fuelRailPressure;
     }
 
-    public String getmEngineFuelRate() {
-        return mEngineFuelRate;
+    public String getEngineFuelRate() {
+        return EngineFuelRate;
     }
 
-    public void setmEngineFuelRate(String mEngineFuelRate) {
-        this.mEngineFuelRate = mEngineFuelRate;
+    public void setEngineFuelRate(String engineFuelRate) {
+        EngineFuelRate = engineFuelRate;
     }
 
-    public String getmControlModuleVoltage() {
-        return mControlModuleVoltage;
+    public String getControlModuleVoltage() {
+        return ControlModuleVoltage;
     }
 
-    public void setmControlModuleVoltage(String mControlModuleVoltage) {
-        this.mControlModuleVoltage = mControlModuleVoltage;
+    public void setControlModuleVoltage(String controlModuleVoltage) {
+        ControlModuleVoltage = controlModuleVoltage;
     }
 
-    public String getmDistanceTraveledAfterCodesCleared() {
-        return mDistanceTraveledAfterCodesCleared;
+    public String getDistanceTraveledAfterCodesCleared() {
+        return DistanceTraveledAfterCodesCleared;
     }
 
-    public void setmDistanceTraveledAfterCodesCleared(String mDistanceTraveledAfterCodesCleared) {
-        this.mDistanceTraveledAfterCodesCleared = mDistanceTraveledAfterCodesCleared;
+    public void setDistanceTraveledAfterCodesCleared(String distanceTraveledAfterCodesCleared) {
+        DistanceTraveledAfterCodesCleared = distanceTraveledAfterCodesCleared;
     }
 
-    public String getmEquivRatio() {
-        return mEquivRatio;
+    public String getEquivRatio() {
+        return EquivRatio;
     }
 
-    public void setmEquivRatio(String mEquivRatio) {
-        this.mEquivRatio = mEquivRatio;
+    public void setEquivRatio(String equivRatio) {
+        EquivRatio = equivRatio;
     }
 
-    public String getmDtcNumber() {
-        return mDtcNumber;
+    public String getDtcNumber() {
+        return DtcNumber;
     }
 
-    public void setmDtcNumber(String mDtcNumber) {
-        this.mDtcNumber = mDtcNumber;
+    public void setDtcNumber(String dtcNumber) {
+        DtcNumber = dtcNumber;
     }
 
-    public String getmTimingAdvance() {
-        return mTimingAdvance;
+    public String getTimingAdvance() {
+        return TimingAdvance;
     }
 
-    public void setmTimingAdvance(String mTimingAdvance) {
-        this.mTimingAdvance = mTimingAdvance;
+    public void setTimingAdvance(String timingAdvance) {
+        TimingAdvance = timingAdvance;
     }
 
-    public String getmFuelConsumptionRate() {
-        return mFuelConsumptionRate;
+    public String getFuelConsumptionRate() {
+        return FuelConsumptionRate;
     }
 
-    public void setmFuelConsumptionRate(String mFuelConsumptionRate) {
-        this.mFuelConsumptionRate = mFuelConsumptionRate;
+    public void setFuelConsumptionRate(String fuelConsumptionRate) {
+        FuelConsumptionRate = fuelConsumptionRate;
     }
 
-    public String getmFuelSystemStatus() {
-        return mFuelSystemStatus;
+    public String getFuelSystemStatus() {
+        return FuelSystemStatus;
     }
 
-    public void setmFuelSystemStatus(String mFuelSystemStatus) {
-        this.mFuelSystemStatus = mFuelSystemStatus;
+    public void setFuelSystemStatus(String fuelSystemStatus) {
+        FuelSystemStatus = fuelSystemStatus;
     }
 
-    public String getmFuelTypeValue() {
-        return mFuelTypeValue;
+    public String getFuelTypeValue() {
+        return FuelTypeValue;
     }
 
-    public void setmFuelTypeValue(String mFuelTypeValue) {
-        this.mFuelTypeValue = mFuelTypeValue;
+    public void setFuelTypeValue(String fuelTypeValue) {
+        FuelTypeValue = fuelTypeValue;
     }
 
-    public String getmFuelLevel() {
-        return mFuelLevel;
+    public String getFuelLevel() {
+        return FuelLevel;
     }
 
-    public void setmFuelLevel(String mFuelLevel) {
-        this.mFuelLevel = mFuelLevel;
+    public void setFuelLevel(String fuelLevel) {
+        FuelLevel = fuelLevel;
     }
 
-    public String getmPermanentTroubleCode() {
-        return mPermanentTroubleCode;
+    public String getPermanentTroubleCode() {
+        return PermanentTroubleCode;
     }
 
-    public void setmPermanentTroubleCode(String mPermanentTroubleCode) {
-        this.mPermanentTroubleCode = mPermanentTroubleCode;
+    public void setPermanentTroubleCode(String permanentTroubleCode) {
+        PermanentTroubleCode = permanentTroubleCode;
     }
 
-    public String getmPendingTroubleCode() {
-        return mPendingTroubleCode;
+    public String getPendingTroubleCode() {
+        return PendingTroubleCode;
     }
 
-    public void setmPendingTroubleCode(String mPendingTroubleCode) {
-        this.mPendingTroubleCode = mPendingTroubleCode;
+    public void setPendingTroubleCode(String pendingTroubleCode) {
+        PendingTroubleCode = pendingTroubleCode;
     }
 
-    public String getmFaultCodes() {
-        return mFaultCodes;
+    public String getFaultCodes() {
+        return FaultCodes;
     }
 
-    public void setmFaultCodes(String mFaultCodes) {
-        this.mFaultCodes = mFaultCodes;
+    public void setFaultCodes(String faultCodes) {
+        FaultCodes = faultCodes;
     }
 
-    public String getmRelThottlePos() {
-        return mRelThottlePos;
+    public String getRelThottlePos() {
+        return RelThottlePos;
     }
 
-    public void setmRelThottlePos(String mRelThottlePos) {
-        this.mRelThottlePos = mRelThottlePos;
+    public void setRelThottlePos(String relThottlePos) {
+        RelThottlePos = relThottlePos;
     }
 
-    public String getmMassAirFlow() {
-        return mMassAirFlow;
+    public String getMassAirFlow() {
+        return MassAirFlow;
     }
 
-    public void setmMassAirFlow(String mMassAirFlow) {
-        this.mMassAirFlow = mMassAirFlow;
+    public void setMassAirFlow(String massAirFlow) {
+        MassAirFlow = massAirFlow;
     }
 
     public String getEngineRuntime() {
-        return engineRuntime;
+        return EngineRuntime;
     }
 
     public void setEngineRuntime(String engineRuntime) {
-        this.engineRuntime = engineRuntime;
+        EngineRuntime = engineRuntime;
     }
 
-    public String getmEngineLoad() {
-        return mEngineLoad;
+    public String getEngineLoad() {
+        return EngineLoad;
     }
 
-    public void setmEngineLoad(String mEngineLoad) {
-        this.mEngineLoad = mEngineLoad;
+    public void setEngineLoad(String engineLoad) {
+        EngineLoad = engineLoad;
     }
 
-    public String getmIntakePressure() {
-        return mIntakePressure;
+    public String getIntakePressure() {
+        return IntakePressure;
     }
 
-    public void setmIntakePressure(String mIntakePressure) {
-        this.mIntakePressure = mIntakePressure;
+    public void setIntakePressure(String intakePressure) {
+        IntakePressure = intakePressure;
     }
 
-    public String getmFuelPressure() {
-        return mFuelPressure;
+    public String getFuelPressure() {
+        return FuelPressure;
     }
 
-    public void setmFuelPressure(String mFuelPressure) {
-        this.mFuelPressure = mFuelPressure;
+    public void setFuelPressure(String fuelPressure) {
+        FuelPressure = fuelPressure;
     }
 
-    public String getmBarometricPressure() {
-        return mBarometricPressure;
+    public String getBarometricPressure() {
+        return BarometricPressure;
     }
 
-    public void setmBarometricPressure(String mBarometricPressure) {
-        this.mBarometricPressure = mBarometricPressure;
+    public void setBarometricPressure(String barometricPressure) {
+        BarometricPressure = barometricPressure;
     }
 
-    public String getmEngineCoolantTemp() {
-        return mEngineCoolantTemp;
+    public String getEngineCoolantTemp() {
+        return EngineCoolantTemp;
     }
 
-    public void setmEngineCoolantTemp(String mEngineCoolantTemp) {
-        this.mEngineCoolantTemp = mEngineCoolantTemp;
+    public void setEngineCoolantTemp(String engineCoolantTemp) {
+        EngineCoolantTemp = engineCoolantTemp;
     }
 
-    public String getmAmbientAirTemp() {
-        return mAmbientAirTemp;
+    public String getAmbientAirTemp() {
+        return AmbientAirTemp;
     }
 
-    public void setmAmbientAirTemp(String mAmbientAirTemp) {
-        this.mAmbientAirTemp = mAmbientAirTemp;
+    public void setAmbientAirTemp(String ambientAirTemp) {
+        AmbientAirTemp = ambientAirTemp;
     }
 
-    public String getmIntakeAirTemp() {
-        return mIntakeAirTemp;
+    public String getIntakeAirTemp() {
+        return IntakeAirTemp;
     }
 
-    public void setmIntakeAirTemp(String mIntakeAirTemp) {
-        this.mIntakeAirTemp = mIntakeAirTemp;
+    public void setIntakeAirTemp(String intakeAirTemp) {
+        IntakeAirTemp = intakeAirTemp;
     }
 }

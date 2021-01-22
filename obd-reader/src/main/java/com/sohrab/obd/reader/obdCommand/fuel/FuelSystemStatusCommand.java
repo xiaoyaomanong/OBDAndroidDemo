@@ -34,7 +34,7 @@ public class FuelSystemStatusCommand extends ObdCommand {
         try {
             return FuelSystemStatus.fromValue(fuelsystemstatus).getDescription();
         } catch (NullPointerException e) {
-            return "-";
+            return "Ok";
         }
     }
 

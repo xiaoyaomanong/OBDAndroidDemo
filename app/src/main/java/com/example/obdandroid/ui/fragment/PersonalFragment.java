@@ -10,15 +10,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,33 +24,21 @@ import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.config.Constant;
-import com.example.obdandroid.ui.activity.AppSettingActivity;
 import com.example.obdandroid.ui.activity.FeedbackActivity;
 import com.example.obdandroid.ui.activity.LoginActivity;
 import com.example.obdandroid.ui.activity.MyVehicleActivity;
-import com.example.obdandroid.ui.activity.OBDSettingActivity;
 import com.example.obdandroid.ui.activity.RechargeRecordActivity;
 import com.example.obdandroid.ui.activity.RechargeSetMealActivity;
-import com.example.obdandroid.ui.activity.TroubleCodeQueryActivity;
-import com.example.obdandroid.ui.adapter.MultipleItemQuickAdapter;
-import com.example.obdandroid.ui.entity.MultipleItem;
 import com.example.obdandroid.ui.entity.UserInfoEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleImageView;
 import com.example.obdandroid.ui.view.IosDialog;
 import com.example.obdandroid.utils.ActivityManager;
-import com.example.obdandroid.utils.BitMapUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
-import com.gyf.immersionbar.ImmersionBar;
 import com.hjq.bar.TitleBar;
-import com.sohrab.obd.reader.application.ObdPreferences;
-import com.sohrab.obd.reader.service.ObdReaderService;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -63,6 +46,7 @@ import okhttp3.Response;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.USER_INFO_URL;
 import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
+import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
 
 /**
  * 作者：Jealous
@@ -138,6 +122,7 @@ public class PersonalFragment extends BaseFragment {
                     @Override
                     public void Confirm(AlertDialog exitDialog, boolean confirm) {
                         if (confirm) {
+                            spUtil.put(CONNECT_BT_KEY, "OFF");
                             spUtil.put(Constant.IS_LOGIN, false);
                             JumpUtil.startAct(context, LoginActivity.class);
                             try {

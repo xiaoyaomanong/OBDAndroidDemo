@@ -316,7 +316,6 @@ public class ObdTwoReaderService extends IntentService implements DefineObdTwoRe
     @Override
     public void onDestroy() {
         super.onDestroy();
-        LogUtils.i("service onDestroy");
         closeSocket();
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(false);
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);

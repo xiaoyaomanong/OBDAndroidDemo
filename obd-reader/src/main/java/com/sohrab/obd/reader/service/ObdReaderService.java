@@ -177,6 +177,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
                 closeSocket();
             }
             boolean isSockedConnected = mSocket.isConnected();
+            ObdPreferences.get(getApplicationContext()).setBlueToothDeviceConnect(isSockedConnected);
             if (isSockedConnected) {
                 try {
                     Thread.sleep(DELAY_TWO_SECOND);

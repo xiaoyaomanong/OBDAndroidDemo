@@ -15,6 +15,7 @@ public interface PreferencesConstants {
     String FUEL_TYPE_VALUE = "FUEL_TYPE_VALUE";
     String BT_NAME_KEY = "bt_name_preference";
     String BT_ADDRESS_KEY = "bt_address_preference";
+    String BT_CONNECT_KEY = "bt_connect_preference";
 
 }
 

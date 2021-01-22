@@ -738,59 +738,6 @@ public class TripRecord implements DefineObdReader, Serializable {
         return data;
     }
 
-    public OBDJsonTripEntity getOBDJson() {
-        OBDJsonTripEntity entity = new OBDJsonTripEntity();
-        entity.setEngineRpm(TextUtils.isEmpty(engineRpm) ? "" : engineRpm);
-        entity.setEngineRpmMax(engineRpmMax + " km/h");
-        entity.setEngineRuntime(TextUtils.isEmpty(engineRuntime) ? "" : engineRuntime);
-        entity.setDrivingDuration(getDrivingDuration() + " m");
-        entity.setIdlingDuration(getIdlingDuration() + " m");
-        entity.setmAbsLoad(TextUtils.isEmpty(mAbsLoad) ? "" : mAbsLoad);
-        entity.setmAirFuelRatio(TextUtils.isEmpty(mAirFuelRatio) ? "" : mAirFuelRatio);
-        entity.setmAmbientAirTemp(TextUtils.isEmpty(mAmbientAirTemp) ? "" : mAmbientAirTemp);
-        entity.setmBarometricPressure(TextUtils.isEmpty(mBarometricPressure) ? "" : mBarometricPressure);
-        entity.setmControlModuleVoltage(TextUtils.isEmpty(mControlModuleVoltage) ? "" : mControlModuleVoltage);
-        entity.setmDescribeProtocol(TextUtils.isEmpty(mDescribeProtocol) ? "" : mDescribeProtocol);
-        entity.setmDescribeProtocolNumber(TextUtils.isEmpty(mDescribeProtocolNumber) ? "" : mDescribeProtocolNumber);
-        entity.setmDistanceTraveledAfterCodesCleared(getmDistanceTraveledAfterCodesCleared());
-        entity.setmDistanceTraveledMilOn(getmDistanceTraveledMilOn());
-        entity.setmDrivingFuelConsumption(getmDrivingFuelConsumption() + " L");
-        entity.setmDrivingMaf(mDrivingMaf + " g/s");
-        entity.setmDtcNumber(TextUtils.isEmpty(mDtcNumber) ? "" : mDtcNumber);
-        entity.setmEngineCoolantTemp(TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp);
-        entity.setmEngineFuelRate(TextUtils.isEmpty(mEngineFuelRate) ? "" : mEngineFuelRate);
-        entity.setmEngineLoad(TextUtils.isEmpty(mEngineLoad) ? "" : mEngineLoad);
-        entity.setmEngineOilTemp(TextUtils.isEmpty(mEngineOilTemp) ? "" : mEngineOilTemp);
-        entity.setmEquivRatio(TextUtils.isEmpty(mEquivRatio) ? "" : mEquivRatio);
-        entity.setmFaultCodes(TextUtils.isEmpty(mFaultCodes) ? "" : mFaultCodes);
-        entity.setmFuelConsumptionRate(TextUtils.isEmpty(mFuelConsumptionRate) ? "" : mFuelConsumptionRate);
-        entity.setmFuelLevel(TextUtils.isEmpty(mFuelLevel) ? "" : mFuelLevel);
-        entity.setmFuelPressure(TextUtils.isEmpty(mFuelPressure) ? "" : mFuelPressure);
-        entity.setmFuelRailPressure(TextUtils.isEmpty(mFuelRailPressure) ? "" : mFuelRailPressure);
-        entity.setmFuelRailPressurevacuum(TextUtils.isEmpty(mFuelRailPressurevacuum) ? "" : mFuelRailPressurevacuum);
-        entity.setmFuelSystemStatus(TextUtils.isEmpty(mFuelSystemStatus) ? "" : mFuelSystemStatus);
-        entity.setmFuelTypeValue(String.valueOf(mFuelTypeValue));
-        entity.setmIdleMaf(mIdleMaf + " g/s");
-        entity.setmIdlingFuelConsumption(getmIdlingFuelConsumption() + " L");
-        entity.setmIgnitionMonitor(TextUtils.isEmpty(mIgnitionMonitor) ? "" : mIgnitionMonitor);
-        entity.setmInsFuelConsumption(getmInsFuelConsumption() + " L");
-        entity.setmIntakeAirTemp(mIntakeAirTemp + " C");
-        entity.setmIntakePressure(mIntakePressure + " kpa");
-        entity.setmMassAirFlow(mMassAirFlow + "");
-        entity.setmPendingTroubleCode(TextUtils.isEmpty(mPendingTroubleCode) ? "" : mAirFuelRatio);
-        entity.setmPermanentTroubleCode(TextUtils.isEmpty(mPermanentTroubleCode) ? "" : mPermanentTroubleCode);
-        entity.setmRapidAccTimes(mRapidAccTimes + "");
-        entity.setmRapidDeclTimes(mRapidDeclTimes + "");
-        entity.setmRelThottlePos(TextUtils.isEmpty(mRelThottlePos) ? "" : mRelThottlePos);
-        entity.setmTimingAdvance(TextUtils.isEmpty(mTimingAdvance) ? "" : mTimingAdvance);
-        entity.setmVehicleIdentificationNumber(TextUtils.isEmpty(mVehicleIdentificationNumber) ? "" : mVehicleIdentificationNumber);
-        entity.setmWideBandAirFuelRatio(TextUtils.isEmpty(mWideBandAirFuelRatio) ? "" : mWideBandAirFuelRatio);
-        entity.setRmCommandedEGR(TextUtils.isEmpty(mCommandedEGR) ? "" : mCommandedEGR);
-        entity.setSpeed(speed + " km/h");
-        entity.setSpeedMax(speedMax + " km/h");
-        return entity;
-    }
-
     @Override
     public String toString() {
         return "OBD data ::" +

@@ -25,15 +25,11 @@ public class DialogUtils {
 
     public void showProgressDialog() {
         WaitDialog.setCanCancelGlobal(true);
-        WaitDialog.show(mContext, "请稍候...").setOnBackPressListener(alertDialog -> {
-            alertDialog.dismiss();
-        });
+        WaitDialog.show(mContext, "请稍候...").setOnBackPressListener(alertDialog -> alertDialog.dismiss());
     }
     public void showProgressDialog(String msg) {
         WaitDialog.setCanCancelGlobal(true);
-        WaitDialog.show(mContext, msg).setOnBackPressListener(alertDialog -> {
-            alertDialog.dismiss();
-        });
+        WaitDialog.show(mContext, msg).setOnBackPressListener(alertDialog -> alertDialog.dismiss());
     }
 
     public void dismiss() {

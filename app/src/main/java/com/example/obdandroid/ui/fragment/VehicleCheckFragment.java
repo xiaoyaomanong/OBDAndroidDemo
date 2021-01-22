@@ -23,11 +23,11 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
+import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.adapter.VehicleCheckAdapter;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.view.CircleWelComeView;
 import com.example.obdandroid.utils.SPUtil;
-import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.Notification;
 import com.kongzue.dialog.v2.TipDialog;
 import com.sohrab.obd.reader.application.ObdPreferences;
@@ -45,8 +45,9 @@ import okhttp3.Response;
 
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.addTestRecord_URL;
-import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_OBD_CONNECTION_STATUS_CAR;
-import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_READ_OBD_REAL_TIME_DATA_CAR;
+import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
+import static com.sohrab.obd.reader.constants.DefineObdTwoReader.ACTION_OBD_CONNECTION_STATUS_CAR;
+import static com.sohrab.obd.reader.constants.DefineObdTwoReader.ACTION_READ_OBD_REAL_TIME_DATA_CAR;
 
 /**
  * 作者：Jealous
@@ -92,21 +93,27 @@ public class VehicleCheckFragment extends BaseFragment {
         // 设定每升汽油价格，以便计算汽油成本。默认值为7$/l
         float gasPrice = 7; // 每升，你应该根据你的要求初始化。
         ObdPreferences.get(context).setGasPrice(gasPrice);
+        //showResult(TripRecordCar.getTripTwoRecode(context).getTripMap());
         btStart.setOnClickListener(v -> {
-            btStart.setText("开始检测");
-            circleView.start();
-            if (!TextUtils.isEmpty(ObdPreferences.get(context).getBlueToothDeviceAddress())) {
-                connectBtDevice(ObdPreferences.get(context).getBlueToothDeviceAddress());
+            if (spUtil.getString(Constant.CONNECT_BT_KEY, "").equals("ON")) {
+                btStart.setText("开始检测");
+                circleView.start();
+                if (!TextUtils.isEmpty(ObdPreferences.get(context).getBlueToothDeviceAddress())) {
+                    connectBtDevice(ObdPreferences.get(context).getBlueToothDeviceAddress());
+                } else {
+                    new Handler().postDelayed(() -> {
+                        if (circleView.isDiffuse()) {
+                            circleView.stop();
+                            btStart.setText("检测失败");
+                        }
+                        showResult(null);
+                        showToast(getString(R.string.text_bluetooth_error_connecting));
+                    }, 3000);
+                }
             } else {
-                new Handler().postDelayed(() -> {
-                    if (circleView.isDiffuse()) {
-                        circleView.stop();
-                        btStart.setText("检测失败");
-                    }
-                    showResult(null);
-                    showToast(getString(R.string.text_bluetooth_error_connecting));
-                }, 3000);
+                showTipDialog("请连接OBD设备",TipDialog.TYPE_WARNING);
             }
+
         });
         circleView.setCallEndListener(() -> LogE("333333"));
     }
@@ -185,6 +192,7 @@ public class VehicleCheckFragment extends BaseFragment {
         //启动服务，该服务将在后台执行连接，并执行命令，直到您停止
         Intent intent = new Intent(context, ObdTwoReaderService.class);
         intent.putExtra("device", bluetoothDevice);
+        intent.putExtra("isConnected" , ObdPreferences.get(context).getBlueToothDeviceConnect());
         context.startService(intent);
     }
 
@@ -224,6 +232,7 @@ public class VehicleCheckFragment extends BaseFragment {
                 }
             } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA_CAR)) {
                 TripRecordCar TripTwoRecord = TripRecordCar.getTripTwoRecode(context);
+                LogE("OBD数据:" + TripTwoRecord.toString());
                 if (circleView.isDiffuse()) {
                     circleView.stop();
                     btStart.setText("检测完成");

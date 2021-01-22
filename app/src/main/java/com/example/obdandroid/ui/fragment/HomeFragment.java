@@ -36,6 +36,7 @@ import com.example.obdandroid.ui.view.CircleImageView;
 import com.example.obdandroid.ui.view.PhilText;
 import com.example.obdandroid.ui.view.dashView.DashboardView;
 import com.example.obdandroid.utils.BitMapUtils;
+import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.ToastUtil;
 import com.hjq.bar.OnTitleBarListener;
@@ -76,7 +77,6 @@ public class HomeFragment extends BaseFragment {
     private List<HashMap<String, Object>> blueList;
     private int yourChoice;
     private SPUtil spUtil;
-    private TextView tvContent;
     private PhilText tvHighSpeed;
     private DashboardView dashSpeed;
     private PhilText tvCurrentSpeed;
@@ -94,6 +94,7 @@ public class HomeFragment extends BaseFragment {
     private TestRecordAdapter recordAdapter;
     private LocalBroadcastManager lm;
     private TestReceiver testReceiver;
+    private DialogUtils dialogUtils;
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -112,7 +113,6 @@ public class HomeFragment extends BaseFragment {
         RecyclerView recycleCar = getView(R.id.recycleCar);
         recycleContent = getView(R.id.recycleContent);
         dashSpeed = getView(R.id.dashSpeed);
-        tvContent = getView(R.id.tv_content);
         tvHighSpeed = getView(R.id.tvHighSpeed);
         tvCurrentSpeed = getView(R.id.tvCurrentSpeed);
         layoutCar = getView(R.id.layoutCar);
@@ -125,6 +125,7 @@ public class HomeFragment extends BaseFragment {
         tvHomeObdTip = getView(R.id.tv_home_obd_tip);
         titleBar.setTitle("汽车扫描");
         spUtil = new SPUtil(context);
+        dialogUtils = new DialogUtils(context);
         mConnectedDeviceName = ObdPreferences.get(context).getBlueToothDeviceName();
         mConnectedDeviceAddress = ObdPreferences.get(context).getBlueToothDeviceAddress();
         initBlueTooth();
@@ -144,7 +145,7 @@ public class HomeFragment extends BaseFragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recycleContent.setLayoutManager(layoutManager);
         recordAdapter = new TestRecordAdapter(context);
-        getTestRecordPageList(getToken(), String.valueOf(1), String.valueOf(5), getUserId());
+        getTestRecordPageList(getToken(), String.valueOf(1), String.valueOf(2), getUserId());
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -222,8 +223,7 @@ public class HomeFragment extends BaseFragment {
                     tvAutomobileBrandName.setText(entity.getData().getAutomobileBrandName());
                     tvModelName.setText(entity.getData().getModelName());
                     if (!TextUtils.isEmpty(entity.getData().getLogo())) {
-                        Glide.with(context).load(SERVER_URL+entity.getData().getLogo()).into(ivCarLogo);
-                       // ivCarLogo.setImageBitmap(BitMapUtils.stringToBitmap(entity.getData().getLogo()));
+                        Glide.with(context).load(SERVER_URL + entity.getData().getLogo()).into(ivCarLogo);
                     }
                     if (entity.getData().getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
                         tvHomeObdTip.setText("将OBD插入车辆并连接");
@@ -299,9 +299,11 @@ public class HomeFragment extends BaseFragment {
         builder.setPositiveButton("确定",
                 (dialog, which) -> {
                     if (yourChoice != -1) {
+                        dialogUtils.showProgressDialog("正在连接OBD");
                         if (!TextUtils.isEmpty(devicesList.get(yourChoice).getAddress())) {
                             connectBtDevice(devicesList.get(yourChoice).getAddress());
                         } else {
+                            dialogUtils.dismiss();
                             showToast(getString(R.string.text_bluetooth_error_connecting));
                         }
                         startServiceOBD(devicesList.get(yourChoice));
@@ -376,6 +378,7 @@ public class HomeFragment extends BaseFragment {
     @SuppressLint("StringFormatInvalid")
     private void onConnect() {
         TipDialog.show(context, getString(R.string.title_connected_to) + mConnectedDeviceName, TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
+        dialogUtils.dismiss();
         titleBar.setLeftTitle("已连接");
         titleBar.setRightIcon(R.drawable.action_connect);
         spUtil.put(CONNECT_BT_KEY, "ON");
@@ -409,6 +412,7 @@ public class HomeFragment extends BaseFragment {
         titleBar.setLeftTitle("未连接");
         titleBar.setRightIcon(R.drawable.action_disconnect);
         spUtil.put(CONNECT_BT_KEY, "OFF");
+        dialogUtils.dismiss();
     }
 
 
@@ -443,13 +447,9 @@ public class HomeFragment extends BaseFragment {
                     onDisconnect();
                 } else if (connectionStatusMsg.contains("未检测到OBD设备")) {
                     onDisconnect();
-                } else {
-                    // 在这里您可以检查OBD连接和配对状态
                 }
             } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA)) {
                 TripRecord tripRecord = TripRecord.getTripRecode(context);
-                LogE("实时数据:" + tripRecord.toString());
-                tvContent.setText(tripRecord.toString());
                 tvHighSpeed.setText(String.valueOf(tripRecord.getSpeedMax()));
                 tvCurrentSpeed.setText(String.valueOf(tripRecord.getSpeed()));
                 dashSpeed.setRealTimeValue(tripRecord.getSpeed());

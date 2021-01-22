@@ -96,12 +96,20 @@ public class ObdPreferences implements PreferencesConstants {
         mEditor.putString(BT_ADDRESS_KEY, deviceAddress).commit();
     }
 
+    public void setBlueToothDeviceConnect(boolean isConnected) {
+        mEditor.putBoolean(BT_CONNECT_KEY, isConnected).commit();
+    }
+
     public String getBlueToothDeviceName() {
         return mPrefs.getString(BT_NAME_KEY, "");
     }
 
     public String getBlueToothDeviceAddress() {
         return mPrefs.getString(BT_ADDRESS_KEY, "");
+    }
+
+    public boolean getBlueToothDeviceConnect() {
+        return mPrefs.getBoolean(BT_CONNECT_KEY, false);
     }
 
     /**

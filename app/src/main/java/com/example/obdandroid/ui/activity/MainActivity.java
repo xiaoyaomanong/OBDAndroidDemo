@@ -36,6 +36,7 @@ import com.kongzue.dialog.util.BlurView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
 import static com.kongzue.dialog.v2.DialogSettings.THEME_DARK;
 import static com.kongzue.dialog.v2.DialogSettings.blur_alpha;
 import static com.kongzue.dialog.v2.DialogSettings.dialog_background_color;
@@ -182,6 +183,7 @@ public class MainActivity extends BaseActivity {
         }
         btnSelectPositive.setText("确定");
         btnSelectPositive.setOnClickListener(v -> {
+            spUtil.put(CONNECT_BT_KEY, "OFF");
             exitDialog.dismiss();
             ActivityManager.getInstance().finishActivitys();
         });

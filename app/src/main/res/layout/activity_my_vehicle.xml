@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         app:barStyle="night"
         app:lineVisible="false"
-        app:rightIcon="@drawable/icon_add_car"
+        app:rightColor="@color/color_bar"
+        app:rightTitle="添加"
         app:title="@string/myCar" />
 
     <com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView

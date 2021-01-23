@@ -4,8 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.JsonReader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +17,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.ui.entity.TestRecordEntity;
 import com.example.obdandroid.ui.view.progressButton.CircularProgressButton;
 import com.example.obdandroid.utils.DensityUtil;
+import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 import com.sohrab.obd.reader.trip.OBDTripEntity;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -33,8 +39,10 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private OnClickCallBack clickCallBack;
     private final int EMPTY_VIEW = 0;//空页面
     private final int NOT_EMPTY_VIEW = 1;//正常页面
+    private Context context;
 
     public TestRecordAdapter(Context context) {
+        this.context = context;
         inflater = LayoutInflater.from(context);
     }
 
@@ -94,21 +102,27 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         private final TextView txtDateTime;
-        private final TextView txt_date_title;
+        private final TextView txt_date_size;
         private final RelativeLayout rlTitle;
+        private final RecyclerView recycleContent;
         private final View vLine;
         private TestRecordEntity.DataEntity.ListEntity timeData;
+        private OBDJsonTripEntity tripEntity;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             rlTitle = itemView.findViewById(R.id.rl_title);
             vLine = itemView.findViewById(R.id.v_line);
             txtDateTime = itemView.findViewById(R.id.txt_date_time);
-            txt_date_title = itemView.findViewById(R.id.txt_date_title);
+            txt_date_size = itemView.findViewById(R.id.txt_date_size);
+            recycleContent = itemView.findViewById(R.id.recycleContent);
         }
 
+        @SuppressLint("SetTextI18n")
         public void setPosition(int position) {
             timeData = list.get(position);
+            tripEntity = JSON.parseObject(timeData.getTestData(), OBDJsonTripEntity.class);
+            int size = tripEntity.getFaultCodes().replaceAll("\r|\n", ",").split(",").length;
             //时间轴竖线的layoutParams,用来动态的添加竖线
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) vLine.getLayoutParams();
             //position等于0的处理
@@ -117,44 +131,53 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 layoutParams.setMargins(DensityUtil.dip2px(vLine.getContext(), 20), DensityUtil.dip2px(vLine.getContext(), 15), 0, 0);
                 rlTitle.setVisibility(View.VISIBLE);
                 txtDateTime.setText(timeData.getDetectionTime());
+                txt_date_size.setText("发现" + size + "个故障码");
                 layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.rl_title);
-                layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.txt_date_title);
+                layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.recycleContent);
             } else if (position < list.size() - 1) {
                 if (timeData.getDetectionTime().equals(list.get(position - 1).getDetectionTime())) {
                     if (timeData.getDetectionTime().equals(list.get(position + 1).getDetectionTime())) {
                         rlTitle.setVisibility(View.GONE);
                         layoutParams.setMargins(DensityUtil.dip2px(vLine.getContext(), 20), DensityUtil.dip2px(vLine.getContext(), 0), 0, 0);
-                        layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.txt_date_title);
-                        layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.txt_date_title);
+                        layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.recycleContent);
+                        layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.recycleContent);
                     } else {
                         rlTitle.setVisibility(View.GONE);
-                        layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.txt_date_title);
-                        layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.txt_date_title);
+                        layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.recycleContent);
+                        layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.recycleContent);
                     }
                 } else {
                     layoutParams.setMargins(DensityUtil.dip2px(vLine.getContext(), 20), DensityUtil.dip2px(vLine.getContext(), 0), 0, 0);
                     rlTitle.setVisibility(View.VISIBLE);
                     txtDateTime.setText(timeData.getDetectionTime());
+                    txt_date_size.setText("发现" + size + "个故障码");
                     layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.rl_title);
-                    layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.txt_date_title);
+                    layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.recycleContent);
                 }
-
             } else {
                 if (!timeData.getDetectionTime().equals(list.get(position - 1).getDetectionTime())) {
                     rlTitle.setVisibility(View.VISIBLE);
                     txtDateTime.setText(timeData.getDetectionTime());
+                    txt_date_size.setText("发现" + size + "个故障码");
                     layoutParams.setMargins(DensityUtil.dip2px(vLine.getContext(), 20), DensityUtil.dip2px(vLine.getContext(), 0), 0, 0);
                     layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.rl_title);
                 } else {
                     rlTitle.setVisibility(View.GONE);
                     txtDateTime.setText(timeData.getDetectionTime());
+                    txt_date_size.setText("发现" + size + "个故障码");
                     layoutParams.setMargins(DensityUtil.dip2px(vLine.getContext(), 20), DensityUtil.dip2px(vLine.getContext(), 0), 0, 0);
-                    layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.txt_date_title);
+                    layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.recycleContent);
                 }
-                layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.txt_date_title);
+                layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.recycleContent);
             }
             vLine.setLayoutParams(layoutParams);
-            txt_date_title.setText(timeData.getTestData());
+            LinearLayoutManager manager = new LinearLayoutManager(context);
+            manager.setOrientation(OrientationHelper.VERTICAL);
+            recycleContent.setLayoutManager(manager);
+            CheckRecorderAdapter adapter=new CheckRecorderAdapter(context);
+            adapter.setList(Arrays.asList(tripEntity.getFaultCodes().replaceAll("\r|\n", ",").split(",")));
+            recycleContent.setAdapter(adapter);
+            //txt_date_title.setText(timeData.getTestData());
         }
     }
 

@@ -32,22 +32,32 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="30dp"
-            android:textColor="@color/gray_light"
             android:fontFamily="@font/calibri"
-            android:textSize="@dimen/sp_12" />
+            android:textColor="@color/gray_light"
+            android:textSize="@dimen/sp_14" />
+
+        <TextView
+            android:id="@+id/txt_date_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="30dp"
+            android:fontFamily="@font/gotham"
+            android:textColor="@color/red"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold" />
     </RelativeLayout>
 
 
-    <TextView
-        android:id="@+id/txt_date_title"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycleContent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/rl_title"
         android:layout_marginStart="30dp"
-        android:padding="10dp"
-        android:textColor="@color/white"
-        android:fontFamily="@font/gotham"
-        android:text="您发布的帖子标题已被取消置顶"
-        android:textSize="15sp" />
+        android:padding="10dp">
+
+    </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

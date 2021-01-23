@@ -118,10 +118,6 @@ public class BindBluetoothDeviceActivity extends BaseActivity {
      *                              蓝牙设备绑定车辆
      */
     private void bindingVehicle(String token, String userId, String vehicleId, String bluetoothDeviceNumber) {
-        LogE("token："+token);
-        LogE("userId："+userId);
-        LogE("vehicleId："+vehicleId);
-        LogE("bluetoothDeviceNumber："+bluetoothDeviceNumber);
         OkHttpUtils.get().url(SERVER_URL + bindingVehicle_URL).
                 addParam("token", token).
                 addParam("userId", userId).

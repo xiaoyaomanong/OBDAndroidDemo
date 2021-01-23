@@ -27,6 +27,7 @@ import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
+import com.example.obdandroid.ui.activity.BindBluetoothDeviceActivity;
 import com.example.obdandroid.ui.activity.VehicleInfoActivity;
 import com.example.obdandroid.ui.adapter.HomeAdapter;
 import com.example.obdandroid.ui.adapter.TestRecordAdapter;
@@ -241,6 +242,11 @@ public class HomeFragment extends BaseFragment {
                         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                         tvHomeObdTip.setCompoundDrawables(drawable, null, null, null);
                         tvObd.setText("OBD 未绑定");
+                        layoutOBD.setOnClickListener(v -> {
+                            Intent intent = new Intent(context, BindBluetoothDeviceActivity.class);
+                            intent.putExtra("vehicleId", vehicleId);
+                            startActivityForResult(intent, 100);
+                        });
                     } else {
                         tvHomeObdTip.setText(entity.getData().getBluetoothDeviceNumber());
                         Drawable drawable = context.getResources().getDrawable(R.drawable.icon_ok);
@@ -310,14 +316,14 @@ public class HomeFragment extends BaseFragment {
                 (dialog, which) -> {
                     if (yourChoice != -1) {
                         dialogUtils.showProgressDialog("正在连接OBD");
-                        mConnectedDeviceAddress=devicesList.get(yourChoice).getAddress();
-                        isConnected= mConnectedDeviceAddress.equals(mConnectedDeviceAddress);
+                        isConnected= devicesList.get(yourChoice).getAddress().equals(deviceAddress);
                         if (!TextUtils.isEmpty(devicesList.get(yourChoice).getAddress())) {
                             if (isConnected){
                                 connectBtDevice(devicesList.get(yourChoice).getAddress());
                             }else {
                                 dialogUtils.dismiss();
-                                showToast("当前车辆绑定OBD设备,与连接的OBD设备不一致");
+                                showTipDialog("当前车辆绑定OBD设备,与连接的OBD设备不一致",TipDialog.TYPE_WARNING);
+                                //showToast("当前车辆绑定OBD设备,与连接的OBD设备不一致");
                             }
 
                         } else {

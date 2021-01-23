@@ -45,8 +45,8 @@ public class ObdTwoReaderService extends IntentService implements DefineObdTwoRe
     private static final String TAG = "ObdTwoReaderService";
     //OBD-2连接时接收
     public final static char PID_STATUS_SUCCESS = '2';
-    private static final int DELAY_FIFTEEN_SECOND = 15000;
-    private static final int DELAY_TWO_SECOND = 2000;
+    private static final int DELAY_FIFTEEN_SECOND = 6000;
+    private static final int DELAY_TWO_SECOND = 1000;
     // 如果为true，则用于查找TroubleCode。这用于显示故障的检查活动。
     public boolean mIsFaultCodeRead = true;
     private final IBinder mBinder = new LocalBinder();
@@ -162,7 +162,7 @@ public class ObdTwoReaderService extends IntentService implements DefineObdTwoRe
                                 // 此线程是必需的，因为在Headunit中命令.run方法无限块，因此，线程的最长寿命为15秒，这样就可以处理块了。
                                 mIsRunningSuccess = false;
                                 new ObdResetCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-                                Thread.sleep(1000);
+                                Thread.sleep(200);
                                 new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                                 Thread.sleep(200);
                                 new LineFeedOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());

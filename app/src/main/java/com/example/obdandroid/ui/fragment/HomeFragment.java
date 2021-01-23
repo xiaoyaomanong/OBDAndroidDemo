@@ -27,6 +27,7 @@ import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
+import com.example.obdandroid.ui.activity.VehicleInfoActivity;
 import com.example.obdandroid.ui.adapter.HomeAdapter;
 import com.example.obdandroid.ui.adapter.TestRecordAdapter;
 import com.example.obdandroid.ui.entity.TestRecordEntity;
@@ -37,6 +38,7 @@ import com.example.obdandroid.ui.view.PhilText;
 import com.example.obdandroid.ui.view.dashView.DashboardView;
 import com.example.obdandroid.utils.BitMapUtils;
 import com.example.obdandroid.utils.DialogUtils;
+import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.ToastUtil;
 import com.hjq.bar.OnTitleBarListener;
@@ -95,6 +97,8 @@ public class HomeFragment extends BaseFragment {
     private LocalBroadcastManager lm;
     private TestReceiver testReceiver;
     private DialogUtils dialogUtils;
+    private boolean isConnected = false;
+    private String deviceAddress;
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -188,11 +192,17 @@ public class HomeFragment extends BaseFragment {
                         layoutAddCar.setVisibility(View.GONE);
                         layoutCar.setVisibility(View.VISIBLE);
                         layoutOBD.setVisibility(View.VISIBLE);
-                        getVehicleInfoById(getToken(), vehicleId);
+                        if (TextUtils.isEmpty(vehicleId)) {
+                            //选择已绑定的车辆
+                        } else {
+                            getVehicleInfoById(getToken(), vehicleId);
+                            layoutCar.setOnClickListener(v -> JumpUtil.startActToData(context, VehicleInfoActivity.class, vehicleId, 0));
+                        }
                     } else {
                         layoutAddCar.setVisibility(View.VISIBLE);
                         layoutCar.setVisibility(View.GONE);
                         layoutOBD.setVisibility(View.GONE);
+                        //添加车辆绑定
                     }
                 }
             }
@@ -217,7 +227,6 @@ public class HomeFragment extends BaseFragment {
             @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(String response, int id) {
-                LogE("获取用户车辆详情：" + response);
                 VehicleInfoEntity entity = JSON.parseObject(response, VehicleInfoEntity.class);
                 if (entity.isSuccess()) {
                     tvAutomobileBrandName.setText(entity.getData().getAutomobileBrandName());
@@ -225,6 +234,7 @@ public class HomeFragment extends BaseFragment {
                     if (!TextUtils.isEmpty(entity.getData().getLogo())) {
                         Glide.with(context).load(SERVER_URL + entity.getData().getLogo()).into(ivCarLogo);
                     }
+                    deviceAddress=entity.getData().getBluetoothDeviceNumber();
                     if (entity.getData().getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
                         tvHomeObdTip.setText("将OBD插入车辆并连接");
                         Drawable drawable = context.getResources().getDrawable(R.drawable.icon_no);
@@ -300,8 +310,16 @@ public class HomeFragment extends BaseFragment {
                 (dialog, which) -> {
                     if (yourChoice != -1) {
                         dialogUtils.showProgressDialog("正在连接OBD");
+                        mConnectedDeviceAddress=devicesList.get(yourChoice).getAddress();
+                        isConnected= mConnectedDeviceAddress.equals(mConnectedDeviceAddress);
                         if (!TextUtils.isEmpty(devicesList.get(yourChoice).getAddress())) {
-                            connectBtDevice(devicesList.get(yourChoice).getAddress());
+                            if (isConnected){
+                                connectBtDevice(devicesList.get(yourChoice).getAddress());
+                            }else {
+                                dialogUtils.dismiss();
+                                showToast("当前车辆绑定OBD设备,与连接的OBD设备不一致");
+                            }
+
                         } else {
                             dialogUtils.dismiss();
                             showToast(getString(R.string.text_bluetooth_error_connecting));

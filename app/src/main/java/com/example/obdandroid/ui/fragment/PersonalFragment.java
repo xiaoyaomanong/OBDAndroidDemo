@@ -116,6 +116,7 @@ public class PersonalFragment extends BaseFragment {
         layoutGo.setOnClickListener(v -> JumpUtil.startAct(context, RechargeSetMealActivity.class));
         llBuyHistory.setOnClickListener(v -> JumpUtil.startAct(context, RechargeRecordActivity.class));
         llFaceBack.setOnClickListener(v -> JumpUtil.startAct(context, FeedbackActivity.class));
+        layoutAddCar.setOnClickListener(v -> JumpUtil.startAct(context, MyVehicleActivity.class));
         //退出账户
         btnLogout.setOnClickListener(v ->
                 new IosDialog(context, new IosDialog.DialogClick() {
@@ -141,7 +142,6 @@ public class PersonalFragment extends BaseFragment {
                         }
                     }
                 }).setMessage("是否退出客户端").setTitle("退出提示").setSelectNegative("取消").setSelectPositive("确定").showDialog());
-        layoutAddCar.setOnClickListener(v -> JumpUtil.startAct(context, MyVehicleActivity.class));
 /* multipleItemQuickAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             switch (view.getId()) {
                 case R.id.ll_my_car:

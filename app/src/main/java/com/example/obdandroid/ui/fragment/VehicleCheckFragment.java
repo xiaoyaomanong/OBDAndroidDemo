@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,15 +18,19 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.adapter.VehicleCheckAdapter;
 import com.example.obdandroid.ui.entity.ResultEntity;
+import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleWelComeView;
 import com.example.obdandroid.utils.SPUtil;
 import com.kongzue.dialog.v2.Notification;
@@ -45,6 +50,7 @@ import okhttp3.Response;
 
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.addTestRecord_URL;
+import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
 import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
 import static com.sohrab.obd.reader.constants.DefineObdTwoReader.ACTION_OBD_CONNECTION_STATUS_CAR;
 import static com.sohrab.obd.reader.constants.DefineObdTwoReader.ACTION_READ_OBD_REAL_TIME_DATA_CAR;
@@ -61,6 +67,11 @@ public class VehicleCheckFragment extends BaseFragment {
     private VehicleCheckAdapter adapter;
     private RecyclerView recycleCheckContent;
     private SPUtil spUtil;
+    private TextView tvConnectObd;
+    private LinearLayout layoutCar;
+    private ImageView ivCarLogo;
+    private TextView tvAutomobileBrandName;
+    private TextView tvModelName;
 
     public static VehicleCheckFragment getInstance() {
         return new VehicleCheckFragment();
@@ -77,6 +88,11 @@ public class VehicleCheckFragment extends BaseFragment {
         circleView = getView(R.id.circleView);
         btStart = getView(R.id.btStart);
         recycleCheckContent = getView(R.id.recycleCheckContent);
+        tvConnectObd = getView(R.id.tv_connect_obd);
+        layoutCar = getView(R.id.layout_Car);
+        ivCarLogo = getView(R.id.ivCarLogo);
+        tvAutomobileBrandName = getView(R.id.tvAutomobileBrandName);
+        tvModelName = getView(R.id.tvModelName);
         spUtil = new SPUtil(context);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ACTION_READ_OBD_REAL_TIME_DATA_CAR);
@@ -97,6 +113,7 @@ public class VehicleCheckFragment extends BaseFragment {
         btStart.setOnClickListener(v -> {
             if (spUtil.getString(Constant.CONNECT_BT_KEY, "").equals("ON")) {
                 btStart.setText("开始检测");
+                tvConnectObd.setVisibility(View.GONE);
                 circleView.start();
                 if (!TextUtils.isEmpty(ObdPreferences.get(context).getBlueToothDeviceAddress())) {
                     connectBtDevice(ObdPreferences.get(context).getBlueToothDeviceAddress());
@@ -111,11 +128,43 @@ public class VehicleCheckFragment extends BaseFragment {
                     }, 3000);
                 }
             } else {
-                showTipDialog("请连接OBD设备",TipDialog.TYPE_WARNING);
+                showTipDialog("请连接OBD设备", TipDialog.TYPE_WARNING);
             }
 
         });
         circleView.setCallEndListener(() -> LogE("333333"));
+
+    }
+
+    /**
+     * @param token     用户Token
+     * @param vehicleId 车辆ID
+     *                  获取用户车辆详情
+     */
+    private void getVehicleInfoById(String token, String vehicleId) {
+        OkHttpUtils.get().url(SERVER_URL + getVehicleInfoById_URL).
+                addParam("token", token).
+                addParam("vehicleId", vehicleId).
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+
+            }
+
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(String response, int id) {
+                LogE("获取用户车辆详情：" + response);
+                VehicleInfoEntity entity = JSON.parseObject(response, VehicleInfoEntity.class);
+                if (entity.isSuccess()) {
+                    tvAutomobileBrandName.setText(entity.getData().getAutomobileBrandName());
+                    tvModelName.setText(entity.getData().getModelName());
+                    if (!TextUtils.isEmpty(entity.getData().getLogo())) {
+                        Glide.with(context).load(SERVER_URL + entity.getData().getLogo()).into(ivCarLogo);
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -192,7 +241,7 @@ public class VehicleCheckFragment extends BaseFragment {
         //启动服务，该服务将在后台执行连接，并执行命令，直到您停止
         Intent intent = new Intent(context, ObdTwoReaderService.class);
         intent.putExtra("device", bluetoothDevice);
-        intent.putExtra("isConnected" , ObdPreferences.get(context).getBlueToothDeviceConnect());
+        intent.putExtra("isConnected", ObdPreferences.get(context).getBlueToothDeviceConnect());
         context.startService(intent);
     }
 
@@ -201,7 +250,7 @@ public class VehicleCheckFragment extends BaseFragment {
      */
     private void onConnect(String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-        Notification.show(context, 2, R.drawable.icon_bm, "宝马", msg, Notification.SHOW_TIME_LONG, Notification.TYPE_NORMAL);
+        layoutCar.setVisibility(View.VISIBLE);
     }
 
     /**

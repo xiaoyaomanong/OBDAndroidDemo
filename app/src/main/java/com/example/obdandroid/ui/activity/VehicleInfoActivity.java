@@ -160,20 +160,19 @@ public class VehicleInfoActivity extends BaseActivity {
             tvHomeObdTip.setText("OBD 设备序列号");
             Drawable drawable = context.getResources().getDrawable(R.drawable.icon_no);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            tvObd.setCompoundDrawables(drawable, null, null, null);
+            tvHomeObdTip.setCompoundDrawables(drawable, null, null, null);
         } else {
             tvObd.setText("  OBD 已绑定");
             tvHomeObdTip.setText(entity.getBluetoothDeviceNumber());
             Drawable drawable = context.getResources().getDrawable(R.drawable.icon_ok);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            tvObd.setCompoundDrawables(drawable, null, null, null);
+            tvHomeObdTip.setCompoundDrawables(drawable, null, null, null);
         }
 
         if (TextUtils.isEmpty(entity.getLogo())) {
             ivLogo.setImageResource(R.drawable.icon_car_def);
         } else {
             Glide.with(context).load(entity.getLogo()).into(ivLogo);
-            //ivLogo.setImageBitmap(BitMapUtils.stringToBitmap(entity.getLogo()));
         }
         tvAutomobileBrandName.setText(checkNull(entity.getAutomobileBrandName()));
         tvModelName.setText(checkNull(entity.getModelName()));

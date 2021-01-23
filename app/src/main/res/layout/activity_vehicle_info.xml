@@ -38,7 +38,8 @@
                     android:id="@+id/ivLogo"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/icon_bm" />
+                    android:background="@null"
+                    android:tint="@color/white" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -54,7 +55,6 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="15dp"
-                        android:text="宝马"
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         tools:ignore="NestedWeights,RtlSymmetry" />
@@ -104,7 +104,6 @@
                     android:fontFamily="@font/gotham"
                     android:gravity="center_vertical"
                     android:paddingStart="15dp"
-                    android:text="OBD 未绑定"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     tools:ignore="NestedWeights,RtlSymmetry" />
@@ -114,10 +113,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableStart="@drawable/icon_no"
                     android:fontFamily="@font/gotham"
                     android:gravity="center_vertical|right"
-                    android:hint="设备序列号"
+                    android:hint="@string/hint_home_obd"
                     android:paddingStart="10dp"
                     android:paddingEnd="5dp"
                     android:textColor="@color/gray_light"

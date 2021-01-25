@@ -393,7 +393,6 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
             case FUEL_SYSTEM_STATUS:
                 mFuelSystemStatus = command.getFormattedResult();
                 break;
-
             case ENGINE_FUEL_RATE:
                 mEngineFuelRate = command.getFormattedResult();
                 break;
@@ -709,25 +708,25 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
         data.add(new OBDTripEntity("车辆识别号（VIN）", TextUtils.isEmpty(mVehicleIdentificationNumber) ? "" : mVehicleIdentificationNumber, R.drawable.icon_vin));
         data.add(new OBDTripEntity("相对于歧管真空的燃油分供管压力", TextUtils.isEmpty(mFuelRailPressurevacuum) ? "" : mFuelRailPressurevacuum , R.drawable.icon_fyg_yl));
         data.add(new OBDTripEntity("燃油分供管压力", TextUtils.isEmpty(mFuelRailPressure) ? "" : mFuelRailPressure , R.drawable.icon_fule_rail_pressure));
-        data.add(new OBDTripEntity("发动机燃油率", TextUtils.isEmpty(mEngineFuelRate) ? "" : mEngineFuelRate, R.drawable.icon_engine_rate));
+        //data.add(new OBDTripEntity("发动机燃油率", TextUtils.isEmpty(mEngineFuelRate) ? "" : mEngineFuelRate, R.drawable.icon_engine_rate));
         data.add(new OBDTripEntity("控制模块电源", TextUtils.isEmpty(mControlModuleVoltage) ? "" : mControlModuleVoltage, R.drawable.icon_control_model_voltage));
         data.add(new OBDTripEntity("代码清除后的距离", TextUtils.isEmpty(getmDistanceTraveledAfterCodesCleared()) ? "" : getmDistanceTraveledAfterCodesCleared(), R.drawable.icon_distance_code_clear));
         data.add(new OBDTripEntity("指令当量比", TextUtils.isEmpty(mEquivRatio) ? "" : mEquivRatio, R.drawable.icon_equiev_tatio));
         data.add(new OBDTripEntity("故障诊断码", TextUtils.isEmpty(mDtcNumber) ? "" : mDtcNumber, R.drawable.icon_dtc_number));
         data.add(new OBDTripEntity("定时提前", TextUtils.isEmpty(mTimingAdvance) ? "" : mTimingAdvance, R.drawable.icon_timing_advance));
         data.add(new OBDTripEntity("燃油消耗率", TextUtils.isEmpty(mFuelConsumptionRate) ? "" : mFuelConsumptionRate , R.drawable.icon_ryxhl));
-        data.add(new OBDTripEntity("燃油系统状态", TextUtils.isEmpty(mFuelSystemStatus) ? "" : mFuelSystemStatus, R.drawable.icon_system_tats));
+        data.add(new OBDTripEntity("燃油系统状态", mFuelSystemStatus, R.drawable.icon_system_tats));
         data.add(new OBDTripEntity("燃料类型", mFuelTypeValue + "", R.drawable.icon_fuel_type_record));
         data.add(new OBDTripEntity("燃油油位", TextUtils.isEmpty(mFuelLevel) ? "" : mFuelLevel, R.drawable.icon_fuel_level));
         data.add(new OBDTripEntity("永久性故障代码", TextUtils.isEmpty(mPermanentTroubleCode) ? "" : mPermanentTroubleCode, R.drawable.icon_troublecode_three));
         data.add(new OBDTripEntity("未决故障代码", TextUtils.isEmpty(mPendingTroubleCode) ? "" : mPendingTroubleCode, R.drawable.icon_troublecode_two));
         data.add(new OBDTripEntity("故障代码", TextUtils.isEmpty(mFaultCodes) ? "" : mFaultCodes, R.drawable.icon_troublecode_one));
-        data.add(new OBDTripEntity("节气门位置", TextUtils.isEmpty(mRelThottlePos) ? "" : mRelThottlePos + "%", R.drawable.icon_jqmwz));
+        data.add(new OBDTripEntity("节气门位置", TextUtils.isEmpty(mThrottlePos) ? "" : mThrottlePos , R.drawable.icon_jqmwz));
         data.add(new OBDTripEntity("空气质量流量", mMassAirFlow + "", R.drawable.icon_kqzlll));
         data.add(new OBDTripEntity("引擎运行时间", TextUtils.isEmpty(engineRuntime) ? "" : engineRuntime, R.drawable.icon_engine_time));
         data.add(new OBDTripEntity("发动机负荷", TextUtils.isEmpty(mEngineLoad) ? "" : mEngineLoad, R.drawable.icon_fdjfh));
         data.add(new OBDTripEntity("进气歧管压力", mIntakePressure + " kpa", R.drawable.icon_intake_pressure));
-        data.add(new OBDTripEntity("燃油压力", TextUtils.isEmpty(mFuelPressure) ? "" : mFuelPressure + " kPa", R.drawable.icon_ryyl));
+        data.add(new OBDTripEntity("燃油压力", TextUtils.isEmpty(mFuelPressure) ? "" : mFuelPressure, R.drawable.icon_ryyl));
         data.add(new OBDTripEntity("大气压", TextUtils.isEmpty(mBarometricPressure) ? "" : mBarometricPressure, R.drawable.icon_dqy));
         data.add(new OBDTripEntity("发动机冷却液温度", TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp + " C", R.drawable.icon_fdjlqywd));
         data.add(new OBDTripEntity("环境空气温度", TextUtils.isEmpty(mAmbientAirTemp) ? "" : mAmbientAirTemp + " C", R.drawable.icon_hjkqwd));
@@ -755,7 +754,7 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
         entity.setDrivingMaf(mDrivingMaf + " g/s");
         entity.setDtcNumber(TextUtils.isEmpty(mDtcNumber) ? "" : mDtcNumber);
         entity.setEngineCoolantTemp(TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp);
-        entity.setEngineFuelRate(TextUtils.isEmpty(mEngineFuelRate) ? "" : mEngineFuelRate);
+        //entity.setEngineFuelRate(TextUtils.isEmpty(mEngineFuelRate) ? "" : mEngineFuelRate);
         entity.setEngineLoad(TextUtils.isEmpty(mEngineLoad) ? "" : mEngineLoad);
         entity.setEngineOilTemp(TextUtils.isEmpty(mEngineOilTemp) ? "" : mEngineOilTemp);
         entity.setEquivRatio(TextUtils.isEmpty(mEquivRatio) ? "" : mEquivRatio);
@@ -765,7 +764,7 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
         entity.setFuelPressure(TextUtils.isEmpty(mFuelPressure) ? "" : mFuelPressure);
         entity.setFuelRailPressure(TextUtils.isEmpty(mFuelRailPressure) ? "" : mFuelRailPressure);
         entity.setFuelRailPressurevacuum(TextUtils.isEmpty(mFuelRailPressurevacuum) ? "" : mFuelRailPressurevacuum);
-        entity.setFuelSystemStatus(TextUtils.isEmpty(mFuelSystemStatus) ? "" : mFuelSystemStatus);
+        entity.setFuelSystemStatus(mFuelSystemStatus);
         entity.setFuelTypeValue(String.valueOf(mFuelTypeValue));
         entity.setIdleMaf(mIdleMaf + " g/s");
         entity.setIdlingFuelConsumption(getmIdlingFuelConsumption() + " L");
@@ -778,7 +777,7 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
         entity.setPermanentTroubleCode(TextUtils.isEmpty(mPermanentTroubleCode) ? "" : mPermanentTroubleCode);
         entity.setRapidAccTimes(mRapidAccTimes + "");
         entity.setRapidDeclTimes(mRapidDeclTimes + "");
-        entity.setRelThottlePos(TextUtils.isEmpty(mRelThottlePos) ? "" : mRelThottlePos);
+        entity.setRelThottlePos(TextUtils.isEmpty(mThrottlePos) ? "" : mThrottlePos);
         entity.setTimingAdvance(TextUtils.isEmpty(mTimingAdvance) ? "" : mTimingAdvance);
         entity.setVehicleIdentificationNumber(TextUtils.isEmpty(mVehicleIdentificationNumber) ? "" : mVehicleIdentificationNumber);
         entity.setWideBandAirFuelRatio(TextUtils.isEmpty(mWideBandAirFuelRatio) ? "" : mWideBandAirFuelRatio);

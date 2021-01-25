@@ -150,6 +150,7 @@ public class HomeFragment extends BaseFragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recycleContent.setLayoutManager(layoutManager);
         recordAdapter = new TestRecordAdapter(context);
+        recordAdapter.setToken(getToken());
         getTestRecordPageList(getToken(), String.valueOf(1), String.valueOf(2), getUserId());
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -235,7 +236,11 @@ public class HomeFragment extends BaseFragment {
                     if (!TextUtils.isEmpty(entity.getData().getLogo())) {
                         Glide.with(context).load(SERVER_URL + entity.getData().getLogo()).into(ivCarLogo);
                     }
-                    deviceAddress=entity.getData().getBluetoothDeviceNumber();
+                    deviceAddress = entity.getData().getBluetoothDeviceNumber();
+                    if (!TextUtils.isEmpty(deviceAddress)) {
+                        dialogUtils.showProgressDialog("正在连接OBD");
+                        connectBtDevice(deviceAddress);
+                    }
                     if (entity.getData().getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
                         tvHomeObdTip.setText("将OBD插入车辆并连接");
                         Drawable drawable = context.getResources().getDrawable(R.drawable.icon_no);
@@ -316,13 +321,13 @@ public class HomeFragment extends BaseFragment {
                 (dialog, which) -> {
                     if (yourChoice != -1) {
                         dialogUtils.showProgressDialog("正在连接OBD");
-                        isConnected= devicesList.get(yourChoice).getAddress().equals(deviceAddress);
+                        isConnected = devicesList.get(yourChoice).getAddress().equals(deviceAddress);
                         if (!TextUtils.isEmpty(devicesList.get(yourChoice).getAddress())) {
-                            if (isConnected){
+                            if (isConnected) {
                                 connectBtDevice(devicesList.get(yourChoice).getAddress());
-                            }else {
+                            } else {
                                 dialogUtils.dismiss();
-                                showTipDialog("当前车辆绑定OBD设备,与连接的OBD设备不一致",TipDialog.TYPE_WARNING);
+                                showTipDialog("当前车辆绑定OBD设备,与连接的OBD设备不一致", TipDialog.TYPE_WARNING);
                                 //showToast("当前车辆绑定OBD设备,与连接的OBD设备不一致");
                             }
 
@@ -383,7 +388,7 @@ public class HomeFragment extends BaseFragment {
                 startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
             }
         }
-        setDefaultMode();
+        //setDefaultMode();
     }
 
     /**

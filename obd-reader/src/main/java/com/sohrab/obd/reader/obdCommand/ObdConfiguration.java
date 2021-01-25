@@ -17,6 +17,7 @@ import com.sohrab.obd.reader.obdCommand.control.TimingAdvanceCommand;
 import com.sohrab.obd.reader.obdCommand.control.TroubleCodesCommand;
 import com.sohrab.obd.reader.obdCommand.control.VinCommand;
 import com.sohrab.obd.reader.obdCommand.engine.AbsoluteLoadCommand;
+import com.sohrab.obd.reader.obdCommand.engine.EngineFuelRateCommand;
 import com.sohrab.obd.reader.obdCommand.engine.LoadCommand;
 import com.sohrab.obd.reader.obdCommand.engine.MassAirFlowCommand;
 import com.sohrab.obd.reader.obdCommand.engine.OilTempCommand;
@@ -119,6 +120,7 @@ public class ObdConfiguration {
         mObdCommands.add(new LoadCommand());//"01 04"
         mObdCommands.add(new OilTempCommand());//"01 5C"
         mObdCommands.add(new ThrottlePositionCommand());//"01 11"
+        //mObdCommands.add(new EngineFuelRateCommand());//"01 5E"
 
         //protocol
         mObdCommands.add(new DescribeProtocolCommand());//"AT DP"

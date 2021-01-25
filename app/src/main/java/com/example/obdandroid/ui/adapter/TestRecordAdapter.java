@@ -2,6 +2,7 @@ package com.example.obdandroid.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.nfc.Tag;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.JsonReader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
+import com.example.obdandroid.config.TAG;
 import com.example.obdandroid.ui.entity.TestRecordEntity;
 import com.example.obdandroid.ui.view.progressButton.CircularProgressButton;
 import com.example.obdandroid.utils.DensityUtil;
@@ -40,10 +43,15 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final int EMPTY_VIEW = 0;//空页面
     private final int NOT_EMPTY_VIEW = 1;//正常页面
     private Context context;
+    private String token;
 
     public TestRecordAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public void setClickCallBack(OnClickCallBack clickCallBack) {
@@ -122,7 +130,13 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public void setPosition(int position) {
             timeData = list.get(position);
             tripEntity = JSON.parseObject(timeData.getTestData(), OBDJsonTripEntity.class);
-            int size = tripEntity.getFaultCodes().replaceAll("\r|\n", ",").split(",").length;
+            Log.e(TAG.TAG_Fragemnt, "错误码:" + tripEntity.getFaultCodes());
+            int size;
+            if (!TextUtils.isEmpty(tripEntity.getFaultCodes())) {
+                size = tripEntity.getFaultCodes().replaceAll("\r|\n", ",").split(",").length;
+            } else {
+                size = 0;
+            }
             //时间轴竖线的layoutParams,用来动态的添加竖线
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) vLine.getLayoutParams();
             //position等于0的处理
@@ -131,7 +145,12 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 layoutParams.setMargins(DensityUtil.dip2px(vLine.getContext(), 20), DensityUtil.dip2px(vLine.getContext(), 15), 0, 0);
                 rlTitle.setVisibility(View.VISIBLE);
                 txtDateTime.setText(timeData.getDetectionTime());
-                txt_date_size.setText("发现" + size + "个故障码");
+                if (size > 0) {
+                    txt_date_size.setText("发现" + size + "个故障码");
+                } else {
+                    txt_date_size.setText("未发现故障码");
+                    txt_date_size.setTextColor(context.getResources().getColor(R.color.gray));
+                }
                 layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.rl_title);
                 layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.recycleContent);
             } else if (position < list.size() - 1) {
@@ -150,7 +169,12 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     layoutParams.setMargins(DensityUtil.dip2px(vLine.getContext(), 20), DensityUtil.dip2px(vLine.getContext(), 0), 0, 0);
                     rlTitle.setVisibility(View.VISIBLE);
                     txtDateTime.setText(timeData.getDetectionTime());
-                    txt_date_size.setText("发现" + size + "个故障码");
+                    if (size > 0) {
+                        txt_date_size.setText("发现" + size + "个故障码");
+                    } else {
+                        txt_date_size.setText("未发现故障码");
+                        txt_date_size.setTextColor(context.getResources().getColor(R.color.gray));
+                    }
                     layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.rl_title);
                     layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.recycleContent);
                 }
@@ -158,13 +182,23 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (!timeData.getDetectionTime().equals(list.get(position - 1).getDetectionTime())) {
                     rlTitle.setVisibility(View.VISIBLE);
                     txtDateTime.setText(timeData.getDetectionTime());
-                    txt_date_size.setText("发现" + size + "个故障码");
+                    if (size > 0) {
+                        txt_date_size.setText("发现" + size + "个故障码");
+                    } else {
+                        txt_date_size.setText("未发现故障码");
+                        txt_date_size.setTextColor(context.getResources().getColor(R.color.gray));
+                    }
                     layoutParams.setMargins(DensityUtil.dip2px(vLine.getContext(), 20), DensityUtil.dip2px(vLine.getContext(), 0), 0, 0);
                     layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.rl_title);
                 } else {
                     rlTitle.setVisibility(View.GONE);
                     txtDateTime.setText(timeData.getDetectionTime());
-                    txt_date_size.setText("发现" + size + "个故障码");
+                    if (size > 0) {
+                        txt_date_size.setText("发现" + size + "个故障码");
+                    } else {
+                        txt_date_size.setText("未发现故障码");
+                        txt_date_size.setTextColor(context.getResources().getColor(R.color.gray));
+                    }
                     layoutParams.setMargins(DensityUtil.dip2px(vLine.getContext(), 20), DensityUtil.dip2px(vLine.getContext(), 0), 0, 0);
                     layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.recycleContent);
                 }
@@ -174,8 +208,9 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             LinearLayoutManager manager = new LinearLayoutManager(context);
             manager.setOrientation(OrientationHelper.VERTICAL);
             recycleContent.setLayoutManager(manager);
-            CheckRecorderAdapter adapter=new CheckRecorderAdapter(context);
+            CheckRecorderAdapter adapter = new CheckRecorderAdapter(context);
             adapter.setList(Arrays.asList(tripEntity.getFaultCodes().replaceAll("\r|\n", ",").split(",")));
+            adapter.setToken(token);
             recycleContent.setAdapter(adapter);
             //txt_date_title.setText(timeData.getTestData());
         }

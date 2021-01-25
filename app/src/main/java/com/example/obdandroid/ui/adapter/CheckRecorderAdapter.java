@@ -3,6 +3,8 @@ package com.example.obdandroid.ui.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +12,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.obdandroid.R;
+import com.example.obdandroid.config.TAG;
 import com.example.obdandroid.ui.entity.CarModelEntity;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Response;
+
+import static com.example.obdandroid.config.APIConfig.FAULT_CODE_URL;
+import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 
 /**
  * 作者：Jealous
@@ -25,10 +36,15 @@ public class CheckRecorderAdapter extends RecyclerView.Adapter<RecyclerView.View
     private List<String> list;
     private final int EMPTY_VIEW = 0;//空页面
     private final int NOT_EMPTY_VIEW = 1;//正常页面
+    private String token;
 
     public CheckRecorderAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public void setList(List<String> list) {
@@ -52,7 +68,15 @@ public class CheckRecorderAdapter extends RecyclerView.Adapter<RecyclerView.View
             viewHolder.mEmptyTextView.setText("暂无数据");
         } else if (NOT_EMPTY_VIEW == itemViewType) {
             final MyViewHolder holder1 = (MyViewHolder) holder;
-            holder1.tvCode.setText("故障码:"+list.get(position));
+            if (!TextUtils.isEmpty(list.get(position))) {
+                holder1.tvCode.setText("故障码:" + list.get(position));
+                holder1.tvContent.setTextColor(context.getResources().getColor(R.color.gray_light_d));
+                getFaultCodeDetails(list.get(position), token, holder1.tvContent);
+            } else {
+                holder1.tvCode.setVisibility(View.GONE);
+                holder1.tvContent.setText("通过检测,无故障码,您的车辆很健康!");
+                holder1.tvContent.setTextColor(context.getResources().getColor(R.color.color_green));
+            }
             //holder1.card_view.setOnClickListener(v -> clickCallBack.Click(list.get(position)));
         }
     }
@@ -104,5 +128,29 @@ public class CheckRecorderAdapter extends RecyclerView.Adapter<RecyclerView.View
             super(itemView);
             mEmptyTextView = itemView.findViewById(R.id.tv_empty_text);
         }
+    }
+
+    /**
+     * @param faultCode OBD汽车故障码
+     * @param token     接口令牌
+     *                  查询故障码
+     */
+    private void getFaultCodeDetails(String faultCode, String token, TextView textView) {
+        OkHttpUtils.get().
+                url(SERVER_URL + FAULT_CODE_URL).
+                addParam("token", token).
+                addParam("faultCode", faultCode).
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                Log.e(TAG.TAG_Fragemnt, "查询故障码:" + response);
+                textView.setText(response);
+            }
+        });
     }
 }

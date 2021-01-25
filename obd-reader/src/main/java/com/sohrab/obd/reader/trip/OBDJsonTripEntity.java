@@ -31,7 +31,6 @@ public class OBDJsonTripEntity {
     private String VehicleIdentificationNumber;
     private String FuelRailPressurevacuum;
     private String FuelRailPressure;
-    private String EngineFuelRate;
     private String ControlModuleVoltage;
     private String DistanceTraveledAfterCodesCleared;
     private String EquivRatio;
@@ -253,14 +252,6 @@ public class OBDJsonTripEntity {
 
     public void setFuelRailPressure(String fuelRailPressure) {
         FuelRailPressure = fuelRailPressure;
-    }
-
-    public String getEngineFuelRate() {
-        return EngineFuelRate;
-    }
-
-    public void setEngineFuelRate(String engineFuelRate) {
-        EngineFuelRate = engineFuelRate;
     }
 
     public String getControlModuleVoltage() {

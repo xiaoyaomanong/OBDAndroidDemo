@@ -21,13 +21,13 @@ import com.example.obdandroid.R;
  * Created by woxingxiao on 2016-11-19.
  */
 
-public class DashboardView1 extends View {
+public class CustomerDashboardView extends View {
 
     private int mRadius; // 扇形半径
     private int mStartAngle = 180; // 起始角度
     private int mSweepAngle = 180; // 绘制角度
-    private int mMin = 0; // 最小值
-    private int mMax = 100; // 最大值
+    private int mMin = -40; // 最小值
+    private int mMax = 160; // 最大值
     private int mSection = 10; // 值域（mMax-mMin）等分份数
     private int mPortion = 10; // 一个mSection等分份数
     private String mHeaderText = "℃"; // 表头
@@ -48,15 +48,15 @@ public class DashboardView1 extends View {
     private Rect mRectText;
     private String[] mTexts;
 
-    public DashboardView1(Context context) {
+    public CustomerDashboardView(Context context) {
         this(context, null);
     }
 
-    public DashboardView1(Context context, AttributeSet attrs) {
+    public CustomerDashboardView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public DashboardView1(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CustomerDashboardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         init();
@@ -139,7 +139,7 @@ public class DashboardView1 extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
+        //canvas.drawColor(ContextCompat.getColor(getContext(), R.color.red));
         /**
          * 画圆弧
          */
@@ -297,6 +297,18 @@ public class DashboardView1 extends View {
         }
 
         return point;
+    }
+
+    public void setmMin(int mMin) {
+        this.mMin = mMin;
+    }
+
+    public void setmMax(int mMax) {
+        this.mMax = mMax;
+    }
+
+    public void setmHeaderText(String mHeaderText) {
+        this.mHeaderText = mHeaderText;
     }
 
     public int getRealTimeValue() {

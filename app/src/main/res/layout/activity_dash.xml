@@ -1,68 +1,280 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_080707"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <com.example.obdandroid.ui.view.dashView.DashboardView
-        android:id="@+id/dashboard_view_2"
+    <com.hjq.bar.TitleBar
+        android:id="@+id/titleBarSet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:arcColor="@color/blue"
-        app:bgColor="@color/color_2c2c2c"
-        app:bigSliceCount="8"
-        app:headerRadius="50dp"
-        app:headerTitle="km/h"
-        app:maxValue="240"
-        app:measureTextSize="10sp"
-        app:radius="110dp"
-        app:realTimeValue="120"
-        app:startAngle="170"
-        app:stripeMode="outer"
-        app:stripeWidth="30dp"
-        app:sweepAngle="200"
-        app:textColor="@color/white" />
+        app:barStyle="night"
+        app:lineVisible="false"
+        app:title="@string/mydash" />
 
-    <com.example.obdandroid.ui.view.dashView.DashboardView
-        android:id="@+id/dashboard_view_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:arcColor="@color/blue"
-        app:bgColor="@color/color_2c2c2c"
-        app:bigSliceCount="8"
-        app:headerRadius="50dp"
-        app:headerTitle="rpmx1000"
-        app:maxValue="8"
-        app:measureTextSize="10sp"
-        app:radius="110dp"
-        app:realTimeValue="120"
-        app:startAngle="170"
-        app:stripeMode="outer"
-        app:stripeWidth="30dp"
-        app:sweepAngle="200"
-        app:textColor="@color/white" />
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
 
-    <com.example.obdandroid.ui.view.dashView.DashboardView
-        android:id="@+id/dashboard_view_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:arcColor="@color/blue"
-        app:bgColor="@color/color_2c2c2c"
-        app:bigSliceCount="8"
-        app:headerRadius="50dp"
-        app:headerTitle="kW"
-        app:maxValue="180"
-        app:minValue="-60"
-        app:measureTextSize="10sp"
-        app:radius="110dp"
-        app:realTimeValue="120"
-        app:startAngle="180"
-        app:stripeMode="outer"
-        app:stripeWidth="30dp"
-        app:sweepAngle="179"
-        app:textColor="@color/white" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_dash"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginEnd="40dp"
+                    android:background="@drawable/bg_dash_title"
+                    android:gravity="center"
+                    android:text="车身状态仪表"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    tools:ignore="DisableBaselineAlignment">
+
+
+                    <include layout="@layout/layout_dash_one" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="220dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.example.obdandroid.ui.view.PhilText
+                            android:id="@+id/tvmInsFuelConsumption"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/calibri"
+                            android:gravity="center"
+                            android:text="360"
+                            android:textColor="@color/white"
+                            android:textSize="60sp"
+                            tools:ignore="NestedWeights" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:fontFamily="@font/gotham"
+                            android:gravity="center"
+                            android:text="@string/mInsFuelConsumption"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_16" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <com.example.obdandroid.ui.view.PhilText
+                            android:id="@+id/tvmOdometer"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:fontFamily="@font/calibri"
+                            android:gravity="center"
+                            android:text="360"
+                            android:textColor="@color/white"
+                            android:textSize="30sp"
+                            tools:ignore="NestedWeights" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:fontFamily="@font/gotham"
+                            android:gravity="center"
+                            android:text="@string/mOdometer"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_13sp" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="0.5dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:background="@color/white"
+                        tools:ignore="Suspicious0dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <com.example.obdandroid.ui.view.PhilText
+                            android:id="@+id/tvDrivingDuration"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:fontFamily="@font/calibri"
+                            android:gravity="center"
+                            android:text="360"
+                            android:textColor="@color/white"
+                            android:textSize="30sp"
+                            tools:ignore="NestedWeights" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:fontFamily="@font/gotham"
+                            android:gravity="center"
+                            android:text="@string/DrivingDuration"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_13sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
+                        android:id="@+id/dashSpeed"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center"
+                        android:text="@string/dashSpeed"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_16" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
+                        android:id="@+id/dashRPM"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center"
+                        android:text="@string/dashRPM"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_16" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
+                        android:id="@+id/dashInsFuelConsumption"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center"
+                        android:text="@string/InsFuelConsumption"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_16" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
+                        android:id="@+id/dashEngineCoolantTemp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center"
+                        android:text="@string/mEngineCoolantTemp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_16" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
 
 </LinearLayout>

@@ -160,6 +160,7 @@
         <activity android:name=".ui.activity.ModifyVehicleActivity" />
         <activity android:name=".ui.activity.RechargeRecordActivity" />
         <activity android:name=".ui.activity.FeedbackActivity" />
+        <activity android:name=".ui.activity.MyVehicleDash" />
 
     </application>
 

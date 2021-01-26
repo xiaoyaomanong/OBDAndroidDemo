@@ -78,12 +78,14 @@ public class TripRecord implements DefineObdReader, Serializable {
     private final static String DESCRIBE_PROTOCOL_NUMBER = "Describe protocol number";
     private final static String IGNITION_MONITOR = "Ignition monitor";
     private final static String Commanded_EGR = "Commanded EGR";
+    private final static String ODOMETER = "Odometer";
 
     private Integer engineRpmMax = 0;
     private String engineRpm;
     private Integer speed = -1;
     private Integer speedMax = 0;
     private String engineRuntime;
+    private String mOdometer;
     private static TripRecord sInstance;
     private long tripStartTime;
     private float idlingDuration;
@@ -247,6 +249,10 @@ public class TripRecord implements DefineObdReader, Serializable {
         return mDistanceTravel;
     }
 
+    public String getmOdometer() {
+        return mOdometer;
+    }
+
     public int getmRapidAccTimes() {
         return mRapidAccTimes;
     }
@@ -375,7 +381,9 @@ public class TripRecord implements DefineObdReader, Serializable {
             case TROUBLE_CODES:
                 mFaultCodes = command.getFormattedResult();
                 break;
-
+            case ODOMETER:
+                mOdometer = command.getFormattedResult();
+                break;
             case AMBIENT_AIR_TEMP:
                 mAmbientAirTemp = command.getFormattedResult();
                 break;
@@ -710,15 +718,15 @@ public class TripRecord implements DefineObdReader, Serializable {
         data.add(new OBDTripEntity("绝对负荷", TextUtils.isEmpty(mAbsLoad) ? "" : mAbsLoad, R.drawable.icon_abs));
         data.add(new OBDTripEntity("MIL开时行驶的距离", TextUtils.isEmpty(mDistanceTraveledMilOn) ? "" : mDistanceTraveledMilOn, R.drawable.icon_mil_jl));
         data.add(new OBDTripEntity("车辆识别号（VIN）", TextUtils.isEmpty(mVehicleIdentificationNumber) ? "" : mVehicleIdentificationNumber, R.drawable.icon_vin));
-        data.add(new OBDTripEntity("相对于歧管真空的燃油分供管压力", TextUtils.isEmpty(mFuelRailPressurevacuum) ? "" : mFuelRailPressurevacuum , R.drawable.icon_fyg_yl));
-        data.add(new OBDTripEntity("燃油分供管压力", TextUtils.isEmpty(mFuelRailPressure) ? "" : mFuelRailPressure , R.drawable.icon_fule_rail_pressure));
+        data.add(new OBDTripEntity("相对于歧管真空的燃油分供管压力", TextUtils.isEmpty(mFuelRailPressurevacuum) ? "" : mFuelRailPressurevacuum, R.drawable.icon_fyg_yl));
+        data.add(new OBDTripEntity("燃油分供管压力", TextUtils.isEmpty(mFuelRailPressure) ? "" : mFuelRailPressure, R.drawable.icon_fule_rail_pressure));
         data.add(new OBDTripEntity("发动机燃油率", TextUtils.isEmpty(mEngineFuelRate) ? "" : mEngineFuelRate, R.drawable.icon_engine_rate));
         data.add(new OBDTripEntity("控制模块电源", TextUtils.isEmpty(mControlModuleVoltage) ? "" : mControlModuleVoltage, R.drawable.icon_control_model_voltage));
         data.add(new OBDTripEntity("代码清除后的距离", TextUtils.isEmpty(getmDistanceTraveledAfterCodesCleared()) ? "" : getmDistanceTraveledAfterCodesCleared(), R.drawable.icon_distance_code_clear));
         data.add(new OBDTripEntity("指令当量比", TextUtils.isEmpty(mEquivRatio) ? "" : mEquivRatio, R.drawable.icon_equiev_tatio));
         data.add(new OBDTripEntity("故障诊断码", TextUtils.isEmpty(mDtcNumber) ? "" : mDtcNumber, R.drawable.icon_dtc_number));
         data.add(new OBDTripEntity("定时提前", TextUtils.isEmpty(mTimingAdvance) ? "" : mTimingAdvance, R.drawable.icon_timing_advance));
-        data.add(new OBDTripEntity("燃油消耗率", TextUtils.isEmpty(mFuelConsumptionRate) ? "" : mFuelConsumptionRate , R.drawable.icon_ryxhl));
+        data.add(new OBDTripEntity("燃油消耗率", TextUtils.isEmpty(mFuelConsumptionRate) ? "" : mFuelConsumptionRate, R.drawable.icon_ryxhl));
         data.add(new OBDTripEntity("燃油系统状态", TextUtils.isEmpty(mFuelSystemStatus) ? "" : mFuelSystemStatus, R.drawable.icon_system_tats));
         data.add(new OBDTripEntity("燃料类型", mFuelTypeValue + "", R.drawable.icon_fuel_type_record));
         data.add(new OBDTripEntity("燃油油位", TextUtils.isEmpty(mFuelLevel) ? "" : mFuelLevel, R.drawable.icon_fuel_level));

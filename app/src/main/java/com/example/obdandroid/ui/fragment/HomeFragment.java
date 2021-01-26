@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.ui.activity.BindBluetoothDeviceActivity;
+import com.example.obdandroid.ui.activity.MyVehicleDash;
 import com.example.obdandroid.ui.activity.VehicleInfoActivity;
 import com.example.obdandroid.ui.adapter.HomeAdapter;
 import com.example.obdandroid.ui.adapter.TestRecordAdapter;
@@ -36,6 +37,7 @@ import com.example.obdandroid.ui.entity.UserInfoEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleImageView;
 import com.example.obdandroid.ui.view.PhilText;
+import com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight;
 import com.example.obdandroid.ui.view.dashView.DashboardView;
 import com.example.obdandroid.utils.BitMapUtils;
 import com.example.obdandroid.utils.DialogUtils;
@@ -81,7 +83,7 @@ public class HomeFragment extends BaseFragment {
     private int yourChoice;
     private SPUtil spUtil;
     private PhilText tvHighSpeed;
-    private DashboardView dashSpeed;
+    private CustomerDashboardViewLight dashSpeed;
     private PhilText tvCurrentSpeed;
     private RecyclerView recycleContent;
     private LinearLayout layoutCar;
@@ -90,6 +92,7 @@ public class HomeFragment extends BaseFragment {
     private TextView tvModelName;
     private LinearLayout layoutOBD;
     private LinearLayout layoutAddCar;
+    private TextView layoutMoreDash;
     private TextView tvObd;
     private TextView tvHomeObdTip;
     private static String mConnectedDeviceName = null;
@@ -128,6 +131,7 @@ public class HomeFragment extends BaseFragment {
         tvObd = getView(R.id.tv_obd);
         layoutAddCar = getView(R.id.layoutAddCar);
         tvHomeObdTip = getView(R.id.tv_home_obd_tip);
+        layoutMoreDash = getView(R.id.layoutMoreDash);
         titleBar.setTitle("汽车扫描");
         spUtil = new SPUtil(context);
         dialogUtils = new DialogUtils(context);
@@ -138,6 +142,7 @@ public class HomeFragment extends BaseFragment {
         registerOBDReceiver();
         initReceiver();
         getUserInfo(getUserId(), getToken(), spUtil.getString("vehicleId", ""));
+        setSpeed();
         // 设置数据更新计时器
         GridLayoutManager manager = new GridLayoutManager(context, 5);
         manager.setOrientation(OrientationHelper.VERTICAL);
@@ -152,6 +157,7 @@ public class HomeFragment extends BaseFragment {
         recordAdapter = new TestRecordAdapter(context);
         recordAdapter.setToken(getToken());
         getTestRecordPageList(getToken(), String.valueOf(1), String.valueOf(2), getUserId());
+        layoutMoreDash.setOnClickListener(v -> JumpUtil.startAct(context, MyVehicleDash.class));
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -170,6 +176,15 @@ public class HomeFragment extends BaseFragment {
         });
     }
 
+    /**
+     * 设置车速仪表
+     */
+    private void setSpeed() {
+        dashSpeed.setmHeaderText("km/h");
+        dashSpeed.setmMin(240);
+        dashSpeed.setmMin(0);
+        dashSpeed.setmSection(8);
+    }
 
     /**
      * @param userId 用户id
@@ -481,7 +496,7 @@ public class HomeFragment extends BaseFragment {
                 TripRecord tripRecord = TripRecord.getTripRecode(context);
                 tvHighSpeed.setText(String.valueOf(tripRecord.getSpeedMax()));
                 tvCurrentSpeed.setText(String.valueOf(tripRecord.getSpeed()));
-                dashSpeed.setRealTimeValue(tripRecord.getSpeed());
+                dashSpeed.setVelocity(tripRecord.getSpeed());
             }
         }
     };

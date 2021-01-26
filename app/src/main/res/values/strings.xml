@@ -160,5 +160,14 @@
     <string name="msg_center">消息中心</string>
     <string name="hint_home_obd">设备序列号</string>
     <string name="text_connect_obd">请连接OBD设备,进行检测</string>
+    <string name="mydash">我的仪表盘</string>
+    <string name="mInsFuelConsumption">瞬时油耗 (L/100km)</string>
+    <string name="mOdometer">行驶里程 (km/10)</string>
+    <string name="DrivingDuration">行驶时间 (min)</string>
+    <string name="dashSpeed">车速仪表</string>
+    <string name="dashRPM">发动机转速仪表</string>
+    <string name="mEngineCoolantTemp">冷却液温度</string>
+    <string name="mFuelLevel">燃油表</string>
+    <string name="InsFuelConsumption">瞬时油耗</string>
 
 </resources>

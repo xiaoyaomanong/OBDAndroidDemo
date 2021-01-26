@@ -194,6 +194,7 @@
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/layoutMoreDash"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:drawableEnd="@drawable/icon_next"
@@ -210,29 +211,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-
-                    <com.example.obdandroid.ui.view.dashView.DashboardView
+                    <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
                         android:id="@+id/dashSpeed"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        app:arcColor="@color/white"
-                        app:bigSliceCount="8"
-                        app:headerRadius="50dp"
-                        app:headerTitle="车速km/h"
-                        app:maxValue="240"
-                        app:measureTextSize="10sp"
-                        app:radius="110dp"
-                        app:realTimeValue="0"
-                        app:startAngle="170"
-                        app:stripeMode="outer"
-                        app:stripeWidth="5dp"
-                        app:sweepAngle="200"
-                        app:textColor="@color/white" />
+                        android:layout_margin="5dp"
+                        android:layout_weight="1" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="0.6"
                         android:orientation="vertical">
 
                         <TextView
@@ -281,7 +270,7 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="0.6"
                         android:orientation="vertical">
 
                         <TextView

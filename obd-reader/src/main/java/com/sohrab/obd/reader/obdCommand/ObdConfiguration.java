@@ -11,6 +11,7 @@ import com.sohrab.obd.reader.obdCommand.control.DtcNumberCommand;
 import com.sohrab.obd.reader.obdCommand.control.EquivalentRatioCommand;
 import com.sohrab.obd.reader.obdCommand.control.IgnitionMonitorCommand;
 import com.sohrab.obd.reader.obdCommand.control.ModuleVoltageCommand;
+import com.sohrab.obd.reader.obdCommand.control.OdometerCommand;
 import com.sohrab.obd.reader.obdCommand.control.PendingTroubleCodesCommand;
 import com.sohrab.obd.reader.obdCommand.control.PermanentTroubleCodesCommand;
 import com.sohrab.obd.reader.obdCommand.control.TimingAdvanceCommand;
@@ -59,12 +60,10 @@ public class ObdConfiguration {
     }
 
     public static void setmObdCommands(Context context, ArrayList<ObdCommand> obdCommands) {
-
         if (mObdCommands == null) {
             mObdCommands = obdCommands;
             return;
         }
-
         Toast.makeText(context, "无法在ObdReaderService启动后添加命令!", Toast.LENGTH_SHORT).show();
     }
 
@@ -100,6 +99,7 @@ public class ObdConfiguration {
         mObdCommands.add(new AirFuelRatioCommand());//"01 44"
         mObdCommands.add(new WidebandAirFuelRatioCommand());//"01 34"
         mObdCommands.add(new FuelSystemStatusCommand());//"01 03"
+        mObdCommands.add(new OdometerCommand());//"01 A6"
 
         //control
         mObdCommands.add(new DistanceMILOnCommand());//"01 21"故障指示灯（MIL）亮时行驶的距离

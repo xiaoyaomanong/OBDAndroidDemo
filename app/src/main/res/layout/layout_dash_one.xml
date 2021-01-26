@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="0dp"
+    android:layout_height="220dp"
+    android:layout_marginStart="15dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginBottom="25dp"
+    android:layout_weight="1"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:padding="3dp"
+            android:src="@drawable/icon_control_model_voltage"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tvmControlModuleVoltage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:hint="控制模组电压"
+            android:paddingStart="15dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/gray"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:padding="3dp"
+            android:src="@drawable/icon_fuel_level" />
+
+        <TextView
+            android:id="@+id/tvmFuelLevel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:hint="燃油油位"
+            android:paddingStart="15dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/gray"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:padding="3dp"
+            android:src="@drawable/icon_kqzlll"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tvmMassAirFlow"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:hint="空气质量流量"
+            android:paddingStart="15dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/gray"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:padding="3dp"
+            android:src="@drawable/icon_krb"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tvmAirFuelRatio"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:hint="空燃比"
+            android:paddingStart="15dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/gray"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:padding="3dp"
+            android:src="@drawable/icon_hjkqwd"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tvmAmbientAirTemp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:hint="环境空气温度"
+            android:paddingStart="15dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/gray"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+</LinearLayout>

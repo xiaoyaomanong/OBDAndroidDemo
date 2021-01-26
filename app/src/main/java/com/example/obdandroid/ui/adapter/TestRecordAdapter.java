@@ -212,7 +212,6 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             adapter.setList(Arrays.asList(tripEntity.getFaultCodes().replaceAll("\r|\n", ",").split(",")));
             adapter.setToken(token);
             recycleContent.setAdapter(adapter);
-            //txt_date_title.setText(timeData.getTestData());
         }
     }
 

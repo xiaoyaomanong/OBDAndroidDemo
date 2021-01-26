@@ -21,17 +21,16 @@ import com.example.obdandroid.R;
  * DashboardView style 4，仿汽车速度仪表盘
  * Created by woxingxiao on 2016-12-19.
  */
-public class DashboardView4 extends View {
-
+public class CustomerDashboardViewLight extends View {
     private int mRadius; // 扇形半径
     private int mStartAngle = 150; // 起始角度
     private int mSweepAngle = 240; // 绘制角度
     private int mMin = 0; // 最小值
-    private int mMax = 180; // 最大值
-    private int mSection = 9; // 值域（mMax-mMin）等分份数
+    private int mMax = 240; // 最大值
+    private int mSection = 8; // 值域（mMax-mMin）等分份数
     private int mPortion = 2; // 一个mSection等分份数
     private String mHeaderText = "km/h"; // 表头
-    private int mVelocity = mMin; // 实时速度
+    private int mVelocity = 0; // 实时速度
     private int mStrokeWidth; // 画笔宽度
     private int mLength1; // 长刻度的相对圆弧的长度
     private int mLength2; // 刻度读数顶部的相对圆弧的长度
@@ -39,6 +38,7 @@ public class DashboardView4 extends View {
     private int mPSRadius; // 指针短半径
 
     private int mPadding;
+    private int backgroudColor = R.color.color_2C2B30;
     private float mCenterX, mCenterY; // 圆心坐标
     private Paint mPaint;
     private RectF mRectFArc;
@@ -57,23 +57,23 @@ public class DashboardView4 extends View {
     private static final int DEFAULT_COLOR_HIGH = Color.RED;
     private static final int DEAFAULT_COLOR_TITLE = Color.BLACK;
 
-    public DashboardView4(Context context) {
+    public CustomerDashboardViewLight(Context context) {
         this(context, null);
     }
 
-    public DashboardView4(Context context, AttributeSet attrs) {
+    public CustomerDashboardViewLight(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public DashboardView4(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CustomerDashboardViewLight(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        initSizes();
     }
 
-    private void init() {
-        mStrokeWidth = dp2px(3);
+    private void initSizes() {
+        mStrokeWidth = dp2px(1);
         mLength1 = dp2px(8) + mStrokeWidth;
-        mLength2 = mLength1 + dp2px(4);
+        mLength2 = mLength1 + dp2px(2);
 
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -83,10 +83,10 @@ public class DashboardView4 extends View {
         mRectFInnerArc = new RectF();
         mRectText = new Rect();
 
-        mTexts = new String[mSection + 1]; // 需要显示mSection + 1个刻度读数
+        mTexts = new String[getmSection() + 1]; // 需要显示mSection + 1个刻度读数
         for (int i = 0; i < mTexts.length; i++) {
-            int n = (mMax - mMin) / mSection;
-            mTexts[i] = String.valueOf(mMin + i * n);
+            int n = (getmMax() - getmMin()) / getmSection();
+            mTexts[i] = String.valueOf(getmMin() + i * n);
         }
 
         mColors = new int[]{ContextCompat.getColor(getContext(), R.color.color_green),
@@ -113,7 +113,8 @@ public class DashboardView4 extends View {
         float[] point2 = getCoordinatePoint(mRadius, mStartAngle + mSweepAngle);
         int height = (int) Math.max(point1[1] + mRadius + mStrokeWidth * 2,
                 point2[1] + mRadius + mStrokeWidth * 2);
-        setMeasuredDimension(width, height + getPaddingTop() + getPaddingBottom());
+
+        setMeasuredDimension(width, width);
 
         mCenterX = mCenterY = getMeasuredWidth() / 2f;
         mRectFArc.set(
@@ -123,7 +124,7 @@ public class DashboardView4 extends View {
                 getMeasuredWidth() - getPaddingBottom() - mStrokeWidth
         );
 
-        mPaint.setTextSize(sp2px(16));
+        mPaint.setTextSize(sp2px(12));
         mPaint.getTextBounds("0", 0, "0".length(), mRectText);
         mRectFInnerArc.set(
                 getPaddingLeft() + mLength2 + mRectText.height() + dp2px(30),
@@ -140,15 +141,12 @@ public class DashboardView4 extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawColor(ContextCompat.getColor(getContext(), R.color.color_dark));
+        //canvas.drawColor(ContextCompat.getColor(getContext(), getBackgroudColor()));
         /**
          * 画圆弧
          */
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(mStrokeWidth);
-       /* mPaint.setColor(ContextCompat.getColor(getContext(), R.color.color_light));
-        canvas.drawArc(mRectFArc, mStartAngle, mSweepAngle, false, mPaint);*/
-       // canvas.translate(getPaddingLeft()  ,getPaddingTop() + DEFAULT_RADIUS_DIAL);
         mPaint.setColor(DEFAULT_COLOR_LOWER);
         canvas.drawArc(mRectFArc, 135, 54, false, mPaint);
         mPaint.setColor(DEFAULT_COLOR_MIDDLE);
@@ -169,49 +167,29 @@ public class DashboardView4 extends View {
 
         canvas.save();
         canvas.drawLine(x0, y0, x1, y1, mPaint);
-        float angle = mSweepAngle * 1f / mSection;
-        for (int i = 0; i < mSection; i++) {
+        float  angle = mSweepAngle * 1f / (getmSection() * mPortion);
+        for (int i = 0; i < getmSection() * mPortion; i++) {
             canvas.rotate(angle, mCenterX, mCenterY);
             if (i <= 3) {
                 mPaint.setColor(DEFAULT_COLOR_LOWER);
             } else if (i <= 8) {
                 mPaint.setColor(DEFAULT_COLOR_MIDDLE);
             } else {
-                mPaint.setColor(DEFAULT_COLOR_HIGH);
+                mPaint.setColor(DEFAULT_COLOR_MIDDLE);
             }
             canvas.drawLine(x0, y0, x1, y1, mPaint);
-
         }
         canvas.restore();
-
-    /*    *//**
-         * 画短刻度
-         * 同样采用canvas的旋转原理
-         *//*
-        canvas.save();
-        mPaint.setStrokeWidth(mStrokeWidth / 2f);
-        float x2 = (float) (mPadding + mStrokeWidth + mRadius - (mRadius - 2 * mLength1 / 3f) * cos);
-        float y2 = (float) (mPadding + mStrokeWidth + mRadius - (mRadius - 2 * mLength1 / 3f) * sin);
-        canvas.drawLine(x0, y0, x2, y2, mPaint);
-        angle = mSweepAngle * 1f / (mSection * mPortion);
-        for (int i = 1; i < mSection * mPortion; i++) {
-            canvas.rotate(angle, mCenterX, mCenterY);
-            if (i % mPortion == 0) { // 避免与长刻度画重合
-                continue;
-            }
-            canvas.drawLine(x0, y0, x2, y2, mPaint);
-        }
-        canvas.restore();*/
 
         /**
          * 画长刻度读数
          */
-        mPaint.setTextSize(sp2px(16));
+        mPaint.setTextSize(sp2px(12));
         mPaint.setStyle(Paint.Style.FILL);
         float α;
         float[] p;
-        angle = mSweepAngle * 1f / mSection;
-        for (int i = 0; i <= mSection; i++) {
+        angle = mSweepAngle * 1f / getmSection();
+        for (int i = 0; i <= getmSection(); i++) {
             α = mStartAngle + angle * i;
             p = getCoordinatePoint(mRadius - mLength2, α);
             if (α % 360 > 135 && α % 360 < 225) {
@@ -221,13 +199,13 @@ public class DashboardView4 extends View {
             } else {
                 mPaint.setTextAlign(Paint.Align.CENTER);
             }
-            mPaint.getTextBounds(mHeaderText, 0, mTexts[i].length(), mRectText);
+            mPaint.getTextBounds(getmHeaderText(), 0, mTexts[i].length(), mRectText);
             int txtH = mRectText.height();
-            if (i <= 1 || i >= mSection - 1) {
+            if (i <= 1 || i >= getmSection() - 1) {
                 canvas.drawText(mTexts[i], p[0], p[1] + txtH / 2, mPaint);
             } else if (i == 3) {
                 canvas.drawText(mTexts[i], p[0] + txtH / 2, p[1] + txtH, mPaint);
-            } else if (i == mSection - 3) {
+            } else if (i == getmSection() - 3) {
                 canvas.drawText(mTexts[i], p[0] - txtH / 2, p[1] + txtH, mPaint);
             } else {
                 canvas.drawText(mTexts[i], p[0], p[1] + txtH, mPaint);
@@ -236,7 +214,7 @@ public class DashboardView4 extends View {
 
         mPaint.setStrokeCap(Paint.Cap.SQUARE);
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(dp2px(10));
+        mPaint.setStrokeWidth(dp2px(3));
         mPaint.setShader(generateSweepGradient());
         canvas.drawArc(mRectFInnerArc, mStartAngle + 1, mSweepAngle - 2, false, mPaint);
 
@@ -248,21 +226,21 @@ public class DashboardView4 extends View {
          * 画表头
          * 没有表头就不画
          */
-        if (!TextUtils.isEmpty(mHeaderText)) {
-            mPaint.setTextSize(sp2px(16));
+        if (!TextUtils.isEmpty(getmHeaderText())) {
+            mPaint.setTextSize(sp2px(9));
             mPaint.setTextAlign(Paint.Align.CENTER);
-            mPaint.getTextBounds(mHeaderText, 0, mHeaderText.length(), mRectText);
-            canvas.drawText(mHeaderText, mCenterX, mCenterY - mRectText.height() * 3, mPaint);
+            mPaint.getTextBounds(getmHeaderText(), 0, getmHeaderText().length(), mRectText);
+            canvas.drawText(getmHeaderText(), mCenterX, mCenterY - mRectText.height() * 3, mPaint);
         }
 
         /**
          * 画指针
          */
-        float θ = mStartAngle + mSweepAngle * (mVelocity - mMin) / (mMax - mMin); // 指针与水平线夹角
+        float θ = mStartAngle + mSweepAngle * (mVelocity - getmMin()) / (getmMax() - getmMin()); // 指针与水平线夹角
         mPaint.setColor(ContextCompat.getColor(getContext(), R.color.color_dark_light));
         int r = mRadius / 8;
         canvas.drawCircle(mCenterX, mCenterY, r, mPaint);
-        mPaint.setStrokeWidth(r / 3);
+        mPaint.setStrokeWidth(3);
         mPaint.setColor(ContextCompat.getColor(getContext(), R.color.color_light));
         float[] p1 = getCoordinatePoint(mPLRadius, θ);
         canvas.drawLine(p1[0], p1[1], mCenterX, mCenterY, mPaint);
@@ -293,13 +271,6 @@ public class DashboardView4 extends View {
     /**
      * 数码管样式
      */
-    //      1
-    //      ——
-    //   2 |  | 3
-    //      —— 4
-    //   5 |  | 6
-    //      ——
-    //       7
     private void drawDigitalTube(Canvas canvas, int num, int xOffset) {
         float x = mCenterX + xOffset;
         float y = mCenterY + dp2px(40);
@@ -389,15 +360,62 @@ public class DashboardView4 extends View {
         return sweepGradient;
     }
 
+    public int getmMin() {
+        return mMin;
+    }
+
+    public int getmMax() {
+        return mMax;
+    }
+
+    public String getmHeaderText() {
+        return mHeaderText;
+    }
+
+    public int getmSection() {
+        return mSection;
+    }
+
+    public void setmSection(int mSection) {
+        this.mSection = mSection;
+        initSizes();
+        invalidate();
+    }
+
+    public int getBackgroudColor() {
+        return backgroudColor;
+    }
+
+    public void setBackgroudColor(int backgroudColor) {
+        this.backgroudColor = backgroudColor;
+    }
+
+    public void setmMin(int mMin) {
+        this.mMin = mMin;
+        initSizes();
+        invalidate();
+    }
+
+    public void setmMax(int mMax) {
+        this.mMax = mMax;
+        initSizes();
+        invalidate();
+    }
+
+    public void setmHeaderText(String mHeaderText) {
+        this.mHeaderText = mHeaderText;
+        initSizes();
+        invalidate();
+    }
+
     public int getVelocity() {
         return mVelocity;
     }
 
     public void setVelocity(int velocity) {
-        if (mVelocity == velocity || velocity < mMin || velocity > mMax) {
+        if (mVelocity == velocity || velocity < getmMin() || velocity > getmMax()) {
             return;
         }
-
         mVelocity = velocity;
         postInvalidate();
     }

@@ -46,6 +46,7 @@ public enum AvailableCommandNames {
     PIDS_41_60("Available PIDs 41-60"),
     ABS_LOAD("Absolute load"),
     Commanded_EGR("Commanded EGR"),
+    ODOMETER("Odometer"),
     ENGINE_OIL_TEMP("Engine oil temperature"),
     AIR_FUEL_RATIO("Air/Fuel Ratio"),
     WIDEBAND_AIR_FUEL_RATIO("Wideband Air/Fuel Ratio"),

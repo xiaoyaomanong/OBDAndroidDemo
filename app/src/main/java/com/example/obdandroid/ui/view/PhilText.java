@@ -24,7 +24,6 @@ public class PhilText extends TextView {
 
     private void init(Context context) {
         String file = "fonts" + File.separator + "digital-7.ttf";
-
         AssetManager assets = context.getAssets();
         Typeface font = Typeface.createFromAsset(assets, file);
         setTypeface(font);

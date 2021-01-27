@@ -133,7 +133,6 @@ public class VehicleCheckFragment extends BaseFragment {
 
         });
         circleView.setCallEndListener(() -> LogE("333333"));
-
     }
 
     /**

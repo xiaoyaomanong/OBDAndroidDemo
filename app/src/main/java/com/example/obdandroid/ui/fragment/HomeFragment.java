@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.ui.activity.BindBluetoothDeviceActivity;
+import com.example.obdandroid.ui.activity.MyVehicleActivity;
 import com.example.obdandroid.ui.activity.MyVehicleDash;
 import com.example.obdandroid.ui.activity.VehicleInfoActivity;
 import com.example.obdandroid.ui.adapter.HomeAdapter;
@@ -36,6 +37,7 @@ import com.example.obdandroid.ui.entity.TestRecordEntity;
 import com.example.obdandroid.ui.entity.UserInfoEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleImageView;
+import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.ui.view.PhilText;
 import com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight;
 import com.example.obdandroid.ui.view.dashView.DashboardView;
@@ -103,6 +105,7 @@ public class HomeFragment extends BaseFragment {
     private DialogUtils dialogUtils;
     private boolean isConnected = false;
     private String deviceAddress;
+    private TripRecord tripRecord;
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -157,7 +160,11 @@ public class HomeFragment extends BaseFragment {
         recordAdapter = new TestRecordAdapter(context);
         recordAdapter.setToken(getToken());
         getTestRecordPageList(getToken(), String.valueOf(1), String.valueOf(2), getUserId());
-        layoutMoreDash.setOnClickListener(v -> JumpUtil.startAct(context, MyVehicleDash.class));
+        layoutMoreDash.setOnClickListener(v -> {
+            Intent intent = new Intent(context, MyVehicleDash.class);
+            intent.putExtra("data", tripRecord);
+            startActivity(intent);
+        });
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -180,10 +187,10 @@ public class HomeFragment extends BaseFragment {
      * 设置车速仪表
      */
     private void setSpeed() {
+        dashSpeed.setmSection(8);
         dashSpeed.setmHeaderText("km/h");
         dashSpeed.setmMin(240);
         dashSpeed.setmMin(0);
-        dashSpeed.setmSection(8);
     }
 
     /**
@@ -211,6 +218,11 @@ public class HomeFragment extends BaseFragment {
                         layoutOBD.setVisibility(View.VISIBLE);
                         if (TextUtils.isEmpty(vehicleId)) {
                             //选择已绑定的车辆
+                            new CustomeDialog(context, "您已经绑定车辆,请选择！", confirm -> {
+                                if (confirm) {
+                                    JumpUtil.startAct(context, MyVehicleActivity.class);
+                                }
+                            }).setPositiveButton("确定").setTitle("提示").show();
                         } else {
                             getVehicleInfoById(getToken(), vehicleId);
                             layoutCar.setOnClickListener(v -> JumpUtil.startActToData(context, VehicleInfoActivity.class, vehicleId, 0));
@@ -300,6 +312,7 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onResponse(String response, int id) {
+                LogE("获取用户检测记录列表:"+response);
                 TestRecordEntity entity = JSON.parseObject(response, TestRecordEntity.class);
                 if (entity.isSuccess()) {
                     recordAdapter.setList(entity.getData().getList());
@@ -493,7 +506,7 @@ public class HomeFragment extends BaseFragment {
                     onDisconnect();
                 }
             } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA)) {
-                TripRecord tripRecord = TripRecord.getTripRecode(context);
+                tripRecord = TripRecord.getTripRecode(context);
                 tvHighSpeed.setText(String.valueOf(tripRecord.getSpeedMax()));
                 tvCurrentSpeed.setText(String.valueOf(tripRecord.getSpeed()));
                 dashSpeed.setVelocity(tripRecord.getSpeed());

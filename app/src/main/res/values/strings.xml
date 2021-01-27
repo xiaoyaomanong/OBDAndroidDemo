@@ -167,7 +167,12 @@
     <string name="dashSpeed">车速仪表</string>
     <string name="dashRPM">发动机转速仪表</string>
     <string name="mEngineCoolantTemp">冷却液温度</string>
-    <string name="mFuelLevel">燃油表</string>
+    <string name="mFuelLevel">燃油油位</string>
     <string name="InsFuelConsumption">瞬时油耗</string>
+    <string name="IdlingFuelConsumption">怠速油耗</string>
+    <string name="DrivingFuelConsumption">行驶油耗</string>
+    <string name="EngineOilTemp">机油温度</string>
+    <string name="cancel">取消</string>
+    <string name="selectVehicle">选择车辆</string>
 
 </resources>

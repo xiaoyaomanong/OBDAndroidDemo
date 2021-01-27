@@ -139,7 +139,7 @@ public class CustomerDashboardView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //canvas.drawColor(ContextCompat.getColor(getContext(), R.color.red));
+        canvas.drawColor(ContextCompat.getColor(getContext(), R.color.red));
         /**
          * 画圆弧
          */

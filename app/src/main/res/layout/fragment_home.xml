@@ -209,19 +209,19 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal">
                     <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
                         android:id="@+id/dashSpeed"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_margin="5dp"
                         android:layout_weight="1" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.6"
+                        android:layout_weight="0.5"
                         android:orientation="vertical">
 
                         <TextView
@@ -270,7 +270,7 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.6"
+                        android:layout_weight="0.5"
                         android:orientation="vertical">
 
                         <TextView
@@ -283,7 +283,8 @@
                             android:paddingBottom="@dimen/dp_10"
                             android:text="@string/home_high_speed"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/sp_12" />
+                            android:textSize="@dimen/sp_12"
+                            tools:ignore="NestedWeights" />
 
                         <com.example.obdandroid.ui.view.PhilText
                             android:id="@+id/tvHighSpeed"

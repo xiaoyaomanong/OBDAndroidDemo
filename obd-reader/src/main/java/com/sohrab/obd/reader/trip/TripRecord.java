@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.trip;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -30,6 +31,7 @@ import app.com.android_obd_reader.R;
  */
 
 public class TripRecord implements DefineObdReader, Serializable {
+    @SuppressLint("StaticFieldLeak")
     private static Context sContext;
     int MINUS_ONE = -1;
     private static final int SPEED_GAP = 20;
@@ -547,6 +549,14 @@ public class TripRecord implements DefineObdReader, Serializable {
 
     public String getmEngineCoolantTemp() {
         return mEngineCoolantTemp;
+    }
+
+    public String getmFuelLevel() {
+        return mFuelLevel;
+    }
+
+    public float getmMassAirFlow() {
+        return mMassAirFlow;
     }
 
     public String getmEngineOilTemp() {

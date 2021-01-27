@@ -72,7 +72,7 @@
                             android:layout_weight="1"
                             android:fontFamily="@font/calibri"
                             android:gravity="center"
-                            android:text="360"
+                            android:text="0.0"
                             android:textColor="@color/white"
                             android:textSize="60sp"
                             tools:ignore="NestedWeights" />
@@ -108,7 +108,7 @@
                             android:layout_height="50dp"
                             android:fontFamily="@font/calibri"
                             android:gravity="center"
-                            android:text="360"
+                            android:text="0"
                             android:textColor="@color/white"
                             android:textSize="30sp"
                             tools:ignore="NestedWeights" />
@@ -143,7 +143,7 @@
                             android:layout_height="50dp"
                             android:fontFamily="@font/calibri"
                             android:gravity="center"
-                            android:text="360"
+                            android:text="0"
                             android:textColor="@color/white"
                             android:textSize="30sp"
                             tools:ignore="NestedWeights" />
@@ -221,6 +221,63 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:baselineAligned="false"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
+                        android:id="@+id/dashFuelLevel"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center"
+                        android:text="@string/mFuelLevel"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_16" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
+                        android:id="@+id/dashDrivingFuelConsumption"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center"
+                        android:text="@string/DrivingFuelConsumption"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_16" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:baselineAligned="false"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -256,6 +313,65 @@
                     android:orientation="vertical">
 
                     <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
+                        android:id="@+id/dashIdlingFuelConsumption"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center"
+                        android:text="@string/IdlingFuelConsumption"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_16" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:baselineAligned="false"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
+                        android:id="@+id/dashEngineOilTemp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center"
+                        android:text="@string/EngineOilTemp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_16" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
                         android:id="@+id/dashEngineCoolantTemp"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -272,6 +388,7 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_16" />
                 </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

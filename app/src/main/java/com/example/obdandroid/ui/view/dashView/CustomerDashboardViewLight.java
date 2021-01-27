@@ -1,6 +1,7 @@
 package com.example.obdandroid.ui.view.dashView;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,28 +10,33 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SweepGradient;
+import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
 import com.example.obdandroid.R;
+import com.example.obdandroid.config.TAG;
+
+import java.io.File;
 
 /**
  * DashboardView style 4，仿汽车速度仪表盘
  * Created by woxingxiao on 2016-12-19.
  */
 public class CustomerDashboardViewLight extends View {
+    private Context mContext;
     private int mRadius; // 扇形半径
     private int mStartAngle = 150; // 起始角度
     private int mSweepAngle = 240; // 绘制角度
     private int mMin = 0; // 最小值
     private int mMax = 240; // 最大值
     private int mSection = 8; // 值域（mMax-mMin）等分份数
-    private int mPortion = 2; // 一个mSection等分份数
     private String mHeaderText = "km/h"; // 表头
-    private int mVelocity = 0; // 实时速度
+    private float mVelocity = 0; // 实时速度
     private int mStrokeWidth; // 画笔宽度
     private int mLength1; // 长刻度的相对圆弧的长度
     private int mLength2; // 刻度读数顶部的相对圆弧的长度
@@ -67,6 +73,7 @@ public class CustomerDashboardViewLight extends View {
 
     public CustomerDashboardViewLight(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mContext=context;
         initSizes();
     }
 
@@ -140,8 +147,7 @@ public class CustomerDashboardViewLight extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        //canvas.drawColor(ContextCompat.getColor(getContext(), getBackgroudColor()));
+        //canvas.drawColor(ContextCompat.getColor(getContext(), R.color.cpb_blue_dark));
         /**
          * 画圆弧
          */
@@ -167,8 +173,8 @@ public class CustomerDashboardViewLight extends View {
 
         canvas.save();
         canvas.drawLine(x0, y0, x1, y1, mPaint);
-        float  angle = mSweepAngle * 1f / (getmSection() * mPortion);
-        for (int i = 0; i < getmSection() * mPortion; i++) {
+        float angle = mSweepAngle * 1f / getmSection();
+        for (int i = 0; i < getmSection(); i++) {
             canvas.rotate(angle, mCenterX, mCenterY);
             if (i <= 3) {
                 mPaint.setColor(DEFAULT_COLOR_LOWER);
@@ -178,6 +184,7 @@ public class CustomerDashboardViewLight extends View {
                 mPaint.setColor(DEFAULT_COLOR_MIDDLE);
             }
             canvas.drawLine(x0, y0, x1, y1, mPaint);
+
         }
         canvas.restore();
 
@@ -188,8 +195,9 @@ public class CustomerDashboardViewLight extends View {
         mPaint.setStyle(Paint.Style.FILL);
         float α;
         float[] p;
-        angle = mSweepAngle * 1f / getmSection();
-        for (int i = 0; i <= getmSection(); i++) {
+        angle = mSweepAngle * 1f / mSection;
+        Log.e(TAG.TAG_Activity,"size====:"+mSection);
+        for (int i = 0; i <= mSection; i++) {
             α = mStartAngle + angle * i;
             p = getCoordinatePoint(mRadius - mLength2, α);
             if (α % 360 > 135 && α % 360 < 225) {
@@ -214,7 +222,7 @@ public class CustomerDashboardViewLight extends View {
 
         mPaint.setStrokeCap(Paint.Cap.SQUARE);
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(dp2px(3));
+        mPaint.setStrokeWidth(dp2px(5));
         mPaint.setShader(generateSweepGradient());
         canvas.drawArc(mRectFInnerArc, mStartAngle + 1, mSweepAngle - 2, false, mPaint);
 
@@ -229,8 +237,9 @@ public class CustomerDashboardViewLight extends View {
         if (!TextUtils.isEmpty(getmHeaderText())) {
             mPaint.setTextSize(sp2px(9));
             mPaint.setTextAlign(Paint.Align.CENTER);
+            mPaint.setColor(DEFAULT_COLOR_HIGH);
             mPaint.getTextBounds(getmHeaderText(), 0, getmHeaderText().length(), mRectText);
-            canvas.drawText(getmHeaderText(), mCenterX, mCenterY - mRectText.height() * 3, mPaint);
+            canvas.drawText(getmHeaderText(), mCenterX, mCenterY - mRectText.height() * 2, mPaint);
         }
 
         /**
@@ -238,7 +247,7 @@ public class CustomerDashboardViewLight extends View {
          */
         float θ = mStartAngle + mSweepAngle * (mVelocity - getmMin()) / (getmMax() - getmMin()); // 指针与水平线夹角
         mPaint.setColor(ContextCompat.getColor(getContext(), R.color.color_dark_light));
-        int r = mRadius / 8;
+        int r = mRadius / 15;
         canvas.drawCircle(mCenterX, mCenterY, r, mPaint);
         mPaint.setStrokeWidth(3);
         mPaint.setColor(ContextCompat.getColor(getContext(), R.color.color_light));
@@ -250,7 +259,17 @@ public class CustomerDashboardViewLight extends View {
         /**
          * 画实时度数值
          */
+        mPaint.setStrokeWidth(dp2px(2));
         mPaint.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        String value = String.valueOf(mVelocity);
+        mPaint.getTextBounds(value, 0, value.length(), mRectText);
+        mPaint.setTextSize(sp2px(25));
+        String file = "fonts" + File.separator + "digital-7.ttf";
+        AssetManager assets = mContext.getAssets();
+        Typeface font = Typeface.createFromAsset(assets, file);
+        mPaint.setTypeface(font);
+        canvas.drawText(value, mCenterX, mCenterY + mPSRadius + mRectText.height() * 5, mPaint);
+      /*  mPaint.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         mPaint.setStrokeWidth(dp2px(2));
         int xOffset = dp2px(22);
         if (mVelocity >= 100) {
@@ -265,7 +284,7 @@ public class CustomerDashboardViewLight extends View {
             drawDigitalTube(canvas, -1, -xOffset);
             drawDigitalTube(canvas, -1, 0);
             drawDigitalTube(canvas, mVelocity, xOffset);
-        }
+        }*/
     }
 
     /**
@@ -382,14 +401,6 @@ public class CustomerDashboardViewLight extends View {
         invalidate();
     }
 
-    public int getBackgroudColor() {
-        return backgroudColor;
-    }
-
-    public void setBackgroudColor(int backgroudColor) {
-        this.backgroudColor = backgroudColor;
-    }
-
     public void setmMin(int mMin) {
         this.mMin = mMin;
         initSizes();
@@ -408,11 +419,11 @@ public class CustomerDashboardViewLight extends View {
         invalidate();
     }
 
-    public int getVelocity() {
+    public float getVelocity() {
         return mVelocity;
     }
 
-    public void setVelocity(int velocity) {
+    public void setVelocity(float velocity) {
         if (mVelocity == velocity || velocity < getmMin() || velocity > getmMax()) {
             return;
         }

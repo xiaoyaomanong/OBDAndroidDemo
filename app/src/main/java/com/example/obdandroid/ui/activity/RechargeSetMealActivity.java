@@ -46,10 +46,10 @@ public class RechargeSetMealActivity extends BaseActivity {
     private RechargeSetMealAdapter adapter;
     private final List<ChargeMealEntity.DataEntity> datas = new ArrayList<>();
     private CircularProgressButton btnBuy;
-    private String rechargeSetMealSettingsId="";
-    private String rechargetAmount="";
-    private final String paymentChannels="1";
-    private final String rechargeStatus="1";
+    private String rechargeSetMealSettingsId = "";
+    private String rechargetAmount = "";
+    private final String paymentChannels = "1";
+    private final String rechargeStatus = "1";
 
     @Override
     protected int getContentViewId() {
@@ -107,18 +107,18 @@ public class RechargeSetMealActivity extends BaseActivity {
         });
         btnBuy.setIndeterminateProgressMode(true);
         btnBuy.setOnClickListener(v -> {
-            if (TextUtils.isEmpty(rechargeSetMealSettingsId)){
+            if (TextUtils.isEmpty(rechargeSetMealSettingsId)) {
                 showTipsDialog("请选择套餐类型", TipDialog.TYPE_ERROR);
                 return;
             }
-            if (TextUtils.isEmpty(rechargetAmount)){
+            if (TextUtils.isEmpty(rechargetAmount)) {
                 showTipsDialog("请选择套餐类型", TipDialog.TYPE_ERROR);
                 return;
             }
             if (btnBuy.getProgress() == -1) {
                 btnBuy.setProgress(0);
             }
-            addRechargeRecord(getUserId(),rechargeSetMealSettingsId, AppDateUtils.getTodayDateTimeHms(),rechargetAmount,paymentChannels,rechargeStatus,getToken());
+            addRechargeRecord(getUserId(), rechargeSetMealSettingsId, AppDateUtils.getTodayDateTimeHms(), rechargetAmount, paymentChannels, rechargeStatus, getToken());
         });
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -190,8 +190,7 @@ public class RechargeSetMealActivity extends BaseActivity {
      *                 充值套餐
      */
     private void getChargeMeal(String pageNum, String pageSize, String token, final boolean isRefresh) {
-        OkHttpUtils.get().
-                url(SERVER_URL + CHARGE_URL).
+        OkHttpUtils.get().url(SERVER_URL + CHARGE_URL).
                 addParam("pageNum", pageNum).
                 addParam("pageSize", pageSize).
                 addParam("token", token).

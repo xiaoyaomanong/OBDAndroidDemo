@@ -119,9 +119,9 @@ public class RegisterActivity extends BaseActivity {
     private TextInputLayout textLayout;
     private CountDownTimerUtils mCountDownTimerUtils;
     private String taskID;
-    private String sex;
+    private String sex = "0";
     private int index = 0;
-    private String[] sexArry = new String[]{"保密", "男", "女"};// 性别选择
+    private final String[] sexArry = new String[]{"保密", "男", "女"};// 性别选择
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
         @Override
@@ -256,7 +256,7 @@ public class RegisterActivity extends BaseActivity {
         AlertDialog.Builder builder3 = new AlertDialog.Builder(this);// 自定义对话框
         // 2默认的选中
         builder3.setSingleChoiceItems(sexArry, index, (dialog, which) -> {// which是被选中的位置
-            sex = String.valueOf(sex);
+            sex = String.valueOf(which);
             index = which;
             changeSex.setText(sexArry[which]);
             dialog.dismiss();// 随便点击一个item消失对话框，不用点击确认取消

@@ -27,6 +27,7 @@ import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.activity.FeedbackActivity;
 import com.example.obdandroid.ui.activity.LoginActivity;
 import com.example.obdandroid.ui.activity.MyVehicleActivity;
+import com.example.obdandroid.ui.activity.PersonSettingActivity;
 import com.example.obdandroid.ui.activity.RechargeRecordActivity;
 import com.example.obdandroid.ui.activity.RechargeSetMealActivity;
 import com.example.obdandroid.ui.entity.UserInfoEntity;
@@ -34,6 +35,7 @@ import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleImageView;
 import com.example.obdandroid.ui.view.IosDialog;
 import com.example.obdandroid.utils.ActivityManager;
+import com.example.obdandroid.utils.BitMapUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.hjq.bar.TitleBar;
@@ -76,6 +78,7 @@ public class PersonalFragment extends BaseFragment {
     private LocalBroadcastManager lm;
     private TestReceiver testReceiver;
     private LinearLayout layoutGo;
+    private LinearLayout layoutUpdate;
 
     public static PersonalFragment getInstance() {
         return new PersonalFragment();
@@ -108,15 +111,17 @@ public class PersonalFragment extends BaseFragment {
         layoutCar = getView(R.id.layoutCar);
         layoutAddCar = getView(R.id.layoutAddCar);
         layoutGo = getView(R.id.layoutGo);
+        layoutUpdate = getView(R.id.layout_update);
         spUtil = new SPUtil(context);
         initReceiver();
         getUserInfo(getUserId(), getToken());
         getVehicleInfoById(getToken(), spUtil.getString("vehicleId", ""));
 
-        layoutGo.setOnClickListener(v -> JumpUtil.startAct(context, RechargeSetMealActivity.class));
-        llBuyHistory.setOnClickListener(v -> JumpUtil.startAct(context, RechargeRecordActivity.class));
-        llFaceBack.setOnClickListener(v -> JumpUtil.startAct(context, FeedbackActivity.class));
-        layoutAddCar.setOnClickListener(v -> JumpUtil.startAct(context, MyVehicleActivity.class));
+        layoutGo.setOnClickListener(v -> JumpUtil.startAct(context, RechargeSetMealActivity.class));//充值
+        llBuyHistory.setOnClickListener(v -> JumpUtil.startAct(context, RechargeRecordActivity.class));//购买记录
+        llFaceBack.setOnClickListener(v -> JumpUtil.startAct(context, FeedbackActivity.class));//反馈
+        layoutAddCar.setOnClickListener(v -> JumpUtil.startAct(context, MyVehicleActivity.class));//车辆管理
+        layoutUpdate.setOnClickListener(v -> JumpUtil.startAct(context, PersonSettingActivity.class));
         //退出账户
         btnLogout.setOnClickListener(v ->
                 new IosDialog(context, new IosDialog.DialogClick() {
@@ -184,7 +189,7 @@ public class PersonalFragment extends BaseFragment {
                     tvName.setText(entity.getData().getNickname());
                     //myHeaderMobile.setText(entity.getData().getPhoneNum());
                     if (entity.getData().getHeadPortrait().length() > 0) {
-                        myHeaderImage.setImageBitmap(stringToBitmap(entity.getData().getHeadPortrait()));
+                        myHeaderImage.setImageBitmap(BitMapUtils.stringToBitmap(entity.getData().getHeadPortrait()));
                     }
                 }
             }
@@ -211,11 +216,11 @@ public class PersonalFragment extends BaseFragment {
             public void onResponse(String response, int id) {
                 VehicleInfoEntity entity = JSON.parseObject(response, VehicleInfoEntity.class);
                 if (entity.isSuccess()) {
+                    layoutCar.setVisibility(View.VISIBLE);
                     tvAutomobileBrandName.setText(entity.getData().getAutomobileBrandName());
                     tvModelName.setText(TextUtils.isEmpty(entity.getData().getModelName()) ? "" : entity.getData().getModelName());
                     if (!TextUtils.isEmpty(entity.getData().getLogo())) {
-                        Glide.with(context).load(SERVER_URL+entity.getData().getLogo()).into(ivCarLogo);
-                        //ivCarLogo.setImageBitmap(BitMapUtils.stringToBitmap(entity.getData().getLogo()));
+                        Glide.with(context).load(SERVER_URL + entity.getData().getLogo()).into(ivCarLogo);
                     }
                     if (entity.getData().getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
                         tvOBDState.setText("  OBD 未绑定");
@@ -256,14 +261,5 @@ public class PersonalFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         lm.unregisterReceiver(testReceiver);
-    }
-
-    /**
-     * @param base64Data Base64图片
-     * @return Base64转换图片
-     */
-    public static Bitmap stringToBitmap(String base64Data) {
-        byte[] bytes = Base64.decode(base64Data, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
 }

@@ -190,7 +190,7 @@
                         android:gravity="center"
                         android:text="@string/dashSpeed"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/sp_16" />
+                        android:textSize="@dimen/sp_14" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -214,7 +214,7 @@
                         android:gravity="center"
                         android:text="@string/dashRPM"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/sp_16" />
+                        android:textSize="@dimen/sp_14" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -246,7 +246,7 @@
                         android:gravity="center"
                         android:text="@string/mFuelLevel"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/sp_16" />
+                        android:textSize="@dimen/sp_14" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -270,7 +270,7 @@
                         android:gravity="center"
                         android:text="@string/DrivingFuelConsumption"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/sp_16" />
+                        android:textSize="@dimen/sp_14" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -302,7 +302,7 @@
                         android:gravity="center"
                         android:text="@string/InsFuelConsumption"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/sp_16" />
+                        android:textSize="@dimen/sp_14" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -327,7 +327,7 @@
                         android:gravity="center"
                         android:text="@string/IdlingFuelConsumption"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/sp_16" />
+                        android:textSize="@dimen/sp_14" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -361,7 +361,7 @@
                         android:gravity="center"
                         android:text="@string/EngineOilTemp"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/sp_16" />
+                        android:textSize="@dimen/sp_14" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -386,7 +386,7 @@
                         android:gravity="center"
                         android:text="@string/mEngineCoolantTemp"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/sp_16" />
+                        android:textSize="@dimen/sp_14" />
                 </LinearLayout>
 
             </LinearLayout>

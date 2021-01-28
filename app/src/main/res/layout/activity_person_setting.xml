@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_080707"
+    android:orientation="vertical">
+
+    <com.hjq.bar.TitleBar
+        android:id="@+id/titleBarSet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barStyle="night"
+        app:lineVisible="false"
+        app:title="@string/person_set" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_black"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/gotham"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/dp_10"
+                android:text="@string/header"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14"
+                tools:ignore="RelativeOverlap,RtlSymmetry" />
+
+
+            <com.example.obdandroid.ui.view.CircleImageView
+                android:id="@+id/imageHeader"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:contentDescription="@null"
+                android:src="@drawable/icon_header_man"
+                app:border_color="@color/white"
+                app:border_width="2dp" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/header"
+                app:srcCompat="@drawable/icon_next" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/black_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/gotham"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/dp_10"
+                android:text="@string/nick"
+                android:textColor="@color/white"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/tvNick"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/calibri"
+                android:gravity="center_vertical|right"
+                android:textColor="@color/white"
+                tools:ignore="RtlHardcoded" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/nick"
+                app:srcCompat="@drawable/icon_next" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/black_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/gotham"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/dp_10"
+                android:text="@string/phone"
+                android:textColor="@color/white"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/tvPhone"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/calibri"
+                android:gravity="center_vertical|right"
+                android:textColor="@color/white"
+                tools:ignore="RtlHardcoded" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/phone"
+                app:srcCompat="@drawable/icon_next" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/black_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/gotham"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/dp_10"
+                android:text="@string/sex"
+                android:textColor="@color/white"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/tvSex"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/calibri"
+                android:gravity="center_vertical|right"
+                android:textColor="@color/white"
+                tools:ignore="RtlHardcoded" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/sex"
+                app:srcCompat="@drawable/icon_next" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/black_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/gotham"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/dp_10"
+                android:text="@string/validityDate"
+                android:textColor="@color/white"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/tvValidityDate"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/calibri"
+                android:gravity="center_vertical|right"
+                android:textColor="@color/white"
+                tools:ignore="RtlHardcoded" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/validityDate"
+                app:srcCompat="@drawable/icon_next" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/black_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/gotham"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/dp_10"
+                android:text="@string/vip"
+                android:textColor="@color/white"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/tvVIP"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/calibri"
+                android:gravity="center_vertical|right"
+                android:textColor="@color/white"
+                tools:ignore="RtlHardcoded" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/vip"
+                app:srcCompat="@drawable/icon_next" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/black_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/gotham"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/dp_10"
+                android:text="@string/isTheDeviceBound"
+                android:textColor="@color/white"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/tvIsTheDeviceBound"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/calibri"
+                android:gravity="center_vertical|right"
+                android:textColor="@color/white"
+                tools:ignore="RtlHardcoded" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/isTheDeviceBound"
+                app:srcCompat="@drawable/icon_next" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

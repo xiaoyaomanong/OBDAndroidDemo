@@ -129,9 +129,7 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @SuppressLint("SetTextI18n")
         public void setPosition(int position) {
             timeData = list.get(position);
-            Log.e(TAG.TAG_Fragemnt, "记录:" + timeData.getTestData());
             tripEntity = JSON.parseObject(timeData.getTestData(), OBDJsonTripEntity.class);
-            Log.e(TAG.TAG_Fragemnt, "错误码:" + tripEntity.getFaultCodes());
             int size;
             if (!TextUtils.isEmpty(tripEntity.getFaultCodes())) {
                 size = tripEntity.getFaultCodes().replaceAll("\r|\n", ",").split(",").length;

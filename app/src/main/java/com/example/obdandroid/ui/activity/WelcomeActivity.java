@@ -32,7 +32,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class WelcomeActivity extends BaseFullScreenActivity implements OnNotchCallBack {
     private static final int ANIM_TIME = 2000;
     private static final float SCALE_END = 1.15F;
-    private static final int[] Imgs = {R.drawable.welcomimg9, R.drawable.welcomimg11, R.drawable.welcomimg12};
+    private static final int[] Imgs = {R.drawable.welcomeone, R.drawable.welcometwo ,R.drawable.welcomethree};
     private ImageView ivEntry;
     private ImageView imgBack;
     private Context context;

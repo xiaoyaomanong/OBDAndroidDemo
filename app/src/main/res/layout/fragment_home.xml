@@ -39,19 +39,38 @@
                 android:background="@drawable/bg_black"
                 android:orientation="vertical"
                 android:visibility="gone">
-
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:drawableStart="@drawable/icon_car"
-                    android:drawableEnd="@drawable/icon_next"
-                    android:fontFamily="@font/gotham"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingStart="10dp"
-                    android:text="   选择添加我的车辆"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    tools:ignore="RtlSymmetry" />
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dp_10"
+                        android:src="@drawable/icon_car"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/calibri"
+                        android:gravity="center_vertical"
+                        android:text="@string/select_add_car"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_14" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/icon_next"
+                        android:tint="@color/gray"
+                        tools:ignore="ContentDescription" />
+                </LinearLayout>
+
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycleCar"
@@ -121,7 +140,9 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@null"
                     android:src="@drawable/icon_next"
+                    android:tint="@color/gray"
                     tools:ignore="ContentDescription" />
 
             </LinearLayout>
@@ -164,7 +185,9 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@null"
                     android:src="@drawable/icon_next"
+                    android:tint="@color/gray"
                     tools:ignore="ContentDescription" />
 
             </LinearLayout>
@@ -177,27 +200,33 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/layoutMoreDash"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dp_10"
+                        android:src="@drawable/icon_dash"
+                        tools:ignore="ContentDescription" />
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="60dp"
-                        android:drawableStart="@drawable/icon_dash"
+                        android:layout_height="40dp"
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
-                        android:paddingStart="10dp"
-                        android:text="   仪表功能"
+                        android:text="@string/dash"
                         android:textColor="@color/white"
                         android:textSize="16sp"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
-                        android:id="@+id/layoutMoreDash"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:drawableEnd="@drawable/icon_next"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
                         android:fontFamily="@font/calibri"
                         android:gravity="center_vertical|right"
                         android:paddingStart="10dp"
@@ -205,12 +234,21 @@
                         android:textColor="@color/gray"
                         android:textSize="@dimen/sp_14"
                         tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/icon_next"
+                        android:tint="@color/gray"
+                        tools:ignore="ContentDescription" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
+
                     <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
                         android:id="@+id/dashSpeed"
                         android:layout_width="0dp"
@@ -319,17 +357,38 @@
                 android:background="@drawable/bg_black"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:drawableStart="@drawable/icon_car_check"
-                    android:drawableEnd="@drawable/icon_next"
-                    android:fontFamily="@font/calibri"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingStart="10dp"
-                    android:text="    车检记录"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp_14" />
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dp_10"
+                        android:src="@drawable/icon_car_check"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/calibri"
+                        android:gravity="center_vertical"
+                        android:text="@string/car_check_record"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_14" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/icon_next"
+                        android:tint="@color/gray"
+                        tools:ignore="ContentDescription" />
+                </LinearLayout>
+
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycleContent"

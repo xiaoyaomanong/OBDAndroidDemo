@@ -65,6 +65,7 @@ import okhttp3.Response;
 
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.USER_INFO_URL;
+import static com.example.obdandroid.config.APIConfig.getCommonBrandList_URL;
 import static com.example.obdandroid.config.APIConfig.getTestRecordPageList_URL;
 import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
 import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
@@ -94,7 +95,7 @@ public class HomeFragment extends BaseFragment {
     private TextView tvModelName;
     private LinearLayout layoutOBD;
     private LinearLayout layoutAddCar;
-    private TextView layoutMoreDash;
+    private LinearLayout layoutMoreDash;
     private TextView tvObd;
     private TextView tvHomeObdTip;
     private static String mConnectedDeviceName = null;
@@ -165,6 +166,7 @@ public class HomeFragment extends BaseFragment {
             intent.putExtra("data", tripRecord);
             startActivity(intent);
         });
+        getCommonBrandList(getToken());
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -191,6 +193,26 @@ public class HomeFragment extends BaseFragment {
         dashSpeed.setmHeaderText("km/h");
         dashSpeed.setmMin(240);
         dashSpeed.setmMin(0);
+    }
+
+    /**
+     * @param token 用户token
+     *              获取常用车辆
+     */
+    private void getCommonBrandList(String token) {
+        OkHttpUtils.get().url(SERVER_URL + getCommonBrandList_URL).
+                addParam("token", token).
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                LogE("获取常用车辆：" + response);
+            }
+        });
     }
 
     /**
@@ -312,7 +334,6 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("获取用户检测记录列表:"+response);
                 TestRecordEntity entity = JSON.parseObject(response, TestRecordEntity.class);
                 if (entity.isSuccess()) {
                     recordAdapter.setList(entity.getData().getList());

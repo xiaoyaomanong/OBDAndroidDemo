@@ -141,7 +141,7 @@ public class UserInfoEntity {
             this.remainingUsageNum = remainingUsageNum;
         }
 
-        public Object getStartValidity() {
+        public String getStartValidity() {
             return startValidity;
         }
 

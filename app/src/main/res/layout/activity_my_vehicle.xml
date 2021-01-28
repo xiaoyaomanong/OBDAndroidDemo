@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         app:barStyle="night"
         app:lineVisible="false"
-        app:rightColor="@color/color_bar"
+        app:rightColor="@color/white"
         app:rightTitle="添加"
         app:title="@string/myCar" />
 

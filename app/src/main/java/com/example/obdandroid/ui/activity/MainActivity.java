@@ -27,8 +27,10 @@ import com.example.obdandroid.ui.fragment.MsgFragment;
 import com.example.obdandroid.ui.fragment.PersonalFragment;
 import com.example.obdandroid.ui.fragment.VehicleCheckFragment;
 import com.example.obdandroid.utils.ActivityManager;
+import com.example.obdandroid.utils.DepthPageTransformer;
 import com.example.obdandroid.utils.GalleryTransformer;
 import com.example.obdandroid.utils.SPUtil;
+import com.example.obdandroid.utils.ScalePageTransformer;
 import com.example.obdandroid.utils.StringUtil;
 import com.gyf.immersionbar.ImmersionBar;
 import com.kongzue.dialog.util.BlurView;
@@ -84,7 +86,9 @@ public class MainActivity extends BaseActivity {
         viewPager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
         viewPager.addOnPageChangeListener(mOnPageChangeListener);
         viewPager.setOffscreenPageLimit(4);
-        viewPager.setPageTransformer(true, new GalleryTransformer());
+        //viewPager.setPageTransformer(true, new GalleryTransformer());
+        //viewPager.setPageTransformer(true, new ScalePageTransformer());
+        viewPager.setPageTransformer(true, new DepthPageTransformer());
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 

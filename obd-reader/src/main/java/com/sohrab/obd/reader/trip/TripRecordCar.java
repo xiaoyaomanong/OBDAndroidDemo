@@ -398,14 +398,12 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
                 if (ObdPreferences.get(sContext.getApplicationContext()).getFuelType() == 0)
                     getFuelTypeValue(command.getFormattedResult());
                 break;
-
             case INTAKE_MANIFOLD_PRESSURE:
                 mIntakePressure = Float.parseFloat(command.getCalculatedResult());
                 data.add(new OBDTripEntity("进气歧管压力", mIntakePressure + " kpa", R.drawable.icon_intake_pressure));
                 entity.setIntakePressure(mIntakePressure + " kpa");
                 calculateMaf();
                 break;
-
             case AIR_INTAKE_TEMPERATURE:
                 mIntakeAirTemp = Float.parseFloat(command.getCalculatedResult()) + 273.15f;
                 data.add(new OBDTripEntity("进气温度", mIntakeAirTemp + " C", R.drawable.icon_intake_air_temp));

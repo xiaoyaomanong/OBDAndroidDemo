@@ -12,13 +12,14 @@
         android:layout_height="wrap_content"
         app:barStyle="night"
         app:lineVisible="false"
-        app:title="@string/obd_search" />
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycle_BluetoothDevice"
+        app:title="@string/car_check_record" />
+
+    <com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
+        android:id="@+id/recycleContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="5dp"
         android:scrollbars="none">
 
-    </android.support.v7.widget.RecyclerView>
-
+    </com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView>
 </LinearLayout>

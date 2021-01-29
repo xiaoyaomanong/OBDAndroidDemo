@@ -14,7 +14,6 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.adapter.commonAdapter.CommonRecycleAdapter;
@@ -23,7 +22,6 @@ import com.example.obdandroid.ui.adapter.commonAdapter.DefaultItemDecoration;
 import com.example.obdandroid.ui.entity.AutomobileBrandEntity;
 import com.example.obdandroid.ui.entity.BrandPinYinEntity;
 import com.example.obdandroid.ui.view.LetterSideBarView;
-import com.example.obdandroid.utils.BitMapUtils;
 import com.example.obdandroid.utils.DialogUtils;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;

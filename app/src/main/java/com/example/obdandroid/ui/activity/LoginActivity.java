@@ -72,7 +72,7 @@ public class LoginActivity extends BaseActivity {
     private Button btnCode;
     private LinearLayout layoutCode;
     private int loginType = 1;
-    private String taskID;
+    private String taskID="";
     private CountDownTimerUtils mCountDownTimerUtils;
     private TextView tvTitle;
     private LinearLayout layoutLogin;
@@ -214,6 +214,10 @@ public class LoginActivity extends BaseActivity {
         }
         if (TextUtils.isEmpty(etCode.getText().toString())) {
             showTipsDialog("请输入短信验证码", TipDialog.TYPE_ERROR);
+            return;
+        }
+        if (TextUtils.isEmpty(taskID)) {
+            showTipsDialog("请获取短信验证码", TipDialog.TYPE_ERROR);
             return;
         }
         //登录成功和记住密码框为选中状态才保存用户信息

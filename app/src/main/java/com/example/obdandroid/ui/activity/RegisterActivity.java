@@ -391,7 +391,7 @@ public class RegisterActivity extends BaseActivity {
                     }).setPositiveButton("登录").setTitle("注册提示").show();
                 } else {
                     btnSignUp.setProgress(-1);
-                    showTipsDialog("注册失败", TipDialog.TYPE_ERROR);
+                    showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
                 }
             }
         });

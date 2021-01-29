@@ -358,6 +358,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/layoutMoreTest"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -394,7 +395,7 @@
                     android:id="@+id/recycleContent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="15dp"
+                    android:layout_margin="5dp"
                     android:scrollbars="none" />
 
             </LinearLayout>

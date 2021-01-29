@@ -162,6 +162,7 @@
         <activity android:name=".ui.activity.FeedbackActivity" />
         <activity android:name=".ui.activity.MyVehicleDash" />
         <activity android:name=".ui.activity.PersonSettingActivity" />
+        <activity android:name=".ui.activity.CheckRecordActivity" />
 
     </application>
 

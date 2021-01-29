@@ -26,6 +26,7 @@ import com.kongzue.dialog.v2.TipDialog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -170,17 +171,7 @@ public class BindBluetoothDeviceActivity extends BaseActivity {
                     e.printStackTrace();
                 }
             }
-            Set<BluetoothDevice> devices = adapter.getBondedDevices();
-            List<BluetoothDeviceEntity> blueList = new ArrayList<>();
-            for (BluetoothDevice bluetoothDevice : devices) {
-                LogE("Address:" + bluetoothDevice.getAddress());
-                BluetoothDeviceEntity entity = new BluetoothDeviceEntity();
-                entity.setBlue_address(bluetoothDevice.getAddress());
-                entity.setBlue_name(bluetoothDevice.getName());
-                blueList.add(entity);
-            }
-            simpleAdapter.setList(blueList);
-            recycleBluetoothDevice.setAdapter(simpleAdapter);
+            getConnectedBtDevice(adapter);
         } else {
             ToastUtil.shortShow("本机没有蓝牙设备");
         }
@@ -202,6 +193,36 @@ public class BindBluetoothDeviceActivity extends BaseActivity {
                 Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
             }
+        }
+    }
+
+    //获取已连接的蓝牙设备
+    private void getConnectedBtDevice(BluetoothAdapter adapter) {
+        Class<BluetoothAdapter> bluetoothAdapterClass = BluetoothAdapter.class;//得到BluetoothAdapter的Class对象
+        try {
+            //得到连接状态的方法
+            Method method = bluetoothAdapterClass.getDeclaredMethod("getConnectionState", (Class[]) null);
+            //打开权限
+            method.setAccessible(true);
+            int state = (int) method.invoke(adapter, (Object[]) null);
+            Set<BluetoothDevice> devices = adapter.getBondedDevices(); //集合里面包括已绑定的设备和已连接的设备
+            List<BluetoothDeviceEntity> blueList = new ArrayList<>();
+            for (BluetoothDevice device : devices) {
+                Method isConnectedMethod = BluetoothDevice.class.getDeclaredMethod("isConnected", (Class[]) null);
+                method.setAccessible(true);
+                boolean isConnected = (boolean) isConnectedMethod.invoke(device, (Object[]) null);
+                BluetoothDeviceEntity entity = new BluetoothDeviceEntity();
+                entity.setBlue_address(device.getAddress());
+                entity.setBlue_name(device.getName());
+                entity.setState(String.valueOf(state));
+                entity.setConnected(isConnected);//根据状态来区分是已连接的还是已绑定的，isConnected为true表示是已连接状态。
+                blueList.add(entity);
+            }
+            simpleAdapter.setList(blueList);
+            recycleBluetoothDevice.setAdapter(simpleAdapter);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

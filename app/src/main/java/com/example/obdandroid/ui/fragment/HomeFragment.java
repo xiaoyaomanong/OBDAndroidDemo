@@ -28,11 +28,13 @@ import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.ui.activity.BindBluetoothDeviceActivity;
+import com.example.obdandroid.ui.activity.CheckRecordActivity;
 import com.example.obdandroid.ui.activity.MyVehicleActivity;
 import com.example.obdandroid.ui.activity.MyVehicleDash;
 import com.example.obdandroid.ui.activity.VehicleInfoActivity;
 import com.example.obdandroid.ui.adapter.HomeAdapter;
 import com.example.obdandroid.ui.adapter.TestRecordAdapter;
+import com.example.obdandroid.ui.entity.AutomobileBrandEntity;
 import com.example.obdandroid.ui.entity.TestRecordEntity;
 import com.example.obdandroid.ui.entity.UserInfoEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
@@ -96,6 +98,7 @@ public class HomeFragment extends BaseFragment {
     private LinearLayout layoutOBD;
     private LinearLayout layoutAddCar;
     private LinearLayout layoutMoreDash;
+    private LinearLayout layoutMoreTest;
     private TextView tvObd;
     private TextView tvHomeObdTip;
     private static String mConnectedDeviceName = null;
@@ -136,17 +139,26 @@ public class HomeFragment extends BaseFragment {
         layoutAddCar = getView(R.id.layoutAddCar);
         tvHomeObdTip = getView(R.id.tv_home_obd_tip);
         layoutMoreDash = getView(R.id.layoutMoreDash);
+        layoutMoreTest = getView(R.id.layoutMoreTest);
         titleBar.setTitle("汽车扫描");
         spUtil = new SPUtil(context);
         dialogUtils = new DialogUtils(context);
         mConnectedDeviceName = ObdPreferences.get(context).getBlueToothDeviceName();
         mConnectedDeviceAddress = ObdPreferences.get(context).getBlueToothDeviceAddress();
-        initBlueTooth();
-        checkBlueTooth();
-        registerOBDReceiver();
-        initReceiver();
+        initBlueTooth();//初始化蓝牙
+        checkBlueTooth();//检查蓝牙
+        registerOBDReceiver();//注册OBD数据接收广播
+        initReceiver();//注册选择默认车辆广播
         getUserInfo(getUserId(), getToken(), spUtil.getString("vehicleId", ""));
-        setSpeed();
+        setSpeed();//设置速度仪表盘
+        layoutMoreDash.setOnClickListener(v -> {
+            Intent intent = new Intent(context, MyVehicleDash.class);
+            intent.putExtra("data", tripRecord);
+            startActivity(intent);
+        });
+        setCheckRecord();
+
+
         // 设置数据更新计时器
         GridLayoutManager manager = new GridLayoutManager(context, 5);
         manager.setOrientation(OrientationHelper.VERTICAL);
@@ -156,16 +168,7 @@ public class HomeFragment extends BaseFragment {
         homeAdapter.setClickCallBack(name -> {
 
         });
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-        recycleContent.setLayoutManager(layoutManager);
-        recordAdapter = new TestRecordAdapter(context);
-        recordAdapter.setToken(getToken());
-        getTestRecordPageList(getToken(), String.valueOf(1), String.valueOf(2), getUserId());
-        layoutMoreDash.setOnClickListener(v -> {
-            Intent intent = new Intent(context, MyVehicleDash.class);
-            intent.putExtra("data", tripRecord);
-            startActivity(intent);
-        });
+
         getCommonBrandList(getToken());
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -183,6 +186,18 @@ public class HomeFragment extends BaseFragment {
                 showSingleChoiceDialog();
             }
         });
+    }
+
+    /**
+     * 设置车检记录
+     */
+    private void setCheckRecord() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        recycleContent.setLayoutManager(layoutManager);
+        recordAdapter = new TestRecordAdapter(context);
+        recordAdapter.setToken(getToken());
+        getTestRecordPageList(getToken(), String.valueOf(1), String.valueOf(2), getUserId());
+        layoutMoreTest.setOnClickListener(v -> JumpUtil.startAct(context, CheckRecordActivity.class));
     }
 
     /**
@@ -211,6 +226,8 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onResponse(String response, int id) {
                 LogE("获取常用车辆：" + response);
+                AutomobileBrandEntity entity = JSON.parseObject(response, AutomobileBrandEntity.class);
+
             }
         });
     }
@@ -235,9 +252,6 @@ public class HomeFragment extends BaseFragment {
                 UserInfoEntity entity = JSON.parseObject(response, UserInfoEntity.class);
                 if (entity.isSuccess()) {
                     if (entity.getData().isTheDeviceBound()) {
-                        layoutAddCar.setVisibility(View.GONE);
-                        layoutCar.setVisibility(View.VISIBLE);
-                        layoutOBD.setVisibility(View.VISIBLE);
                         if (TextUtils.isEmpty(vehicleId)) {
                             //选择已绑定的车辆
                             new CustomeDialog(context, "您已经绑定车辆,请选择！", confirm -> {
@@ -246,6 +260,9 @@ public class HomeFragment extends BaseFragment {
                                 }
                             }).setPositiveButton("确定").setTitle("提示").show();
                         } else {
+                            layoutAddCar.setVisibility(View.GONE);
+                            layoutCar.setVisibility(View.VISIBLE);
+                            layoutOBD.setVisibility(View.VISIBLE);
                             getVehicleInfoById(getToken(), vehicleId);
                             layoutCar.setOnClickListener(v -> JumpUtil.startActToData(context, VehicleInfoActivity.class, vehicleId, 0));
                         }
@@ -337,8 +354,10 @@ public class HomeFragment extends BaseFragment {
                 TestRecordEntity entity = JSON.parseObject(response, TestRecordEntity.class);
                 if (entity.isSuccess()) {
                     recordAdapter.setList(entity.getData().getList());
-                    recycleContent.setAdapter(recordAdapter);
+                } else {
+                    recordAdapter.setList(null);
                 }
+                recycleContent.setAdapter(recordAdapter);
             }
         });
     }
@@ -558,11 +577,7 @@ public class HomeFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         //注销接收器
-        try {
-            context.unregisterReceiver(mObdReaderReceiver);
-        } catch (Exception e) {
-            LogE("33333");
-        }
+        context.unregisterReceiver(mObdReaderReceiver);
         //解绑
         lm.unregisterReceiver(testReceiver);
         //停止服务

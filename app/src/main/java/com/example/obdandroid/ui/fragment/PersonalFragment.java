@@ -30,6 +30,7 @@ import com.example.obdandroid.ui.activity.MyVehicleActivity;
 import com.example.obdandroid.ui.activity.PersonSettingActivity;
 import com.example.obdandroid.ui.activity.RechargeRecordActivity;
 import com.example.obdandroid.ui.activity.RechargeSetMealActivity;
+import com.example.obdandroid.ui.activity.VehicleInfoActivity;
 import com.example.obdandroid.ui.entity.UserInfoEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleImageView;
@@ -217,6 +218,7 @@ public class PersonalFragment extends BaseFragment {
                 VehicleInfoEntity entity = JSON.parseObject(response, VehicleInfoEntity.class);
                 if (entity.isSuccess()) {
                     layoutCar.setVisibility(View.VISIBLE);
+                    layoutCar.setOnClickListener(v -> JumpUtil.startActToData(context, VehicleInfoActivity.class, vehicleId, 0));
                     tvAutomobileBrandName.setText(entity.getData().getAutomobileBrandName());
                     tvModelName.setText(TextUtils.isEmpty(entity.getData().getModelName()) ? "" : entity.getData().getModelName());
                     if (!TextUtils.isEmpty(entity.getData().getLogo())) {

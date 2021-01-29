@@ -10,6 +10,8 @@ import java.io.Serializable;
 public class BluetoothDeviceEntity implements Serializable {
     private String blue_name;
     private String blue_address;
+    private String state;
+    private boolean isConnected;
 
     public String getBlue_name() {
         return blue_name;
@@ -25,5 +27,21 @@ public class BluetoothDeviceEntity implements Serializable {
 
     public void setBlue_address(String blue_address) {
         this.blue_address = blue_address;
+    }
+
+    public boolean isConnected() {
+        return isConnected;
+    }
+
+    public void setConnected(boolean connected) {
+        isConnected = connected;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

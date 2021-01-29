@@ -185,5 +185,6 @@
     <string name="validityDate">有效期</string>
     <string name="vip">是否VIP</string>
     <string name="isTheDeviceBound">是否绑定设备</string>
+    <string name="obd_search">OBD设备搜索</string>
 
 </resources>

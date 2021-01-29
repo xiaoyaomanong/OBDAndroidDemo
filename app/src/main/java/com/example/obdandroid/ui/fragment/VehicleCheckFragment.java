@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -72,6 +73,8 @@ public class VehicleCheckFragment extends BaseFragment {
     private ImageView ivCarLogo;
     private TextView tvAutomobileBrandName;
     private TextView tvModelName;
+    private LocalBroadcastManager localBroadcastManager;
+    private CarReceiver receiver;
 
     public static VehicleCheckFragment getInstance() {
         return new VehicleCheckFragment();
@@ -101,6 +104,7 @@ public class VehicleCheckFragment extends BaseFragment {
         LinearLayoutManager manager = new LinearLayoutManager(context);
         manager.setOrientation(OrientationHelper.VERTICAL);
         recycleCheckContent.setLayoutManager(manager);
+        initReceiver();
         /*
          *  配置obd：在arrayList中添加所需命令并设置为ObdConfiguration。
          *  如果您没有设置任何命令或传递null，那么将请求所有命令OBD command。   *
@@ -109,7 +113,7 @@ public class VehicleCheckFragment extends BaseFragment {
         // 设定每升汽油价格，以便计算汽油成本。默认值为7$/l
         float gasPrice = 7; // 每升，你应该根据你的要求初始化。
         ObdPreferences.get(context).setGasPrice(gasPrice);
-        //showResult(TripRecordCar.getTripTwoRecode(context).getTripMap());
+        getVehicleInfoById(getToken(), spUtil.getString("vehicleId", ""));
         btStart.setOnClickListener(v -> {
             if (spUtil.getString(Constant.CONNECT_BT_KEY, "").equals("ON")) {
                 btStart.setText("开始检测");
@@ -153,7 +157,6 @@ public class VehicleCheckFragment extends BaseFragment {
             @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(String response, int id) {
-                LogE("获取用户车辆详情：" + response);
                 VehicleInfoEntity entity = JSON.parseObject(response, VehicleInfoEntity.class);
                 if (entity.isSuccess()) {
                     tvAutomobileBrandName.setText(entity.getData().getAutomobileBrandName());
@@ -275,8 +278,6 @@ public class VehicleCheckFragment extends BaseFragment {
                 } else if (connectionStatusMsg.equals(getString(R.string.connect_lost))) {
                     //OBD断开连接断开后做什么
                     onDisconnect();
-                } else {
-                    // 在这里您可以检查OBD连接和配对状态
                 }
             } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA_CAR)) {
                 TripRecordCar TripTwoRecord = TripRecordCar.getTripTwoRecode(context);
@@ -295,16 +296,32 @@ public class VehicleCheckFragment extends BaseFragment {
         TipDialog.show(context, msg, TipDialog.TYPE_ERROR, type);
     }
 
+    private void initReceiver() {
+        //获取实例
+        localBroadcastManager = LocalBroadcastManager.getInstance(context);
+        IntentFilter intentFilter = new IntentFilter("com.android.ObdCar");
+        receiver = new CarReceiver();
+        //绑定
+        localBroadcastManager.registerReceiver(receiver, intentFilter);
+
+    }
+
+    private class CarReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String vehicleId = intent.getStringExtra(Intent.EXTRA_TEXT);
+            getVehicleInfoById(getToken(), vehicleId);
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         //注销接收器
-        try {
-            context.unregisterReceiver(mObdReaderReceiver);
-        } catch (Exception e) {
-            LogE("33333");
-        }
-
+        context.unregisterReceiver(mObdReaderReceiver);
+        //解绑
+        localBroadcastManager.unregisterReceiver(receiver);
         //停止服务
         context.stopService(new Intent(context, ObdTwoReaderService.class));
         // 这将停止后台线程，如果任何运行立即。

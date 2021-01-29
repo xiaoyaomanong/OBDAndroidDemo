@@ -53,8 +53,8 @@ public class AddVehiclActivity extends BaseActivity {
     private String modelId;
     private String fuelType;
     private String transmissionType;
-    private String bluetoothDeviceNumber;
-    private String bluetoothName;
+    private String bluetoothDeviceNumber = "";
+    private String bluetoothName = "";
 
     @Override
     protected int getContentViewId() {
@@ -138,9 +138,9 @@ public class AddVehiclActivity extends BaseActivity {
             if (btnAdd.getProgress() == -1) {
                 btnAdd.setProgress(0);
             }
-            getVehiclePageList(getUserId(), automobileBrandId, tvAutomobileBrandName.getText().toString(),
+            addVehicle(getUserId(), automobileBrandId, tvAutomobileBrandName.getText().toString(),
                     modelId, tvModelName.getText().toString(), fuelType, transmissionType, tvCurrentMileage.getText().toString(),
-                    bluetoothDeviceNumber,bluetoothName, getToken());
+                    bluetoothDeviceNumber, bluetoothName, getToken());
         });
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -182,9 +182,9 @@ public class AddVehiclActivity extends BaseActivity {
      * @param token                 用户Token
      *                              添加车辆信息
      */
-    private void getVehiclePageList(String appUserId, String automobileBrandId, String automobileBrandName, String modelId,
+    private void addVehicle(String appUserId, String automobileBrandId, String automobileBrandName, String modelId,
                                     String modelName, String fuelType, String transmissionType, String currentMileage,
-                                    String bluetoothDeviceNumber,String bluetoothName, String token) {
+                                    String bluetoothDeviceNumber, String bluetoothName, String token) {
         btnAdd.setProgress(0);
         new Handler().postDelayed(() -> btnAdd.setProgress(50), 3000);
         OkHttpUtils.post().
@@ -272,8 +272,8 @@ public class AddVehiclActivity extends BaseActivity {
                 if (data != null) {
                     entity = (BluetoothDeviceEntity) data.getSerializableExtra("bluetoothDeviceNumber");
                 }
-                bluetoothDeviceNumber= entity != null ? entity.getBlue_address() : "";
-                bluetoothName= entity != null ? entity.getBlue_name() : "";
+                bluetoothDeviceNumber = entity != null ? entity.getBlue_address() : "";
+                bluetoothName = entity != null ? entity.getBlue_name() : "";
                 tvBluetoothDeviceNumber.setText(entity != null ? entity.getBlue_name() : "");
             }
         }

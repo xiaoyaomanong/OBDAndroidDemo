@@ -63,11 +63,9 @@ public class CheckRecorderAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (!TextUtils.isEmpty(list.get(position))) {
             holder1.tvCode.setText("故障码:" + list.get(position));
             holder1.tvContent.setTextColor(context.getResources().getColor(R.color.gray_light_d));
-            holder1.tvScopeOfApplication.setTextColor(context.getResources().getColor(R.color.gray_light_d));
-            getFaultCodeDetails(list.get(position), token, holder1.tvContent,holder1.tvScopeOfApplication);
+            getFaultCodeDetails(list.get(position), token, holder1.tvContent);
         } else {
             holder1.tvCode.setVisibility(View.GONE);
-            holder1.tvScopeOfApplication.setVisibility(View.GONE);
             holder1.tvContent.setText("通过检测,无故障码,您的车辆很健康!");
             holder1.tvContent.setTextColor(context.getResources().getColor(R.color.color_green));
         }
@@ -89,7 +87,6 @@ public class CheckRecorderAdapter extends RecyclerView.Adapter<RecyclerView.View
         View itemView;
         private final TextView tvCode;
         private final TextView tvContent;
-        private final TextView tvScopeOfApplication;
         private final LinearLayout card_view;
 
         public MyViewHolder(View itemView) {
@@ -97,17 +94,7 @@ public class CheckRecorderAdapter extends RecyclerView.Adapter<RecyclerView.View
             this.itemView = itemView;
             tvCode = itemView.findViewById(R.id.tvCode);
             tvContent = itemView.findViewById(R.id.tvContent);
-            tvScopeOfApplication = itemView.findViewById(R.id.tvScopeOfApplication);
             card_view = itemView.findViewById(R.id.card_view);
-        }
-    }
-
-    public static class EmptyViewHolder extends RecyclerView.ViewHolder {
-        private final TextView mEmptyTextView;
-
-        public EmptyViewHolder(View itemView) {
-            super(itemView);
-            mEmptyTextView = itemView.findViewById(R.id.tv_empty_text);
         }
     }
 
@@ -116,7 +103,7 @@ public class CheckRecorderAdapter extends RecyclerView.Adapter<RecyclerView.View
      * @param token     接口令牌
      *                  查询故障码
      */
-    private void getFaultCodeDetails(String faultCode, String token, TextView tvContent, TextView tvScopeOfApplication) {
+    private void getFaultCodeDetails(String faultCode, String token, TextView tvContent) {
         OkHttpUtils.get().url(SERVER_URL + FAULT_CODE_URL).
                 addParam("token", token).
                 addParam("faultCode", faultCode).
@@ -132,12 +119,10 @@ public class CheckRecorderAdapter extends RecyclerView.Adapter<RecyclerView.View
                 FaultCodeDetailsEntity entity = JSON.parseObject(response, FaultCodeDetailsEntity.class);
                 if (entity.isSuccess()) {
                     if (entity.getData().size() != 0) {
-                        tvContent.setText("中文含义: " + entity.getData().get(0).getChineseMeaning());
-                        tvScopeOfApplication.setText("适用车商: " + entity.getData().get(0).getScopeOfApplication());
+                        tvContent.setText(entity.getData().get(0).getChineseMeaning());
                     } else {
                         tvContent.setTextColor(context.getResources().getColor(R.color.cpb_blue_dark));
                         tvContent.setText("该故障码暂时未录入系统,请联系相关人员");
-                        tvScopeOfApplication.setVisibility(View.GONE);
                     }
                 }
             }

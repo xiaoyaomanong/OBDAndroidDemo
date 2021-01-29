@@ -124,7 +124,8 @@
                         android:text="@string/myCar"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_16"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:ignore="RtlSymmetry" />
 
                     <LinearLayout
                         android:id="@+id/layoutAddCar"
@@ -164,7 +165,7 @@
                     android:background="@drawable/bg_black"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <ImageView
                         android:id="@+id/ivCarLogo"

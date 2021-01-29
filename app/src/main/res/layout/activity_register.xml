@@ -30,8 +30,8 @@
         android:id="@+id/layoutRegisterCode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginTop="30dp"
+        android:orientation="vertical"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
         android:visibility="visible">
@@ -79,6 +79,7 @@
                     android:fontFamily="@font/calibri"
                     android:hint="@string/hint_code"
                     android:inputType="number"
+                    android:maxLength="6"
                     android:maxLines="1"
                     android:textColor="@android:color/white"
                     android:textSize="16sp" />

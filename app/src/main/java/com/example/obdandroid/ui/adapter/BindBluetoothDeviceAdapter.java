@@ -1,6 +1,8 @@
 package com.example.obdandroid.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -8,9 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.obdandroid.R;
+import com.example.obdandroid.ui.activity.BindBluetoothDeviceActivity;
 import com.example.obdandroid.ui.entity.BluetoothDeviceEntity;
 
 import java.util.List;
@@ -21,6 +25,7 @@ import java.util.List;
  * 描述：
  */
 public class BindBluetoothDeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private Context context;
     private final LayoutInflater inflater;
     private OnClickCallBack clickCallBack;
     private List<BluetoothDeviceEntity> list;
@@ -29,6 +34,7 @@ public class BindBluetoothDeviceAdapter extends RecyclerView.Adapter<RecyclerVie
     private final int NOT_EMPTY_VIEW = 1;//正常页面
 
     public BindBluetoothDeviceAdapter(Context context) {
+        this.context = context;
         inflater = LayoutInflater.from(context);
     }
 
@@ -60,7 +66,40 @@ public class BindBluetoothDeviceAdapter extends RecyclerView.Adapter<RecyclerVie
         } else if (NOT_EMPTY_VIEW == itemViewType) {
             final MyViewHolder holder1 = (MyViewHolder) holder;
             holder1.tvDeviceName.setText(list.get(position).getBlue_name());
-            holder1.tvBind.setOnClickListener(v -> clickCallBack.Click(list.get(position)));
+            switch (list.get(position).getState()) {
+                case "0":
+                    holder1.tv_obd_state.setText("  已断开连接");
+                    Drawable drawable = context.getResources().getDrawable(R.drawable.icon_no);
+                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                    holder1.tv_obd_state.setCompoundDrawables(drawable, null, null, null);
+                    break;
+                case "1":
+                    holder1.tv_obd_state.setText("  连接中");
+                    Drawable drawable2 = context.getResources().getDrawable(R.drawable.icon_connecting);
+                    drawable2.setBounds(0, 0, drawable2.getMinimumWidth(), drawable2.getMinimumHeight());
+                    holder1.tv_obd_state.setCompoundDrawables(drawable2, null, null, null);
+                    break;
+                case "2":
+                    if (list.get(position).isConnected()) {
+                        holder1.tv_obd_state.setText("  已连接");
+                        Drawable drawable1 = context.getResources().getDrawable(R.drawable.icon_ok);
+                        drawable1.setBounds(0, 0, drawable1.getMinimumWidth(), drawable1.getMinimumHeight());
+                        holder1.tv_obd_state.setCompoundDrawables(drawable1, null, null, null);
+                    } else {
+                        holder1.tv_obd_state.setText("  未连接");
+                        Drawable drawable1 = context.getResources().getDrawable(R.drawable.icon_no);
+                        drawable1.setBounds(0, 0, drawable1.getMinimumWidth(), drawable1.getMinimumHeight());
+                        holder1.tv_obd_state.setCompoundDrawables(drawable1, null, null, null);
+                    }
+                    break;
+                case "3":
+                    Drawable drawable3 = context.getResources().getDrawable(R.drawable.icon_disconnecting);
+                    drawable3.setBounds(0, 0, drawable3.getMinimumWidth(), drawable3.getMinimumHeight());
+                    holder1.tv_obd_state.setCompoundDrawables(drawable3, null, null, null);
+                    holder1.tv_obd_state.setText("  正在断开连接");
+                    break;
+            }
+            holder1.layoutBind.setOnClickListener(v -> clickCallBack.Click(list.get(position)));
         }
     }
 
@@ -92,13 +131,15 @@ public class BindBluetoothDeviceAdapter extends RecyclerView.Adapter<RecyclerVie
     static class MyViewHolder extends RecyclerView.ViewHolder {
         View itemView;
         private final TextView tvDeviceName;
-        private final ImageView tvBind;
+        private final TextView tv_obd_state;
+        private final LinearLayout layoutBind;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
             tvDeviceName = itemView.findViewById(R.id.tvDeviceName);
-            tvBind = itemView.findViewById(R.id.tvBind);
+            tv_obd_state = itemView.findViewById(R.id.tv_obd_state);
+            layoutBind = itemView.findViewById(R.id.layoutBind);
         }
     }
 

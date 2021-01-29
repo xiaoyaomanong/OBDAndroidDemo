@@ -358,6 +358,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
         if (mSocket != null) {
             try {
                 mSocket.close();
+                sendBroadcast(ACTION_OBD_CONNECTION_STATUS,"socket closed");
             } catch (IOException e) {
                 LogUtils.i("socket closing failed :: ");
             }

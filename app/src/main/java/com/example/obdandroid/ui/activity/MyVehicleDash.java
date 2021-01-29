@@ -102,7 +102,7 @@ public class MyVehicleDash extends BaseActivity {
     private void setView(TripRecord tripRecord) {
         if (tripRecord != null) {
             tvmControlModuleVoltage.setText(tripRecord.getmControlModuleVoltage());
-            tvmFuelLevel.setText(tripRecord.getmFuelLevel() + "%");
+            tvmFuelLevel.setText(tripRecord.getmFuelLevel());
             tvmMassAirFlow.setText(String.valueOf(tripRecord.getmMassAirFlow()));
             tvmAirFuelRatio.setText(tripRecord.getmAirFuelRatio());
             tvmAmbientAirTemp.setText(tripRecord.getmAmbientAirTemp());
@@ -112,11 +112,11 @@ public class MyVehicleDash extends BaseActivity {
             dashRPM.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getEngineRpm()) ? "0" : tripRecord.getEngineRpm()));
             dashSpeed.setVelocity(tripRecord.getSpeed());
             dashInsFuelConsumption.setVelocity(tripRecord.getmInsFuelConsumption());
-            dashEngineCoolantTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineCoolantTemp().replace("C", "")) ? "0" : tripRecord.getmEngineCoolantTemp().replace("C", "")));
-            dashFuelLevel.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmFuelLevel()) ? "" : tripRecord.getmFuelLevel()));
+            dashEngineCoolantTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineCoolantTemp()) ? "0" : tripRecord.getmEngineCoolantTemp().replace("C", "")));
+            dashFuelLevel.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmFuelLevel()) ? "" : tripRecord.getmFuelLevel().replace("%", "")));
             dashDrivingFuelConsumption.setVelocity(tripRecord.getmDrivingFuelConsumption());
-            dashIdlingFuelConsumption.setVelocity( tripRecord.getmIdlingFuelConsumption());
-            dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineOilTemp().replace("C", "")) ? "" : tripRecord.getmEngineOilTemp().replace("C", "")));
+            dashIdlingFuelConsumption.setVelocity(tripRecord.getmIdlingFuelConsumption());
+            dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineOilTemp()) ? "" : tripRecord.getmEngineOilTemp().replace("C", "")));
         }
     }
 

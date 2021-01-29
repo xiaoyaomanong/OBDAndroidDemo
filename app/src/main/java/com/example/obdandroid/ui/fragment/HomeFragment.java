@@ -159,8 +159,6 @@ public class HomeFragment extends BaseFragment {
             startActivity(intent);
         });
         setCheckRecord();
-
-
         // 设置数据更新计时器
         GridLayoutManager manager = new GridLayoutManager(context, 5);
         manager.setOrientation(OrientationHelper.VERTICAL);
@@ -396,22 +394,16 @@ public class HomeFragment extends BaseFragment {
         builder.setPositiveButton("确定",
                 (dialog, which) -> {
                     if (yourChoice != -1) {
-                        dialogUtils.showProgressDialog("正在连接OBD");
                         isConnected = devicesList.get(yourChoice).getAddress().equals(deviceAddress);
                         if (!TextUtils.isEmpty(devicesList.get(yourChoice).getAddress())) {
                             if (isConnected) {
                                 connectBtDevice(devicesList.get(yourChoice).getAddress());
                             } else {
-                                dialogUtils.dismiss();
                                 showTipDialog("当前车辆绑定OBD设备,与连接的OBD设备不一致", TipDialog.TYPE_WARNING);
-                                //showToast("当前车辆绑定OBD设备,与连接的OBD设备不一致");
                             }
-
                         } else {
-                            dialogUtils.dismiss();
                             showToast(getString(R.string.text_bluetooth_error_connecting));
                         }
-                        startServiceOBD(devicesList.get(yourChoice));
                     }
                 });
         builder.show();
@@ -473,6 +465,7 @@ public class HomeFragment extends BaseFragment {
      */
     private void connectBtDevice(String address) {
         // 获取BluetoothDevice对象
+        dialogUtils.showProgressDialog("正在连接OBD");
         BluetoothDevice device = bluetoothadapter.getRemoteDevice(address);
         startServiceOBD(device);
     }
@@ -486,7 +479,6 @@ public class HomeFragment extends BaseFragment {
         dialogUtils.dismiss();
         titleBar.setLeftTitle("已连接");
         titleBar.setRightIcon(R.drawable.action_connect);
-        spUtil.put(CONNECT_BT_KEY, "ON");
     }
 
     /**
@@ -552,6 +544,8 @@ public class HomeFragment extends BaseFragment {
                     onDisconnect();
                 } else if (connectionStatusMsg.contains("未检测到OBD设备")) {
                     onDisconnect();
+                } else if (connectionStatusMsg.equals("socket closed")) {
+                    spUtil.put(CONNECT_BT_KEY, "ON");
                 }
             } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA)) {
                 tripRecord = TripRecord.getTripRecode(context);

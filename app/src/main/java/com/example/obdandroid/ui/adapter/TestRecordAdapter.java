@@ -39,11 +39,11 @@ import java.util.List;
 public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<TestRecordEntity.DataEntity.ListEntity> list;
     private final LayoutInflater inflater;
-    private OnClickCallBack clickCallBack;
     private final int EMPTY_VIEW = 0;//空页面
     private final int NOT_EMPTY_VIEW = 1;//正常页面
     private Context context;
     private String token;
+    private OnClickCallBack clickCallBack;
 
     public TestRecordAdapter(Context context) {
         this.context = context;
@@ -114,8 +114,6 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final RelativeLayout rlTitle;
         private final RecyclerView recycleContent;
         private final View vLine;
-        private TestRecordEntity.DataEntity.ListEntity timeData;
-        private OBDJsonTripEntity tripEntity;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -128,8 +126,8 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         @SuppressLint("SetTextI18n")
         public void setPosition(int position) {
-            timeData = list.get(position);
-            tripEntity = JSON.parseObject(timeData.getTestData(), OBDJsonTripEntity.class);
+            TestRecordEntity.DataEntity.ListEntity timeData = list.get(position);
+            OBDJsonTripEntity tripEntity = JSON.parseObject(timeData.getTestData(), OBDJsonTripEntity.class);
             int size;
             if (!TextUtils.isEmpty(tripEntity.getFaultCodes())) {
                 size = tripEntity.getFaultCodes().replaceAll("\r|\n", ",").split(",").length;
@@ -204,6 +202,7 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.recycleContent);
             }
             vLine.setLayoutParams(layoutParams);
+            rlTitle.setOnClickListener(v -> clickCallBack.click(list.get(position)));
             LinearLayoutManager manager = new LinearLayoutManager(context);
             manager.setOrientation(OrientationHelper.VERTICAL);
             recycleContent.setLayoutManager(manager);
@@ -224,6 +223,6 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public interface OnClickCallBack {
-        void Click(TestRecordEntity.DataEntity.ListEntity entity);
+        void click(TestRecordEntity.DataEntity.ListEntity entity);
     }
 }

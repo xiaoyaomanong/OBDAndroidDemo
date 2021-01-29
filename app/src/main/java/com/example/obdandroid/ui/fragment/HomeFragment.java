@@ -29,6 +29,7 @@ import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.ui.activity.BindBluetoothDeviceActivity;
 import com.example.obdandroid.ui.activity.CheckRecordActivity;
+import com.example.obdandroid.ui.activity.CheckRecordDetailsActivity;
 import com.example.obdandroid.ui.activity.MyVehicleActivity;
 import com.example.obdandroid.ui.activity.MyVehicleDash;
 import com.example.obdandroid.ui.activity.VehicleInfoActivity;
@@ -53,6 +54,7 @@ import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
 import com.sohrab.obd.reader.application.ObdPreferences;
 import com.sohrab.obd.reader.service.ObdReaderService;
+import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 import com.sohrab.obd.reader.trip.TripRecord;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -197,6 +199,12 @@ public class HomeFragment extends BaseFragment {
         recordAdapter = new TestRecordAdapter(context);
         recordAdapter.setToken(getToken());
         getTestRecordPageList(getToken(), String.valueOf(1), String.valueOf(2), getUserId());
+        recordAdapter.setClickCallBack(entity -> {
+            OBDJsonTripEntity tripEntity = JSON.parseObject(entity.getTestData(), OBDJsonTripEntity.class);
+            Intent intent = new Intent(context, CheckRecordDetailsActivity.class);
+            intent.putExtra("data", tripEntity);
+            startActivity(intent);
+        });
         layoutMoreTest.setOnClickListener(v -> JumpUtil.startAct(context, CheckRecordActivity.class));
     }
 

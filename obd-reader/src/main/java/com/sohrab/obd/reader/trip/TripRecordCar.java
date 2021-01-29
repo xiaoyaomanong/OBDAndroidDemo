@@ -745,8 +745,10 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
 
     public OBDJsonTripEntity getOBDJson() {
         OBDJsonTripEntity entity = new OBDJsonTripEntity();
+        entity.setSpeed(speed + " km/h");
+        entity.setSpeedMax(speedMax + " km/h");
         entity.setEngineRpm(TextUtils.isEmpty(engineRpm) ? "" : engineRpm);
-        entity.setEngineRpmMax(engineRpmMax + " km/h");
+        entity.setEngineRpmMax(String.valueOf(engineRpmMax));
         entity.setEngineRuntime(TextUtils.isEmpty(engineRuntime) ? "" : engineRuntime);
         entity.setDrivingDuration(getDrivingDuration() + " m");
         entity.setIdlingDuration(getIdlingDuration() + " m");
@@ -782,7 +784,7 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
         entity.setIntakeAirTemp(mIntakeAirTemp + " C");
         entity.setIntakePressure(mIntakePressure + " kpa");
         entity.setMassAirFlow(mMassAirFlow + "");
-        entity.setPendingTroubleCode(TextUtils.isEmpty(mPendingTroubleCode) ? "" : mAirFuelRatio);
+        entity.setPendingTroubleCode(TextUtils.isEmpty(mPendingTroubleCode) ? "" : mPendingTroubleCode);
         entity.setPermanentTroubleCode(TextUtils.isEmpty(mPermanentTroubleCode) ? "" : mPermanentTroubleCode);
         entity.setRapidAccTimes(mRapidAccTimes + "");
         entity.setRapidDeclTimes(mRapidDeclTimes + "");
@@ -791,8 +793,6 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
         entity.setVehicleIdentificationNumber(TextUtils.isEmpty(mVehicleIdentificationNumber) ? "" : mVehicleIdentificationNumber);
         entity.setWideBandAirFuelRatio(TextUtils.isEmpty(mWideBandAirFuelRatio) ? "" : mWideBandAirFuelRatio);
         entity.setRmCommandedEGR(TextUtils.isEmpty(mCommandedEGR) ? "" : mCommandedEGR);
-        entity.setSpeed(speed + " km/h");
-        entity.setSpeedMax(speedMax + " km/h");
         return entity;
     }
 

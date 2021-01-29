@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         app:barStyle="night"
         app:lineVisible="false"
-        app:title="@string/car_check_record" />
+        app:title="@string/check_detaisl" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -26,7 +26,152 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-         <!--   <LinearLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_black"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="130dp"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/dp_10"
+                        android:text="@string/mPermanentTroubleCode"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/tv_mPermanentTroubleCode"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|right"
+                        android:paddingEnd="10dp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlHardcoded,RtlSymmetry,TextFields" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/icon_next"
+                        android:tint="@color/gray"
+                        tools:ignore="ContentDescription" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/black_line" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="130dp"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/dp_10"
+                        android:text="@string/mPendingTroubleCode"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/tv_mPendingTroubleCode"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|right"
+                        android:paddingEnd="10dp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlHardcoded,RtlSymmetry,TextFields" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/icon_next"
+                        android:tint="@color/gray"
+                        tools:ignore="ContentDescription" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/black_line" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="130dp"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/dp_10"
+                        android:text="@string/mFaultCodes"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/tv_mFaultCodes"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|right"
+                        android:paddingEnd="10dp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlHardcoded,RtlSymmetry,TextFields" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/icon_next"
+                        android:tint="@color/gray"
+                        tools:ignore="ContentDescription" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/black_line" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -45,12 +190,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="车速"
+                        android:text="@string/speed"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_speed"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -79,12 +225,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="发动机转速"
+                        android:text="@string/engineRpm"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_engineRpm"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -112,12 +259,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="空闲时间"
+                        android:text="@string/IdlingDuration"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_IdlingDuration"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -156,12 +304,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="行驶时间"
+                        android:text="@string/DrivingDuration"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_DrivingDuration"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -190,12 +339,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="最高车速"
+                        android:text="@string/speedMax"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_speedMax"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -223,12 +373,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="最大转速"
+                        android:text="@string/engineRpmMax"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_engineRpmMax"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -267,12 +418,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="速降次数"
+                        android:text="@string/mRapidDeclTimes"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mRapidDeclTimes"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -301,12 +453,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="加速次数"
+                        android:text="@string/mRapidAccTimes"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mRapidAccTimes"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -334,12 +487,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="怠速空气流量"
+                        android:text="@string/mIdleMaf"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mIdleMaf"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -378,12 +532,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="驱动空气流量"
+                        android:text="@string/mDrivingMaf"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mDrivingMaf"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -412,12 +567,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="瞬时油耗"
+                        android:text="@string/mInsFuelConsumption"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mInsFuelConsumption"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -440,128 +596,18 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="130dp"
+                        android:layout_width="132dp"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="行驶油耗"
+                        android:text="@string/DrivingFuelConsumption"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|right"
-                        android:paddingEnd="10dp"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlHardcoded,RtlSymmetry,TextFields" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@color/black_line" />
-
-            </LinearLayout>-->
-
-         <!--   <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/bg_black"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="130dp"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/gotham"
-                        android:gravity="center_vertical"
-                        android:paddingStart="@dimen/dp_10"
-                        android:text="怠速油耗"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlSymmetry" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|right"
-                        android:paddingEnd="10dp"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlHardcoded,RtlSymmetry" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@color/black_line" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="130dp"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/gotham"
-                        android:gravity="center_vertical"
-                        android:paddingStart="@dimen/dp_10"
-                        android:text="点火监视器"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlSymmetry" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|right"
-                        android:paddingEnd="10dp"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlHardcoded,RtlSymmetry" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@color/black_line" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="130dp"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/gotham"
-                        android:gravity="center_vertical"
-                        android:paddingStart="@dimen/dp_10"
-                        android:text="描述协议编号"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlSymmetry" />
-
-                    <TextView
+                        android:id="@+id/tv_DrivingFuelConsumption"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -600,12 +646,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="描述协议"
+                        android:text="@string/IdlingFuelConsumption"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_IdlingFuelConsumption"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -634,12 +681,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="宽带空燃比"
+                        android:text="@string/mIgnitionMonitor"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mIgnitionMonitor"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -667,123 +715,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="空燃比"
+                        android:text="@string/mDescribeProtocolNumber"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|right"
-                        android:paddingEnd="10dp"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlHardcoded,RtlSymmetry,TextFields" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@color/black_line" />
-
-            </LinearLayout>-->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/bg_black"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="130dp"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/gotham"
-                        android:gravity="center_vertical"
-                        android:paddingStart="@dimen/dp_10"
-                        android:text="发动机油温"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlSymmetry" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|right"
-                        android:paddingEnd="10dp"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlHardcoded,RtlSymmetry" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@color/black_line" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="130dp"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/gotham"
-                        android:gravity="center_vertical"
-                        android:paddingStart="@dimen/dp_10"
-                        android:text="指令EGR"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlSymmetry" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|right"
-                        android:paddingEnd="10dp"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlHardcoded,RtlSymmetry" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@color/black_line" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="130dp"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/gotham"
-                        android:gravity="center_vertical"
-                        android:paddingStart="@dimen/dp_10"
-                        android:text="绝对负荷"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlSymmetry" />
-
-                    <TextView
+                        android:id="@+id/tv_mDescribeProtocolNumber"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -822,13 +760,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="MIL开时行驶的距离"
+                        android:text="@string/mDescribeProtocol"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
-                        android:id="@+id/tvFuelType"
+                        android:id="@+id/tv_mDescribeProtocol"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -857,13 +795,241 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="车辆识别号（VIN）"
+                        android:text="@string/mWideBandAirFuelRatio"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
-                        android:id="@+id/tvTransmissionType"
+                        android:id="@+id/tv_mWideBandAirFuelRatio"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        android:paddingEnd="10dp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlHardcoded,RtlSymmetry" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/black_line" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="130dp"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/dp_10"
+                        android:text="@string/mAirFuelRatio"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlSymmetry,TooManyViews" />
+
+                    <TextView
+                        android:id="@+id/tv_mAirFuelRatio"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        android:paddingEnd="10dp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlHardcoded,RtlSymmetry,TextFields" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/black_line" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_black"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="130dp"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/dp_10"
+                        android:text="@string/mEngineOilTemp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/tv_mEngineOilTemp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        android:paddingEnd="10dp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/black_line" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="130dp"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/dp_10"
+                        android:text="@string/mCommandedEGR"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/tv_mCommandedEGR"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        android:paddingEnd="10dp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlHardcoded,RtlSymmetry" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/black_line" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="130dp"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/dp_10"
+                        android:text="@string/mAbsLoad"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/tv_mAbsLoad"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        android:paddingEnd="10dp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlHardcoded,RtlSymmetry,TextFields" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/black_line" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_black"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="130dp"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/dp_10"
+                        android:text="@string/mDistanceTraveledMilOn"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/tv_mDistanceTraveledMilOn"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        android:paddingEnd="10dp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/black_line" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="130dp"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/dp_10"
+                        android:text="@string/mVehicleIdentificationNumber"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:id="@+id/tv_mVehicleIdentificationNumber"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -892,12 +1058,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="相对于歧管真空的燃油分供管压力"
+                        android:text="@string/mFuelRailPressurevacuum"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_FuelRail_Pressure_vacuum"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -914,6 +1081,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -925,12 +1093,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="燃油分供管压力"
+                        android:text="@string/mFuelRailPressure"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mFuelRailPressure"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -947,6 +1116,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -958,12 +1128,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="控制模组电压"
+                        android:text="@string/mControlModuleVoltage"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mControlModuleVoltage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -980,6 +1151,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -991,12 +1163,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="代码清除后的距离"
+                        android:text="@string/DistanceTraveledAfter"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_DistanceTraveledAfter"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -1013,6 +1186,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -1024,12 +1198,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="指令当量比"
+                        android:text="@string/mEquivRatio"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mEquivRatio"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -1046,6 +1221,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -1057,12 +1233,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="故障诊断码"
+                        android:text="@string/mDtcNumber"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mDtcNumber"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -1079,6 +1256,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -1090,12 +1268,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="定时提前"
+                        android:text="@string/mTimingAdvance"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mTimingAdvance"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -1112,6 +1291,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -1123,12 +1303,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="燃油消耗率"
+                        android:text="@string/mFuelConsumptionRate"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mFuelConsumptionRate"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -1145,6 +1326,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -1156,12 +1338,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="燃油系统状态"
+                        android:text="@string/mFuelSystemStatus"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mFuelSystemStatus"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -1178,6 +1361,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -1189,12 +1373,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="燃料类型"
+                        android:text="@string/mFuelTypeValue"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mFuelTypeValue"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -1211,6 +1396,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -1222,12 +1408,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="燃油油位"
+                        android:text="@string/mFuelLevel"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mFuelLevel"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -1244,6 +1431,8 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -1255,12 +1444,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="永久性故障代码"
+                        android:text="@string/mThrottlePos"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mThrottlePos"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -1277,6 +1467,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -1288,12 +1479,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="未决故障代码"
+                        android:text="@string/mMassAirFlow"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mMassAirFlow"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -1310,6 +1502,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -1321,12 +1514,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="故障代码"
+                        android:text="@string/engineRuntime"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_engineRuntime"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -1343,6 +1537,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -1354,12 +1549,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="节气门位置"
+                        android:text="@string/mEngineLoad"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mEngineLoad"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -1376,6 +1572,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -1387,12 +1584,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="空气质量流量"
+                        android:text="@string/mIntakePressure"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mIntakePressure"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -1409,6 +1607,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -1420,12 +1619,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="引擎运行时间"
+                        android:text="@string/mFuelPressure"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mFuelPressure"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -1442,6 +1642,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -1453,12 +1654,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="发动机负荷"
+                        android:text="@string/mBarometricPressure"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mBarometricPressure"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -1475,6 +1677,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -1486,12 +1689,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="进气歧管压力"
+                        android:text="@string/mEngineCoolantTemp"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mEngineCoolantTemp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -1508,6 +1712,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -1519,12 +1724,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="燃油压力"
+                        android:text="@string/mAmbientAirTemp"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
+                        android:id="@+id/tv_mAmbientAirTemp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"
@@ -1541,6 +1747,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/black_line" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -1552,111 +1759,13 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dp_10"
-                        android:text="大气压"
+                        android:text="@string/mIntakeAirTemp"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_12"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|right"
-                        android:paddingEnd="10dp"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlHardcoded,RtlSymmetry,TextFields" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@color/black_line" />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="130dp"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/gotham"
-                        android:gravity="center_vertical"
-                        android:paddingStart="@dimen/dp_10"
-                        android:text="发动机冷却液温度"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlSymmetry" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|right"
-                        android:paddingEnd="10dp"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlHardcoded,RtlSymmetry,TextFields" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@color/black_line" />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="130dp"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/gotham"
-                        android:gravity="center_vertical"
-                        android:paddingStart="@dimen/dp_10"
-                        android:text="环境空气温度"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlSymmetry" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|right"
-                        android:paddingEnd="10dp"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlHardcoded,RtlSymmetry,TextFields" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@color/black_line" />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="130dp"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/gotham"
-                        android:gravity="center_vertical"
-                        android:paddingStart="@dimen/dp_10"
-                        android:text="进气温度"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_12"
-                        tools:ignore="RtlSymmetry" />
-
-                    <TextView
+                        android:id="@+id/tv_mIntakeAirTemp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical|right"

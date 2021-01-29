@@ -195,7 +195,7 @@ public class CheckRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.recycleContent);
             }
             vLine.setLayoutParams(layoutParams);
-            card_view.setOnClickListener(v -> clickCallBack.click(list.get(position)));
+            rlTitle.setOnClickListener(v -> clickCallBack.click(list.get(position)));
             LinearLayoutManager manager = new LinearLayoutManager(context);
             manager.setOrientation(OrientationHelper.VERTICAL);
             recycleContent.setLayoutManager(manager);

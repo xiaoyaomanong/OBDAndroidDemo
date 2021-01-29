@@ -43,7 +43,9 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="30dp"
+            android:drawableEnd="@drawable/icon_next"
             android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
             android:textColor="@color/red"
             android:textSize="@dimen/sp_14"
             tools:ignore="RelativeOverlap" />

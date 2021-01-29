@@ -1,6 +1,7 @@
 package com.example.obdandroid.ui.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.view.View;
 
@@ -12,6 +13,7 @@ import com.example.obdandroid.ui.entity.TestRecordEntity;
 import com.example.obdandroid.ui.entity.VehicleEntity;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
+import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -89,11 +91,11 @@ public class CheckRecordActivity extends BaseActivity {
             }
         });
 
-        adapter.setClickCallBack(new CheckRecordAdapter.OnClickCallBack() {
-            @Override
-            public void click(TestRecordEntity.DataEntity.ListEntity entity) {
-
-            }
+        adapter.setClickCallBack(entity -> {
+            OBDJsonTripEntity tripEntity = JSON.parseObject(entity.getTestData(), OBDJsonTripEntity.class);
+            Intent intent = new Intent(context, CheckRecordDetailsActivity.class);
+            intent.putExtra("data", tripEntity);
+            startActivity(intent);
         });
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -120,7 +122,7 @@ public class CheckRecordActivity extends BaseActivity {
      * @param appUserId 用户id
      *                  获取用户检测记录列表
      */
-    private void getTestRecordPageList( String pageNum, String pageSize,String token, String appUserId,boolean isRefresh) {
+    private void getTestRecordPageList(String pageNum, String pageSize, String token, String appUserId, boolean isRefresh) {
         OkHttpUtils.get().url(SERVER_URL + getTestRecordPageList_URL).
                 addParam("token", token).
                 addParam("pageNum", pageNum).

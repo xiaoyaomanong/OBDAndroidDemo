@@ -1,8 +1,11 @@
 package com.example.obdandroid.base;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -11,8 +14,16 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.obdandroid.ui.entity.BluetoothDeviceEntity;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.StringUtil;
+import com.example.obdandroid.utils.ToastUtil;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
 import static com.example.obdandroid.config.Constant.TOKEN;
@@ -32,6 +43,7 @@ public abstract class BaseFragment extends Fragment {
     private String token;
     private String userId = "";
     private String expireTime = "";
+    private List<BluetoothDeviceEntity> blueList = new ArrayList<>();
 
     //获取布局文件ID
     protected abstract int getLayoutId();
@@ -122,6 +134,106 @@ public abstract class BaseFragment extends Fragment {
     public void setExpireTime(String expireTime) {
         this.expireTime = expireTime;
     }
+
+    /**
+     * 初始化蓝牙
+     */
+    public List<BluetoothDeviceEntity> getBlueTooth() {
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        if (adapter != null) {
+            if (!adapter.isEnabled()) {
+                adapter.enable();
+                //睡一秒钟，避免不发现
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+          /*  Set<BluetoothDevice> devices = adapter.getBondedDevices();
+            blueList = new ArrayList<>();
+            for (BluetoothDevice bluetoothDevice : devices) {
+                HashMap<String, Object> blueHashMap = new HashMap<>();
+                blueHashMap.put("blue_device", bluetoothDevice);
+                blueHashMap.put("blue_name", bluetoothDevice.getName());
+                blueHashMap.put("blue_address", bluetoothDevice.getAddress());
+                blueList.add(blueHashMap);
+            }*/
+            // getConnectedBtDevice(adapter);
+            return getConnectedBtDevice(adapter);
+        } else {
+            ToastUtil.shortShow("本机没有蓝牙设备");
+            return null;
+        }
+    }
+
+    //获取已连接的蓝牙设备
+    private List<BluetoothDeviceEntity> getConnectedBtDevice(BluetoothAdapter adapter) {
+        Class<BluetoothAdapter> bluetoothAdapterClass = BluetoothAdapter.class;//得到BluetoothAdapter的Class对象
+        try {
+            //得到连接状态的方法
+            Method method = bluetoothAdapterClass.getDeclaredMethod("getConnectionState", (Class[]) null);
+            //打开权限
+            method.setAccessible(true);
+            int state = (int) method.invoke(adapter, (Object[]) null);
+            Set<BluetoothDevice> devices = adapter.getBondedDevices(); //集合里面包括已绑定的设备和已连接的设备
+            for (BluetoothDevice device : devices) {
+                Method isConnectedMethod = BluetoothDevice.class.getDeclaredMethod("isConnected", (Class[]) null);
+                method.setAccessible(true);
+                boolean isConnected = (boolean) isConnectedMethod.invoke(device, (Object[]) null);
+                BluetoothDeviceEntity entity = new BluetoothDeviceEntity();
+                entity.setBlue_address(device.getAddress());
+                entity.setBlue_name(device.getName());
+                entity.setState(String.valueOf(state));
+                entity.setConnected(isConnected);//根据状态来区分是已连接的还是已绑定的，isConnected为true表示是已连接状态。
+                blueList.add(entity);
+            }
+            return blueList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * @param macAddress 设备mac地址,例如"78:02:B7:01:01:16"
+     * @return 判断给定的设备mac地址是否已连接经典蓝牙
+     */
+    public static boolean isConnectClassicBT(String macAddress) {
+        if (TextUtils.isEmpty(macAddress)) {
+            return false;
+        }
+        final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        Class<BluetoothAdapter> bluetoothAdapterClass = BluetoothAdapter.class;//得到BluetoothAdapter的Class对象
+        try {
+            //是否存在连接的蓝牙设备
+            Method method = bluetoothAdapterClass.getDeclaredMethod("getConnectionState", (Class[]) null);
+            //打开权限
+            method.setAccessible(true);
+            int state = (int) method.invoke(bluetoothAdapter, (Object[]) null);
+            if (state == BluetoothAdapter.STATE_CONNECTED) {
+                Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
+                for (BluetoothDevice device : devices) {
+                    Method isConnectedMethod = BluetoothDevice.class.getDeclaredMethod("isConnected", (Class[]) null);
+                    method.setAccessible(true);
+                    boolean isConnected = (boolean) isConnectedMethod.invoke(device, (Object[]) null);
+                    if (isConnected) {
+                        {
+                            return macAddress.contains(device.getAddress());
+                        }
+                    } else {
+                        Log.d("test", device.getName() + " connect false(" + device.getAddress() + ")");
+                    }
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     /**
      * @param msg 日志内容

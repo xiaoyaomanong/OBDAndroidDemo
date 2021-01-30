@@ -1,5 +1,6 @@
 package com.example.obdandroid.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,7 +16,6 @@ import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
  * 描述：车检详情
  */
 public class CheckRecordDetailsActivity extends BaseActivity {
-    private TitleBar titleBarSet;
     private TextView tvSpeed;
     private TextView tvEngineRpm;
     private TextView tvIdlingDuration;
@@ -63,7 +63,6 @@ public class CheckRecordDetailsActivity extends BaseActivity {
     private TextView tvMEngineCoolantTemp;
     private TextView tvMAmbientAirTemp;
     private TextView tvMIntakeAirTemp;
-    private OBDJsonTripEntity mTripEntity;
 
     @Override
     protected int getContentViewId() {
@@ -78,8 +77,8 @@ public class CheckRecordDetailsActivity extends BaseActivity {
     @Override
     public void initView() {
         super.initView();
-        mTripEntity = (OBDJsonTripEntity) getIntent().getSerializableExtra("data");
-        titleBarSet = findViewById(R.id.titleBarSet);
+        OBDJsonTripEntity mTripEntity = (OBDJsonTripEntity) getIntent().getSerializableExtra("data");
+        TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         tvSpeed = findViewById(R.id.tv_speed);
         tvEngineRpm = findViewById(R.id.tv_engineRpm);
         tvIdlingDuration = findViewById(R.id.tv_IdlingDuration);
@@ -146,6 +145,7 @@ public class CheckRecordDetailsActivity extends BaseActivity {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void setView(OBDJsonTripEntity entity) {
         tvSpeed.setText(entity.getSpeed());
         tvEngineRpm.setText(entity.getEngineRpm());
@@ -181,9 +181,9 @@ public class CheckRecordDetailsActivity extends BaseActivity {
         tvMFuelSystemStatus.setText(entity.getFuelSystemStatus());
         tvMFuelTypeValue.setText(entity.getFuelTypeValue());
         tvMFuelLevel.setText(entity.getFuelLevel());
-        tvMPermanentTroubleCode.setText(entity.getPermanentTroubleCode());
-        tvMPendingTroubleCode.setText(entity.getPendingTroubleCode());
-        tvMFaultCodes.setText(entity.getFaultCodes());
+        tvMPermanentTroubleCode.setText(entity.getPermanentTroubleCode().replaceAll("\r|\n", ",").split(",").length + "");
+        tvMPendingTroubleCode.setText(entity.getPendingTroubleCode().replaceAll("\r|\n", ",").split(",").length + "");
+        tvMFaultCodes.setText(entity.getFaultCodes().replaceAll("\r|\n", ",").split(",").length +"");
         tvMThrottlePos.setText(entity.getRelThottlePos());
         tvMMassAirFlow.setText(entity.getMassAirFlow());
         tvEngineRuntime.setText(entity.getEngineRuntime());

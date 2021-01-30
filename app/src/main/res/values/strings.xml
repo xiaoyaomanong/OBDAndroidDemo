@@ -229,5 +229,10 @@
     <string name="mIntakeAirTemp">进气温度</string>
     <string name="mIntakePressure">进气歧管压力</string>
     <string name="check_detaisl">车检详情</string>
+    <string name="running">Route in process…</string>
+    <string name="noti_id" translatable="false">Speedmeterisanid</string>
+    <string name="notification">Max Speed : %1$s, Distance : %2$s.</string>
+    <string name="gps_disabled">GPS disabled</string>
+    <string name="please_enable_gps">In order to use this app you need the GPS to be enabled.</string>
 
 </resources>

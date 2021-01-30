@@ -2,8 +2,13 @@ package com.example.obdandroid.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.location.GpsStatus;
+import android.location.Location;
+import android.location.LocationListener;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -21,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.listener.Data;
 import com.example.obdandroid.ui.adapter.SimpleFragmentPagerAdapter;
 import com.example.obdandroid.ui.fragment.HomeFragment;
 import com.example.obdandroid.ui.fragment.MsgFragment;
@@ -39,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
+import static com.example.obdandroid.config.Constant.REQUEST_ENABLE_BT;
 import static com.kongzue.dialog.v2.DialogSettings.THEME_DARK;
 import static com.kongzue.dialog.v2.DialogSettings.blur_alpha;
 import static com.kongzue.dialog.v2.DialogSettings.dialog_background_color;
@@ -59,6 +66,7 @@ public class MainActivity extends BaseActivity {
     private int blur_front_color;
     private BlurView blur;
     private SPUtil spUtil;
+    private BluetoothAdapter bluetoothadapter;
 
     @Override
     protected int getContentViewId() {
@@ -90,6 +98,26 @@ public class MainActivity extends BaseActivity {
         //viewPager.setPageTransformer(true, new ScalePageTransformer());
         viewPager.setPageTransformer(true, new DepthPageTransformer());
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        checkBlueTooth();//检查蓝牙
+    }
+
+    /**
+     * 检查蓝牙
+     */
+    private void checkBlueTooth() {
+        bluetoothadapter = BluetoothAdapter.getDefaultAdapter();
+        //如果BT未开启，请请求将其启用。
+        if (bluetoothadapter != null) {
+            /*
+             * 记住最初的蓝牙状态
+             * 蓝牙适配器的初始状态
+             */
+            boolean initialBtStateEnabled = bluetoothadapter.isEnabled();
+            if (!initialBtStateEnabled) {
+                Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+            }
+        }
     }
 
     private final ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -236,6 +264,14 @@ public class MainActivity extends BaseActivity {
             bkg.setBackgroundResource(dialog_background_color);
         }
         exitDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
     }
 
     @Override

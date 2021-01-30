@@ -31,6 +31,7 @@ import app.com.android_obd_reader.R;
  * 描述：
  */
 public class TripRecordCar implements DefineObdTwoReader, Serializable {
+    @SuppressLint("StaticFieldLeak")
     private static Context sContext;
     int MINUS_ONE = -1;
     private static final int SPEED_GAP = 20;
@@ -575,13 +576,11 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
                 data.add(new OBDTripEntity("描述协议", TextUtils.isEmpty(mDescribeProtocol) ? "" : mDescribeProtocol, R.drawable.icon_msxy));
                 entity.setDescribeProtocol(TextUtils.isEmpty(mDescribeProtocol) ? "" : mDescribeProtocol);
                 break;
-
             case DESCRIBE_PROTOCOL_NUMBER:
                 mDescribeProtocolNumber = command.getFormattedResult();
                 data.add(new OBDTripEntity("描述协议编号", TextUtils.isEmpty(mDescribeProtocolNumber) ? "" : mDescribeProtocolNumber, R.drawable.icon_xybh));
                 entity.setDescribeProtocolNumber(TextUtils.isEmpty(mDescribeProtocolNumber) ? "" : mDescribeProtocolNumber);
                 break;
-
             case IGNITION_MONITOR:
                 mIgnitionMonitor = command.getFormattedResult();
                 data.add(new OBDTripEntity("点火监视器", TextUtils.isEmpty(mIgnitionMonitor) ? "" : mIgnitionMonitor, R.drawable.icon_fire));

@@ -1,11 +1,13 @@
 package com.example.obdandroid.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.utils.JumpUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
@@ -63,6 +65,10 @@ public class CheckRecordDetailsActivity extends BaseActivity {
     private TextView tvMEngineCoolantTemp;
     private TextView tvMAmbientAirTemp;
     private TextView tvMIntakeAirTemp;
+    private android.widget.LinearLayout layoutPermanentTroubleCode;
+    private android.widget.LinearLayout layoutPendingTroubleCode;
+    private android.widget.LinearLayout layoutFaultCodes;
+    private Context context;
 
     @Override
     protected int getContentViewId() {
@@ -77,6 +83,7 @@ public class CheckRecordDetailsActivity extends BaseActivity {
     @Override
     public void initView() {
         super.initView();
+        context = this;
         OBDJsonTripEntity mTripEntity = (OBDJsonTripEntity) getIntent().getSerializableExtra("data");
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         tvSpeed = findViewById(R.id.tv_speed);
@@ -126,6 +133,9 @@ public class CheckRecordDetailsActivity extends BaseActivity {
         tvMEngineCoolantTemp = findViewById(R.id.tv_mEngineCoolantTemp);
         tvMAmbientAirTemp = findViewById(R.id.tv_mAmbientAirTemp);
         tvMIntakeAirTemp = findViewById(R.id.tv_mIntakeAirTemp);
+        layoutPermanentTroubleCode = findViewById(R.id.layoutPermanentTroubleCode);
+        layoutPendingTroubleCode = findViewById(R.id.layoutPendingTroubleCode);
+        layoutFaultCodes = findViewById(R.id.layoutFaultCodes);
         setView(mTripEntity);
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -183,7 +193,7 @@ public class CheckRecordDetailsActivity extends BaseActivity {
         tvMFuelLevel.setText(entity.getFuelLevel());
         tvMPermanentTroubleCode.setText(entity.getPermanentTroubleCode().replaceAll("\r|\n", ",").split(",").length + "");
         tvMPendingTroubleCode.setText(entity.getPendingTroubleCode().replaceAll("\r|\n", ",").split(",").length + "");
-        tvMFaultCodes.setText(entity.getFaultCodes().replaceAll("\r|\n", ",").split(",").length +"");
+        tvMFaultCodes.setText(entity.getFaultCodes().replaceAll("\r|\n", ",").split(",").length + "");
         tvMThrottlePos.setText(entity.getRelThottlePos());
         tvMMassAirFlow.setText(entity.getMassAirFlow());
         tvEngineRuntime.setText(entity.getEngineRuntime());
@@ -194,5 +204,8 @@ public class CheckRecordDetailsActivity extends BaseActivity {
         tvMEngineCoolantTemp.setText(entity.getEngineCoolantTemp());
         tvMAmbientAirTemp.setText(entity.getAmbientAirTemp());
         tvMIntakeAirTemp.setText(entity.getIntakeAirTemp());
+        layoutFaultCodes.setOnClickListener(v -> JumpUtil.startActToData(context, TroubleCodeQueryActivity.class, entity.getFaultCodes(), 0));
+        layoutPendingTroubleCode.setOnClickListener(v -> JumpUtil.startActToData(context, TroubleCodeQueryActivity.class, entity.getPendingTroubleCode(), 0));
+        layoutPermanentTroubleCode.setOnClickListener(v -> JumpUtil.startActToData(context, TroubleCodeQueryActivity.class, entity.getPermanentTroubleCode(), 0));
     }
 }

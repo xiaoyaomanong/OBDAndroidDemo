@@ -610,13 +610,12 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
             fuelTypeValue = 17.2f;
             gramToLitre = GRAM_TO_LITRE_CNG;
         }
-
         if (fuelTypeValue != 0) {
             ObdPreferences.get(sContext.getApplicationContext()).setFuelType(mFuelTypeValue);
             mFuelTypeValue = fuelTypeValue;
-            data.add(new OBDTripEntity("燃料类型", mFuelTypeValue + "", R.drawable.icon_fuel_type_record));
-            entity.setFuelTypeValue(String.valueOf(mFuelTypeValue));
         }
+        data.add(new OBDTripEntity("燃料类型", mFuelTypeValue + "", R.drawable.icon_fuel_type_record));
+        entity.setFuelTypeValue(String.valueOf(mFuelTypeValue));
     }
 
     public void setmIsTempPressureSupported(boolean mIsTempPressureSupported) {

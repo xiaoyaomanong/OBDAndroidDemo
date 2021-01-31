@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.ui.entity.AutomobileBrandEntity;
 import com.example.obdandroid.ui.entity.BluetoothDeviceEntity;
 import com.example.obdandroid.ui.entity.BrandPinYinEntity;
 import com.example.obdandroid.ui.entity.CarModelEntity;
@@ -39,7 +40,7 @@ import static com.example.obdandroid.config.APIConfig.SERVER_URL;
  * 日期：2021/1/9 0009
  * 描述：
  */
-public class AddVehiclActivity extends BaseActivity {
+public class AddVehicleActivity extends BaseActivity {
     private Context context;
     private TitleBar titleBarSet;
     private TextView tvAutomobileBrandName;
@@ -55,6 +56,8 @@ public class AddVehiclActivity extends BaseActivity {
     private String transmissionType;
     private String bluetoothDeviceNumber = "";
     private String bluetoothName = "";
+    private AutomobileBrandEntity.DataEntity dataEntity;
+    private BrandPinYinEntity yinEntity;
 
     @Override
     protected int getContentViewId() {
@@ -70,6 +73,8 @@ public class AddVehiclActivity extends BaseActivity {
     public void initView() {
         super.initView();
         context = this;
+        dataEntity = (AutomobileBrandEntity.DataEntity) getIntent().getSerializableExtra("data");
+        yinEntity = (BrandPinYinEntity) getIntent().getSerializableExtra("dataA");
         titleBarSet = findViewById(R.id.titleBarSet);
         tvAutomobileBrandName = findViewById(R.id.tvAutomobileBrandName);
         tvModelName = findViewById(R.id.tvModelName);
@@ -78,6 +83,14 @@ public class AddVehiclActivity extends BaseActivity {
         tvCurrentMileage = findViewById(R.id.tvCurrentMileage);
         tvBluetoothDeviceNumber = findViewById(R.id.tvBluetoothDeviceNumber);
         btnAdd = findViewById(R.id.btnAdd);
+        if (dataEntity != null) {
+            automobileBrandId = String.valueOf(dataEntity.getAutomobileBrandId());
+            tvAutomobileBrandName.setText(dataEntity.getName());
+        }
+        if (yinEntity != null) {
+            automobileBrandId = String.valueOf(yinEntity.getAutomobileBrandId());
+            tvAutomobileBrandName.setText(yinEntity.getName());
+        }
         //选择汽车品牌
         tvAutomobileBrandName.setOnClickListener(v -> {
             Intent intent = new Intent(context, AutomobileBrandActivity.class);
@@ -183,8 +196,8 @@ public class AddVehiclActivity extends BaseActivity {
      *                              添加车辆信息
      */
     private void addVehicle(String appUserId, String automobileBrandId, String automobileBrandName, String modelId,
-                                    String modelName, String fuelType, String transmissionType, String currentMileage,
-                                    String bluetoothDeviceNumber, String bluetoothName, String token) {
+                            String modelName, String fuelType, String transmissionType, String currentMileage,
+                            String bluetoothDeviceNumber, String bluetoothName, String token) {
         btnAdd.setProgress(0);
         new Handler().postDelayed(() -> btnAdd.setProgress(50), 3000);
         OkHttpUtils.post().

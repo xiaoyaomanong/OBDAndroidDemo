@@ -11,6 +11,8 @@ import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.adapter.MyVehicleAdapter;
+import com.example.obdandroid.ui.entity.AutomobileBrandEntity;
+import com.example.obdandroid.ui.entity.BrandPinYinEntity;
 import com.example.obdandroid.ui.entity.VehicleEntity;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
@@ -31,10 +33,10 @@ import static com.example.obdandroid.config.APIConfig.Vehicle_URL;
 
 /**
  * 作者：Jealous
- * 日期：2021/1/8 0008
+ * 日期：2021/1/31
  * 描述：
  */
-public class MyVehicleActivity extends BaseActivity {
+public class VehicleActivity extends BaseActivity {
     private Context context;
     private PullLoadMoreRecyclerView recycleCar;
     private int pageNum = 1;
@@ -44,6 +46,8 @@ public class MyVehicleActivity extends BaseActivity {
     private MyVehicleAdapter adapter;
     private SPUtil spUtil;
     private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
+    private AutomobileBrandEntity.DataEntity dataEntity;
+    private BrandPinYinEntity yinEntity;
 
     @Override
     protected int getContentViewId() {
@@ -59,6 +63,8 @@ public class MyVehicleActivity extends BaseActivity {
     public void initView() {
         super.initView();
         context = this;
+        dataEntity = (AutomobileBrandEntity.DataEntity) getIntent().getSerializableExtra("data");
+        yinEntity = (BrandPinYinEntity) getIntent().getSerializableExtra("dataA");
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         recycleCar = findViewById(R.id.recycle_Car);
         spUtil = new SPUtil(context);
@@ -123,6 +129,8 @@ public class MyVehicleActivity extends BaseActivity {
             @Override
             public void onRightClick(View v) {
                 Intent intent = new Intent(context, AddVehicleActivity.class);
+                intent.putExtra("data", dataEntity);
+                intent.putExtra("dataA", yinEntity);
                 startActivityForResult(intent, 11);
             }
         });

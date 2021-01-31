@@ -196,7 +196,6 @@ public class CustomerDashboardViewLight extends View {
         float α;
         float[] p;
         angle = mSweepAngle * 1f / mSection;
-        Log.e(TAG.TAG_Activity,"size====:"+mSection);
         for (int i = 0; i <= mSection; i++) {
             α = mStartAngle + angle * i;
             p = getCoordinatePoint(mRadius - mLength2, α);
@@ -269,22 +268,6 @@ public class CustomerDashboardViewLight extends View {
         Typeface font = Typeface.createFromAsset(assets, file);
         mPaint.setTypeface(font);
         canvas.drawText(value, mCenterX, mCenterY + mPSRadius + mRectText.height() * 5, mPaint);
-      /*  mPaint.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-        mPaint.setStrokeWidth(dp2px(2));
-        int xOffset = dp2px(22);
-        if (mVelocity >= 100) {
-            drawDigitalTube(canvas, mVelocity / 100, -xOffset);
-            drawDigitalTube(canvas, (mVelocity - 100) / 10, 0);
-            drawDigitalTube(canvas, mVelocity % 100 % 10, xOffset);
-        } else if (mVelocity >= 10) {
-            drawDigitalTube(canvas, -1, -xOffset);
-            drawDigitalTube(canvas, mVelocity / 10, 0);
-            drawDigitalTube(canvas, mVelocity % 10, xOffset);
-        } else {
-            drawDigitalTube(canvas, -1, -xOffset);
-            drawDigitalTube(canvas, -1, 0);
-            drawDigitalTube(canvas, mVelocity, xOffset);
-        }*/
     }
 
     /**

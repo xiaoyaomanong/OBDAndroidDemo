@@ -309,7 +309,6 @@ public class TripRecord implements DefineObdReader, Serializable {
     }
 
     public void findIdleAndDrivingFuelConsumtion(float currentMaf) {
-
         float literPerSecond = 0;
         if (speed > 0) {
             mDrivingMaf += currentMaf;
@@ -799,6 +798,7 @@ public class TripRecord implements DefineObdReader, Serializable {
                 "\n" + AvailableCommandNames.EQUIV_RATIO.getValue() + ":  " + mEquivRatio +
                 "\n" + AvailableCommandNames.DTC_NUMBER.getValue() + ":  " + mDtcNumber +
                 "\n" + AvailableCommandNames.DESCRIBE_PROTOCOL.getValue() + ":  " + mDescribeProtocol +
+                "\n" + AvailableCommandNames.ODOMETER.getValue() + ":  " + mOdometer +
                 "\n" + AvailableCommandNames.PENDING_TROUBLE_CODES.getValue() + ":  " + mPendingTroubleCode;
     }
 }

@@ -16,6 +16,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
@@ -38,11 +39,14 @@ import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.listener.Data;
 import com.example.obdandroid.service.GpsServices;
+import com.example.obdandroid.ui.activity.AutomobileBrandActivity;
 import com.example.obdandroid.ui.activity.BindBluetoothDeviceActivity;
 import com.example.obdandroid.ui.activity.CheckRecordActivity;
 import com.example.obdandroid.ui.activity.CheckRecordDetailsActivity;
 import com.example.obdandroid.ui.activity.MyVehicleActivity;
 import com.example.obdandroid.ui.activity.MyVehicleDash;
+import com.example.obdandroid.ui.activity.SelectAutomobileBrandActivity;
+import com.example.obdandroid.ui.activity.VehicleActivity;
 import com.example.obdandroid.ui.activity.VehicleInfoActivity;
 import com.example.obdandroid.ui.adapter.HomeAdapter;
 import com.example.obdandroid.ui.adapter.TestRecordAdapter;
@@ -95,9 +99,11 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
     private List<BluetoothDeviceEntity> blueList;
     private int yourChoice;
     private SPUtil spUtil;
-    private PhilText tvHighSpeed;
-    private CustomerDashboardViewLight dashSpeed;
+    private RecyclerView recycleCar;
     private PhilText tvCurrentSpeed;
+    private PhilText tvMaxSpeed;
+    private PhilText tvAverageSpeed;
+    private CustomerDashboardViewLight dashSpeed;
     private RecyclerView recycleContent;
     private LinearLayout layoutCar;
     private ImageView ivCarLogo;
@@ -122,6 +128,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
     private LocationManager mLocationManager;
     private static Data data;
     private Data.OnGpsServiceUpdate onGpsServiceUpdate;
+    private HomeAdapter homeAdapter;
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -137,11 +144,12 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
     public void initView(View view, Bundle savedInstanceState) {
         context = getHoldingActivity();
         titleBar = getView(R.id.titleBar);
-        RecyclerView recycleCar = getView(R.id.recycleCar);
+        recycleCar = getView(R.id.recycleCar);
         recycleContent = getView(R.id.recycleContent);
         dashSpeed = getView(R.id.dashSpeed);
-        tvHighSpeed = getView(R.id.tvHighSpeed);
         tvCurrentSpeed = getView(R.id.tvCurrentSpeed);
+        tvMaxSpeed = getView(R.id.tvMaxSpeed);
+        tvAverageSpeed = getView(R.id.tvAverageSpeed);
         layoutCar = getView(R.id.layoutCar);
         ivCarLogo = getView(R.id.ivCarLogo);
         tvAutomobileBrandName = getView(R.id.tvAutomobileBrandName);
@@ -163,25 +171,20 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         registerOBDReceiver();//注册OBD数据接收广播
         initReceiver();//注册选择默认车辆广播
         getUserInfo(getUserId(), getToken(), spUtil.getString("vehicleId", ""));
+        resetData();
         setSpeed();//设置速度仪表盘
         layoutMoreDash.setOnClickListener(v -> {
-            Intent intent = new Intent(context, MyVehicleDash.class);
-            intent.putExtra("data", tripRecord);
-            startActivity(intent);
+            if (tripRecord != null) {
+                Intent intent = new Intent(context, MyVehicleDash.class);
+                intent.putExtra("data", tripRecord);
+                startActivity(intent);
+            } else {
+                showTipDialog("正在读取OBD数据,请稍后查看");
+            }
+
         });
         setCheckRecord();
         setGPS();
-        // 设置数据更新计时器
-        GridLayoutManager manager = new GridLayoutManager(context, 5);
-        manager.setOrientation(OrientationHelper.VERTICAL);
-        recycleCar.setLayoutManager(manager);
-        HomeAdapter homeAdapter = new HomeAdapter(context);
-        recycleCar.setAdapter(homeAdapter);
-        homeAdapter.setClickCallBack(name -> {
-
-        });
-
-        getCommonBrandList(getToken());
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -197,6 +200,22 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
             public void onRightClick(View v) {
                 showSingleChoiceDialog();
             }
+        });
+    }
+
+    /**
+     * 展示默认车辆
+     */
+    private void showDefaultVehicle() {
+        GridLayoutManager manager = new GridLayoutManager(context, 4);
+        manager.setOrientation(OrientationHelper.VERTICAL);
+        recycleCar.setLayoutManager(manager);
+        homeAdapter = new HomeAdapter(context);
+        getCommonBrandList(getToken());
+        homeAdapter.setClickCallBack(entity -> {
+            Intent intent = new Intent(context, VehicleActivity.class);
+            intent.putExtra("data", entity);
+            startActivity(intent);
         });
     }
 
@@ -217,6 +236,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
     /**
      * 设置GPS
      */
+    @SuppressLint("DefaultLocale")
     private void setGPS() {
         onGpsServiceUpdate = () -> {
             double maxSpeedTemp = data.getMaxSpeed();
@@ -248,15 +268,16 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
 
             SpannableString s = new SpannableString(String.format("%.0f %s", maxSpeedTemp, speedUnits));
             s.setSpan(new RelativeSizeSpan(0.5f), s.length() - speedUnits.length() - 1, s.length(), 0);
-            LogE("最大速度：" + s);
+            tvMaxSpeed.setText(s.toString().replace("km/h", ""));
 
             s = new SpannableString(String.format("%.0f %s", averageTemp, speedUnits));
             s.setSpan(new RelativeSizeSpan(0.5f), s.length() - speedUnits.length() - 1, s.length(), 0);
-            LogE("平均速度：" + s);
+            LogE("平均速度：" + s.toString());
+            tvAverageSpeed.setText(s.toString().replace("km/h", ""));
 
             s = new SpannableString(String.format("%.3f %s", distanceTemp, distanceUnits));
             s.setSpan(new RelativeSizeSpan(0.5f), s.length() - distanceUnits.length() - 1, s.length(), 0);
-            LogE("行驶距离：" + s);
+            LogE("行驶距离：" + s.toString());
         };
 
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -305,9 +326,11 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("获取常用车辆：" + response);
                 AutomobileBrandEntity entity = JSON.parseObject(response, AutomobileBrandEntity.class);
-
+                if (entity.isSuccess()) {
+                    homeAdapter.setList(entity.getData());
+                    recycleCar.setAdapter(homeAdapter);
+                }
             }
         });
     }
@@ -350,7 +373,9 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                         layoutAddCar.setVisibility(View.VISIBLE);
                         layoutCar.setVisibility(View.GONE);
                         layoutOBD.setVisibility(View.GONE);
+                        showDefaultVehicle();
                         //添加车辆绑定
+                        layoutAddCar.setOnClickListener(v -> JumpUtil.startAct(context, SelectAutomobileBrandActivity.class));
                     }
                 }
             }
@@ -383,12 +408,9 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                         Glide.with(context).load(SERVER_URL + entity.getData().getLogo()).into(ivCarLogo);
                     }
                     deviceAddress = entity.getData().getBluetoothDeviceNumber();
-                    if (isConnectClassicBT(deviceAddress)) {
+                    if (!TextUtils.isEmpty(deviceAddress)) {
                         dialogUtils.showProgressDialog("正在连接OBD");
                         connectBtDevice(deviceAddress);
-                    } else {
-                        showTipDialog("当前车辆绑定的OBD蓝牙未连接");
-                        setDefaultMode();
                     }
                     if (entity.getData().getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
                         tvHomeObdTip.setText("将OBD插入车辆并连接");
@@ -451,6 +473,9 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
     private void showSingleChoiceDialog() {
         yourChoice = 0;
         final String[] items = new String[blueList.size()];
+        for (int i = 0; i < blueList.size(); i++) {
+            items[i] = blueList.get(i).getBlue_name();
+        }
         for (int i = 0; i < items.length; i++) {
             if (mConnectedDeviceName.equals(items[i])) {
                 yourChoice = i;
@@ -469,12 +494,8 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                         isConnected = blueList.get(yourChoice).getBlue_address().equals(deviceAddress);
                         if (!TextUtils.isEmpty(blueList.get(yourChoice).getBlue_address())) {
                             if (isConnected) {
-                                if (blueList.get(yourChoice).getState().equals("2") && blueList.get(yourChoice).isConnected()) {
-                                    onstartGPS();
-                                    connectBtDevice(blueList.get(yourChoice).getBlue_address());
-                                } else {
-                                    showTipDialog("当前OBD设备蓝牙未连接");
-                                }
+                                onstartGPS();
+                                connectBtDevice(blueList.get(yourChoice).getBlue_address());
                             } else {
                                 showTipDialog("当前车辆绑定OBD设备,与连接的OBD设备不一致");
                             }
@@ -506,6 +527,8 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         dialogUtils.dismiss();
         titleBar.setLeftTitle("已连接");
         titleBar.setRightIcon(R.drawable.action_connect);
+        new Handler().postDelayed(() -> dialogUtils.showProgressDialog("读取OBD中..."), 1000);
+
     }
 
     /**
@@ -577,9 +600,11 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                 }
             } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA)) {
                 tripRecord = TripRecord.getTripRecode(context);
-               /* tvHighSpeed.setText(String.valueOf(tripRecord.getSpeedMax()));
-                tvCurrentSpeed.setText(String.valueOf(tripRecord.getSpeed()));
-                dashSpeed.setVelocity(tripRecord.getSpeed());*/
+                if (tripRecord != null) {
+                    dialogUtils.dismiss();
+                    showTipDialog("OBD数据读取成功");
+                }
+
             }
         }
     };
@@ -634,6 +659,8 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
             }
             SpannableString s = new SpannableString(String.format(Locale.ENGLISH, "%.0f %s", speed, units));
             s.setSpan(new RelativeSizeSpan(0.25f), s.length() - units.length() - 1, s.length(), 0);
+            LogE("当前速度:" + s);
+            tvCurrentSpeed.setText(s.toString().replace("km/h", ""));
             dashSpeed.setVelocity(Float.parseFloat(s.toString().replace("km/h", "")));
         }
 
@@ -675,9 +702,9 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
     }
 
     public void resetData() {
-        tvHighSpeed.setText("0");
+        tvMaxSpeed.setText("0");
         tvCurrentSpeed.setText("0");
-        data = new Data(onGpsServiceUpdate);
+        tvAverageSpeed.setText("0");
     }
 
     public static Data getData() {

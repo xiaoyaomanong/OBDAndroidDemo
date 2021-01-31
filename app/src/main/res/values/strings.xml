@@ -235,5 +235,8 @@
     <string name="gps_disabled">GPS disabled</string>
     <string name="please_enable_gps">In order to use this app you need the GPS to be enabled.</string>
     <string name="troubleCode">故障码查询</string>
+    <string name="AverageSpeed">平均速度</string>
+    <string name="MaxSpeed">最大速度</string>
+    <string name="CurrentSpeed">当前速度</string>
 
 </resources>

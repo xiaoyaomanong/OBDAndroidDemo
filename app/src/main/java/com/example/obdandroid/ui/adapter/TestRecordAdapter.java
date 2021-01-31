@@ -207,9 +207,11 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             manager.setOrientation(OrientationHelper.VERTICAL);
             recycleContent.setLayoutManager(manager);
             CheckRecorderAdapter adapter = new CheckRecorderAdapter(context);
-            adapter.setList(Arrays.asList(tripEntity.getFaultCodes().replaceAll("\r|\n", ",").split(",")));
-            adapter.setToken(token);
-            recycleContent.setAdapter(adapter);
+            if (!TextUtils.isEmpty(tripEntity.getFaultCodes())) {
+                adapter.setList(Arrays.asList(tripEntity.getFaultCodes().replaceAll("\r|\n", ",").split(",")));
+                adapter.setToken(token);
+                recycleContent.setAdapter(adapter);
+            }
         }
     }
 

@@ -148,8 +148,9 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
     private String mDescribeProtocol;
     private String mDescribeProtocolNumber;
     private String mIgnitionMonitor;
-    private final List<OBDTripEntity> data = new ArrayList<>();
-    private final OBDJsonTripEntity entity = new OBDJsonTripEntity();
+    private List<OBDTripEntity> datas = new ArrayList<>();
+    private List<OBDTripEntity> data = new ArrayList<>();
+    private OBDJsonTripEntity entity = new OBDJsonTripEntity();
 
     private TripRecordCar() {
         tripStartTime = System.currentTimeMillis();
@@ -177,12 +178,11 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
         if (speed != 0) {
             mAddSpeed += speed;
             mSpeedCount++;
-
             mDistanceTravel = (mAddSpeed / mSpeedCount * (drivingDuration / (60 * 60 * 1000)));
         }
-        data.add(new OBDTripEntity("车速", speed + " km/h", R.drawable.icon_speed));
+        data.add(new OBDTripEntity("时速", speed + " km/h", R.drawable.icon_speed));
         entity.setSpeed(speed + " km/h");
-        data.add(new OBDTripEntity("最高车速", speedMax + " km/h", R.drawable.icon_max_speed));
+        data.add(new OBDTripEntity("最高时速", speedMax + " km/h", R.drawable.icon_max_speed));
         entity.setSpeedMax(speedMax + " km/h");
     }
 
@@ -217,8 +217,8 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
             entity.setIdlingDuration((idlingDuration / 60000) + " m");
         }
         drivingDuration = currentTime - tripStartTime - idlingDuration;
-        data.add(new OBDTripEntity("行驶时间", (drivingDuration/ 60000) + " m", R.drawable.icon_driving_time));
-        entity.setDrivingDuration((drivingDuration/ 60000)+ " m");
+        data.add(new OBDTripEntity("行驶时间", (drivingDuration / 60000) + " m", R.drawable.icon_driving_time));
+        entity.setDrivingDuration((drivingDuration / 60000) + " m");
     }
 
     private void calculateMaf() {
@@ -307,7 +307,7 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
             mInsFuelConsumption = 100 * (massAirFlow / (mFuelTypeValue * gramToLitre) * 3600) / speed; // in  litre/100km
         findIdleAndDrivingFuelConsumtion(massAirFlow);
         data.add(new OBDTripEntity("瞬时油耗", ((mIsMAFSupported || mIsTempPressureSupported) ? mInsFuelConsumption : MINUS_ONE) + " L/100km", R.drawable.icon_ssyh));
-        entity.setInsFuelConsumption(((mIsMAFSupported || mIsTempPressureSupported) ? mInsFuelConsumption : MINUS_ONE)+ " L");
+        entity.setInsFuelConsumption(((mIsMAFSupported || mIsTempPressureSupported) ? mInsFuelConsumption : MINUS_ONE) + " L");
     }
 
     public float getmInsFuelConsumption() {
@@ -344,8 +344,8 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
         data.add(new OBDTripEntity("驱动空气流量", mDrivingMaf + " g/s", R.drawable.icon_qdkqll));
         entity.setDrivingMaf(mDrivingMaf + " g/s");
         data.add(new OBDTripEntity("行驶油耗", ((mIsMAFSupported || mIsTempPressureSupported) ? mDrivingFuelConsumption : MINUS_ONE) + " L", R.drawable.icon_xsyh));
-        data.add(new OBDTripEntity("怠速油耗", ( (mIsMAFSupported || mIsTempPressureSupported) ? mIdlingFuelConsumption : MINUS_ONE) + " L", R.drawable.icon_dsyh));
-        entity.setDrivingFuelConsumption(((mIsMAFSupported || mIsTempPressureSupported) ? mDrivingFuelConsumption : MINUS_ONE)+ " L");
+        data.add(new OBDTripEntity("怠速油耗", ((mIsMAFSupported || mIsTempPressureSupported) ? mIdlingFuelConsumption : MINUS_ONE) + " L", R.drawable.icon_dsyh));
+        entity.setDrivingFuelConsumption(((mIsMAFSupported || mIsTempPressureSupported) ? mDrivingFuelConsumption : MINUS_ONE) + " L");
         entity.setIdlingFuelConsumption(((mIsMAFSupported || mIsTempPressureSupported) ? mIdlingFuelConsumption : MINUS_ONE) + " L");
 
     }
@@ -392,7 +392,7 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
 
             case FUEL_LEVEL:
                 mFuelLevel = command.getFormattedResult();
-                data.add(new OBDTripEntity("燃油油位", TextUtils.isEmpty(mFuelLevel) ? "" : mFuelLevel , R.drawable.icon_fuel_level));
+                data.add(new OBDTripEntity("燃油油位", TextUtils.isEmpty(mFuelLevel) ? "" : mFuelLevel, R.drawable.icon_fuel_level));
                 entity.setFuelLevel(TextUtils.isEmpty(mFuelLevel) ? "" : mFuelLevel + "%");
                 break;
             case FUEL_TYPE:
@@ -587,6 +587,9 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
                 entity.setIgnitionMonitor(TextUtils.isEmpty(mIgnitionMonitor) ? "" : mIgnitionMonitor);
                 break;
         }
+        datas.addAll(data);
+        setTripMap(datas);
+        setOBDJson(entity);
     }
 
     private void getFuelTypeValue(String fuelType) {
@@ -783,8 +786,16 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
         return data;
     }
 
+    public void setTripMap(List<OBDTripEntity> data) {
+        this.datas = data;
+    }
+
     public OBDJsonTripEntity getOBDJson() {
         return entity;
+    }
+
+    public void setOBDJson(OBDJsonTripEntity entity) {
+        this.entity = entity;
     }
 
     @Override

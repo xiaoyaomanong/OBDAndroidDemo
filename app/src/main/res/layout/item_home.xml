@@ -12,9 +12,9 @@
         android:layout_margin="5dp"
         android:gravity="center"
         android:orientation="vertical"
-        tools:ignore="UseCompoundDrawables">
+        tools:ignore="UseCompoundDrawables,UselessParent">
 
-        <com.example.obdandroid.ui.view.CircleImageView
+        <ImageView
             android:id="@+id/ivName"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -24,8 +24,8 @@
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
             android:fontFamily="@font/gotham"
+            android:padding="5dp"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_14" />
     </LinearLayout>

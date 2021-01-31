@@ -1,5 +1,6 @@
 package com.example.obdandroid.ui.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * 日期：2021/1/11 0011
  * 描述：
  */
-public class AutomobileBrandEntity {
+public class AutomobileBrandEntity implements Serializable {
 
     /**
      * success : true
@@ -53,7 +54,7 @@ public class AutomobileBrandEntity {
         this.data = data;
     }
 
-    public static class DataEntity {
+    public static class DataEntity implements Serializable{
         /**
          * automobileBrandId : 1347111731423481900
          * name : 阿尔法罗米欧

@@ -37,7 +37,7 @@ public class OdometerCommand extends ObdCommand {
      */
     @Override
     public String getFormattedResult() {
-        return  String.valueOf(Odometer);
+        return  Odometer+"";
     }
 
     /**

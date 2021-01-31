@@ -2,6 +2,7 @@ package com.example.obdandroid.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -107,16 +108,18 @@ public class MyVehicleDash extends BaseActivity {
             tvmAirFuelRatio.setText(tripRecord.getmAirFuelRatio());
             tvmAmbientAirTemp.setText(tripRecord.getmAmbientAirTemp());
             tvmInsFuelConsumption.setText(String.valueOf(tripRecord.getmInsFuelConsumption()));
-            tvmOdometer.setText(tripRecord.getmOdometer());
+            tvmOdometer.setText(TextUtils.isEmpty(tripRecord.getmOdometer())?"0":tripRecord.getmOdometer());
             tvDrivingDuration.setText(String.valueOf(tripRecord.getDrivingDuration()));
-            dashRPM.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getEngineRpm()) ? "0" : tripRecord.getEngineRpm()));
+            String rpm=TextUtils.isEmpty(tripRecord.getEngineRpm()) ? "0" : tripRecord.getEngineRpm();
+            dashRPM.setVelocity(Float.parseFloat(rpm)/1000);
             dashSpeed.setVelocity(tripRecord.getSpeed());
             dashInsFuelConsumption.setVelocity(tripRecord.getmInsFuelConsumption());
             dashEngineCoolantTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineCoolantTemp()) ? "0" : tripRecord.getmEngineCoolantTemp().replace("C", "")));
-            dashFuelLevel.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmFuelLevel()) ? "" : tripRecord.getmFuelLevel().replace("%", "")));
+            dashFuelLevel.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmFuelLevel()) ? "0%" : tripRecord.getmFuelLevel().replace("%", "")));
             dashDrivingFuelConsumption.setVelocity(tripRecord.getmDrivingFuelConsumption());
             dashIdlingFuelConsumption.setVelocity(tripRecord.getmIdlingFuelConsumption());
-            dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineOilTemp()) ? "" : tripRecord.getmEngineOilTemp().replace("C", "")));
+            LogE("怠速油耗:"+tripRecord.getmIdlingFuelConsumption());
+            dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineOilTemp()) ? "0C" : tripRecord.getmEngineOilTemp().replace("C", "")));
         }
     }
 
@@ -124,9 +127,9 @@ public class MyVehicleDash extends BaseActivity {
      * 设置转速仪表
      */
     private void setRPM() {
-        dashRPM.setmSection(8);
+        dashRPM.setmSection(10);
         dashRPM.setmHeaderText("x1000");
-        dashRPM.setmMax(8);
+        dashRPM.setmMax(30);
         dashRPM.setmMin(0);
     }
 
@@ -156,9 +159,9 @@ public class MyVehicleDash extends BaseActivity {
      * 设置瞬时油耗仪表
      */
     private void setInsFuelConsumption() {
-        dashInsFuelConsumption.setmSection(10);
+        dashInsFuelConsumption.setmSection(8);
         dashInsFuelConsumption.setmHeaderText("L/100km");
-        dashInsFuelConsumption.setmMax(30);
+        dashInsFuelConsumption.setmMax(240);
         dashInsFuelConsumption.setmMin(0);
     }
 
@@ -178,7 +181,7 @@ public class MyVehicleDash extends BaseActivity {
     private void setIdlingFuelConsumption() {
         dashIdlingFuelConsumption.setmSection(10);
         dashIdlingFuelConsumption.setmHeaderText(" L ");
-        dashIdlingFuelConsumption.setmMax(30);
+        dashIdlingFuelConsumption.setmMax(100);
         dashIdlingFuelConsumption.setmMin(0);
     }
 

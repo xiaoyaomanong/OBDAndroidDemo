@@ -281,11 +281,12 @@ public class VehicleCheckFragment extends BaseFragment {
                 }
             } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA_CAR)) {
                 TripRecordCar TripTwoRecord = TripRecordCar.getTripTwoRecode(context);
-                LogE("OBD数据:" + TripTwoRecord.toString());
                 if (circleView.isDiffuse()) {
                     circleView.stop();
                     btStart.setText("检测完成");
                 }
+                LogE("长度:"+TripTwoRecord.getTripMap().size());
+                LogE("Json内容:"+JSON.toJSONString(TripTwoRecord.getOBDJson()));
                 showResult(TripTwoRecord.getTripMap());
                 addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(TripTwoRecord.getOBDJson()), getUserId(), getToken());
             }

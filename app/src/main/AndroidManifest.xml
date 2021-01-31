@@ -149,7 +149,7 @@
         <activity android:name=".ui.activity.RechargeSetMealActivity" />
         <activity android:name=".ui.activity.MyVehicleActivity" />
         <activity android:name=".ui.activity.TroubleCodeQueryActivity" />
-        <activity android:name=".ui.activity.AddVehiclActivity" />
+        <activity android:name=".ui.activity.AddVehicleActivity" />
         <activity android:name=".ui.activity.AutomobileBrandActivity" />
         <activity android:name=".ui.activity.FuelTypeActivity" />
         <activity android:name=".ui.activity.CarModelActivity" />
@@ -164,6 +164,8 @@
         <activity android:name=".ui.activity.PersonSettingActivity" />
         <activity android:name=".ui.activity.CheckRecordActivity" />
         <activity android:name=".ui.activity.CheckRecordDetailsActivity" />
+        <activity android:name=".ui.activity.SelectAutomobileBrandActivity" />
+        <activity android:name=".ui.activity.VehicleActivity" />
 
         <service android:name=".service.GpsServices" />
     </application>

@@ -10,8 +10,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
+import com.example.obdandroid.ui.entity.AutomobileBrandEntity;
 import com.example.obdandroid.ui.view.CircleImageView;
+
+import java.util.List;
+
+import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 
 /**
  * 作者：Jealous
@@ -22,16 +28,17 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
     private final LayoutInflater inflater;
     private OnClickCallBack clickCallBack;
-    private final String[] list = {"大众", "本田", "别克", "丰田", "宝马", "日产", "奥迪", "奔驰", "马自达", "更多"};
-    private final int[] resImg = {R.drawable.icon_dz, R.drawable.icon_bt, R.drawable.icon_bk, R.drawable.icon_ft,
-            R.drawable.icon_bm, R.drawable.icon_rc, R.drawable.icon_audi, R.drawable.icon_bc, R.drawable.icon_mzd,
-            R.drawable.icon_car_more};
+    private List<AutomobileBrandEntity.DataEntity> list;
     private final int EMPTY_VIEW = 0;//空页面
     private final int NOT_EMPTY_VIEW = 1;//正常页面
 
     public HomeAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
+    }
+
+    public void setList(List<AutomobileBrandEntity.DataEntity> list) {
+        this.list = list;
     }
 
     public void setClickCallBack(OnClickCallBack clickCallBack) {
@@ -54,9 +61,9 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             viewHolder.mEmptyTextView.setText("附近没有蓝牙");
         } else if (NOT_EMPTY_VIEW == itemViewType) {
             final MyViewHolder holder1 = (MyViewHolder) holder;
-            holder1.tvName.setText(list[position]);
-            holder1.ivName.setImageResource(resImg[position]);
-            holder1.card_view.setOnClickListener(v -> clickCallBack.Click(list[position]));
+            holder1.tvName.setText(list.get(position).getName());
+            Glide.with(context).load(SERVER_URL + list.get(position).getLogo()).into(holder1.ivName);
+            holder1.card_view.setOnClickListener(v -> clickCallBack.click(list.get(position)));
         }
     }
 
@@ -64,8 +71,8 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int getItemCount() {
         //获取传入adapter的条目数，没有则返回 1
         if (list != null) {
-            if (list.length > 0) {
-                return list.length;
+            if (list.size() > 0) {
+                return list.size();
             }
         }
         //位空视图保留一个条目
@@ -76,7 +83,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int getItemViewType(int position) {
         //根据传入adapter来判断是否有数据
         if (list != null) {
-            if (list.length != 0) {
+            if (list.size() != 0) {
                 return NOT_EMPTY_VIEW;
             } else {
                 return EMPTY_VIEW;
@@ -87,7 +94,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         View itemView;
-        private final CircleImageView ivName;
+        private final ImageView ivName;
         private final TextView tvName;
         private final LinearLayout card_view;
 
@@ -110,6 +117,6 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public interface OnClickCallBack {
-        void Click(String name);
+        void click(AutomobileBrandEntity.DataEntity entity);
     }
 }

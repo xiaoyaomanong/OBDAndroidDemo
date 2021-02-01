@@ -17,6 +17,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
@@ -29,6 +30,7 @@ import android.text.TextUtils;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -129,6 +131,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
     private static Data data;
     private Data.OnGpsServiceUpdate onGpsServiceUpdate;
     private HomeAdapter homeAdapter;
+    private Chronometer time;
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -160,6 +163,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         tvHomeObdTip = getView(R.id.tv_home_obd_tip);
         layoutMoreDash = getView(R.id.layoutMoreDash);
         layoutMoreTest = getView(R.id.layoutMoreTest);
+        time = getView(R.id.time);
         titleBar.setTitle("汽车扫描");
         spUtil = new SPUtil(context);
         dialogUtils = new DialogUtils(context);
@@ -185,6 +189,41 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         });
         setCheckRecord();
         setGPS();
+
+        time.setText("00:00:00");
+        time.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+            boolean isPair = true;
+            @Override
+            public void onChronometerTick(Chronometer chrono) {
+                long time;
+                if(data.isRunning()){
+                    time= SystemClock.elapsedRealtime() - chrono.getBase();
+                    data.setTime(time);
+                }else{
+                    time = data.getTime();
+                }
+
+                int h   = (int)(time /3600000);
+                int m = (int)(time  - h*3600000)/60000;
+                int s= (int)(time  - h*3600000 - m*60000)/1000 ;
+                String hh = h < 10 ? "0"+h: h+"";
+                String mm = m < 10 ? "0"+m: m+"";
+                String ss = s < 10 ? "0"+s: s+"";
+                chrono.setText(hh+":"+mm+":"+ss);
+
+                if (data.isRunning()){
+                    chrono.setText(hh+":"+mm+":"+ss);
+                } else {
+                    if (isPair) {
+                        isPair = false;
+                        chrono.setText(hh+":"+mm+":"+ss);
+                    }else{
+                        isPair = true;
+                        chrono.setText("");
+                    }
+                }
+            }
+        });
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -225,6 +264,8 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
     public void onstartGPS() {
         if (!data.isRunning()) {
             data.setRunning(true);
+            time.setBase(SystemClock.elapsedRealtime() - data.getTime());
+            time.start();
             data.setFirstTime(true);
             context.startService(new Intent(context, GpsServices.class));
         } else {
@@ -705,6 +746,8 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         tvMaxSpeed.setText("0");
         tvCurrentSpeed.setText("0");
         tvAverageSpeed.setText("0");
+        time.stop();
+        time.setText("00:00:00");
     }
 
     public static Data getData() {

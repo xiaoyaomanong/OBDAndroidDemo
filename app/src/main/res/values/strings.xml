@@ -238,5 +238,9 @@
     <string name="AverageSpeed">平均速度</string>
     <string name="MaxSpeed">最大速度</string>
     <string name="CurrentSpeed">当前速度</string>
+    <string name="BelongingSystem">所属系统</string>
+    <string name="scopeOfApplication">适用车商</string>
+    <string name="text_troubleCode">故障码</string>
+    <string name="troubleCodeDetails">查看故障码详情</string>
 
 </resources>

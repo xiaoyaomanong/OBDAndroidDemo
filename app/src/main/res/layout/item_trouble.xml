@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dp_10"
+    android:layout_marginBottom="2dp"
+    android:background="@drawable/bg_black"
+    android:orientation="vertical"
+    tools:ignore="UseCompoundDrawables">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:fontFamily="@font/gotham"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:text="车主指南"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16"
+        tools:ignore="RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/tvCodeTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/gotham"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="@string/text_troubleCode"
+        android:textColor="@color/graye4"
+        android:textSize="@dimen/sp_12"
+        tools:ignore="RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/tvCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/gotham"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textColor="@color/red"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        tools:ignore="RtlSymmetry" />
+
+    <LinearLayout
+        android:id="@+id/layoutBelongingSystem"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:text="@string/BelongingSystem"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvBelongingSystem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:hint="@string/BelongingSystem"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/graye4"
+            android:textSize="@dimen/sp_12"
+            tools:ignore="RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutScopeOfApplication"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:text="@string/scopeOfApplication"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvScopeOfApplication"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:hint="@string/scopeOfApplication"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/graye4"
+            android:textSize="@dimen/sp_12"
+            tools:ignore="RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutDetails"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:text="@string/troubleCodeDetails"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            tools:ignore="RtlSymmetry" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_40"
+            android:src="@drawable/icon_next"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
+
+
+</LinearLayout>

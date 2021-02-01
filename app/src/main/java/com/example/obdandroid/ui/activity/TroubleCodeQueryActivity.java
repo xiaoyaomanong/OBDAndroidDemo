@@ -10,6 +10,7 @@ import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.adapter.CheckRecorderAdapter;
+import com.example.obdandroid.ui.adapter.TroubleCodeQueryAdapter;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
@@ -51,7 +52,7 @@ public class TroubleCodeQueryActivity extends BaseActivity {
         LinearLayoutManager manager = new LinearLayoutManager(context);
         manager.setOrientation(OrientationHelper.VERTICAL);
         recycleContent.setLayoutManager(manager);
-        CheckRecorderAdapter adapter = new CheckRecorderAdapter(context);
+        TroubleCodeQueryAdapter adapter = new TroubleCodeQueryAdapter(context);
         adapter.setList(Arrays.asList(troubleCodes.replaceAll("\r|\n", ",").split(",")));
         adapter.setToken(getToken());
         recycleContent.setAdapter(adapter);

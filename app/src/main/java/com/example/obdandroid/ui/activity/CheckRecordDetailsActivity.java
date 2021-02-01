@@ -2,6 +2,7 @@ package com.example.obdandroid.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,6 +11,7 @@ import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.utils.JumpUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
+import com.kongzue.dialog.v2.TipDialog;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 
 /**
@@ -191,9 +193,15 @@ public class CheckRecordDetailsActivity extends BaseActivity {
         tvMFuelSystemStatus.setText(entity.getFuelSystemStatus());
         tvMFuelTypeValue.setText(entity.getFuelTypeValue());
         tvMFuelLevel.setText(entity.getFuelLevel());
-        tvMPermanentTroubleCode.setText(entity.getPermanentTroubleCode().replaceAll("\r|\n", ",").split(",").length + "");
-        tvMPendingTroubleCode.setText(entity.getPendingTroubleCode().replaceAll("\r|\n", ",").split(",").length + "");
-        tvMFaultCodes.setText(entity.getFaultCodes().replaceAll("\r|\n", ",").split(",").length + "");
+        if (!TextUtils.isEmpty(entity.getPermanentTroubleCode())) {
+            tvMPermanentTroubleCode.setText(entity.getPermanentTroubleCode().replaceAll("\r|\n", ",").split(",").length + "");
+        }
+        if (!TextUtils.isEmpty(entity.getPendingTroubleCode())) {
+            tvMPendingTroubleCode.setText(entity.getPendingTroubleCode().replaceAll("\r|\n", ",").split(",").length + "");
+        }
+        if (!TextUtils.isEmpty(entity.getFaultCodes())) {
+            tvMFaultCodes.setText(entity.getFaultCodes().replaceAll("\r|\n", ",").split(",").length + "");
+        }
         tvMThrottlePos.setText(entity.getRelThottlePos());
         tvMMassAirFlow.setText(entity.getMassAirFlow());
         tvEngineRuntime.setText(entity.getEngineRuntime());
@@ -204,8 +212,30 @@ public class CheckRecordDetailsActivity extends BaseActivity {
         tvMEngineCoolantTemp.setText(entity.getEngineCoolantTemp());
         tvMAmbientAirTemp.setText(entity.getAmbientAirTemp());
         tvMIntakeAirTemp.setText(entity.getIntakeAirTemp());
-        layoutFaultCodes.setOnClickListener(v -> JumpUtil.startActToData(context, TroubleCodeQueryActivity.class, entity.getFaultCodes(), 0));
-        layoutPendingTroubleCode.setOnClickListener(v -> JumpUtil.startActToData(context, TroubleCodeQueryActivity.class, entity.getPendingTroubleCode(), 0));
-        layoutPermanentTroubleCode.setOnClickListener(v -> JumpUtil.startActToData(context, TroubleCodeQueryActivity.class, entity.getPermanentTroubleCode(), 0));
+        layoutFaultCodes.setOnClickListener(v -> {
+            if (!TextUtils.isEmpty(entity.getFaultCodes())) {
+                JumpUtil.startActToData(context, TroubleCodeQueryActivity.class, entity.getFaultCodes(), 0);
+            } else {
+                showTipDialog("没有故障码可查询");
+            }
+        });
+        layoutPendingTroubleCode.setOnClickListener(v -> {
+            if (!TextUtils.isEmpty(entity.getPendingTroubleCode())) {
+                JumpUtil.startActToData(context, TroubleCodeQueryActivity.class, entity.getPendingTroubleCode(), 0);
+            } else {
+                showTipDialog("没有故障码可查询");
+            }
+        });
+        layoutPermanentTroubleCode.setOnClickListener(v -> {
+            if (!TextUtils.isEmpty(entity.getPermanentTroubleCode())) {
+                JumpUtil.startActToData(context, TroubleCodeQueryActivity.class, entity.getPermanentTroubleCode(), 0);
+            } else {
+                showTipDialog("没有故障码可查询");
+            }
+        });
+    }
+
+    private void showTipDialog(String msg) {
+        TipDialog.show(context, msg, TipDialog.TYPE_ERROR, TipDialog.TYPE_WARNING);
     }
 }

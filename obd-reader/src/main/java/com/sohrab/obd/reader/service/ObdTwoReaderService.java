@@ -22,6 +22,7 @@ import com.sohrab.obd.reader.enums.ObdProtocols;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
 import com.sohrab.obd.reader.obdCommand.control.TroubleCodesCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.ClearDTCCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
@@ -176,6 +177,8 @@ public class ObdTwoReaderService extends IntentService implements DefineObdTwoRe
                                 new SelectProtocolCommand(ObdProtocols.AUTO).run(mSocket.getInputStream(), mSocket.getOutputStream());
                                 Thread.sleep(200);
                                 new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+                                Thread.sleep(200);
+                                new ClearDTCCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                                 Thread.sleep(200);
                                 mIsRunningSuccess = true;
                             } catch (Exception e) {

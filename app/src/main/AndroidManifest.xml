@@ -166,6 +166,7 @@
         <activity android:name=".ui.activity.CheckRecordDetailsActivity" />
         <activity android:name=".ui.activity.SelectAutomobileBrandActivity" />
         <activity android:name=".ui.activity.VehicleActivity" />
+        <activity android:name=".ui.activity.TroubleCodeQueryDetailsActivity" />
 
         <service android:name=".service.GpsServices" />
     </application>

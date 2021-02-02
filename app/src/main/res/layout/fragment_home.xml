@@ -280,13 +280,10 @@
                             tools:ignore="NestedWeights">
 
                             <TextView
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_weight="0.5"
                                 android:fontFamily="@font/calibri"
                                 android:gravity="center"
-                                android:paddingTop="@dimen/dp_10"
-                                android:paddingBottom="@dimen/dp_10"
                                 android:text="@string/CurrentSpeed"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/sp_12" />
@@ -326,13 +323,10 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_weight="0.5"
                                 android:fontFamily="@font/calibri"
                                 android:gravity="center"
-                                android:paddingTop="@dimen/dp_10"
-                                android:paddingBottom="@dimen/dp_10"
                                 android:text="@string/MaxSpeed"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/sp_12"
@@ -371,13 +365,10 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_weight="0.5"
                                 android:fontFamily="@font/calibri"
                                 android:gravity="center"
-                                android:paddingTop="@dimen/dp_10"
-                                android:paddingBottom="@dimen/dp_10"
                                 android:text="@string/AverageSpeed"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/sp_12"

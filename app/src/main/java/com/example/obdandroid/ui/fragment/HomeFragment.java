@@ -113,7 +113,6 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
     private TextView tvModelName;
     private LinearLayout layoutOBD;
     private LinearLayout layoutAddCar;
-    private LinearLayout layoutMoreDash;
     private LinearLayout layoutMoreTest;
     private TextView tvObd;
     private TextView tvHomeObdTip;
@@ -161,7 +160,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         tvObd = getView(R.id.tv_obd);
         layoutAddCar = getView(R.id.layoutAddCar);
         tvHomeObdTip = getView(R.id.tv_home_obd_tip);
-        layoutMoreDash = getView(R.id.layoutMoreDash);
+        LinearLayout layoutMoreDash = getView(R.id.layoutMoreDash);
         layoutMoreTest = getView(R.id.layoutMoreTest);
         time = getView(R.id.time);
         titleBar.setTitle("汽车扫描");
@@ -174,6 +173,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         blueList = getBlueTooth();//初始化蓝牙
         registerOBDReceiver();//注册OBD数据接收广播
         initReceiver();//注册选择默认车辆广播
+        setGPS();
         getUserInfo(getUserId(), getToken(), spUtil.getString("vehicleId", ""));
         resetData();
         setSpeed();//设置速度仪表盘
@@ -188,36 +188,35 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
 
         });
         setCheckRecord();
-        setGPS();
-
         time.setText("00:00:00");
         time.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             boolean isPair = true;
+
             @Override
             public void onChronometerTick(Chronometer chrono) {
                 long time;
-                if(data.isRunning()){
-                    time= SystemClock.elapsedRealtime() - chrono.getBase();
+                if (data.isRunning()) {
+                    time = SystemClock.elapsedRealtime() - chrono.getBase();
                     data.setTime(time);
-                }else{
+                } else {
                     time = data.getTime();
                 }
 
-                int h   = (int)(time /3600000);
-                int m = (int)(time  - h*3600000)/60000;
-                int s= (int)(time  - h*3600000 - m*60000)/1000 ;
-                String hh = h < 10 ? "0"+h: h+"";
-                String mm = m < 10 ? "0"+m: m+"";
-                String ss = s < 10 ? "0"+s: s+"";
-                chrono.setText(hh+":"+mm+":"+ss);
+                int h = (int) (time / 3600000);
+                int m = (int) (time - h * 3600000) / 60000;
+                int s = (int) (time - h * 3600000 - m * 60000) / 1000;
+                String hh = h < 10 ? "0" + h : h + "";
+                String mm = m < 10 ? "0" + m : m + "";
+                String ss = s < 10 ? "0" + s : s + "";
+                chrono.setText(hh + ":" + mm + ":" + ss);
 
-                if (data.isRunning()){
-                    chrono.setText(hh+":"+mm+":"+ss);
+                if (data.isRunning()) {
+                    chrono.setText(hh + ":" + mm + ":" + ss);
                 } else {
                     if (isPair) {
                         isPair = false;
-                        chrono.setText(hh+":"+mm+":"+ss);
-                    }else{
+                        chrono.setText(hh + ":" + mm + ":" + ss);
+                    } else {
                         isPair = true;
                         chrono.setText("");
                     }
@@ -274,6 +273,14 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         }
     }
 
+    public void resetData() {
+        tvMaxSpeed.setText("0");
+        tvCurrentSpeed.setText("0");
+        tvAverageSpeed.setText("0");
+        time.stop();
+        time.setText("00:00:00");
+    }
+
     /**
      * 设置GPS
      */
@@ -288,7 +295,6 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
             } else {
                 averageTemp = data.getAverageSpeed();
             }
-
             String speedUnits;
             String distanceUnits;
             if (sharedPreferences.getBoolean("miles_per_hour", false)) {
@@ -313,14 +319,11 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
 
             s = new SpannableString(String.format("%.0f %s", averageTemp, speedUnits));
             s.setSpan(new RelativeSizeSpan(0.5f), s.length() - speedUnits.length() - 1, s.length(), 0);
-            LogE("平均速度：" + s.toString());
             tvAverageSpeed.setText(s.toString().replace("km/h", ""));
 
             s = new SpannableString(String.format("%.3f %s", distanceTemp, distanceUnits));
             s.setSpan(new RelativeSizeSpan(0.5f), s.length() - distanceUnits.length() - 1, s.length(), 0);
-            LogE("行驶距离：" + s.toString());
         };
-
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
     }
 
@@ -569,7 +572,6 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         titleBar.setLeftTitle("已连接");
         titleBar.setRightIcon(R.drawable.action_connect);
         new Handler().postDelayed(() -> dialogUtils.showProgressDialog("读取OBD中..."), 1000);
-
     }
 
     /**
@@ -645,7 +647,6 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                     dialogUtils.dismiss();
                     showTipDialog("OBD数据读取成功");
                 }
-
             }
         }
     };
@@ -740,14 +741,6 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         Dialog dialog = new Dialog(context, getResources().getString(R.string.gps_disabled), getResources().getString(R.string.please_enable_gps));
         dialog.setOnAcceptButtonClickListener(view -> startActivity(new Intent("android.settings.LOCATION_SOURCE_SETTINGS")));
         dialog.show();
-    }
-
-    public void resetData() {
-        tvMaxSpeed.setText("0");
-        tvCurrentSpeed.setText("0");
-        tvAverageSpeed.setText("0");
-        time.stop();
-        time.setText("00:00:00");
     }
 
     public static Data getData() {

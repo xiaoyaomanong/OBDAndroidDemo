@@ -50,6 +50,10 @@ public class TroubleCodeQueryAdapter extends RecyclerView.Adapter<RecyclerView.V
         this.list = list;
     }
 
+    public void setCallBack(OnClickCallBack callBack) {
+        this.callBack = callBack;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new MyViewHolder(inflater.inflate(R.layout.item_trouble, parent, false));

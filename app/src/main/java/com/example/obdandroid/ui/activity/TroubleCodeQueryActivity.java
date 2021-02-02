@@ -11,6 +11,7 @@ import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.adapter.CheckRecorderAdapter;
 import com.example.obdandroid.ui.adapter.TroubleCodeQueryAdapter;
+import com.example.obdandroid.utils.JumpUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
@@ -56,6 +57,7 @@ public class TroubleCodeQueryActivity extends BaseActivity {
         adapter.setList(Arrays.asList(troubleCodes.replaceAll("\r|\n", ",").split(",")));
         adapter.setToken(getToken());
         recycleContent.setAdapter(adapter);
+        adapter.setCallBack(faultCode -> JumpUtil.startActToData(context, TroubleCodeQueryDetailsActivity.class, faultCode, 0));
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {

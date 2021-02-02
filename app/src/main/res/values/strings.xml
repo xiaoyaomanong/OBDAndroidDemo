@@ -242,5 +242,8 @@
     <string name="scopeOfApplication">适用车商</string>
     <string name="text_troubleCode">故障码</string>
     <string name="troubleCodeDetails">查看故障码详情</string>
+    <string name="chineseMeaning">中文含义</string>
+    <string name="englishMeaning">英文含义</string>
+    <string name="causeOfFailure">故障原因</string>
 
 </resources>

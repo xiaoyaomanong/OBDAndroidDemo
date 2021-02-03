@@ -260,7 +260,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
     /**
      * 启动或停止GSP监听服务
      */
-    public void onstartGPS() {
+    public void onStartGPS() {
         if (!data.isRunning()) {
             data.setRunning(true);
             time.setBase(SystemClock.elapsedRealtime() - data.getTime());
@@ -538,7 +538,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                         isConnected = blueList.get(yourChoice).getBlue_address().equals(deviceAddress);
                         if (!TextUtils.isEmpty(blueList.get(yourChoice).getBlue_address())) {
                             if (isConnected) {
-                                onstartGPS();
+                                onStartGPS();
                                 connectBtDevice(blueList.get(yourChoice).getBlue_address());
                             } else {
                                 showTipDialog("当前车辆绑定OBD设备,与连接的OBD设备不一致");
@@ -639,7 +639,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                     onDisconnect();
                 } else if (connectionStatusMsg.equals("socket closed")) {
                     spUtil.put(CONNECT_BT_KEY, "ON");
-                    onstartGPS();
+                    onStartGPS();
                 }
             } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA)) {
                 tripRecord = TripRecord.getTripRecode(context);

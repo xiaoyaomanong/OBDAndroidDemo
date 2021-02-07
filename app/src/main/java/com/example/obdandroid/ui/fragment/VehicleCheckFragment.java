@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -30,15 +29,17 @@ import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.adapter.VehicleCheckAdapter;
+import com.example.obdandroid.ui.entity.MessageCheckEntity;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleWelComeView;
+import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.SPUtil;
-import com.kongzue.dialog.v2.Notification;
 import com.kongzue.dialog.v2.TipDialog;
 import com.sohrab.obd.reader.application.ObdPreferences;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
 import com.sohrab.obd.reader.service.ObdTwoReaderService;
+import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 import com.sohrab.obd.reader.trip.OBDTripEntity;
 import com.sohrab.obd.reader.trip.TripRecordCar;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -47,12 +48,13 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import java.util.List;
 
 import okhttp3.Call;
+import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
+import static com.example.obdandroid.config.APIConfig.addRemind_URL;
 import static com.example.obdandroid.config.APIConfig.addTestRecord_URL;
 import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
-import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
 import static com.sohrab.obd.reader.constants.DefineObdTwoReader.ACTION_OBD_CONNECTION_STATUS_CAR;
 import static com.sohrab.obd.reader.constants.DefineObdTwoReader.ACTION_READ_OBD_REAL_TIME_DATA_CAR;
 
@@ -136,6 +138,7 @@ public class VehicleCheckFragment extends BaseFragment {
             }
 
         });
+        //addRemind(getUserId(), addJsonContent(TripRecordCar.getTripTwoRecode(context).getOBDJson()), getToken());
         circleView.setCallEndListener(() -> LogE("333333"));
     }
 
@@ -212,6 +215,47 @@ public class VehicleCheckFragment extends BaseFragment {
         });
     }
 
+    /**
+     * @param appUserId APP用户ID
+     * @param content   消息内容
+     * @param token     用户Token
+     */
+    private void addRemind(String appUserId, String content, String token) {
+        OkHttpUtils.post().url(SERVER_URL + addRemind_URL).
+                addParam("appUserId", appUserId).
+                addParam("remindType", "2").
+                addParam("content", content).
+                addParam("title", "车辆检测报告").
+                addParam("token", token).
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
+                if (entity.isSuccess()) {
+                    showToast("检测提示上传完成");
+                }
+            }
+        });
+    }
+
+    private String addJsonContent(OBDJsonTripEntity tripEntity) {
+        MessageCheckEntity entity = new MessageCheckEntity();
+        entity.setCreateTime(AppDateUtils.getTodayDateTime());
+        if (TextUtils.isEmpty(tripEntity.getFaultCodes())) {
+            entity.setContent("通过检测,无故障码,您的车辆很健康!");
+            entity.setDetails("");
+        } else {
+            entity.setContent("通过检测,发现你的车辆有故障，请及时处理!");
+            entity.setDetails(JSON.toJSONString(tripEntity));
+        }
+        return JSON.toJSONString(entity);
+    }
+
     private void initAinm() {
         //通过加载XML动画设置文件来创建一个Animation对象；
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.left);
@@ -280,15 +324,14 @@ public class VehicleCheckFragment extends BaseFragment {
                     onDisconnect();
                 }
             } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA_CAR)) {
-                TripRecordCar TripTwoRecord = TripRecordCar.getTripTwoRecode(context);
+                TripRecordCar tripRecordCar = TripRecordCar.getTripTwoRecode(context);
                 if (circleView.isDiffuse()) {
                     circleView.stop();
                     btStart.setText("检测完成");
                 }
-                LogE("长度:"+TripTwoRecord.getTripMap().size());
-                LogE("Json内容:"+JSON.toJSONString(TripTwoRecord.getOBDJson()));
-                showResult(TripTwoRecord.getTripMap());
-                addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(TripTwoRecord.getOBDJson()), getUserId(), getToken());
+                showResult(tripRecordCar.getTripMap());
+                addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(tripRecordCar.getOBDJson()), getUserId(), getToken());
+                //addRemind(getUserId(), addJsonContent(tripRecordCar.getOBDJson()), getToken());
             }
         }
     };

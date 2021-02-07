@@ -41,7 +41,6 @@ import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.listener.Data;
 import com.example.obdandroid.service.GpsServices;
-import com.example.obdandroid.ui.activity.AutomobileBrandActivity;
 import com.example.obdandroid.ui.activity.BindBluetoothDeviceActivity;
 import com.example.obdandroid.ui.activity.CheckRecordActivity;
 import com.example.obdandroid.ui.activity.CheckRecordDetailsActivity;
@@ -183,9 +182,8 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                 intent.putExtra("data", tripRecord);
                 startActivity(intent);
             } else {
-                showTipDialog("正在读取OBD数据,请稍后查看");
+                showTipDialog("暂未读取到OBD数据,请稍后查看");
             }
-
         });
         setCheckRecord();
         time.setText("00:00:00");

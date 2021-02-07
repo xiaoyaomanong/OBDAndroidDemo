@@ -178,8 +178,8 @@ public class ObdTwoReaderService extends IntentService implements DefineObdTwoRe
                                 Thread.sleep(200);
                                 new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                                 Thread.sleep(200);
-                                new ClearDTCCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-                                Thread.sleep(200);
+                              /*  new ClearDTCCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+                                Thread.sleep(200);*/
                                 mIsRunningSuccess = true;
                             } catch (Exception e) {
                                 mIsRunningSuccess = false;

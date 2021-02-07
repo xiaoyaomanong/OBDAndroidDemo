@@ -103,4 +103,12 @@ public class APIConfig {
      * 添加意见反馈
      */
     public static final String addFeedback_URL = "/api/addFeedback";
+    /**
+     * 添加消息
+     */
+    public static final String addRemind_URL = "/api/addRemind";
+    /**
+     * 获取用户消息列表
+     */
+    public static final String getRemindPageList_URL = "/api//api/getRemindPageList";
 }

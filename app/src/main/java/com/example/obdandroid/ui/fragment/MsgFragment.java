@@ -1,12 +1,17 @@
 package com.example.obdandroid.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
+import com.example.obdandroid.ui.activity.CheckRecordDetailsActivity;
+import com.example.obdandroid.ui.adapter.CheckRecordAdapter;
 import com.hjq.bar.TitleBar;
+import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -28,6 +33,8 @@ public class MsgFragment extends BaseFragment {
     private PullLoadMoreRecyclerView recycleRemind;
     private int pageNum = 1;
     private final int pageSize = 10;
+    private CheckRecordAdapter adapter;
+    private boolean isLoadMore;
 
     public static MsgFragment getInstance() {
         return new MsgFragment();
@@ -43,7 +50,7 @@ public class MsgFragment extends BaseFragment {
         context = getHoldingActivity();
         titleBarSet = getView(R.id.titleBarSet);
         recycleRemind = getView(R.id.recycle_Remind);
-       /* recycleRemind.setLinearLayout();
+        recycleRemind.setLinearLayout();
         //设置是否可以下拉刷新
         recycleRemind.setPullRefreshEnable(true);
         //设置是否可以上拉刷新
@@ -55,8 +62,8 @@ public class MsgFragment extends BaseFragment {
         //设置上拉刷新文字颜色
         recycleRemind.setFooterViewTextColor(R.color.teal_200);
         recycleRemind.setFooterViewBackgroundColor(R.color.color_080707);
-        getRemindPageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), true);*/
-      /*  adapter = new CheckRecordAdapter(context);
+        getRemindPageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), true);
+        adapter = new CheckRecordAdapter(context);
         adapter.setToken(getToken());
         getRemindPageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), true);
         recycleRemind.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
@@ -83,7 +90,7 @@ public class MsgFragment extends BaseFragment {
             Intent intent = new Intent(context, CheckRecordDetailsActivity.class);
             intent.putExtra("data", tripEntity);
             startActivity(intent);
-        });*/
+        });
     }
 
     /**
@@ -94,8 +101,8 @@ public class MsgFragment extends BaseFragment {
      *                  获取用户消息列表
      */
     private void getRemindPageList(String pageNum, String pageSize, String token, String appUserId, boolean isRefresh) {
-        LogE("token:"+token);
-        LogE("appUserId:"+appUserId);
+        LogE("token:" + token);
+        LogE("appUserId:" + appUserId);
         OkHttpUtils.get().url(SERVER_URL + getRemindPageList_URL).
                 addParam("token", token).
                 addParam("pageNum", pageNum).
@@ -109,7 +116,7 @@ public class MsgFragment extends BaseFragment {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("获取用户消息列表:"+response);
+                LogE("获取用户消息列表:" + response);
                 //TestRecordEntity entity = JSON.parseObject(response, TestRecordEntity.class);
               /*  if (entity.isSuccess()) {
                     isLoadMore = Integer.parseInt(pageSize) <= entity.getData().getPages();

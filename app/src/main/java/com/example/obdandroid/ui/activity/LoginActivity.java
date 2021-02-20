@@ -267,7 +267,6 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("用户登录:" + response);
                 UserLoginEntity entity = JSON.parseObject(response, UserLoginEntity.class);
                 if (entity.isSuccess()) {
                     btnSignIn.setProgress(100);
@@ -306,7 +305,6 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                Log.e(TAG_Activity, "发送短信验证码：" + response);
                 SMSVerificationCodeEntity entity = JSON.parseObject(response, SMSVerificationCodeEntity.class);
                 if (entity.isSuccess()) {
                     showTipsDialog("验证码发送成功", TipDialog.TYPE_FINISH);

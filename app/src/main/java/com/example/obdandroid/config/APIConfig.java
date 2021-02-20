@@ -111,4 +111,12 @@ public class APIConfig {
      * 获取用户消息列表
      */
     public static final String getRemindPageList_URL = "/api//api/getRemindPageList";
+    /**
+     * 添加购买套餐校验
+     */
+    public static final String addRechargeRecordCheck_URL = "/api/addRechargeRecordCheck";
+    /**
+     * 减少使用次数和累计使用次数
+     */
+    public static final String reduceAndCumulativeFrequency_URL = "/api/reduceAndCumulativeFrequency";
 }

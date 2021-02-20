@@ -26,15 +26,19 @@ import android.widget.Toast;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.listener.Data;
 import com.example.obdandroid.ui.adapter.SimpleFragmentPagerAdapter;
 import com.example.obdandroid.ui.fragment.HomeFragment;
 import com.example.obdandroid.ui.fragment.MsgFragment;
 import com.example.obdandroid.ui.fragment.PersonalFragment;
 import com.example.obdandroid.ui.fragment.VehicleCheckFragment;
+import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.utils.ActivityManager;
+import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.DepthPageTransformer;
 import com.example.obdandroid.utils.GalleryTransformer;
+import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.ScalePageTransformer;
 import com.example.obdandroid.utils.StringUtil;
@@ -45,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
+import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
 import static com.example.obdandroid.config.Constant.REQUEST_ENABLE_BT;
 import static com.kongzue.dialog.v2.DialogSettings.THEME_DARK;
 import static com.kongzue.dialog.v2.DialogSettings.blur_alpha;
@@ -66,7 +71,6 @@ public class MainActivity extends BaseActivity {
     private int blur_front_color;
     private BlurView blur;
     private SPUtil spUtil;
-    private BluetoothAdapter bluetoothadapter;
 
     @Override
     protected int getContentViewId() {
@@ -94,10 +98,9 @@ public class MainActivity extends BaseActivity {
         viewPager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
         viewPager.addOnPageChangeListener(mOnPageChangeListener);
         viewPager.setOffscreenPageLimit(4);
-        //viewPager.setPageTransformer(true, new GalleryTransformer());
-        //viewPager.setPageTransformer(true, new ScalePageTransformer());
         viewPager.setPageTransformer(true, new DepthPageTransformer());
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
         checkBlueTooth();//检查蓝牙
     }
 
@@ -105,7 +108,7 @@ public class MainActivity extends BaseActivity {
      * 检查蓝牙
      */
     private void checkBlueTooth() {
-        bluetoothadapter = BluetoothAdapter.getDefaultAdapter();
+        BluetoothAdapter bluetoothadapter = BluetoothAdapter.getDefaultAdapter();
         //如果BT未开启，请请求将其启用。
         if (bluetoothadapter != null) {
             /*

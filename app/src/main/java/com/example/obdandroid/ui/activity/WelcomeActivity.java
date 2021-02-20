@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFullScreenActivity;
 import com.example.obdandroid.config.Constant;
+import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.SharedPreferencesUtil;
@@ -29,10 +30,12 @@ import notchtools.geek.com.notchtools.core.OnNotchCallBack;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
+import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
+
 public class WelcomeActivity extends BaseFullScreenActivity implements OnNotchCallBack {
     private static final int ANIM_TIME = 2000;
     private static final float SCALE_END = 1.15F;
-    private static final int[] Imgs = {R.drawable.welcomeone, R.drawable.welcometwo ,R.drawable.welcomethree};
+    private static final int[] Imgs = {R.drawable.welcomeone, R.drawable.welcometwo, R.drawable.welcomethree};
     private ImageView ivEntry;
     private ImageView imgBack;
     private Context context;

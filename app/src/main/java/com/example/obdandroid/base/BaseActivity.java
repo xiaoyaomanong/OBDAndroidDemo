@@ -14,6 +14,7 @@ import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.activity.LoginActivity;
 import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.utils.ActivityManager;
+import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.StringUtil;
@@ -25,6 +26,7 @@ import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.Set;
 
+import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
 import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
 import static com.example.obdandroid.config.Constant.TOKEN;
 import static com.example.obdandroid.config.Constant.USER_ID;
@@ -93,6 +95,20 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (!StringUtil.isNull(expireTime)) {
             setExpireTime(expireTime);
         }
+        if (!AppDateUtils.isDateTwoBigger(AppDateUtils.getTodayDateTimeHms(), expireTime)) {
+            new CustomeDialog(mContext, "您的账号登录时间过长，请重新登录！", confirm -> {
+                if (confirm) {
+                    spUtil.put(CONNECT_BT_KEY, "OFF");
+                    spUtil.put(Constant.IS_LOGIN, false);
+                    JumpUtil.startAct(mContext, LoginActivity.class);
+                    try {
+                        ActivityManager.getInstance().finishActivitys();
+                    } catch (Exception e) {
+                        LogE("该服务未注册");
+                    }
+                }
+            }).setPositiveButton("知道了").setTitle("提示").show();
+        }
     }
 
     public String getToken() {
@@ -138,6 +154,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public AppCompatActivity getActivity() {
         return mActivity;
     }
+
     /**
      * @param resId 资源id
      *              弹吐司方法
@@ -150,9 +167,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (msg.equals("token失效，请重新登录")) {
             new CustomeDialog(context, "你的账号已在其他设备登录或登录时间过长,请检查重新登录", confirm -> {
                 if (confirm) {
-                  /*  spUtil.remove(Constant.Account);
-                    spUtil.remove(Constant.Password);
-                    spUtil.remove(Constant.TOKEN);*/
                     JumpUtil.startAct(context, LoginActivity.class);
                     ActivityManager.getInstance().finishActivitys();
                 }

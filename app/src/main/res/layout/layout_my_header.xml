@@ -72,12 +72,11 @@
 
         <TextView
             android:id="@+id/tvIntegral"
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_integral"
             android:gravity="center"
             android:padding="5dp"
-            android:text="725积分"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_12"
             tools:ignore="HardcodedText" />

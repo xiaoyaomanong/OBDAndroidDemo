@@ -3,18 +3,24 @@ package com.example.obdandroid.ui.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.ui.activity.CheckRecordDetailsActivity;
-import com.example.obdandroid.ui.adapter.CheckRecordAdapter;
+import com.example.obdandroid.ui.adapter.RemindAdapter;
+import com.example.obdandroid.ui.entity.RemindPageEntity;
+import com.example.obdandroid.ui.entity.TestRecordEntity;
 import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -33,8 +39,9 @@ public class MsgFragment extends BaseFragment {
     private PullLoadMoreRecyclerView recycleRemind;
     private int pageNum = 1;
     private final int pageSize = 10;
-    private CheckRecordAdapter adapter;
+    private RemindAdapter adapter;
     private boolean isLoadMore;
+    private List<RemindPageEntity.DataEntity.ListEntity> datas = new ArrayList<>();
 
     public static MsgFragment getInstance() {
         return new MsgFragment();
@@ -62,22 +69,21 @@ public class MsgFragment extends BaseFragment {
         //设置上拉刷新文字颜色
         recycleRemind.setFooterViewTextColor(R.color.teal_200);
         recycleRemind.setFooterViewBackgroundColor(R.color.color_080707);
-        getRemindPageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), true);
-        adapter = new CheckRecordAdapter(context);
-        adapter.setToken(getToken());
-        getRemindPageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), true);
+        getRemindPageList(String.valueOf(pageNum), getToken(), getUserId(), true);
+        adapter = new RemindAdapter(context);
+        getRemindPageList(String.valueOf(pageNum), getToken(), getUserId(), true);
         recycleRemind.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
             @Override
             public void onRefresh() {
                 pageNum = 1;
-                getRemindPageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), true);
+                getRemindPageList(String.valueOf(pageNum), getToken(), getUserId(), true);
             }
 
             @Override
             public void onLoadMore() {
                 if (isLoadMore) {
                     pageNum++;
-                    getRemindPageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), false);
+                    getRemindPageList(String.valueOf(pageNum), getToken(), getUserId(), false);
                 } else {
                     //设置是否可以上拉刷新
                     recycleRemind.setPullLoadMoreCompleted();
@@ -86,27 +92,24 @@ public class MsgFragment extends BaseFragment {
         });
 
         adapter.setClickCallBack(entity -> {
-            OBDJsonTripEntity tripEntity = JSON.parseObject(entity.getTestData(), OBDJsonTripEntity.class);
+          /*  OBDJsonTripEntity tripEntity = JSON.parseObject(entity.getTestData(), OBDJsonTripEntity.class);
             Intent intent = new Intent(context, CheckRecordDetailsActivity.class);
             intent.putExtra("data", tripEntity);
-            startActivity(intent);
+            startActivity(intent);*/
         });
     }
 
     /**
      * @param token     用户token
      * @param pageNum   页号
-     * @param pageSize  条数
      * @param appUserId 用户id
      *                  获取用户消息列表
      */
-    private void getRemindPageList(String pageNum, String pageSize, String token, String appUserId, boolean isRefresh) {
-        LogE("token:" + token);
-        LogE("appUserId:" + appUserId);
+    private void getRemindPageList(String pageNum, String token, String appUserId, boolean isRefresh) {
         OkHttpUtils.get().url(SERVER_URL + getRemindPageList_URL).
                 addParam("token", token).
                 addParam("pageNum", pageNum).
-                addParam("pageSize", pageSize).
+                addParam("pageSize", "10").
                 addParam("appUserId", appUserId).
                 build().execute(new StringCallback() {
             @Override
@@ -116,10 +119,9 @@ public class MsgFragment extends BaseFragment {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("获取用户消息列表:" + response);
-                //TestRecordEntity entity = JSON.parseObject(response, TestRecordEntity.class);
-              /*  if (entity.isSuccess()) {
-                    isLoadMore = Integer.parseInt(pageSize) <= entity.getData().getPages();
+                RemindPageEntity entity = JSON.parseObject(response, RemindPageEntity.class);
+                if (entity.isSuccess()) {
+                    isLoadMore = Integer.parseInt(pageNum) <= entity.getData().getPages();
                     if (isRefresh) {
                         adapter.setList(entity.getData().getList());
                         recycleRemind.setAdapter(adapter);
@@ -134,9 +136,7 @@ public class MsgFragment extends BaseFragment {
                             recycleRemind.setPullLoadMoreCompleted();
                         }), 1000);
                     }
-                } else {
-                    dialogError(context, entity.getMessage());
-                }*/
+                }
             }
         });
     }

@@ -36,7 +36,7 @@ public class CheckRecordActivity extends BaseActivity {
     private Context context;
     private PullLoadMoreRecyclerView recycleContent;
     private int pageNum = 1;
-    private final int pageSize = 10;
+    private int pageSize = 8;
     private boolean isLoadMore;
     private final List<TestRecordEntity.DataEntity.ListEntity> datas = new ArrayList<>();
     private CheckRecordAdapter adapter;
@@ -71,19 +71,19 @@ public class CheckRecordActivity extends BaseActivity {
         recycleContent.setFooterViewBackgroundColor(R.color.color_080707);
         adapter = new CheckRecordAdapter(context);
         adapter.setToken(getToken());
-        getTestRecordPageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), true);
+        getTestRecordPageList(String.valueOf(pageNum), getToken(), getUserId(), true);
         recycleContent.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
             @Override
             public void onRefresh() {
                 pageNum = 1;
-                getTestRecordPageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), true);
+                getTestRecordPageList(String.valueOf(pageNum), getToken(), getUserId(), true);
             }
 
             @Override
             public void onLoadMore() {
                 if (isLoadMore) {
                     pageNum++;
-                    getTestRecordPageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), false);
+                    getTestRecordPageList(String.valueOf(pageNum), getToken(), getUserId(), false);
                 } else {
                     //设置是否可以上拉刷新
                     recycleContent.setPullLoadMoreCompleted();
@@ -118,15 +118,15 @@ public class CheckRecordActivity extends BaseActivity {
     /**
      * @param token     用户token
      * @param pageNum   页号
-     * @param pageSize  条数
      * @param appUserId 用户id
      *                  获取用户检测记录列表
      */
-    private void getTestRecordPageList(String pageNum, String pageSize, String token, String appUserId, boolean isRefresh) {
+    private void getTestRecordPageList(String pageNum, String token, String appUserId, boolean isRefresh) {
+        LogE("pageNum:" + pageNum);
         OkHttpUtils.get().url(SERVER_URL + getTestRecordPageList_URL).
                 addParam("token", token).
                 addParam("pageNum", pageNum).
-                addParam("pageSize", pageSize).
+                addParam("pageSize", "8").
                 addParam("appUserId", appUserId).
                 build().execute(new StringCallback() {
             @Override
@@ -138,7 +138,7 @@ public class CheckRecordActivity extends BaseActivity {
             public void onResponse(String response, int id) {
                 TestRecordEntity entity = JSON.parseObject(response, TestRecordEntity.class);
                 if (entity.isSuccess()) {
-                    isLoadMore = Integer.parseInt(pageSize) <= entity.getData().getPages();
+                    isLoadMore = Integer.parseInt(pageNum) <= entity.getData().getPages();
                     if (isRefresh) {
                         adapter.setList(entity.getData().getList());
                         recycleContent.setAdapter(adapter);

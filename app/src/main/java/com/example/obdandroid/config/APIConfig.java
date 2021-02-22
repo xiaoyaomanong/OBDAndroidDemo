@@ -9,8 +9,9 @@ public class APIConfig {
     /**
      * APP服务器地址
      */
-    //public static final String SERVER_URL = "http://192.168.0.188:8088";
-    public static final String SERVER_URL = "http://47.92.146.15:1021";
+    public static final String SERVER_URL = "http://192.168.0.188:8088";//本地测试
+    //public static final String SERVER_URL = "http://47.92.146.15:1021";//外网测试
+    //public static final String SERVER_URL = "http://8.136.125.33:1021";//生产
     /**
      * 注册接口
      */
@@ -110,7 +111,7 @@ public class APIConfig {
     /**
      * 获取用户消息列表
      */
-    public static final String getRemindPageList_URL = "/api//api/getRemindPageList";
+    public static final String getRemindPageList_URL = "/api/getRemindPageList";
     /**
      * 添加购买套餐校验
      */

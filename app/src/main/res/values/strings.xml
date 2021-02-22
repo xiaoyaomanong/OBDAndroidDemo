@@ -245,5 +245,8 @@
     <string name="chineseMeaning">中文含义</string>
     <string name="englishMeaning">英文含义</string>
     <string name="causeOfFailure">故障原因</string>
+    <string name="reming">全车检测自动生成体检报告</string>
+    <string name="Service">服务协议与隐私政策</string>
+    <string name="aboutOfUs">关于我们</string>
 
 </resources>

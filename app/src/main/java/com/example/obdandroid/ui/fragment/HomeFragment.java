@@ -333,7 +333,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         recycleContent.setLayoutManager(layoutManager);
         recordAdapter = new TestRecordAdapter(context);
         recordAdapter.setToken(getToken());
-        getTestRecordPageList(getToken(), String.valueOf(1), String.valueOf(2), getUserId());
+        getTestRecordPageList(getToken(), String.valueOf(1), String.valueOf(5), getUserId());
         recordAdapter.setClickCallBack(entity -> {
             OBDJsonTripEntity tripEntity = JSON.parseObject(entity.getTestData(), OBDJsonTripEntity.class);
             Intent intent = new Intent(context, CheckRecordDetailsActivity.class);

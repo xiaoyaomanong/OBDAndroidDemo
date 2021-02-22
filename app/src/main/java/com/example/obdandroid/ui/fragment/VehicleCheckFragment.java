@@ -52,6 +52,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
+import static com.example.obdandroid.config.APIConfig.reduceAndCumulativeFrequency_URL;
 import static com.example.obdandroid.config.APIConfig.addRemind_URL;
 import static com.example.obdandroid.config.APIConfig.addTestRecord_URL;
 import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
@@ -136,11 +137,37 @@ public class VehicleCheckFragment extends BaseFragment {
             } else {
                 showTipDialog("请连接OBD设备", TipDialog.TYPE_WARNING);
             }
-
         });
         //addRemind(getUserId(), addJsonContent(TripRecordCar.getTripTwoRecode(context).getOBDJson()), getToken());
         circleView.setCallEndListener(() -> LogE("333333"));
     }
+
+    /**
+     * @param token     用户Token
+     * @param appUserId APP用户ID
+     *                  减少使用次数和累计使用次数
+     */
+    private void reduceAndCumulativeFrequency(String token, String appUserId) {
+        OkHttpUtils.post().url(SERVER_URL + reduceAndCumulativeFrequency_URL).
+                addParam("token", token).
+                addParam("appUserId", appUserId).
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                LogE("减少使用次数和累计使用次数:"+response);
+                ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
+                if (entity.isSuccess()) {
+
+                }
+            }
+        });
+    }
+    
 
     /**
      * @param token     用户Token
@@ -225,7 +252,7 @@ public class VehicleCheckFragment extends BaseFragment {
                 addParam("appUserId", appUserId).
                 addParam("remindType", "2").
                 addParam("content", content).
-                addParam("title", "车辆检测报告").
+                addParam("title", "全车检测自动生成体检报告").
                 addParam("token", token).
                 build().execute(new StringCallback() {
             @Override
@@ -331,7 +358,8 @@ public class VehicleCheckFragment extends BaseFragment {
                 }
                 showResult(tripRecordCar.getTripMap());
                 addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(tripRecordCar.getOBDJson()), getUserId(), getToken());
-                //addRemind(getUserId(), addJsonContent(tripRecordCar.getOBDJson()), getToken());
+                reduceAndCumulativeFrequency(getToken(), getUserId());
+                addRemind(getUserId(), addJsonContent(tripRecordCar.getOBDJson()), getToken());
             }
         }
     };

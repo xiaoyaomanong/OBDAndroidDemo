@@ -24,6 +24,8 @@ import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.config.Constant;
+import com.example.obdandroid.ui.activity.AboutActivity;
+import com.example.obdandroid.ui.activity.CheckRecordActivity;
 import com.example.obdandroid.ui.activity.FeedbackActivity;
 import com.example.obdandroid.ui.activity.LoginActivity;
 import com.example.obdandroid.ui.activity.MyVehicleActivity;
@@ -93,7 +95,6 @@ public class PersonalFragment extends BaseFragment {
     @Override
     public void initView(View view, Bundle savedInstanceState) {
         context = getHoldingActivity();
-
         ivCarLogo = getView(R.id.ivCarLogo);
         tvAutomobileBrandName = getView(R.id.tvAutomobileBrandName);
         tvOBDState = getView(R.id.tvOBDState);
@@ -122,7 +123,9 @@ public class PersonalFragment extends BaseFragment {
         llBuyHistory.setOnClickListener(v -> JumpUtil.startAct(context, RechargeRecordActivity.class));//购买记录
         llFaceBack.setOnClickListener(v -> JumpUtil.startAct(context, FeedbackActivity.class));//反馈
         layoutAddCar.setOnClickListener(v -> JumpUtil.startAct(context, MyVehicleActivity.class));//车辆管理
-        layoutUpdate.setOnClickListener(v -> JumpUtil.startAct(context, PersonSettingActivity.class));
+        layoutUpdate.setOnClickListener(v -> JumpUtil.startAct(context, PersonSettingActivity.class));//个人信息
+        llAbout.setOnClickListener(v -> JumpUtil.startAct(context, AboutActivity.class));//关于我们
+        llHistoryRecord.setOnClickListener(v -> JumpUtil.startAct(context, CheckRecordActivity.class));//历史记录
         //退出账户
         btnLogout.setOnClickListener(v ->
                 new IosDialog(context, new IosDialog.DialogClick() {
@@ -188,7 +191,7 @@ public class PersonalFragment extends BaseFragment {
                 UserInfoEntity entity = JSON.parseObject(response, UserInfoEntity.class);
                 if (entity.isSuccess()) {
                     tvName.setText(entity.getData().getNickname());
-                    //myHeaderMobile.setText(entity.getData().getPhoneNum());
+                    tvIntegral.setText(entity.getData().getPhoneNum());
                     if (entity.getData().getHeadPortrait().length() > 0) {
                         myHeaderImage.setImageBitmap(BitMapUtils.stringToBitmap(entity.getData().getHeadPortrait()));
                     }

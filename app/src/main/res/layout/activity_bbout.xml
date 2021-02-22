@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_080707"
+    android:orientation="vertical">
+
+    <com.hjq.bar.TitleBar
+        android:id="@+id/titleBarSet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barStyle="night"
+        app:lineVisible="false"
+        app:title="@string/aboutOfUs" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <com.example.obdandroid.ui.view.CircleImageView
+            android:id="@+id/imageHeader"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_margin="15dp"
+            android:contentDescription="@null"
+            android:src="@drawable/logo"
+            app:border_color="@color/white"
+            app:border_width="2dp" />
+
+        <TextView
+            android:id="@+id/tvAppVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="15dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/dp_10"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RelativeOverlap,RtlSymmetry" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutService"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/color_2C2B30"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/dp_10"
+            android:text="@string/Service"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/calibri"
+            android:gravity="center_vertical|right"
+            android:textColor="@color/white"
+            tools:ignore="RtlHardcoded" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/validityDate"
+            app:srcCompat="@drawable/icon_next" />
+
+    </LinearLayout>
+</LinearLayout>

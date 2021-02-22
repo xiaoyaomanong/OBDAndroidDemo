@@ -29,6 +29,7 @@ import okhttp3.Response;
 
 import static com.example.obdandroid.config.APIConfig.CHARGE_URL;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
+import static com.example.obdandroid.config.APIConfig.addRechargeRecordCheck_URL;
 import static com.example.obdandroid.config.APIConfig.addRechargeRecord_URL;
 
 
@@ -115,10 +116,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                 showTipsDialog("请选择套餐类型", TipDialog.TYPE_ERROR);
                 return;
             }
-            if (btnBuy.getProgress() == -1) {
-                btnBuy.setProgress(0);
-            }
-            addRechargeRecord(getUserId(), rechargeSetMealSettingsId, AppDateUtils.getTodayDateTimeHms(), rechargetAmount, paymentChannels, rechargeStatus, getToken());
+            addRechargeRecordCheck(getToken(), getUserId());
         });
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -136,6 +134,37 @@ public class RechargeSetMealActivity extends BaseActivity {
 
             }
         });
+    }
+
+    /**
+     * @param token     用户Token
+     * @param appUserId APP用户ID
+     *                  添加购买套餐校验
+     */
+    private void addRechargeRecordCheck(String token, String appUserId) {
+        OkHttpUtils.post().url(SERVER_URL + addRechargeRecordCheck_URL).
+                addParam("token", token).
+                addParam("appUserId", appUserId).
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
+                if (entity.isSuccess()) {
+                    if (btnBuy.getProgress() == -1) {
+                        btnBuy.setProgress(0);
+                    }
+                    addRechargeRecord(getUserId(), rechargeSetMealSettingsId, AppDateUtils.getTodayDateTimeHms(), rechargetAmount, paymentChannels, rechargeStatus, getToken());
+                } else {
+                    showTipsDialog("购买套餐校验失败", TipDialog.TYPE_ERROR);
+                }
+            }
+        });
+
     }
 
 

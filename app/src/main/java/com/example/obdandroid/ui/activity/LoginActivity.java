@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.base.BaseLoginActivity;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.entity.SMSVerificationCodeEntity;
@@ -57,7 +58,7 @@ import static com.example.obdandroid.config.TAG.TAG_Activity;
  * 日期：2020/12/22 0022
  * 描述：
  */
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseLoginActivity {
     private Context context;
     private EditText etUser;
     private EditText etPwd;

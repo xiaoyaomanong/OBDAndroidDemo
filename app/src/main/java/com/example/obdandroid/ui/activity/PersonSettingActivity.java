@@ -88,8 +88,8 @@ public class PersonSettingActivity extends BaseActivity {
         tvNick.setText(entity.getNickname());
         tvPhone.setText(entity.getPhoneNum());
         tvSex.setText("未知");
-        if (!TextUtils.isEmpty(entity.getStartValidity()) && !TextUtils.isEmpty(entity.getEndValidity())) {
-            tvValidityDate.setText(AppDateUtils.dealDateFormat(entity.getStartValidity()) + "-" + AppDateUtils.dealDateFormat(entity.getEndValidity()));
+        if (!TextUtils.isEmpty(entity.getEndValidity())) {
+            tvValidityDate.setText(entity.getEndValidity().split(" ")[0]);
         }
         tvVIP.setText(entity.getIsVip() == 1 ? "是" : "否");
         tvIsTheDeviceBound.setText(entity.isTheDeviceBound() ? "是" : "否");

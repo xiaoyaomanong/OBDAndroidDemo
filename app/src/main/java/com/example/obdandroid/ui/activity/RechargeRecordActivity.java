@@ -113,6 +113,7 @@ public class RechargeRecordActivity extends BaseActivity {
      * @param pageNum   页号
      * @param pageSize  条数
      * @param appUserId APP用户ID
+     *                  获取用户购买套餐记录列表
      */
     private void getRechargeRecordPageList(String token, String pageNum, String pageSize, String appUserId,final boolean isRefresh) {
         OkHttpUtils.get().url(SERVER_URL + getRechargeRecordPageList_URL).

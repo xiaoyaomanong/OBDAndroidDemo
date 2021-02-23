@@ -3,39 +3,31 @@ package com.example.obdandroid.ui.activity;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.obdandroid.R;
-import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.base.BaseLoginActivity;
 import com.example.obdandroid.config.Constant;
-import com.example.obdandroid.listener.OnSwipeTouchListener;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.entity.SMSVerificationCodeEntity;
 import com.example.obdandroid.ui.entity.UserLoginEntity;
@@ -92,7 +84,7 @@ import static com.example.obdandroid.config.TAG.TAG_Activity;
  * 日期：2020/12/23 0023
  * 描述：
  */
-public class RegisterActivity extends BaseActivity {
+public class RegisterActivity extends BaseLoginActivity {
     private Context context;
     private EditText etUser;
     private EditText etPwd;
@@ -100,8 +92,6 @@ public class RegisterActivity extends BaseActivity {
     private CircleImageView myHeaderImage;
     private EditText etNick;
     private EditText etCode;
-    private Button btnCode;
-    private TitleBar titleBarSet;
     private LinearLayout layoutRegisterCode;
     private CircularProgressButton btnSignUpAgree;
     private LinearLayout layoutRegisterInfo;
@@ -121,7 +111,7 @@ public class RegisterActivity extends BaseActivity {
     private String taskID;
     private String sex = "0";
     private int index = 0;
-    private final String[] sexArry = new String[]{"保密", "男", "女"};// 性别选择
+    private final String[] sexArr = new String[]{"保密", "男", "女"};// 性别选择
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
         @Override
@@ -155,9 +145,9 @@ public class RegisterActivity extends BaseActivity {
         myHeaderImage = findViewById(R.id.my_header_image);
         etNick = findViewById(R.id.etNick);
         etCode = findViewById(R.id.etCode);
-        btnCode = findViewById(R.id.btn_code);
+        Button btnCode = findViewById(R.id.btn_code);
         textLayout = findViewById(R.id.textLayout);
-        titleBarSet = findViewById(R.id.titleBarSet);
+        TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         layoutRegisterCode = findViewById(R.id.layoutRegisterCode);
         btnSignUpAgree = findViewById(R.id.btnSignUpAgree);
         layoutRegisterInfo = findViewById(R.id.layoutRegisterInfo);
@@ -255,10 +245,10 @@ public class RegisterActivity extends BaseActivity {
     private void showSexChooseDialog(TextView changeSex) {
         AlertDialog.Builder builder3 = new AlertDialog.Builder(this);// 自定义对话框
         // 2默认的选中
-        builder3.setSingleChoiceItems(sexArry, index, (dialog, which) -> {// which是被选中的位置
+        builder3.setSingleChoiceItems(sexArr, index, (dialog, which) -> {// which是被选中的位置
             sex = String.valueOf(which);
             index = which;
-            changeSex.setText(sexArry[which]);
+            changeSex.setText(sexArr[which]);
             dialog.dismiss();// 随便点击一个item消失对话框，不用点击确认取消
         });
         builder3.show();// 让弹出框显示

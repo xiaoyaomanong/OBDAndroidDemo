@@ -76,8 +76,6 @@ public class LoginActivity extends BaseLoginActivity {
     private String taskID="";
     private CountDownTimerUtils mCountDownTimerUtils;
     private TextView tvTitle;
-    private LinearLayout layoutLogin;
-    private TextView tvVersion;
 
     @Override
     protected int getContentViewId() {
@@ -105,7 +103,6 @@ public class LoginActivity extends BaseLoginActivity {
         btnCode = findViewById(R.id.btn_code);
         layoutCode = findViewById(R.id.layoutCode);
         tvTitle = findViewById(R.id.tv_title);
-        tvVersion = findViewById(R.id.tvVersion);
 
         spUtil = new SPUtil(context);
         String OtherLogin = spUtil.getString("OtherLogin", getString(R.string.text_pwd_msg));

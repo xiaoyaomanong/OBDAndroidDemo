@@ -114,6 +114,7 @@
                 android:layout_marginEnd="5dp"
                 android:background="@drawable/btn_shape_white_bg"
                 android:text="@string/hint_code"
+                android:textSize="@dimen/sp_12"
                 android:textColor="@color/white" />
         </LinearLayout>
 
@@ -213,6 +214,7 @@
         <com.example.obdandroid.ui.view.CircleImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:visibility="invisible"
             android:src="@drawable/logo" />
 
         <TextView
@@ -221,6 +223,7 @@
             android:fontFamily="@font/gotham"
             android:gravity="center"
             android:padding="5dp"
+            android:visibility="invisible"
             android:text="@string/login_version"
             android:textColor="@color/white" />
 
@@ -231,6 +234,7 @@
             android:fontFamily="@font/gotham"
             android:gravity="center"
             android:padding="5dp"
+            android:visibility="invisible"
             android:text="@string/str_copyright"
             android:textColor="@color/white" />
 

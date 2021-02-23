@@ -1,6 +1,7 @@
 package com.example.obdandroid.ui.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
@@ -160,7 +161,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                     }
                     addRechargeRecord(getUserId(), rechargeSetMealSettingsId, AppDateUtils.getTodayDateTimeHms(), rechargetAmount, paymentChannels, rechargeStatus, getToken());
                 } else {
-                    showTipsDialog("购买套餐校验失败", TipDialog.TYPE_ERROR);
+                    showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
                 }
             }
         });
@@ -202,7 +203,10 @@ public class RechargeSetMealActivity extends BaseActivity {
                 if (entity.isSuccess()) {
                     btnBuy.setProgress(100);
                     new CustomeDialog(context, "购买套餐成功！", confirm -> {
-
+                        if (confirm) {
+                            setResult(102, new Intent());
+                            finish();
+                        }
                     }).setPositiveButton("确定").setTitle("支付").show();
                 } else {
                     btnBuy.setProgress(-1);

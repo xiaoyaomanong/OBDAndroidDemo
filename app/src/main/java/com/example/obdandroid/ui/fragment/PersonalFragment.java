@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -33,6 +34,7 @@ import com.example.obdandroid.ui.activity.PersonSettingActivity;
 import com.example.obdandroid.ui.activity.RechargeRecordActivity;
 import com.example.obdandroid.ui.activity.RechargeSetMealActivity;
 import com.example.obdandroid.ui.activity.VehicleInfoActivity;
+import com.example.obdandroid.ui.entity.RechargeRecordEntity;
 import com.example.obdandroid.ui.entity.UserInfoEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleImageView;
@@ -50,6 +52,7 @@ import okhttp3.Response;
 
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.USER_INFO_URL;
+import static com.example.obdandroid.config.APIConfig.getRechargeRecordPageList_URL;
 import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
 import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
 
@@ -64,24 +67,16 @@ public class PersonalFragment extends BaseFragment {
     private TextView tvAutomobileBrandName;
     private TextView tvOBDState;
     private TextView tvModelName;
-    private LinearLayout llHistoryRecord;
-    private LinearLayout llBuyHistory;
-    private LinearLayout llFaceBack;
-    private LinearLayout llVersion;
-    private LinearLayout llHelp;
-    private LinearLayout llAbout;
-    private LinearLayout layoutAddCar;
-    private Button btnLogout;
     private SPUtil spUtil;
     private TextView tvName;
     private TextView tvIntegral;
-    private TitleBar titleBarSet;
+    private TextView tvRechargeAmount;
+    private TextView tvRechargeSetMeaName;
     private CircleImageView myHeaderImage;
     private LinearLayout layoutCar;
     private LocalBroadcastManager lm;
     private TestReceiver testReceiver;
-    private LinearLayout layoutGo;
-    private LinearLayout layoutUpdate;
+    private ImageView ivVip;
 
     public static PersonalFragment getInstance() {
         return new PersonalFragment();
@@ -99,27 +94,33 @@ public class PersonalFragment extends BaseFragment {
         tvAutomobileBrandName = getView(R.id.tvAutomobileBrandName);
         tvOBDState = getView(R.id.tvOBDState);
         tvModelName = getView(R.id.tvModelName);
-        llHistoryRecord = getView(R.id.ll_history_record);
-        llBuyHistory = getView(R.id.ll_buy_history);
-        llFaceBack = getView(R.id.ll_faceBack);
-        llVersion = getView(R.id.ll_Version);
-        llHelp = getView(R.id.ll_help);
-        llAbout = getView(R.id.ll_about);
-        btnLogout = getView(R.id.btnLogout);
+        LinearLayout llHistoryRecord = getView(R.id.ll_history_record);
+        LinearLayout llBuyHistory = getView(R.id.ll_buy_history);
+        LinearLayout llFaceBack = getView(R.id.ll_faceBack);
+        LinearLayout llVersion = getView(R.id.ll_Version);
+        LinearLayout llHelp = getView(R.id.ll_help);
+        LinearLayout llAbout = getView(R.id.ll_about);
+        Button btnLogout = getView(R.id.btnLogout);
         tvName = getView(R.id.tvName);
         tvIntegral = getView(R.id.tvIntegral);
-        titleBarSet = getView(R.id.titleBarSet);
         myHeaderImage = getView(R.id.my_header_image);
         layoutCar = getView(R.id.layoutCar);
-        layoutAddCar = getView(R.id.layoutAddCar);
-        layoutGo = getView(R.id.layoutGo);
-        layoutUpdate = getView(R.id.layout_update);
+        LinearLayout layoutAddCar = getView(R.id.layoutAddCar);
+        LinearLayout layoutGo = getView(R.id.layoutGo);
+        LinearLayout layoutUpdate = getView(R.id.layout_update);
+        tvRechargeAmount = getView(R.id.tvRechargeAmount);
+        tvRechargeSetMeaName = getView(R.id.tvRechargeSetMeaName);
+        ivVip = getView(R.id.ivVip);
         spUtil = new SPUtil(context);
         initReceiver();
         getUserInfo(getUserId(), getToken());
+        getRechargeRecordPageList(getToken(),getUserId());
         getVehicleInfoById(getToken(), spUtil.getString("vehicleId", ""));
 
-        layoutGo.setOnClickListener(v -> JumpUtil.startAct(context, RechargeSetMealActivity.class));//充值
+        layoutGo.setOnClickListener(v -> {
+            Intent intent=new Intent(context,RechargeSetMealActivity.class);
+            startActivityForResult(intent,101);
+        });//充值
         llBuyHistory.setOnClickListener(v -> JumpUtil.startAct(context, RechargeRecordActivity.class));//购买记录
         llFaceBack.setOnClickListener(v -> JumpUtil.startAct(context, FeedbackActivity.class));//反馈
         layoutAddCar.setOnClickListener(v -> JumpUtil.startAct(context, MyVehicleActivity.class));//车辆管理
@@ -151,24 +152,56 @@ public class PersonalFragment extends BaseFragment {
                         }
                     }
                 }).setMessage("是否退出客户端").setTitle("退出提示").setSelectNegative("取消").setSelectPositive("确定").showDialog());
-/* multipleItemQuickAdapter.setOnItemChildClickListener((adapter, view, position) -> {
-            switch (view.getId()) {
-                case R.id.ll_my_car:
+                /* multipleItemQuickAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+                            switch (view.getId()) {
+                                case R.id.ll_my_car:
+                                    break;
+                                case R.id.ll_my_pay:
+                                    break;
+                                case R.id.ll_my_obd:
+                                    JumpUtil.startAct(context, OBDSettingActivity.class);
+                                    break;
+                                case R.id.ll_my_trouble:
+                                    JumpUtil.startAct(context, TroubleCodeQueryActivity.class);
+                                    break;
+                                case R.id.my_header_settings:
+                                    JumpUtil.startAct(context, AppSettingActivity.class);
+                                    break;
+                            }*/
+    }
 
-                    break;
-                case R.id.ll_my_pay:
+    /**
+     * @param token     用户Token
+     * @param appUserId APP用户ID
+     *                  获取用户购买套餐记录列表
+     */
+    private void getRechargeRecordPageList(String token, String appUserId) {
+        OkHttpUtils.get().url(SERVER_URL + getRechargeRecordPageList_URL).
+                addParam("token", token).
+                addParam("pageNum", "1").
+                addParam("pageSize", "3").
+                addParam("appUserId", appUserId).
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
 
-                    break;
-                case R.id.ll_my_obd:
-                    JumpUtil.startAct(context, OBDSettingActivity.class);
-                    break;
-                case R.id.ll_my_trouble:
-                    JumpUtil.startAct(context, TroubleCodeQueryActivity.class);
-                    break;
-                case R.id.my_header_settings:
-                    JumpUtil.startAct(context, AppSettingActivity.class);
-                    break;
-            }*/
+            }
+
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(String response, int id) {
+                RechargeRecordEntity entity = JSON.parseObject(response, RechargeRecordEntity.class);
+                if (entity.isSuccess()) {
+                    if (entity.getData().getList().size() != 0) {
+                        tvRechargeAmount.setText("￥" + entity.getData().getList().get(0).getRechargetAmount());
+                        tvRechargeSetMeaName.setText(entity.getData().getList().get(0).getRechargeSetMeaName());
+                    } else {
+                        tvRechargeSetMeaName.setText("未购买套餐");
+                        tvRechargeAmount.setText("￥0");
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -192,6 +225,7 @@ public class PersonalFragment extends BaseFragment {
                 if (entity.isSuccess()) {
                     tvName.setText(entity.getData().getNickname());
                     tvIntegral.setText(entity.getData().getPhoneNum());
+                    ivVip.setVisibility(entity.getData().getIsVip() == 1 ? View.VISIBLE : View.GONE);
                     if (entity.getData().getHeadPortrait().length() > 0) {
                         myHeaderImage.setImageBitmap(BitMapUtils.stringToBitmap(entity.getData().getHeadPortrait()));
                     }
@@ -259,6 +293,16 @@ public class PersonalFragment extends BaseFragment {
         public void onReceive(Context context, Intent intent) {
             String vehicleId = intent.getStringExtra(Intent.EXTRA_TEXT);
             getVehicleInfoById(getToken(), vehicleId);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==101){
+            if (resultCode==102){
+                getRechargeRecordPageList(getToken(),getUserId());
+            }
         }
     }
 

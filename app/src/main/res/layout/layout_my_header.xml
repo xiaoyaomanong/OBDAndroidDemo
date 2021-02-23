@@ -8,15 +8,31 @@
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
-    <com.example.obdandroid.ui.view.CircleImageView
-        android:id="@+id/my_header_image"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:contentDescription="@null"
-        android:src="@drawable/header_image"
-        app:border_color="@color/white"
-        app:border_width="2dp" />
+        android:layout_gravity="center">
+
+        <com.example.obdandroid.ui.view.CircleImageView
+            android:id="@+id/my_header_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:contentDescription="@null"
+            android:layout_marginTop="25dp"
+            android:src="@drawable/header_image"
+            app:border_color="@color/white"
+            app:border_width="2dp" />
+
+        <ImageView
+            android:id="@+id/ivVip"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/icon_vip"
+            tools:ignore="ContentDescription" />
+    </FrameLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"

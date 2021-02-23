@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.obdandroid.R;
+import com.example.obdandroid.config.TAG;
 import com.example.obdandroid.ui.entity.ChargeMealEntity;
 import com.example.obdandroid.utils.AppDateUtils;
 
@@ -61,8 +63,13 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         } else if (NOT_EMPTY_VIEW == itemViewType) {
             final MyViewHolder holder = (MyViewHolder) viewHolder;
             //充值套餐类型(1 数量 2 时间) ,
+            Log.e(TAG.TAG_Activity, "套餐说明:" + list.get(position).getRechargeSetMeaExplain());
             if (list.get(position).getRechargeSetMeaType() == 1) {
-                holder.tvEffectiveDays.setText("使用次数:" + list.get(position).getRechargeSetMeaNum());
+                if (list.get(position).getRechargeSetMeaNum() == 0) {
+                    holder.tvEffectiveDays.setText("不限制次数");
+                } else {
+                    holder.tvEffectiveDays.setText("使用次数:" + list.get(position).getRechargeSetMeaNum());
+                }
             } else {
                 try {
                     holder.tvEffectiveDays.setText("有效期至:" + AppDateUtils.addDate(AppDateUtils.getTodayDateTime(), list.get(position).getEffectiveDays()));
@@ -75,7 +82,6 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             } else {
                 holder.tvRechargeSetMeaName.setText(list.get(position).getRechargeSetMeaName());
             }
-            holder.tvBindingDeviceNum.setText("1个OBD终端 | 绑定" + list.get(position).getBindingDeviceNum() + "台车");
             holder.tvRechargeSetMeaAmount.setText("￥" + list.get(position).getRechargeSetMeaAmount());
 
             if (list.get(position).isChecked()) {

@@ -105,7 +105,7 @@ public class MyVehicleActivity extends BaseActivity {
                 spUtil.remove("vehicleId");
                 spUtil.put("vehicleId", String.valueOf(entity.getVehicleId()));
                 Intent intent = new Intent("com.android.ObdCar");//创建发送广播的Action
-                intent.putExtra(Intent.EXTRA_TEXT, String.valueOf(entity.getVehicleId()));//发送携带的数据
+                intent.putExtra("vehicleId", String.valueOf(entity.getVehicleId()));//发送携带的数据
                 mLocalBroadcastManager.sendBroadcast(intent);                               //发送本地广播
             }
         });

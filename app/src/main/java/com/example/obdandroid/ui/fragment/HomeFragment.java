@@ -288,6 +288,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
             double maxSpeedTemp = data.getMaxSpeed();
             double distanceTemp = data.getDistance();
             double averageTemp;
+            LogE("自动检测停机时间:"+sharedPreferences.getBoolean("auto_average", false));
             if (sharedPreferences.getBoolean("auto_average", false)) {
                 averageTemp = data.getAverageSpeedMotion();
             } else {
@@ -317,6 +318,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
 
             s = new SpannableString(String.format("%.0f %s", averageTemp, speedUnits));
             s.setSpan(new RelativeSizeSpan(0.5f), s.length() - speedUnits.length() - 1, s.length(), 0);
+            LogE("平均速度："+s);
             tvAverageSpeed.setText(s.toString().replace("km/h", ""));
 
             s = new SpannableString(String.format("%.3f %s", distanceTemp, distanceUnits));
@@ -666,7 +668,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String vehicleId = intent.getStringExtra(Intent.EXTRA_TEXT);
+            String vehicleId = intent.getStringExtra("vehicleId");
             getUserInfo(getUserId(), getToken(), vehicleId);
         }
     }
@@ -685,7 +687,6 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
             }
             SpannableString s = new SpannableString(String.format("%.0f %s", acc, units));
             s.setSpan(new RelativeSizeSpan(0.75f), s.length() - units.length() - 1, s.length(), 0);
-            LogE("精确度:" + s);
         }
 
         if (location.hasSpeed()) {
@@ -699,7 +700,6 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
             }
             SpannableString s = new SpannableString(String.format(Locale.ENGLISH, "%.0f %s", speed, units));
             s.setSpan(new RelativeSizeSpan(0.25f), s.length() - units.length() - 1, s.length(), 0);
-            LogE("当前速度:" + s);
             tvCurrentSpeed.setText(s.toString().replace("km/h", ""));
             dashSpeed.setVelocity(Float.parseFloat(s.toString().replace("km/h", "")));
         }

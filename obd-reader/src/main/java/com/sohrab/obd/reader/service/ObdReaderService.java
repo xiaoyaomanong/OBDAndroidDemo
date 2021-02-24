@@ -36,7 +36,7 @@ import com.sohrab.obd.reader.application.ObdPreferences;
 import com.sohrab.obd.reader.constants.DefineObdReader;
 import com.sohrab.obd.reader.enums.ObdProtocols;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
-import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
+import com.sohrab.obd.reader.obdCommand.ObdConfig;
 import com.sohrab.obd.reader.obdCommand.control.TroubleCodesCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
@@ -84,6 +84,14 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
     private boolean mIsRunningSuccess;
     private Intent mIntent = new Intent(ACTION_READ_OBD_REAL_TIME_DATA);
     private char[] mSupportedPids;
+    // 在另一个线程中运行executeQueue，以减轻UI线程
+    Thread t = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            executeCommand();
+        }
+    });
+
 
     public ObdReaderService() {
         super("ObdReaderService");
@@ -189,7 +197,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
                                 // 此线程是必需的，因为在Headunit中命令.run方法无限块，因此，线程的最长寿命为15秒，这样就可以处理块了。
                                 mIsRunningSuccess = false;
                                 new ObdResetCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-                                Thread.sleep(1000);
+                                Thread.sleep(200);
                                 new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                                 Thread.sleep(200);
                                 new LineFeedOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
@@ -242,38 +250,40 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
      */
     private void executeCommand() {
         LogUtils.i("执行命令线程是 :: " + Thread.currentThread().getId());
-        TripRecord tripRecord = TripRecord.getTripRecode(this);
-        ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfiguration.getmObdCommands().clone();
-        for (int i = 0; i < commands.size(); i++) {
-            ObdCommand command = commands.get(i);
-            try {
-                LogUtils.i("命令运行:: " + command.getName());
-                command.run(mSocket.getInputStream(), mSocket.getOutputStream());
-                LogUtils.i("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
-                tripRecord.updateTrip(command.getName(), command);
-                if (mIsFaultCodeRead) {
-                    try {
-                        TroubleCodesCommand troubleCodesCommand = new TroubleCodesCommand();
-                        troubleCodesCommand.run(mSocket.getInputStream(), mSocket.getOutputStream());
-                        tripRecord.updateTrip(troubleCodesCommand.getName(), troubleCodesCommand);
-                        mIsFaultCodeRead = false;
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        while (!Thread.currentThread().isInterrupted()) {
+            TripRecord tripRecord = TripRecord.getTripRecode(this);
+            ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfig.getmObdCommands().clone();
+            for (int i = 0; i < commands.size(); i++) {
+                ObdCommand command = commands.get(i);
+                try {
+                    LogUtils.i("命令运行:: " + command.getName());
+                    command.run(mSocket.getInputStream(), mSocket.getOutputStream());
+                    LogUtils.i("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
+                    tripRecord.updateTrip(command.getName(), command);
+                    if (mIsFaultCodeRead) {
+                        try {
+                            TroubleCodesCommand troubleCodesCommand = new TroubleCodesCommand();
+                            troubleCodesCommand.run(mSocket.getInputStream(), mSocket.getOutputStream());
+                            tripRecord.updateTrip(troubleCodesCommand.getName(), troubleCodesCommand);
+                            mIsFaultCodeRead = false;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (Exception e) {
+                    LogUtils.i("执行命令异常  :: " + e.getMessage());
+                    if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
+                        LogUtils.i("命令异常  :: " + e.getMessage());
+                        setDisconnection();
                     }
                 }
-            } catch (Exception e) {
-                LogUtils.i("执行命令异常  :: " + e.getMessage());
-                if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
-                    LogUtils.i("命令异常  :: " + e.getMessage());
-                    setDisconnection();
-                }
             }
+            if (mIntent == null)
+                mIntent = new Intent(ACTION_READ_OBD_REAL_TIME_DATA);
+            sendBroadcast(mIntent);
+            // 退出循环意味着连接丢失，所以将连接状态设置为false
+            isConnected = false;
         }
-        if (mIntent == null)
-            mIntent = new Intent(ACTION_READ_OBD_REAL_TIME_DATA);
-        sendBroadcast(mIntent);
-        // 退出循环意味着连接丢失，所以将连接状态设置为false
-        isConnected = false;
     }
 
     /**
@@ -304,6 +314,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(true);
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
         LogUtils.i("Service Created :: ");
+        t.start();
     }
 
 
@@ -348,6 +359,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(false);
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
         TripRecord.getTripRecode(this).clear();
+        t.interrupt();
     }
 
     /**
@@ -358,7 +370,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
         if (mSocket != null) {
             try {
                 mSocket.close();
-                sendBroadcast(ACTION_OBD_CONNECTION_STATUS,"socket closed");
+                sendBroadcast(ACTION_OBD_CONNECTION_STATUS, "socket closed");
             } catch (IOException e) {
                 LogUtils.i("socket closing failed :: ");
             }

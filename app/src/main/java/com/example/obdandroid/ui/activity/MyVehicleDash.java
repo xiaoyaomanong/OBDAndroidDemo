@@ -14,6 +14,8 @@ import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.trip.TripRecord;
 
+import java.math.BigDecimal;
+
 /**
  * 作者：Jealous
  * 日期：2021/1/26 0026
@@ -107,16 +109,28 @@ public class MyVehicleDash extends BaseActivity {
             tvmMassAirFlow.setText(String.valueOf(tripRecord.getmMassAirFlow()));
             tvmAirFuelRatio.setText(tripRecord.getmAirFuelRatio());
             tvmAmbientAirTemp.setText(tripRecord.getmAmbientAirTemp());
-            tvmInsFuelConsumption.setText(String.valueOf(tripRecord.getmInsFuelConsumption()));
+            float InsFuelConsumption= BigDecimal.valueOf(tripRecord.getmInsFuelConsumption())
+                    .setScale(2, BigDecimal.ROUND_HALF_DOWN)
+                    .floatValue();
+            tvmInsFuelConsumption.setText(String.valueOf(InsFuelConsumption));
             tvmOdometer.setText(TextUtils.isEmpty(tripRecord.getmOdometer())?"0":tripRecord.getmOdometer());
-            tvDrivingDuration.setText(String.valueOf(tripRecord.getDrivingDuration()));
+            float DrivingDuration= BigDecimal.valueOf(tripRecord.getDrivingDuration())
+                    .setScale(2, BigDecimal.ROUND_HALF_DOWN)
+                    .floatValue();
+            tvDrivingDuration.setText(String.valueOf(DrivingDuration));
             String rpm=TextUtils.isEmpty(tripRecord.getEngineRpm()) ? "0" : tripRecord.getEngineRpm();
             dashRPM.setVelocity(Float.parseFloat(rpm)/1000);
             dashSpeed.setVelocity(tripRecord.getSpeed());
-            dashInsFuelConsumption.setVelocity(tripRecord.getmInsFuelConsumption());
+            float InsFuelConsumptionTwo= BigDecimal.valueOf(tripRecord.getmInsFuelConsumption())
+                    .setScale(2, BigDecimal.ROUND_HALF_DOWN)
+                    .floatValue();
+            dashInsFuelConsumption.setVelocity(InsFuelConsumptionTwo);
             dashEngineCoolantTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineCoolantTemp()) ? "0" : tripRecord.getmEngineCoolantTemp().replace("C", "")));
             dashFuelLevel.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmFuelLevel()) ? "0" : tripRecord.getmFuelLevel().replace("%", "")));
-            dashDrivingFuelConsumption.setVelocity(tripRecord.getmDrivingFuelConsumption());
+            float DrivingFuelConsumption= BigDecimal.valueOf(tripRecord.getmDrivingFuelConsumption())
+                    .setScale(2, BigDecimal.ROUND_HALF_DOWN)
+                    .floatValue();
+            dashDrivingFuelConsumption.setVelocity(DrivingFuelConsumption);
             dashIdlingFuelConsumption.setVelocity(tripRecord.getmIdlingFuelConsumption());
             dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineOilTemp()) ? "0" : tripRecord.getmEngineOilTemp().replace("C", "")));
         }

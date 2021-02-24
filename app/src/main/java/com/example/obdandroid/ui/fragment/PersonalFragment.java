@@ -301,7 +301,7 @@ public class PersonalFragment extends BaseFragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String vehicleId = intent.getStringExtra(Intent.EXTRA_TEXT);
+            String vehicleId = intent.getStringExtra("vehicleId");
             getVehicleInfoById(getToken(), vehicleId);
         }
     }

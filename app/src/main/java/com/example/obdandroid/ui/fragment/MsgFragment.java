@@ -35,7 +35,6 @@ import static com.example.obdandroid.config.APIConfig.getRemindPageList_URL;
  */
 public class MsgFragment extends BaseFragment {
     private Context context;
-    private TitleBar titleBarSet;
     private PullLoadMoreRecyclerView recycleRemind;
     private int pageNum = 1;
     private final int pageSize = 10;
@@ -55,7 +54,6 @@ public class MsgFragment extends BaseFragment {
     @Override
     public void initView(View view, Bundle savedInstanceState) {
         context = getHoldingActivity();
-        titleBarSet = getView(R.id.titleBarSet);
         recycleRemind = getView(R.id.recycle_Remind);
         recycleRemind.setLinearLayout();
         //设置是否可以下拉刷新

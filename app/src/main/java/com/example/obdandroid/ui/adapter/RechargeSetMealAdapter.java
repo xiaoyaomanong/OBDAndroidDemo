@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final LayoutInflater inflater;
-    private List<ChargeMealEntity.DataEntity> list;
+    private List<ChargeMealEntity.DataEntity.ListEntity> list;
     private OnClickCallBack clickCallBack;
     private final int EMPTY_VIEW = 0;//空页面
     private final int NOT_EMPTY_VIEW = 1;//正常页面
@@ -41,7 +41,7 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.clickCallBack = clickCallBack;
     }
 
-    public void setList(List<ChargeMealEntity.DataEntity> list) {
+    public void setList(List<ChargeMealEntity.DataEntity.ListEntity> list) {
         this.list = list;
     }
 
@@ -63,19 +63,15 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         } else if (NOT_EMPTY_VIEW == itemViewType) {
             final MyViewHolder holder = (MyViewHolder) viewHolder;
             //充值套餐类型(1 数量 2 时间) ,
-            Log.e(TAG.TAG_Activity, "套餐说明:" + list.get(position).getRechargeSetMeaExplain());
-            if (list.get(position).getRechargeSetMeaType() == 1) {
-                if (list.get(position).getRechargeSetMeaNum() == 0) {
-                    holder.tvEffectiveDays.setText("不限制次数");
-                } else {
-                    holder.tvEffectiveDays.setText("使用次数:" + list.get(position).getRechargeSetMeaNum());
-                }
+            try {
+                holder.tvEffectiveDays.setText("即日起有效期至:" + AppDateUtils.addDate(AppDateUtils.getTodayDateTime(), list.get(position).getEffectiveDays()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (list.get(position).getRechargeSetMeaNum() == 0) {
+                holder.tvRechargeSetMeaNum.setText("不限制次数");
             } else {
-                try {
-                    holder.tvEffectiveDays.setText("有效期至:" + AppDateUtils.addDate(AppDateUtils.getTodayDateTime(), list.get(position).getEffectiveDays()));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                holder.tvRechargeSetMeaNum.setText("使用次数:" + list.get(position).getRechargeSetMeaNum());
             }
             if (TextUtils.isEmpty(list.get(position).getRechargeSetMeaName())) {
                 holder.tvRechargeSetMeaName.setText("");
@@ -133,7 +129,7 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         private final TextView tvRechargeSetMeaName;
         private final TextView tvEffectiveDays;
         private final TextView tvRechargeSetMeaAmount;
-        private final TextView tvBindingDeviceNum;
+        private final TextView tvRechargeSetMeaNum;
         private final LinearLayout card_view;
 
         public MyViewHolder(View itemView) {
@@ -142,7 +138,7 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             tvRechargeSetMeaName = itemView.findViewById(R.id.tvRechargeSetMeaName);
             tvEffectiveDays = itemView.findViewById(R.id.tvEffectiveDays);
             tvRechargeSetMeaAmount = itemView.findViewById(R.id.tvRechargeSetMeaAmount);
-            tvBindingDeviceNum = itemView.findViewById(R.id.tvBindingDeviceNum);
+            tvRechargeSetMeaNum = itemView.findViewById(R.id.tvRechargeSetMeaNum);
             card_view = itemView.findViewById(R.id.card_view);
         }
     }
@@ -157,10 +153,10 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public interface OnClickCallBack {
-        void Click(ChargeMealEntity.DataEntity entity);
+        void Click(ChargeMealEntity.DataEntity.ListEntity entity);
     }
 
-    public void addFootItem(List<ChargeMealEntity.DataEntity> lists) {
+    public void addFootItem(List<ChargeMealEntity.DataEntity.ListEntity> lists) {
         list.addAll(lists);
         notifyDataSetChanged();
     }

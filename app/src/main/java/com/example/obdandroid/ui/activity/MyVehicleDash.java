@@ -115,11 +115,10 @@ public class MyVehicleDash extends BaseActivity {
             dashSpeed.setVelocity(tripRecord.getSpeed());
             dashInsFuelConsumption.setVelocity(tripRecord.getmInsFuelConsumption());
             dashEngineCoolantTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineCoolantTemp()) ? "0" : tripRecord.getmEngineCoolantTemp().replace("C", "")));
-            dashFuelLevel.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmFuelLevel()) ? "0%" : tripRecord.getmFuelLevel().replace("%", "")));
+            dashFuelLevel.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmFuelLevel()) ? "0" : tripRecord.getmFuelLevel().replace("%", "")));
             dashDrivingFuelConsumption.setVelocity(tripRecord.getmDrivingFuelConsumption());
             dashIdlingFuelConsumption.setVelocity(tripRecord.getmIdlingFuelConsumption());
-            LogE("怠速油耗:"+tripRecord.getmIdlingFuelConsumption());
-            dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineOilTemp()) ? "0C" : tripRecord.getmEngineOilTemp().replace("C", "")));
+            dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineOilTemp()) ? "0" : tripRecord.getmEngineOilTemp().replace("C", "")));
         }
     }
 

@@ -9,9 +9,9 @@ public class APIConfig {
     /**
      * APP服务器地址
      */
-    public static final String SERVER_URL = "http://192.168.0.188:8088";//本地测试
+    //public static final String SERVER_URL = "http://192.168.0.188:8088";//本地测试
     //public static final String SERVER_URL = "http://47.92.146.15:1021";//外网测试
-    //public static final String SERVER_URL = "http://8.136.125.33:1021";//生产
+    public static final String SERVER_URL = "http://8.136.125.33:1021";//生产
     /**
      * 注册接口
      */

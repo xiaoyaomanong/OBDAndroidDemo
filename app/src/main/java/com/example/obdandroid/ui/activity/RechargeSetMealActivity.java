@@ -46,7 +46,7 @@ public class RechargeSetMealActivity extends BaseActivity {
     private final int pageSize = 10;
     private boolean isLoadMore;
     private RechargeSetMealAdapter adapter;
-    private final List<ChargeMealEntity.DataEntity> datas = new ArrayList<>();
+    private final List<ChargeMealEntity.DataEntity.ListEntity> datas = new ArrayList<>();
     private CircularProgressButton btnBuy;
     private String rechargeSetMealSettingsId = "";
     private String rechargetAmount = "";
@@ -235,18 +235,19 @@ public class RechargeSetMealActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
+                LogE("充值套餐:" + response);
                 ChargeMealEntity entity = JSON.parseObject(response, ChargeMealEntity.class);
                 if (entity.isSuccess()) {
-                    isLoadMore = entity.getData().size() >= 10;
+                    isLoadMore = entity.getData().getPages() >= Integer.parseInt(pageNum);
                     if (isRefresh) {
-                        adapter.setList(entity.getData());
+                        adapter.setList(entity.getData().getList());
                         recycleMeal.setAdapter(adapter);
                         // 刷新完成后调用，必须在UI线程中
                         recycleMeal.setPullLoadMoreCompleted();
                     } else {
                         new Handler().postDelayed(() -> getActivity().runOnUiThread(() -> {
                             datas.clear();
-                            datas.addAll(entity.getData());
+                            datas.addAll(entity.getData().getList());
                             adapter.addFootItem(datas);
                             // 加载更多完成后调用，必须在UI线程中
                             recycleMeal.setPullLoadMoreCompleted();

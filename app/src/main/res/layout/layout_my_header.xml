@@ -71,7 +71,6 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical|right"
-                    android:text="@string/update"
                     android:textColor="@color/gray_light"
                     tools:ignore="NestedWeights,RtlHardcoded" />
 

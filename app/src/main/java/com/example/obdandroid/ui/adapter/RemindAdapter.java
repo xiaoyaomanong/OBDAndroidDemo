@@ -57,7 +57,7 @@ public class RemindAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         int itemViewType = getItemViewType(position);
         if (EMPTY_VIEW == itemViewType) {
             EmptyViewHolder viewHolder = (EmptyViewHolder) holder;
-            viewHolder.mEmptyTextView.setText("绑定OBD设备,开始检测");
+            viewHolder.mEmptyTextView.setText("没有消息");
         } else if (NOT_EMPTY_VIEW == itemViewType) {
             final MyViewHolder holder1 = (MyViewHolder) holder;
             holder1.setPosition(position);

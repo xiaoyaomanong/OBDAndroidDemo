@@ -70,7 +70,7 @@ public class PersonalFragment extends BaseFragment {
     private SPUtil spUtil;
     private TextView tvName;
     private TextView tvIntegral;
-    private TextView tvRechargeAmount;
+    private TextView tvRechargeTime;
     private TextView tvRechargeSetMeaName;
     private CircleImageView myHeaderImage;
     private LinearLayout layoutCar;
@@ -108,18 +108,23 @@ public class PersonalFragment extends BaseFragment {
         LinearLayout layoutAddCar = getView(R.id.layoutAddCar);
         LinearLayout layoutGo = getView(R.id.layoutGo);
         LinearLayout layoutUpdate = getView(R.id.layout_update);
-        tvRechargeAmount = getView(R.id.tvRechargeAmount);
+        tvRechargeTime = getView(R.id.tvRechargeTime);
         tvRechargeSetMeaName = getView(R.id.tvRechargeSetMeaName);
         ivVip = getView(R.id.ivVip);
         spUtil = new SPUtil(context);
+        String vehicleId = spUtil.getString("vehicleId", "");
         initReceiver();
         getUserInfo(getUserId(), getToken());
-        getRechargeRecordPageList(getToken(),getUserId());
-        getVehicleInfoById(getToken(), spUtil.getString("vehicleId", ""));
+        getRechargeRecordPageList(getToken(), getUserId());
+        if (!TextUtils.isEmpty(vehicleId)) {
+            getVehicleInfoById(getToken(), vehicleId);
+        } else {
+            layoutCar.setVisibility(View.GONE);
+        }
 
         layoutGo.setOnClickListener(v -> {
-            Intent intent=new Intent(context,RechargeSetMealActivity.class);
-            startActivityForResult(intent,101);
+            Intent intent = new Intent(context, RechargeSetMealActivity.class);
+            startActivityForResult(intent, 101);
         });//充值
         llBuyHistory.setOnClickListener(v -> JumpUtil.startAct(context, RechargeRecordActivity.class));//购买记录
         llFaceBack.setOnClickListener(v -> JumpUtil.startAct(context, FeedbackActivity.class));//反馈
@@ -135,6 +140,7 @@ public class PersonalFragment extends BaseFragment {
                         if (confirm) {
                             spUtil.put(CONNECT_BT_KEY, "OFF");
                             spUtil.put(Constant.IS_LOGIN, false);
+                            spUtil.remove("vehicleId");
                             JumpUtil.startAct(context, LoginActivity.class);
                             try {
                                 ActivityManager.getInstance().finishActivitys();
@@ -193,11 +199,9 @@ public class PersonalFragment extends BaseFragment {
                 RechargeRecordEntity entity = JSON.parseObject(response, RechargeRecordEntity.class);
                 if (entity.isSuccess()) {
                     if (entity.getData().getList().size() != 0) {
-                        tvRechargeAmount.setText("￥" + entity.getData().getList().get(0).getRechargetAmount());
                         tvRechargeSetMeaName.setText(entity.getData().getList().get(0).getRechargeSetMeaName());
                     } else {
                         tvRechargeSetMeaName.setText("未购买套餐");
-                        tvRechargeAmount.setText("￥0");
                     }
                 }
             }
@@ -219,12 +223,18 @@ public class PersonalFragment extends BaseFragment {
 
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(String response, int id) {
                 UserInfoEntity entity = JSON.parseObject(response, UserInfoEntity.class);
                 if (entity.isSuccess()) {
                     tvName.setText(entity.getData().getNickname());
                     tvIntegral.setText(entity.getData().getPhoneNum());
+                    if (!TextUtils.isEmpty(entity.getData().getEndValidity())) {
+                        tvRechargeTime.setText("即日起有效期至: " + entity.getData().getEndValidity().split(" ")[0]);
+                    } else {
+                        tvRechargeTime.setText("即日起有效期至: ");
+                    }
                     ivVip.setVisibility(entity.getData().getIsVip() == 1 ? View.VISIBLE : View.GONE);
                     if (entity.getData().getHeadPortrait().length() > 0) {
                         myHeaderImage.setImageBitmap(BitMapUtils.stringToBitmap(entity.getData().getHeadPortrait()));
@@ -299,9 +309,10 @@ public class PersonalFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==101){
-            if (resultCode==102){
-                getRechargeRecordPageList(getToken(),getUserId());
+        if (requestCode == 101) {
+            if (resultCode == 102) {
+                getRechargeRecordPageList(getToken(), getUserId());
+                getUserInfo(getUserId(), getToken());
             }
         }
     }

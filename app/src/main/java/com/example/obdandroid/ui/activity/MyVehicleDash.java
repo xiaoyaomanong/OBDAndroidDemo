@@ -1,6 +1,11 @@
 package com.example.obdandroid.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -39,6 +44,8 @@ public class MyVehicleDash extends BaseActivity {
     private CustomerDashboardViewLight dashDrivingFuelConsumption;//行驶油耗
     private CustomerDashboardViewLight dashIdlingFuelConsumption;//怠速油耗
     private CustomerDashboardViewLight dashEngineOilTemp;//机油温度
+    private TestReceiver testReceiver;
+    private Context context;
 
     @Override
     protected int getContentViewId() {
@@ -53,6 +60,7 @@ public class MyVehicleDash extends BaseActivity {
     @Override
     public void initView() {
         super.initView();
+        context = this;
         TripRecord mTripRecord = (TripRecord) getIntent().getSerializableExtra("data");
         titleBarSet = findViewById(R.id.titleBarSet);
         tvmControlModuleVoltage = findViewById(R.id.tvmControlModuleVoltage);
@@ -79,7 +87,7 @@ public class MyVehicleDash extends BaseActivity {
         setDrivingFuelConsumption();
         setIdlingFuelConsumption();
         setEngineOilTemp();
-        setView(mTripRecord);
+        initReceiver();
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -99,6 +107,28 @@ public class MyVehicleDash extends BaseActivity {
     }
 
     /**
+     * 发送数据
+     */
+    private void initReceiver() {
+        //获取实例
+        LocalBroadcastManager lm = LocalBroadcastManager.getInstance(context);
+        IntentFilter intentFilter = new IntentFilter("com.android.ObdData");
+        testReceiver = new TestReceiver();
+        //绑定
+        lm.registerReceiver(testReceiver, intentFilter);
+    }
+
+    private class TestReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            TripRecord tripRecord = (TripRecord) intent.getSerializableExtra("data");
+            LogE("时速:"+tripRecord.getSpeed());
+            setView(tripRecord);
+        }
+    }
+
+    /**
      * @param tripRecord OBD数据
      */
     @SuppressLint("SetTextI18n")
@@ -109,25 +139,25 @@ public class MyVehicleDash extends BaseActivity {
             tvmMassAirFlow.setText(String.valueOf(tripRecord.getmMassAirFlow()));
             tvmAirFuelRatio.setText(tripRecord.getmAirFuelRatio());
             tvmAmbientAirTemp.setText(tripRecord.getmAmbientAirTemp());
-            float InsFuelConsumption= BigDecimal.valueOf(tripRecord.getmInsFuelConsumption())
+            float InsFuelConsumption = BigDecimal.valueOf(tripRecord.getmInsFuelConsumption())
                     .setScale(2, BigDecimal.ROUND_HALF_DOWN)
                     .floatValue();
             tvmInsFuelConsumption.setText(String.valueOf(InsFuelConsumption));
-            tvmOdometer.setText(TextUtils.isEmpty(tripRecord.getmOdometer())?"0":tripRecord.getmOdometer());
-            float DrivingDuration= BigDecimal.valueOf(tripRecord.getDrivingDuration())
+            tvmOdometer.setText(TextUtils.isEmpty(tripRecord.getmOdometer()) ? "0" : tripRecord.getmOdometer());
+            float DrivingDuration = BigDecimal.valueOf(tripRecord.getDrivingDuration())
                     .setScale(2, BigDecimal.ROUND_HALF_DOWN)
                     .floatValue();
             tvDrivingDuration.setText(String.valueOf(DrivingDuration));
-            String rpm=TextUtils.isEmpty(tripRecord.getEngineRpm()) ? "0" : tripRecord.getEngineRpm();
-            dashRPM.setVelocity(Float.parseFloat(rpm)/1000);
+            String rpm = TextUtils.isEmpty(tripRecord.getEngineRpm()) ? "0" : tripRecord.getEngineRpm();
+            dashRPM.setVelocity(Float.parseFloat(rpm) / 1000);
             dashSpeed.setVelocity(tripRecord.getSpeed());
-            float InsFuelConsumptionTwo= BigDecimal.valueOf(tripRecord.getmInsFuelConsumption())
+            float InsFuelConsumptionTwo = BigDecimal.valueOf(tripRecord.getmInsFuelConsumption())
                     .setScale(2, BigDecimal.ROUND_HALF_DOWN)
                     .floatValue();
             dashInsFuelConsumption.setVelocity(InsFuelConsumptionTwo);
             dashEngineCoolantTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineCoolantTemp()) ? "0" : tripRecord.getmEngineCoolantTemp().replace("C", "")));
             dashFuelLevel.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmFuelLevel()) ? "0" : tripRecord.getmFuelLevel().replace("%", "")));
-            float DrivingFuelConsumption= BigDecimal.valueOf(tripRecord.getmDrivingFuelConsumption())
+            float DrivingFuelConsumption = BigDecimal.valueOf(tripRecord.getmDrivingFuelConsumption())
                     .setScale(2, BigDecimal.ROUND_HALF_DOWN)
                     .floatValue();
             dashDrivingFuelConsumption.setVelocity(DrivingFuelConsumption);

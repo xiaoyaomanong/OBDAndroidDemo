@@ -107,6 +107,8 @@ public class VehicleCheckFragment extends BaseFragment {
         LinearLayoutManager manager = new LinearLayoutManager(context);
         manager.setOrientation(OrientationHelper.VERTICAL);
         recycleCheckContent.setLayoutManager(manager);
+        //获取实例
+        localBroadcastManager = LocalBroadcastManager.getInstance(context);
         initReceiver();
         /*
          *  配置obd：在arrayList中添加所需命令并设置为ObdConfiguration。
@@ -236,7 +238,8 @@ public class VehicleCheckFragment extends BaseFragment {
             public void onResponse(String response, int id) {
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
-                    showToast("检测信息上传完成");
+                    Intent intent = new Intent("com.android.Record");//创建发送广播的Action
+                    localBroadcastManager.sendBroadcast(intent);                               //发送本地广播
                 }
             }
         });
@@ -264,7 +267,8 @@ public class VehicleCheckFragment extends BaseFragment {
             public void onResponse(String response, int id) {
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
-                    showToast("检测提示上传完成");
+                    Intent intent = new Intent("com.android.Remind");//创建发送广播的Action
+                    localBroadcastManager.sendBroadcast(intent);
                 }
             }
         });
@@ -369,8 +373,6 @@ public class VehicleCheckFragment extends BaseFragment {
     }
 
     private void initReceiver() {
-        //获取实例
-        localBroadcastManager = LocalBroadcastManager.getInstance(context);
         IntentFilter intentFilter = new IntentFilter("com.android.ObdCar");
         receiver = new CarReceiver();
         //绑定

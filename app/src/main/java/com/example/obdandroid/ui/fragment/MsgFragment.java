@@ -1,9 +1,12 @@
 package com.example.obdandroid.ui.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
@@ -41,6 +44,7 @@ public class MsgFragment extends BaseFragment {
     private RemindAdapter adapter;
     private boolean isLoadMore;
     private List<RemindPageEntity.DataEntity.ListEntity> datas = new ArrayList<>();
+    private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
 
     public static MsgFragment getInstance() {
         return new MsgFragment();
@@ -67,6 +71,7 @@ public class MsgFragment extends BaseFragment {
         //设置上拉刷新文字颜色
         recycleRemind.setFooterViewTextColor(R.color.teal_200);
         recycleRemind.setFooterViewBackgroundColor(R.color.color_080707);
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(context);                   //广播变量管理器获
         getRemindPageList(String.valueOf(pageNum), getToken(), getUserId(), true);
         adapter = new RemindAdapter(context);
         getRemindPageList(String.valueOf(pageNum), getToken(), getUserId(), true);
@@ -95,6 +100,26 @@ public class MsgFragment extends BaseFragment {
             intent.putExtra("data", tripEntity);
             startActivity(intent);*/
         });
+        initRecordReceiver();
+    }
+
+    /**
+     * 注册本地广播
+     */
+    private void initRecordReceiver() {
+        //获取实例
+        IntentFilter intentFilter = new IntentFilter("com.android.Remind");
+        RemindReceiver receiver = new RemindReceiver();
+        //绑定
+        mLocalBroadcastManager.registerReceiver(receiver, intentFilter);
+    }
+
+    private class RemindReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getRemindPageList(String.valueOf(pageNum), getToken(), getUserId(), true);
+        }
     }
 
     /**

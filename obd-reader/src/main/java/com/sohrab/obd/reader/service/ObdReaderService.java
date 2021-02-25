@@ -65,16 +65,11 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
     private static final String TAG = "ObdReaderService";
     //OBD-2连接时接收
     public final static char PID_STATUS_SUCCESS = '1';
-    public final static int DEVICE_NOT_PAIRED = 1;
-    public final static int OBD_NOT_RESPONDING = 2;
-    public final static int OBD_CONNECTED = 3;
-    public final static int INIT_OBD = 4;
 
     //   private static final int NOTIFICATION_ID = 101;
     private static final int DELAY_FIFTEEN_SECOND = 15000;
     private static final int DELAY_TWO_SECOND = 2000;
     // 如果为true，则用于查找TroubleCode。这用于显示故障的检查活动。
-    public boolean mIsFaultCodeRead = true;
     private final IBinder mBinder = new LocalBinder();
     private BluetoothManager mBluetoothManager;//Bluetooth Manager
     private BluetoothAdapter mBluetoothAdapter;//Bluetooth adapter
@@ -126,7 +121,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
         if (!isConnected) {
             findPairedDevices(bluetoothDevice);
         }
-        if (isConnected) {
+        while (isConnected){
             executeCommand();
         }
     }
@@ -250,40 +245,28 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
      */
     private void executeCommand() {
         LogUtils.i("执行命令线程是 :: " + Thread.currentThread().getId());
-        while (!Thread.currentThread().isInterrupted()) {
-            TripRecord tripRecord = TripRecord.getTripRecode(this);
-            ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfig.getmObdCommands().clone();
-            for (int i = 0; i < commands.size(); i++) {
-                ObdCommand command = commands.get(i);
-                try {
-                    LogUtils.i("命令运行:: " + command.getName());
-                    command.run(mSocket.getInputStream(), mSocket.getOutputStream());
-                    LogUtils.i("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
-                    tripRecord.updateTrip(command.getName(), command);
-                    if (mIsFaultCodeRead) {
-                        try {
-                            TroubleCodesCommand troubleCodesCommand = new TroubleCodesCommand();
-                            troubleCodesCommand.run(mSocket.getInputStream(), mSocket.getOutputStream());
-                            tripRecord.updateTrip(troubleCodesCommand.getName(), troubleCodesCommand);
-                            mIsFaultCodeRead = false;
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                } catch (Exception e) {
-                    LogUtils.i("执行命令异常  :: " + e.getMessage());
-                    if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
-                        LogUtils.i("命令异常  :: " + e.getMessage());
-                        setDisconnection();
-                    }
+        TripRecord tripRecord = TripRecord.getTripRecode(this);
+        ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfig.getmObdCommands().clone();
+        for (int i = 0; i < commands.size(); i++) {
+            ObdCommand command = commands.get(i);
+            try {
+                LogUtils.i("命令运行:: " + command.getName());
+                command.run(mSocket.getInputStream(), mSocket.getOutputStream());
+                LogUtils.i("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
+                tripRecord.updateTrip(command.getName(), command);
+            } catch (Exception e) {
+                LogUtils.i("执行命令异常  :: " + e.getMessage());
+                if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
+                    LogUtils.i("命令异常  :: " + e.getMessage());
+                   setDisconnection();
                 }
             }
-            if (mIntent == null)
-                mIntent = new Intent(ACTION_READ_OBD_REAL_TIME_DATA);
-            sendBroadcast(mIntent);
-            // 退出循环意味着连接丢失，所以将连接状态设置为false
-            isConnected = false;
         }
+        if (mIntent == null)
+            mIntent = new Intent(ACTION_READ_OBD_REAL_TIME_DATA);
+        sendBroadcast(mIntent);
+        // 退出循环意味着连接丢失，所以将连接状态设置为false
+        //isConnected = false;
     }
 
     /**
@@ -314,7 +297,6 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(true);
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
         LogUtils.i("Service Created :: ");
-        t.start();
     }
 
 
@@ -359,7 +341,6 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(false);
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
         TripRecord.getTripRecode(this).clear();
-        t.interrupt();
     }
 
     /**

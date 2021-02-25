@@ -91,6 +91,6 @@ public class ObdConfig {
         mObdCommands.add(new AbsoluteLoadCommand());//"01 43"
         mObdCommands.add(new LoadCommand());//"01 04"
         mObdCommands.add(new OilTempCommand());//"01 5C"
-        mObdCommands.add(new ThrottlePositionCommand());//"01 11"
+       // mObdCommands.add(new ThrottlePositionCommand());//"01 11"
     }
 }

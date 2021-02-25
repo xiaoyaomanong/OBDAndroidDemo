@@ -118,7 +118,6 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
     private static String mConnectedDeviceName = null;
     private static String mConnectedDeviceAddress = null;
     private TestRecordAdapter recordAdapter;
-    private LocalBroadcastManager lm;
     private TestReceiver testReceiver;
     private DialogUtils dialogUtils;
     private boolean isConnected = false;
@@ -130,6 +129,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
     private Data.OnGpsServiceUpdate onGpsServiceUpdate;
     private HomeAdapter homeAdapter;
     private Chronometer time;
+    private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -169,9 +169,11 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getHoldingActivity());
         mConnectedDeviceName = ObdPreferences.get(context).getBlueToothDeviceName();
         mConnectedDeviceAddress = ObdPreferences.get(context).getBlueToothDeviceAddress();
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(context);                   //广播变量管理器获
         blueList = getBlueTooth();//初始化蓝牙
         registerOBDReceiver();//注册OBD数据接收广播
         initReceiver();//注册选择默认车辆广播
+        initRecordReceiver();//注册车辆检测记录跟新广播
         setGPS();
         getUserInfo(getUserId(), getToken(), spUtil.getString("vehicleId", ""));
         resetData();
@@ -288,7 +290,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
             double maxSpeedTemp = data.getMaxSpeed();
             double distanceTemp = data.getDistance();
             double averageTemp;
-            LogE("自动检测停机时间:"+sharedPreferences.getBoolean("auto_average", false));
+            LogE("自动检测停机时间:" + sharedPreferences.getBoolean("auto_average", false));
             if (sharedPreferences.getBoolean("auto_average", false)) {
                 averageTemp = data.getAverageSpeedMotion();
             } else {
@@ -318,7 +320,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
 
             s = new SpannableString(String.format("%.0f %s", averageTemp, speedUnits));
             s.setSpan(new RelativeSizeSpan(0.5f), s.length() - speedUnits.length() - 1, s.length(), 0);
-            LogE("平均速度："+s);
+            LogE("平均速度：" + s);
             tvAverageSpeed.setText(s.toString().replace("km/h", ""));
 
             s = new SpannableString(String.format("%.3f %s", distanceTemp, distanceUnits));
@@ -571,7 +573,6 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         dialogUtils.dismiss();
         titleBar.setLeftTitle("已连接");
         titleBar.setRightIcon(R.drawable.action_connect);
-        new Handler().postDelayed(() -> dialogUtils.showProgressDialog("读取OBD中..."), 1000);
     }
 
     /**
@@ -583,6 +584,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         intentFilter.addAction(ACTION_OBD_CONNECTION_STATUS);
         context.registerReceiver(mObdReaderReceiver, intentFilter);
     }
+
 
     /**
      * @param bluetoothDevice 蓝夜设备
@@ -643,25 +645,23 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                 }
             } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA)) {
                 tripRecord = TripRecord.getTripRecode(context);
-                if (tripRecord != null) {
-                    dialogUtils.dismiss();
-                    showTipDialog("OBD数据读取成功");
-                }
+                Intent intents = new Intent("com.android.ObdData");//创建发送广播的Action
+                intents.putExtra("data", tripRecord);//发送携带的数据
+                mLocalBroadcastManager.sendBroadcast(intents);                               //发送本地广播
+                LogE("速度:" + tripRecord.getSpeed());
             }
         }
     };
+
 
     /**
      * 注册本地广播
      */
     private void initReceiver() {
-        //获取实例
-        lm = LocalBroadcastManager.getInstance(context);
         IntentFilter intentFilter = new IntentFilter("com.android.ObdCar");
         testReceiver = new TestReceiver();
         //绑定
-        lm.registerReceiver(testReceiver, intentFilter);
-
+        mLocalBroadcastManager.registerReceiver(testReceiver, intentFilter);
     }
 
     private class TestReceiver extends BroadcastReceiver {
@@ -670,6 +670,24 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         public void onReceive(Context context, Intent intent) {
             String vehicleId = intent.getStringExtra("vehicleId");
             getUserInfo(getUserId(), getToken(), vehicleId);
+        }
+    }
+    /**
+     * 注册本地广播
+     */
+    private void initRecordReceiver() {
+        //获取实例
+        IntentFilter intentFilter = new IntentFilter("com.android.Record");
+        RecordReceiver  receiver = new RecordReceiver();
+        //绑定
+        mLocalBroadcastManager.registerReceiver(receiver, intentFilter);
+    }
+
+    private class RecordReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getTestRecordPageList(getToken(), String.valueOf(1), String.valueOf(5), getUserId());
         }
     }
 
@@ -793,7 +811,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         //注销接收器
         context.unregisterReceiver(mObdReaderReceiver);
         //解绑
-        lm.unregisterReceiver(testReceiver);
+        mLocalBroadcastManager.unregisterReceiver(testReceiver);
         //停止服务
         context.stopService(new Intent(context, ObdReaderService.class));
         context.stopService(new Intent(context, GpsServices.class));

@@ -142,7 +142,7 @@ public class ObdTwoReaderService extends IntentService implements DefineObdTwoRe
         if (mSocket != null) {
             try {
                 mBluetoothAdapter.cancelDiscovery();
-                Thread.sleep(500);
+                Thread.sleep(100);
                 mSocket.connect();
                 LogUtils.i("Socket connected");
                 ObdPreferences.get(getApplicationContext()).setBlueToothDeviceAddress(device.getAddress());
@@ -163,7 +163,7 @@ public class ObdTwoReaderService extends IntentService implements DefineObdTwoRe
                                 // 此线程是必需的，因为在Headunit中命令.run方法无限块，因此，线程的最长寿命为15秒，这样就可以处理块了。
                                 mIsRunningSuccess = false;
                                 new ObdResetCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-                                Thread.sleep(1000);
+                                Thread.sleep(200);
                                 new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                                 Thread.sleep(200);
                                 new LineFeedOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());

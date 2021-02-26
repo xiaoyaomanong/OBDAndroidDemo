@@ -181,7 +181,6 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         layoutMoreDash.setOnClickListener(v -> {
             if (tripRecord != null) {
                 Intent intent = new Intent(context, MyVehicleDash.class);
-                intent.putExtra("data", tripRecord);
                 startActivity(intent);
             } else {
                 showTipDialog("暂未读取到OBD数据,请稍后查看");
@@ -290,7 +289,6 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
             double maxSpeedTemp = data.getMaxSpeed();
             double distanceTemp = data.getDistance();
             double averageTemp;
-            LogE("自动检测停机时间:" + sharedPreferences.getBoolean("auto_average", false));
             if (sharedPreferences.getBoolean("auto_average", false)) {
                 averageTemp = data.getAverageSpeedMotion();
             } else {
@@ -320,7 +318,6 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
 
             s = new SpannableString(String.format("%.0f %s", averageTemp, speedUnits));
             s.setSpan(new RelativeSizeSpan(0.5f), s.length() - speedUnits.length() - 1, s.length(), 0);
-            LogE("平均速度：" + s);
             tvAverageSpeed.setText(s.toString().replace("km/h", ""));
 
             s = new SpannableString(String.format("%.3f %s", distanceTemp, distanceUnits));
@@ -644,11 +641,13 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                     onStartGPS();
                 }
             } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA)) {
-                tripRecord = TripRecord.getTripRecode(context);
+                tripRecord = TripRecord.getTriRecode(context);
                 Intent intents = new Intent("com.android.ObdData");//创建发送广播的Action
                 intents.putExtra("data", tripRecord);//发送携带的数据
                 mLocalBroadcastManager.sendBroadcast(intents);                               //发送本地广播
-                LogE("速度:" + tripRecord.getSpeed());
+                Intent intentss = new Intent("com.android.ObdMessge");//创建发送广播的Action
+                intentss.putExtra("data", tripRecord);//发送携带的数据
+                mLocalBroadcastManager.sendBroadcast(intentss);                               //发送本地广播
             }
         }
     };

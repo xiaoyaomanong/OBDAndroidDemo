@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -28,6 +30,7 @@ import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.config.Constant;
+import com.example.obdandroid.ui.activity.MyVehicleDash;
 import com.example.obdandroid.ui.adapter.VehicleCheckAdapter;
 import com.example.obdandroid.ui.entity.MessageCheckEntity;
 import com.example.obdandroid.ui.entity.ResultEntity;
@@ -38,9 +41,11 @@ import com.example.obdandroid.utils.SPUtil;
 import com.kongzue.dialog.v2.TipDialog;
 import com.sohrab.obd.reader.application.ObdPreferences;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
+import com.sohrab.obd.reader.service.ObdReaderService;
 import com.sohrab.obd.reader.service.ObdTwoReaderService;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 import com.sohrab.obd.reader.trip.OBDTripEntity;
+import com.sohrab.obd.reader.trip.TripRecord;
 import com.sohrab.obd.reader.trip.TripRecordCar;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -56,6 +61,7 @@ import static com.example.obdandroid.config.APIConfig.reduceAndCumulativeFrequen
 import static com.example.obdandroid.config.APIConfig.addRemind_URL;
 import static com.example.obdandroid.config.APIConfig.addTestRecord_URL;
 import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
+import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_OBD_CONNECTION_STATUS;
 import static com.sohrab.obd.reader.constants.DefineObdTwoReader.ACTION_OBD_CONNECTION_STATUS_CAR;
 import static com.sohrab.obd.reader.constants.DefineObdTwoReader.ACTION_READ_OBD_REAL_TIME_DATA_CAR;
 
@@ -124,7 +130,8 @@ public class VehicleCheckFragment extends BaseFragment {
                 btStart.setText("开始检测");
                 tvConnectObd.setVisibility(View.GONE);
                 circleView.start();
-                if (!TextUtils.isEmpty(ObdPreferences.get(context).getBlueToothDeviceAddress())) {
+                broadcastUpdate("com.android.Obd");
+               /* if (!TextUtils.isEmpty(ObdPreferences.get(context).getBlueToothDeviceAddress())) {
                     connectBtDevice(ObdPreferences.get(context).getBlueToothDeviceAddress());
                 } else {
                     new Handler().postDelayed(() -> {
@@ -135,7 +142,7 @@ public class VehicleCheckFragment extends BaseFragment {
                         showResult(null);
                         showToast(getString(R.string.text_bluetooth_error_connecting));
                     }, 3000);
-                }
+                }*/
             } else {
                 showTipDialog("请连接OBD设备", TipDialog.TYPE_WARNING);
             }
@@ -161,7 +168,7 @@ public class VehicleCheckFragment extends BaseFragment {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("减少使用次数和累计使用次数:"+response);
+                LogE("减少使用次数和累计使用次数:" + response);
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
 
@@ -169,7 +176,7 @@ public class VehicleCheckFragment extends BaseFragment {
             }
         });
     }
-    
+
 
     /**
      * @param token     用户Token
@@ -301,23 +308,25 @@ public class VehicleCheckFragment extends BaseFragment {
     }
 
     /**
-     * @param address 蓝牙设备MAC地址
-     *                启动与所选蓝牙设备的连接
+     * 发送带有特定操作的广播
+     *
+     * @param action 特定动作
      */
-    private void connectBtDevice(String address) {
-        // 获取BluetoothDevice对象
-        BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
-        startServiceOBD(device);
+    private void broadcastUpdate(final String action) {
+        final Intent intent = new Intent(action);
+        localBroadcastManager.sendBroadcast(intent);
     }
 
+
     /**
-     * @param bluetoothDevice 蓝夜设备
-     *                        启动蓝牙连接服务
+     * @param address 蓝牙设备MAC地址
+     *                启动蓝牙连接服务
      */
-    private void startServiceOBD(BluetoothDevice bluetoothDevice) {
+    private void startServiceOBD(String address) {
+        BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
         //启动服务，该服务将在后台执行连接，并执行命令，直到您停止
         Intent intent = new Intent(context, ObdTwoReaderService.class);
-        intent.putExtra("device", bluetoothDevice);
+        intent.putExtra("device", device);
         intent.putExtra("isConnected", ObdPreferences.get(context).getBlueToothDeviceConnect());
         context.startService(intent);
     }
@@ -345,11 +354,11 @@ public class VehicleCheckFragment extends BaseFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(ACTION_OBD_CONNECTION_STATUS_CAR)) {
-                String connectionStatusMsg = intent.getStringExtra(ObdTwoReaderService.INTENT_OBD_EXTRA_DATA_CAR);
+            if (action.equals(ACTION_OBD_CONNECTION_STATUS)) {
+                String connectionStatusMsg = intent.getStringExtra(ObdReaderService.INTENT_OBD_EXTRA_DATA);
                 if (connectionStatusMsg.equals(getString(R.string.obd_connected))) {
                     //OBD连接在OBD连接之后做什么
-                    onConnect(connectionStatusMsg);
+                    onConnect("连接成功");
                 } else if (connectionStatusMsg.equals(getString(R.string.connect_lost))) {
                     //OBD断开连接断开后做什么
                     onDisconnect();

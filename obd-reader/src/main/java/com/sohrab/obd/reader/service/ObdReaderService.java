@@ -21,14 +21,17 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -37,6 +40,7 @@ import com.sohrab.obd.reader.constants.DefineObdReader;
 import com.sohrab.obd.reader.enums.ObdProtocols;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.ObdConfig;
+import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
 import com.sohrab.obd.reader.obdCommand.control.TroubleCodesCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
@@ -45,12 +49,15 @@ import com.sohrab.obd.reader.obdCommand.protocol.SelectProtocolCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
 import com.sohrab.obd.reader.trip.TripRecord;
+import com.sohrab.obd.reader.trip.TripRecordCar;
 import com.sohrab.obd.reader.utils.LogUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import app.com.android_obd_reader.R;
+
+import static com.sohrab.obd.reader.constants.DefineObdTwoReader.ACTION_READ_OBD_REAL_TIME_DATA_CAR;
 
 
 /**
@@ -67,8 +74,8 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
     public final static char PID_STATUS_SUCCESS = '1';
 
     //   private static final int NOTIFICATION_ID = 101;
-    private static final int DELAY_FIFTEEN_SECOND = 15000;
-    private static final int DELAY_TWO_SECOND = 2000;
+    private static final int DELAY_FIFTEEN_SECOND = 1500;
+    private static final int DELAY_TWO_SECOND = 1000;
     // 如果为true，则用于查找TroubleCode。这用于显示故障的检查活动。
     private final IBinder mBinder = new LocalBinder();
     private BluetoothManager mBluetoothManager;//Bluetooth Manager
@@ -79,14 +86,16 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
     private boolean mIsRunningSuccess;
     private Intent mIntent = new Intent(ACTION_READ_OBD_REAL_TIME_DATA);
     private char[] mSupportedPids;
+    // 如果为true，则用于查找TroubleCode。这用于显示故障的检查活动。
+    public boolean mIsFaultCodeRead = true;
     // 在另一个线程中运行executeQueue，以减轻UI线程
-    Thread t = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            executeCommand();
-        }
-    });
 
+    private LocalBroadcastManager localBroadcastManager;
+    private OBDReceiver receiver;
+
+    public void setConnected(boolean connected) {
+        isConnected = connected;
+    }
 
     public ObdReaderService() {
         super("ObdReaderService");
@@ -111,7 +120,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
         }
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(false);
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
-        TripRecord.getTripRecode(this).clear();
+        TripRecord.getTriRecode(this).clear();
     }
 
     /**
@@ -121,7 +130,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
         if (!isConnected) {
             findPairedDevices(bluetoothDevice);
         }
-        while (isConnected){
+        while (isConnected) {
             executeCommand();
         }
     }
@@ -244,9 +253,8 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
      * 一旦OBD-2连接，此方法将执行以连续获取数据，直到OBD断开或服务停止。
      */
     private void executeCommand() {
-        LogUtils.i("执行命令线程是 :: " + Thread.currentThread().getId());
-        TripRecord tripRecord = TripRecord.getTripRecode(this);
-        ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfig.getmObdCommands().clone();
+        TripRecord tripRecord = TripRecord.getTriRecode(this);
+        ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfiguration.getmObdCommands().clone();
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {
@@ -258,16 +266,52 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
                 LogUtils.i("执行命令异常  :: " + e.getMessage());
                 if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
                     LogUtils.i("命令异常  :: " + e.getMessage());
-                   setDisconnection();
+                    setDisconnection();
                 }
             }
         }
         if (mIntent == null)
             mIntent = new Intent(ACTION_READ_OBD_REAL_TIME_DATA);
         sendBroadcast(mIntent);
-        // 退出循环意味着连接丢失，所以将连接状态设置为false
-        //isConnected = false;
     }
+
+    /**
+     * 一旦OBD-2连接，此方法将执行以连续获取数据，直到OBD断开或服务停止。
+     */
+    private void executeCommandCheck() {
+        LogUtils.i("执行命令线程是 :: " + Thread.currentThread().getId());
+        TripRecordCar TripTwoRecord = TripRecordCar.getTripTwoRecode(this);
+        ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfiguration.getmObdCommands().clone();
+        for (int i = 0; i < commands.size(); i++) {
+            ObdCommand command = commands.get(i);
+            try {
+                LogUtils.i("命令运行:: " + command.getName());
+                command.run(mSocket.getInputStream(), mSocket.getOutputStream());
+                LogUtils.i("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
+                TripTwoRecord.updateTrip(command.getName(), command);
+                if (mIsFaultCodeRead) {
+                    try {
+                        TroubleCodesCommand troubleCodesCommand = new TroubleCodesCommand();
+                        troubleCodesCommand.run(mSocket.getInputStream(), mSocket.getOutputStream());
+                        TripTwoRecord.updateTrip(troubleCodesCommand.getName(), troubleCodesCommand);
+                        mIsFaultCodeRead = false;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                LogUtils.i("执行命令异常  :: " + e.getMessage());
+                if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
+                    LogUtils.i("命令异常  :: " + e.getMessage());
+                    setDisconnection();
+                }
+            }
+        }
+        if (mIntent == null)
+            mIntent = new Intent(ACTION_READ_OBD_REAL_TIME_DATA_CAR);
+        sendBroadcast(mIntent);
+    }
+
 
     /**
      * 发送带有特定动作和数据的广播
@@ -291,12 +335,33 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
         sendBroadcast(intent);
     }
 
+    private void registerBroadCast() {
+        IntentFilter intentFilter = new IntentFilter("com.android.Obd");
+        receiver = new OBDReceiver();
+        //绑定
+        localBroadcastManager.registerReceiver(receiver, intentFilter);
+
+    }
+
+    private class OBDReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (isConnected){
+                executeCommandCheck();
+            }
+        }
+    }
+
+
     @Override
     public void onCreate() {
         super.onCreate();
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(true);
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
         LogUtils.i("Service Created :: ");
+        registerBroadCast();
     }
 
 
@@ -325,11 +390,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
                 return false;
             }
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            mBluetoothAdapter = mBluetoothManager.getAdapter();
-        } else {
-            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        }
+        mBluetoothAdapter = mBluetoothManager.getAdapter();
         return mBluetoothAdapter != null;
     }
 
@@ -340,7 +401,9 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
         closeSocket();
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(false);
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
-        TripRecord.getTripRecode(this).clear();
+        TripRecord.getTriRecode(this).clear();
+        this.unregisterReceiver(receiver);
+        localBroadcastManager.unregisterReceiver(receiver);
     }
 
     /**

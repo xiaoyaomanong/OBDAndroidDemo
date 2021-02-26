@@ -160,7 +160,9 @@ public class ObdTwoReaderService extends IntentService implements DefineObdTwoRe
                         @Override
                         public void run() {
                             try {
-                                // 此线程是必需的，因为在Headunit中命令.run方法无限块，因此，线程的最长寿命为15秒，这样就可以处理块了。
+                                mIsRunningSuccess = false;
+                                executeCommand();
+                              /*  // 此线程是必需的，因为在Headunit中命令.run方法无限块，因此，线程的最长寿命为15秒，这样就可以处理块了。
                                 mIsRunningSuccess = false;
                                 new ObdResetCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                                 Thread.sleep(200);
@@ -178,7 +180,7 @@ public class ObdTwoReaderService extends IntentService implements DefineObdTwoRe
                                 Thread.sleep(200);
                                 new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                                 Thread.sleep(200);
-                              /*  new ClearDTCCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+                              *//*  new ClearDTCCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                                 Thread.sleep(200);*/
                                 mIsRunningSuccess = true;
                             } catch (Exception e) {

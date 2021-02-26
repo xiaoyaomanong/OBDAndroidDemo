@@ -61,7 +61,6 @@ public class MyVehicleDash extends BaseActivity {
     public void initView() {
         super.initView();
         context = this;
-        TripRecord mTripRecord = (TripRecord) getIntent().getSerializableExtra("data");
         titleBarSet = findViewById(R.id.titleBarSet);
         tvmControlModuleVoltage = findViewById(R.id.tvmControlModuleVoltage);
         tvmFuelLevel = findViewById(R.id.tvmFuelLevel);

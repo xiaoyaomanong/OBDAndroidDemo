@@ -130,9 +130,9 @@ public class VehicleCheckFragment extends BaseFragment {
                 btStart.setText("开始检测");
                 tvConnectObd.setVisibility(View.GONE);
                 circleView.start();
-                broadcastUpdate("com.android.Obd");
-               /* if (!TextUtils.isEmpty(ObdPreferences.get(context).getBlueToothDeviceAddress())) {
-                    connectBtDevice(ObdPreferences.get(context).getBlueToothDeviceAddress());
+                if (!TextUtils.isEmpty(ObdPreferences.get(context).getBlueToothDeviceAddress())) {
+                    broadcastUpdate("com.android.Obd");
+                    // connectBtDevice(ObdPreferences.get(context).getBlueToothDeviceAddress());
                 } else {
                     new Handler().postDelayed(() -> {
                         if (circleView.isDiffuse()) {
@@ -142,7 +142,7 @@ public class VehicleCheckFragment extends BaseFragment {
                         showResult(null);
                         showToast(getString(R.string.text_bluetooth_error_connecting));
                     }, 3000);
-                }*/
+                }
             } else {
                 showTipDialog("请连接OBD设备", TipDialog.TYPE_WARNING);
             }

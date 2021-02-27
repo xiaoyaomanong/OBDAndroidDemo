@@ -132,7 +132,6 @@ public class VehicleCheckFragment extends BaseFragment {
                 circleView.start();
                 if (!TextUtils.isEmpty(ObdPreferences.get(context).getBlueToothDeviceAddress())) {
                     broadcastUpdate("com.android.Obd");
-                    // connectBtDevice(ObdPreferences.get(context).getBlueToothDeviceAddress());
                 } else {
                     new Handler().postDelayed(() -> {
                         if (circleView.isDiffuse()) {

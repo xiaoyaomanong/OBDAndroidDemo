@@ -3,6 +3,7 @@ package com.example.obdandroid.ui.activity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -44,6 +45,8 @@ import com.example.obdandroid.utils.ScalePageTransformer;
 import com.example.obdandroid.utils.StringUtil;
 import com.gyf.immersionbar.ImmersionBar;
 import com.kongzue.dialog.util.BlurView;
+import com.sohrab.obd.reader.application.ObdPreferences;
+import com.sohrab.obd.reader.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,6 +125,7 @@ public class MainActivity extends BaseActivity {
             }
         }
     }
+
 
     private final ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override

@@ -74,8 +74,8 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
     public final static char PID_STATUS_SUCCESS = '1';
 
     //   private static final int NOTIFICATION_ID = 101;
-    private static final int DELAY_FIFTEEN_SECOND = 1500;
-    private static final int DELAY_TWO_SECOND = 1000;
+    private static final int DELAY_FIFTEEN_SECOND = 15000;
+    private static final int DELAY_TWO_SECOND = 2000;
     // 如果为true，则用于查找TroubleCode。这用于显示故障的检查活动。
     private final IBinder mBinder = new LocalBinder();
     private BluetoothManager mBluetoothManager;//Bluetooth Manager
@@ -85,6 +85,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
     private boolean isConnected;
     private boolean mIsRunningSuccess;
     private Intent mIntent = new Intent(ACTION_READ_OBD_REAL_TIME_DATA);
+    private Intent intents = new Intent(ACTION_READ_OBD_REAL_TIME_DATA_CAR);
     private char[] mSupportedPids;
     // 如果为true，则用于查找TroubleCode。这用于显示故障的检查活动。
     public boolean mIsFaultCodeRead = true;
@@ -93,9 +94,6 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
     private LocalBroadcastManager localBroadcastManager;
     private OBDReceiver receiver;
 
-    public void setConnected(boolean connected) {
-        isConnected = connected;
-    }
 
     public ObdReaderService() {
         super("ObdReaderService");
@@ -188,66 +186,77 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
                 LogUtils.i("Socket connection  exception :: " + e.getMessage());
                 closeSocket();
             }
-            boolean isSockedConnected = mSocket.isConnected();
-            ObdPreferences.get(getApplicationContext()).setBlueToothDeviceConnect(isSockedConnected);
-            if (isSockedConnected) {
-                try {
-                    Thread.sleep(DELAY_TWO_SECOND);
-                    LogUtils.i("在新线程中执行reset命令 :: " + Thread.currentThread().getId());
-                    final Thread newThread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                // 此线程是必需的，因为在Headunit中命令.run方法无限块，因此，线程的最长寿命为15秒，这样就可以处理块了。
-                                mIsRunningSuccess = false;
-                                new ObdResetCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-                                Thread.sleep(200);
-                                new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-                                Thread.sleep(200);
-                                new LineFeedOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-                                Thread.sleep(200);
-                                new SpacesOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-                                Thread.sleep(200);
-                                new SpacesOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-                                Thread.sleep(200);
-                                new TimeoutCommand(125).run(mSocket.getInputStream(), mSocket.getOutputStream());
-                                Thread.sleep(200);
-                                new SelectProtocolCommand(ObdProtocols.AUTO).run(mSocket.getInputStream(), mSocket.getOutputStream());
-                                Thread.sleep(200);
-                                new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-                                Thread.sleep(200);
-                                mIsRunningSuccess = true;
-                            } catch (Exception e) {
-                                mIsRunningSuccess = false;
-                                LogUtils.i("在新线程中重置命令异常:: " + e.getMessage());
-                            }
-                        }
-                    });
-                    newThread.start();
-                    newThread.join(DELAY_FIFTEEN_SECOND);
-                    LogUtils.i("线程唤醒以检查重置命令状态  i.e  :: " + Thread.currentThread().getId() + ",  mIsRunningSuccess :: " + mIsRunningSuccess);
-                    isSockedConnected = mIsRunningSuccess;
-                } catch (Exception e) {
-                    LogUtils.i(" 重置命令异常  :: " + e.getMessage());
-                    isSockedConnected = false;
-                }
-            }
-            if (mSocket != null && mSocket.isConnected() && isSockedConnected) {
-                setConnection();
-            } else {
-                if (mSupportedPids != null && mSupportedPids.length == 32) {
-
-                    if ((mSupportedPids[12] != PID_STATUS_SUCCESS) || (mSupportedPids[11] != PID_STATUS_SUCCESS)) {
-                        // 不支持速度PID
-                        sendBroadcast(ACTION_OBD_CONNECTION_STATUS, getString(R.string.unable_to_connect));
-                        return;
-                    }
-                }
-                sendBroadcast(ACTION_OBD_CONNECTION_STATUS, getString(R.string.obd2_adapter_not_responding));
-            }
+            executeCommandBase(device);
         }
     }
 
+    private void executeCommandBase(BluetoothDevice device) {
+        boolean isSockedConnected = mSocket.isConnected();
+        if (!isSockedConnected) {
+            try {
+                connectOBDDevice(device);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        ObdPreferences.get(getApplicationContext()).setBlueToothDeviceConnect(isSockedConnected);
+        if (isSockedConnected) {
+            try {
+                Thread.sleep(DELAY_TWO_SECOND);
+                LogUtils.i("在新线程中执行reset命令 :: " + Thread.currentThread().getId());
+                final Thread newThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            // 此线程是必需的，因为在Headunit中命令.run方法无限块，因此，线程的最长寿命为15秒，这样就可以处理块了。
+                            mIsRunningSuccess = false;
+                            new ObdResetCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+                            Thread.sleep(200);
+                            new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+                            Thread.sleep(200);
+                            new LineFeedOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+                            Thread.sleep(200);
+                            new SpacesOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+                            Thread.sleep(200);
+                            new SpacesOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+                            Thread.sleep(200);
+                            new TimeoutCommand(125).run(mSocket.getInputStream(), mSocket.getOutputStream());
+                            Thread.sleep(200);
+                            new SelectProtocolCommand(ObdProtocols.AUTO).run(mSocket.getInputStream(), mSocket.getOutputStream());
+                            Thread.sleep(200);
+                            new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+                            Thread.sleep(200);
+                            mIsRunningSuccess = true;
+                        } catch (Exception e) {
+                            mIsRunningSuccess = false;
+                            LogUtils.i("在新线程中重置命令异常:: " + e.getMessage());
+                        }
+                    }
+                });
+                newThread.start();
+                newThread.join(DELAY_FIFTEEN_SECOND);
+                LogUtils.i("线程唤醒以检查重置命令状态  i.e  :: " + Thread.currentThread().getId() + ",  mIsRunningSuccess :: " + mIsRunningSuccess);
+                isSockedConnected = mIsRunningSuccess;
+            } catch (Exception e) {
+                LogUtils.i(" 重置命令异常  :: " + e.getMessage());
+                isSockedConnected = false;
+            }
+        }
+        if (mSocket != null && mSocket.isConnected() && isSockedConnected) {
+            setConnection();
+        } else {
+            if (mSupportedPids != null && mSupportedPids.length == 32) {
+
+                if ((mSupportedPids[12] != PID_STATUS_SUCCESS) || (mSupportedPids[11] != PID_STATUS_SUCCESS)) {
+                    // 不支持速度PID
+                    sendBroadcast(ACTION_OBD_CONNECTION_STATUS, getString(R.string.unable_to_connect));
+                    return;
+                }
+            }
+            sendBroadcast(ACTION_OBD_CONNECTION_STATUS, getString(R.string.obd2_adapter_not_responding));
+        }
+
+    }
 
     /**
      * 一旦OBD-2连接，此方法将执行以连续获取数据，直到OBD断开或服务停止。
@@ -281,7 +290,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
     private void executeCommandCheck() {
         LogUtils.i("执行命令线程是 :: " + Thread.currentThread().getId());
         TripRecordCar TripTwoRecord = TripRecordCar.getTripTwoRecode(this);
-        ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfiguration.getmObdCommands().clone();
+        ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfig.getmObdCommands().clone();
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {
@@ -289,16 +298,6 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
                 command.run(mSocket.getInputStream(), mSocket.getOutputStream());
                 LogUtils.i("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
                 TripTwoRecord.updateTrip(command.getName(), command);
-                if (mIsFaultCodeRead) {
-                    try {
-                        TroubleCodesCommand troubleCodesCommand = new TroubleCodesCommand();
-                        troubleCodesCommand.run(mSocket.getInputStream(), mSocket.getOutputStream());
-                        TripTwoRecord.updateTrip(troubleCodesCommand.getName(), troubleCodesCommand);
-                        mIsFaultCodeRead = false;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
             } catch (Exception e) {
                 LogUtils.i("执行命令异常  :: " + e.getMessage());
                 if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
@@ -308,8 +307,8 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
             }
         }
         if (mIntent == null)
-            mIntent = new Intent(ACTION_READ_OBD_REAL_TIME_DATA_CAR);
-        sendBroadcast(mIntent);
+            intents = new Intent(ACTION_READ_OBD_REAL_TIME_DATA_CAR);
+        sendBroadcast(intents);
     }
 
 
@@ -347,7 +346,7 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (isConnected){
+            if (isConnected) {
                 executeCommandCheck();
             }
         }
@@ -402,7 +401,6 @@ public class ObdReaderService extends IntentService implements DefineObdReader {
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(false);
         ObdPreferences.get(getApplicationContext()).setIsOBDconnected(false);
         TripRecord.getTriRecode(this).clear();
-        this.unregisterReceiver(receiver);
         localBroadcastManager.unregisterReceiver(receiver);
     }
 

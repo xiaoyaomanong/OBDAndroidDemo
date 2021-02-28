@@ -3,6 +3,7 @@ package com.example.obdandroid.ui.fragment;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +11,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -23,14 +23,12 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.config.Constant;
-import com.example.obdandroid.ui.activity.MyVehicleDash;
 import com.example.obdandroid.ui.adapter.VehicleCheckAdapter;
 import com.example.obdandroid.ui.entity.MessageCheckEntity;
 import com.example.obdandroid.ui.entity.ResultEntity;
@@ -40,30 +38,26 @@ import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.SPUtil;
 import com.kongzue.dialog.v2.TipDialog;
 import com.sohrab.obd.reader.application.ObdPreferences;
+import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
-import com.sohrab.obd.reader.service.ObdReaderService;
-import com.sohrab.obd.reader.service.ObdTwoReaderService;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 import com.sohrab.obd.reader.trip.OBDTripEntity;
-import com.sohrab.obd.reader.trip.TripRecord;
 import com.sohrab.obd.reader.trip.TripRecordCar;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
-import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
-import static com.example.obdandroid.config.APIConfig.reduceAndCumulativeFrequency_URL;
 import static com.example.obdandroid.config.APIConfig.addRemind_URL;
 import static com.example.obdandroid.config.APIConfig.addTestRecord_URL;
 import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
-import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_OBD_CONNECTION_STATUS;
-import static com.sohrab.obd.reader.constants.DefineObdTwoReader.ACTION_OBD_CONNECTION_STATUS_CAR;
-import static com.sohrab.obd.reader.constants.DefineObdTwoReader.ACTION_READ_OBD_REAL_TIME_DATA_CAR;
+import static com.example.obdandroid.config.APIConfig.reduceAndCumulativeFrequency_URL;
 
 /**
  * 作者：Jealous
@@ -84,6 +78,32 @@ public class VehicleCheckFragment extends BaseFragment {
     private TextView tvModelName;
     private LocalBroadcastManager localBroadcastManager;
     private CarReceiver receiver;
+    private BluetoothSocket mSocket;
+    private int RENZHENG = 12;
+    @SuppressLint("HandlerLeak")
+    private final Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 12) {
+                if (!TextUtils.isEmpty(ObdPreferences.get(context).getBlueToothDeviceAddress())) {
+                    connectBluetooth(ObdPreferences.get(context).getBlueToothDeviceAddress());
+                } else {
+                    new Handler().postDelayed(() -> {
+                        if (circleView.isDiffuse()) {
+                            circleView.stop();
+                            btStart.setText("检测失败");
+                        }
+                        showResult(null);
+                        showToast(getString(R.string.text_bluetooth_error_connecting));
+                    }, 3000);
+                }
+
+            } else {
+                throw new IllegalStateException("Unexpected value: " + msg.what);
+            }
+        }
+    };
+
 
     public static VehicleCheckFragment getInstance() {
         return new VehicleCheckFragment();
@@ -106,10 +126,6 @@ public class VehicleCheckFragment extends BaseFragment {
         tvAutomobileBrandName = getView(R.id.tvAutomobileBrandName);
         tvModelName = getView(R.id.tvModelName);
         spUtil = new SPUtil(context);
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ACTION_READ_OBD_REAL_TIME_DATA_CAR);
-        intentFilter.addAction(ACTION_OBD_CONNECTION_STATUS_CAR);
-        context.registerReceiver(mObdReaderReceiver, intentFilter);
         LinearLayoutManager manager = new LinearLayoutManager(context);
         manager.setOrientation(OrientationHelper.VERTICAL);
         recycleCheckContent.setLayoutManager(manager);
@@ -130,18 +146,7 @@ public class VehicleCheckFragment extends BaseFragment {
                 btStart.setText("开始检测");
                 tvConnectObd.setVisibility(View.GONE);
                 circleView.start();
-                if (!TextUtils.isEmpty(ObdPreferences.get(context).getBlueToothDeviceAddress())) {
-                    broadcastUpdate("com.android.Obd");
-                } else {
-                    new Handler().postDelayed(() -> {
-                        if (circleView.isDiffuse()) {
-                            circleView.stop();
-                            btStart.setText("检测失败");
-                        }
-                        showResult(null);
-                        showToast(getString(R.string.text_bluetooth_error_connecting));
-                    }, 3000);
-                }
+                handler.sendEmptyMessage(RENZHENG);
             } else {
                 showTipDialog("请连接OBD设备", TipDialog.TYPE_WARNING);
             }
@@ -149,6 +154,67 @@ public class VehicleCheckFragment extends BaseFragment {
         //addRemind(getUserId(), addJsonContent(TripRecordCar.getTripTwoRecode(context).getOBDJson()), getToken());
         circleView.setCallEndListener(() -> LogE("333333"));
     }
+
+    private void connectBluetooth(String address) {
+        BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
+        try {
+            mSocket = (BluetoothSocket) device.getClass().getMethod("createInsecureRfcommSocket", new Class[]{int.class}).invoke(device, 1);
+        } catch (Exception e) {
+            LogE("createInsecureRfcommSocket failed");
+        }
+        try {
+            Thread.sleep(500);
+            mSocket.connect();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        executeCommandCheck(address);
+    }
+
+    /**
+     * 一旦OBD-2连接，此方法将执行以连续获取数据，直到OBD断开或服务停止。
+     */
+    private void executeCommandCheck(String address) {
+        boolean isSockedConnected = mSocket.isConnected();
+        if (!isSockedConnected) {
+            connectBluetooth(address);
+        }
+        if (isSockedConnected) {
+            LogE("在新线程中执行reset命令 :: " + Thread.currentThread().getId());
+            TripRecordCar TripTwoRecord = TripRecordCar.getTripTwoRecode(context);
+            TripTwoRecord.getTripMap().clear();
+            ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfiguration.getmObdCommands().clone();
+            final Thread newThread = new Thread(() -> {
+                for (int i = 0; i < commands.size(); i++) {
+                    ObdCommand command = commands.get(i);
+                    try {
+                        LogE("命令运行:: " + command.getName());
+                        command.run(mSocket.getInputStream(), mSocket.getOutputStream());
+                        LogE("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
+                        TripTwoRecord.updateTrip(command.getName(), command);
+                    } catch (Exception e) {
+                        LogE("执行命令异常  :: " + e.getMessage());
+                        if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
+                            LogE("命令异常  :: " + e.getMessage());
+                        }
+                    }
+                }
+
+                if (circleView.isDiffuse()) {
+                    circleView.stop();
+                    btStart.setText("检测完成");
+                }
+                if (!TextUtils.isEmpty(TripTwoRecord.getEngineRpm())) {
+                    showResult(TripTwoRecord.getTripMap());
+                    addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(TripTwoRecord.getOBDJson()), getUserId(), getToken());
+                    reduceAndCumulativeFrequency(getToken(), getUserId());
+                    addRemind(getUserId(), addJsonContent(TripTwoRecord.getOBDJson()), getToken());
+                }
+            });
+            newThread.start();
+        }
+    }
+
 
     /**
      * @param token     用户Token
@@ -306,75 +372,6 @@ public class VehicleCheckFragment extends BaseFragment {
         recycleCheckContent.setLayoutAnimation(lac);
     }
 
-    /**
-     * 发送带有特定操作的广播
-     *
-     * @param action 特定动作
-     */
-    private void broadcastUpdate(final String action) {
-        final Intent intent = new Intent(action);
-        localBroadcastManager.sendBroadcast(intent);
-    }
-
-
-    /**
-     * @param address 蓝牙设备MAC地址
-     *                启动蓝牙连接服务
-     */
-    private void startServiceOBD(String address) {
-        BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
-        //启动服务，该服务将在后台执行连接，并执行命令，直到您停止
-        Intent intent = new Intent(context, ObdTwoReaderService.class);
-        intent.putExtra("device", device);
-        intent.putExtra("isConnected", ObdPreferences.get(context).getBlueToothDeviceConnect());
-        context.startService(intent);
-    }
-
-    /**
-     * 处理建立的蓝牙连接...
-     */
-    private void onConnect(String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-        layoutCar.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * 处理蓝牙连接断开
-     */
-    private void onDisconnect() {
-        showResult(null);
-    }
-
-    /**
-     * 接收OBD连接状态和实时数据的广播接收器
-     */
-    private final BroadcastReceiver mObdReaderReceiver = new BroadcastReceiver() {
-        @SuppressLint("SetTextI18n")
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(ACTION_OBD_CONNECTION_STATUS)) {
-                String connectionStatusMsg = intent.getStringExtra(ObdReaderService.INTENT_OBD_EXTRA_DATA);
-                if (connectionStatusMsg.equals(getString(R.string.obd_connected))) {
-                    //OBD连接在OBD连接之后做什么
-                    onConnect("连接成功");
-                } else if (connectionStatusMsg.equals(getString(R.string.connect_lost))) {
-                    //OBD断开连接断开后做什么
-                    onDisconnect();
-                }
-            } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA_CAR)) {
-                TripRecordCar tripRecordCar = TripRecordCar.getTripTwoRecode(context);
-                if (circleView.isDiffuse()) {
-                    circleView.stop();
-                    btStart.setText("检测完成");
-                }
-                showResult(tripRecordCar.getTripMap());
-                addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(tripRecordCar.getOBDJson()), getUserId(), getToken());
-                reduceAndCumulativeFrequency(getToken(), getUserId());
-                addRemind(getUserId(), addJsonContent(tripRecordCar.getOBDJson()), getToken());
-            }
-        }
-    };
 
     private void showTipDialog(String msg, int type) {
         TipDialog.show(context, msg, TipDialog.TYPE_ERROR, type);
@@ -401,12 +398,7 @@ public class VehicleCheckFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         //注销接收器
-        context.unregisterReceiver(mObdReaderReceiver);
         //解绑
         localBroadcastManager.unregisterReceiver(receiver);
-        //停止服务
-        context.stopService(new Intent(context, ObdTwoReaderService.class));
-        // 这将停止后台线程，如果任何运行立即。
-        ObdPreferences.get(context).setServiceRunningStatus(false);
     }
 }

@@ -687,6 +687,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         @Override
         public void onReceive(Context context, Intent intent) {
             getTestRecordPageList(getToken(), String.valueOf(1), String.valueOf(5), getUserId());
+            connectBtDevice(mConnectedDeviceAddress);
         }
     }
 

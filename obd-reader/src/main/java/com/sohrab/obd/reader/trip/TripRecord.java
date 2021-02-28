@@ -204,7 +204,7 @@ public class TripRecord implements DefineObdReader, Serializable {
         }
         data.add(new OBDTripEntity("速降次数", mRapidDeclTimes + "", R.drawable.icon_js_times));
         entity.setRapidDeclTimes(mRapidDeclTimes + "");
-        data.add(new OBDTripEntity("加速次数", mRapidAccTimes + " km/h", R.drawable.icon_add_times));
+        data.add(new OBDTripEntity("加速次数", mRapidAccTimes + "", R.drawable.icon_add_times));
         entity.setRapidAccTimes(mRapidAccTimes + "");
     }
 
@@ -321,7 +321,7 @@ public class TripRecord implements DefineObdReader, Serializable {
         }
         data.add(new OBDTripEntity("发动机转速", TextUtils.isEmpty(engineRpm) ? "" : engineRpm, R.drawable.icon_engine_zs));
         entity.setEngineRpm(TextUtils.isEmpty(engineRpm) ? "" : engineRpm);
-        data.add(new OBDTripEntity("最大转速", engineRpmMax + " km/h", R.drawable.icon_max_engine_zs));
+        data.add(new OBDTripEntity("最大转速", engineRpmMax + " ", R.drawable.icon_max_engine_zs));
         entity.setEngineRpmMax(String.valueOf(engineRpmMax));
     }
 

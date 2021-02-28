@@ -180,6 +180,7 @@ public class VehicleCheckFragment extends BaseFragment {
             connectBluetooth(address);
         }
         if (isSockedConnected) {
+            layoutCar.setVisibility(View.VISIBLE);
             LogE("在新线程中执行reset命令 :: " + Thread.currentThread().getId());
             TripRecordCar TripTwoRecord = TripRecordCar.getTripTwoRecode(context);
             TripTwoRecord.getTripMap().clear();
@@ -397,7 +398,6 @@ public class VehicleCheckFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        //注销接收器
         //解绑
         localBroadcastManager.unregisterReceiver(receiver);
     }

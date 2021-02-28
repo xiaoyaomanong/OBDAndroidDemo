@@ -453,7 +453,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                     deviceAddress = entity.getData().getBluetoothDeviceNumber();
                     if (!TextUtils.isEmpty(deviceAddress)) {
                         dialogUtils.showProgressDialog("正在连接OBD");
-                        connectBtDevice(deviceAddress);
+                        connectBtDevice(deviceAddress,true);
                     }
                     if (entity.getData().getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
                         tvHomeObdTip.setText("将OBD插入车辆并连接");
@@ -538,7 +538,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                         if (!TextUtils.isEmpty(blueList.get(yourChoice).getBlue_address())) {
                             if (isConnected) {
                                 onStartGPS();
-                                connectBtDevice(blueList.get(yourChoice).getBlue_address());
+                                connectBtDevice(blueList.get(yourChoice).getBlue_address(),true);
                             } else {
                                 showTipDialog("当前车辆绑定OBD设备,与连接的OBD设备不一致");
                             }
@@ -554,9 +554,11 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
      * @param address 蓝牙设备MAC地址
      *                启动与所选蓝牙设备的连接
      */
-    private void connectBtDevice(String address) {
+    private void connectBtDevice(String address, boolean isShow) {
         // 获取BluetoothDevice对象
-        dialogUtils.showProgressDialog("正在连接OBD");
+        if (isShow) {
+            dialogUtils.showProgressDialog("正在连接OBD");
+        }
         BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
         startServiceOBD(device);
     }
@@ -671,13 +673,14 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
             getUserInfo(getUserId(), getToken(), vehicleId);
         }
     }
+
     /**
      * 注册本地广播
      */
     private void initRecordReceiver() {
         //获取实例
         IntentFilter intentFilter = new IntentFilter("com.android.Record");
-        RecordReceiver  receiver = new RecordReceiver();
+        RecordReceiver receiver = new RecordReceiver();
         //绑定
         mLocalBroadcastManager.registerReceiver(receiver, intentFilter);
     }
@@ -687,7 +690,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         @Override
         public void onReceive(Context context, Intent intent) {
             getTestRecordPageList(getToken(), String.valueOf(1), String.valueOf(5), getUserId());
-            connectBtDevice(mConnectedDeviceAddress);
+            connectBtDevice(mConnectedDeviceAddress,false);
         }
     }
 
@@ -825,7 +828,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         if (requestCode == REQUEST_ENABLE_BT) {
             if (resultCode == Activity.RESULT_OK) {
                 if (!TextUtils.isEmpty(mConnectedDeviceAddress)) {
-                    connectBtDevice(mConnectedDeviceAddress);
+                    connectBtDevice(mConnectedDeviceAddress,true);
                 } else {
                     setDefaultMode();
                     showToast(getString(R.string.text_bluetooth_error_connecting));

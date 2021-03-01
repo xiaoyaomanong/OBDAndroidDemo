@@ -314,11 +314,11 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
 
             SpannableString s = new SpannableString(String.format("%.0f %s", maxSpeedTemp, speedUnits));
             s.setSpan(new RelativeSizeSpan(0.5f), s.length() - speedUnits.length() - 1, s.length(), 0);
-            tvMaxSpeed.setText(s.toString().replace("km/h", ""));
+            // tvMaxSpeed.setText(s.toString().replace("km/h", ""));
 
             s = new SpannableString(String.format("%.0f %s", averageTemp, speedUnits));
             s.setSpan(new RelativeSizeSpan(0.5f), s.length() - speedUnits.length() - 1, s.length(), 0);
-            tvAverageSpeed.setText(s.toString().replace("km/h", ""));
+            //tvAverageSpeed.setText(s.toString().replace("km/h", ""));
 
             s = new SpannableString(String.format("%.3f %s", distanceTemp, distanceUnits));
             s.setSpan(new RelativeSizeSpan(0.5f), s.length() - distanceUnits.length() - 1, s.length(), 0);
@@ -420,6 +420,8 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                         //添加车辆绑定
                         layoutAddCar.setOnClickListener(v -> JumpUtil.startAct(context, SelectAutomobileBrandActivity.class));
                     }
+                } else {
+                    dialogError(context, entity.getMessage());
                 }
             }
         });
@@ -642,6 +644,10 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                 }
             } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA)) {
                 tripRecord = TripRecord.getTriRecode(context);
+                dashSpeed.setVelocity(tripRecord.getSpeed());
+                tvCurrentSpeed.setText(String.valueOf(tripRecord.getSpeed()));
+                tvMaxSpeed.setText(String.valueOf(tripRecord.getSpeedMax()));
+                tvAverageSpeed.setText(String.valueOf(tripRecord.getAverageSpeed()));
                 Intent intents = new Intent("com.android.ObdData");//创建发送广播的Action
                 intents.putExtra("data", tripRecord);//发送携带的数据
                 mLocalBroadcastManager.sendBroadcast(intents);                               //发送本地广播
@@ -671,13 +677,14 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
             getUserInfo(getUserId(), getToken(), vehicleId);
         }
     }
+
     /**
      * 注册本地广播
      */
     private void initRecordReceiver() {
         //获取实例
         IntentFilter intentFilter = new IntentFilter("com.android.Record");
-        RecordReceiver  receiver = new RecordReceiver();
+        RecordReceiver receiver = new RecordReceiver();
         //绑定
         mLocalBroadcastManager.registerReceiver(receiver, intentFilter);
     }
@@ -718,7 +725,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
             }
             SpannableString s = new SpannableString(String.format(Locale.ENGLISH, "%.0f %s", speed, units));
             s.setSpan(new RelativeSizeSpan(0.25f), s.length() - units.length() - 1, s.length(), 0);
-            tvCurrentSpeed.setText(s.toString().replace("km/h", ""));
+            //tvCurrentSpeed.setText(s.toString().replace("km/h", ""));
             dashSpeed.setVelocity(Float.parseFloat(s.toString().replace("km/h", "")));
         }
 

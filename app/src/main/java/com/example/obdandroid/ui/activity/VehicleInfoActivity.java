@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.config.APIConfig;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleImageView;
@@ -172,7 +173,7 @@ public class VehicleInfoActivity extends BaseActivity {
         if (TextUtils.isEmpty(entity.getLogo())) {
             ivLogo.setImageResource(R.drawable.icon_car_def);
         } else {
-            Glide.with(context).load(entity.getLogo()).into(ivLogo);
+            Glide.with(context).load(SERVER_URL +entity.getLogo()).into(ivLogo);
         }
         tvAutomobileBrandName.setText(checkNull(entity.getAutomobileBrandName()));
         tvModelName.setText(checkNull(entity.getModelName()));

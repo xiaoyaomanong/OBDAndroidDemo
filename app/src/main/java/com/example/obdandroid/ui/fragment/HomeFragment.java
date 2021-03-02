@@ -454,8 +454,12 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                     }
                     deviceAddress = entity.getData().getBluetoothDeviceNumber();
                     if (!TextUtils.isEmpty(deviceAddress)) {
-                        dialogUtils.showProgressDialog("正在连接OBD");
-                        connectBtDevice(deviceAddress);
+                        for (int i = 0; i < blueList.size(); i++) {
+                            if (blueList.get(i).getBlue_address().equals(deviceAddress)) {
+                                dialogUtils.showProgressDialog("正在连接OBD");
+                                connectBtDevice(deviceAddress);
+                            }
+                        }
                     }
                     if (entity.getData().getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
                         tvHomeObdTip.setText("将OBD插入车辆并连接");
@@ -639,8 +643,9 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                 } else if (connectionStatusMsg.contains("未检测到OBD设备")) {
                     onDisconnect();
                 } else if (connectionStatusMsg.equals("socket closed")) {
-                    spUtil.put(CONNECT_BT_KEY, "ON");
-                    onStartGPS();
+                    onDisconnect();
+                    // spUtil.put(CONNECT_BT_KEY, "ON");
+                    //onStartGPS();
                 }
             } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA)) {
                 tripRecord = TripRecord.getTriRecode(context);
@@ -726,7 +731,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
             SpannableString s = new SpannableString(String.format(Locale.ENGLISH, "%.0f %s", speed, units));
             s.setSpan(new RelativeSizeSpan(0.25f), s.length() - units.length() - 1, s.length(), 0);
             //tvCurrentSpeed.setText(s.toString().replace("km/h", ""));
-            dashSpeed.setVelocity(Float.parseFloat(s.toString().replace("km/h", "")));
+            // dashSpeed.setVelocity(Float.parseFloat(s.toString().replace("km/h", "")));
         }
 
     }

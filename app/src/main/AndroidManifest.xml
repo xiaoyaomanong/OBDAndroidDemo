@@ -131,8 +131,12 @@
             android:theme="@style/AppTheme.StartingWindowTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="wx3e6b0491c74145a2" />
             </intent-filter>
         </activity>
         <activity
@@ -169,8 +173,14 @@
         <activity android:name=".ui.activity.TroubleCodeQueryDetailsActivity" />
         <activity android:name=".ui.activity.AboutActivity" />
         <activity android:name=".ui.activity.AgreementActivity" />
+        <activity
+            android:name=".wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop" />
 
         <service android:name=".service.GpsServices" />
+
+
     </application>
 
 </manifest>

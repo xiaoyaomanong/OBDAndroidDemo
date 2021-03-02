@@ -92,10 +92,10 @@ public class ObdConfiguration {
         mObdCommands.add(new FindFuelTypeCommand());//"01 51"
         mObdCommands.add(new ConsumptionRateCommand());//"01 5E"
         mObdCommands.add(new FuelLevelCommand());//"01 2F"
-        mObdCommands.add(new FuelTrimCommand(FuelTrim.SHORT_TERM_BANK_1));//"01 06"
-        mObdCommands.add(new FuelTrimCommand(FuelTrim.LONG_TERM_BANK_1));//"01 07"
-        mObdCommands.add(new FuelTrimCommand(FuelTrim.LONG_TERM_BANK_2));//"01 08"
-        mObdCommands.add(new FuelTrimCommand(FuelTrim.SHORT_TERM_BANK_2));//"01 09"
+        mObdCommands.add(new FuelTrimCommand(FuelTrim.LONG_TERM_BANK_1));//燃油调节命令 长期燃油调节库1
+        mObdCommands.add(new FuelTrimCommand(FuelTrim.LONG_TERM_BANK_2));//燃油调节命令  长期燃油调节库2
+        mObdCommands.add(new FuelTrimCommand(FuelTrim.SHORT_TERM_BANK_1));//燃油调节命令 短期燃油调节库1
+        mObdCommands.add(new FuelTrimCommand(FuelTrim.SHORT_TERM_BANK_2));//燃油调节命令  短期燃油调节库2
         mObdCommands.add(new AirFuelRatioCommand());//"01 44"
         mObdCommands.add(new WidebandAirFuelRatioCommand());//"01 34"
         mObdCommands.add(new FuelSystemStatusCommand());//"01 03"
@@ -112,9 +112,9 @@ public class ObdConfiguration {
         mObdCommands.add(new VinCommand());//"09 02"
         mObdCommands.add(new CommandedEGRCommand());//"01 2C"
         //Trouble codes
-        mObdCommands.add(new TroubleCodesCommand());//"03"
-        mObdCommands.add(new PermanentTroubleCodesCommand());//"0A"
-        mObdCommands.add(new PendingTroubleCodesCommand());//"07"
+        mObdCommands.add(new TroubleCodesCommand());//"03" 故障代码
+        mObdCommands.add(new PermanentTroubleCodesCommand());//"0A" 永久故障码
+        mObdCommands.add(new PendingTroubleCodesCommand());//"07" 未解决故障码
         //engine
         mObdCommands.add(new AbsoluteLoadCommand());//"01 43"
         mObdCommands.add(new LoadCommand());//"01 04"

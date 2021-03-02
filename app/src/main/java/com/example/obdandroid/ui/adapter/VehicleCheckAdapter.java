@@ -30,6 +30,7 @@ public class VehicleCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private OnClickCallBack clickCallBack;
     private final int EMPTY_VIEW = 0;//空页面
     private final int NOT_EMPTY_VIEW = 1;//正常页面
+    private String msg;
 
     public VehicleCheckAdapter(Context context) {
         this.context = context;
@@ -38,6 +39,10 @@ public class VehicleCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public void setClickCallBack(OnClickCallBack clickCallBack) {
         this.clickCallBack = clickCallBack;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public void setList(List<OBDTripEntity> list) {
@@ -58,7 +63,8 @@ public class VehicleCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         int itemViewType = getItemViewType(position);
         if (EMPTY_VIEW == itemViewType) {
             EmptyViewHolder viewHolder = (EmptyViewHolder) holder;
-            viewHolder.mEmptyTextView.setText("请连接OBD设备,进行检测");
+            //viewHolder.mEmptyTextView.setText("请连接OBD设备,进行检测");
+            viewHolder.mEmptyTextView.setText(msg);
         } else if (NOT_EMPTY_VIEW == itemViewType) {
             final MyViewHolder holder1 = (MyViewHolder) holder;
             holder1.ivName.setImageResource(list.get(position).getResId());

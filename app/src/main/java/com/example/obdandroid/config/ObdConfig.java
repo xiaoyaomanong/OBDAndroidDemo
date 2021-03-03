@@ -1,57 +1,18 @@
 package com.example.obdandroid.config;
 
-import com.github.pires.obd.commands.ObdCommand;
-import com.github.pires.obd.commands.SpeedCommand;
-import com.github.pires.obd.commands.control.DistanceMILOnCommand;
-import com.github.pires.obd.commands.control.DistanceSinceCCCommand;
-import com.github.pires.obd.commands.control.DtcNumberCommand;
-import com.github.pires.obd.commands.control.EquivalentRatioCommand;
-import com.github.pires.obd.commands.control.IgnitionMonitorCommand;
-import com.github.pires.obd.commands.control.ModuleVoltageCommand;
-import com.github.pires.obd.commands.control.PendingTroubleCodesCommand;
-import com.github.pires.obd.commands.control.PermanentTroubleCodesCommand;
-import com.github.pires.obd.commands.control.TimingAdvanceCommand;
-import com.github.pires.obd.commands.control.TroubleCodesCommand;
-import com.github.pires.obd.commands.control.VinCommand;
-import com.github.pires.obd.commands.engine.AbsoluteLoadCommand;
-import com.github.pires.obd.commands.engine.LoadCommand;
-import com.github.pires.obd.commands.engine.MassAirFlowCommand;
-import com.github.pires.obd.commands.engine.OilTempCommand;
-import com.github.pires.obd.commands.engine.RPMCommand;
-import com.github.pires.obd.commands.engine.RuntimeCommand;
-import com.github.pires.obd.commands.engine.ThrottlePositionCommand;
-import com.github.pires.obd.commands.fuel.AirFuelRatioCommand;
-import com.github.pires.obd.commands.fuel.ConsumptionRateCommand;
-import com.github.pires.obd.commands.fuel.FindFuelTypeCommand;
-import com.github.pires.obd.commands.fuel.FuelLevelCommand;
-import com.github.pires.obd.commands.fuel.FuelTrimCommand;
-import com.github.pires.obd.commands.fuel.WidebandAirFuelRatioCommand;
-import com.github.pires.obd.commands.pressure.BarometricPressureCommand;
-import com.github.pires.obd.commands.pressure.FuelPressureCommand;
-import com.github.pires.obd.commands.pressure.FuelRailPressureCommand;
-import com.github.pires.obd.commands.pressure.IntakeManifoldPressureCommand;
-import com.github.pires.obd.commands.protocol.AdaptiveTimingCommand;
-import com.github.pires.obd.commands.protocol.AvailablePidsCommand;
-import com.github.pires.obd.commands.protocol.AvailablePidsCommand_01_20;
-import com.github.pires.obd.commands.protocol.AvailablePidsCommand_21_40;
-import com.github.pires.obd.commands.protocol.AvailablePidsCommand_41_60;
-import com.github.pires.obd.commands.protocol.DescribeProtocolCommand;
-import com.github.pires.obd.commands.protocol.DescribeProtocolNumberCommand;
-import com.github.pires.obd.commands.protocol.EchoOffCommand;
-import com.github.pires.obd.commands.protocol.HeadersOffCommand;
-import com.github.pires.obd.commands.protocol.LineFeedOffCommand;
-import com.github.pires.obd.commands.protocol.ObdRawCommand;
-import com.github.pires.obd.commands.protocol.ObdResetCommand;
-import com.github.pires.obd.commands.protocol.ObdWarmstartCommand;
-import com.github.pires.obd.commands.protocol.ResetTroubleCodesCommand;
-import com.github.pires.obd.commands.protocol.SelectProtocolCommand;
-import com.github.pires.obd.commands.protocol.SpacesOffCommand;
-import com.github.pires.obd.commands.protocol.TimeoutCommand;
-import com.github.pires.obd.commands.temperature.AirIntakeTemperatureCommand;
-import com.github.pires.obd.commands.temperature.AmbientAirTemperatureCommand;
-import com.github.pires.obd.commands.temperature.EngineCoolantTemperatureCommand;
-import com.github.pires.obd.enums.FuelTrim;
-import com.github.pires.obd.enums.ObdProtocols;
+
+import com.sohrab.obd.reader.enums.ObdProtocols;
+import com.sohrab.obd.reader.obdCommand.ObdCommand;
+import com.sohrab.obd.reader.obdCommand.SpeedCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SelectProtocolCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
+import com.sohrab.obd.reader.obdCommand.temperature.AirIntakeTemperatureCommand;
+import com.sohrab.obd.reader.obdCommand.temperature.AmbientAirTemperatureCommand;
+import com.sohrab.obd.reader.obdCommand.temperature.EngineCoolantTemperatureCommand;
 
 import java.util.ArrayList;
 
@@ -64,10 +25,10 @@ public final class ObdConfig {
         ArrayList<ObdCommand> cmds = new ArrayList<>();
         //协议
         cmds.add(new ObdResetCommand());//重置OBD连接。。
-        cmds.add(new ObdWarmstartCommand());//热启动OBD连接。。。
+        //cmds.add(new ObdWarmstartCommand());//热启动OBD连接。。。
         cmds.add(new SpacesOffCommand());//关闭空间。
         cmds.add(new EchoOffCommand());//关掉Echo
-        cmds.add(new HeadersOffCommand());//关闭headers
+       // cmds.add(new HeadersOffCommand());//关闭headers
         cmds.add(new LineFeedOffCommand());//关闭换行
         cmds.add(new SelectProtocolCommand(ObdProtocols.valueOf(protocol)));//选择要使用的协议
        //cmds.add(new AdaptiveTimingCommand(1));//自适应定时命令

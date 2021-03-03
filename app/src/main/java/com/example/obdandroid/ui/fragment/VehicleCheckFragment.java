@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -29,6 +30,7 @@ import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.config.Constant;
+import com.example.obdandroid.listener.CallEndListener;
 import com.example.obdandroid.ui.adapter.VehicleCheckAdapter;
 import com.example.obdandroid.ui.entity.MessageCheckEntity;
 import com.example.obdandroid.ui.entity.ResultEntity;
@@ -36,13 +38,27 @@ import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleWelComeView;
 import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.SPUtil;
+import com.hjq.bar.OnTitleBarListener;
+import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
 import com.sohrab.obd.reader.application.ObdPreferences;
+import com.sohrab.obd.reader.enums.ObdProtocols;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
+import com.sohrab.obd.reader.obdCommand.control.PendingTroubleCodesCommand;
+import com.sohrab.obd.reader.obdCommand.control.PermanentTroubleCodesCommand;
+import com.sohrab.obd.reader.obdCommand.control.TroubleCodesCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.ResetTroubleCodesCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SelectProtocolCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 import com.sohrab.obd.reader.trip.OBDTripEntity;
 import com.sohrab.obd.reader.trip.TripRecordCar;
+import com.sohrab.obd.reader.utils.LogUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -66,6 +82,7 @@ import static com.example.obdandroid.config.APIConfig.reduceAndCumulativeFrequen
  */
 public class VehicleCheckFragment extends BaseFragment {
     private Context context;
+    private TitleBar titleBar;
     private CircleWelComeView circleView;
     private TextView btStart;
     private VehicleCheckAdapter adapter;
@@ -79,14 +96,14 @@ public class VehicleCheckFragment extends BaseFragment {
     private LocalBroadcastManager localBroadcastManager;
     private CarReceiver receiver;
     private BluetoothSocket mSocket;
-    private int RENZHENG = 12;
+    private boolean mIsFaultCodeRead = true;
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == 12) {
+            if (msg.arg1 == 12) {
                 if (!TextUtils.isEmpty(ObdPreferences.get(context).getBlueToothDeviceAddress())) {
-                    connectBluetooth(ObdPreferences.get(context).getBlueToothDeviceAddress());
+                    connectBluetooth(ObdPreferences.get(context).getBlueToothDeviceAddress(), 11);
                 } else {
                     new Handler().postDelayed(() -> {
                         if (circleView.isDiffuse()) {
@@ -98,6 +115,14 @@ public class VehicleCheckFragment extends BaseFragment {
                     }, 3000);
                 }
 
+            } else if (msg.arg1 == 11) {
+                circleView.start();
+                btStart.setText("开始检测");
+                tvConnectObd.setVisibility(View.GONE);
+                btStart.setEnabled(false);
+                executeCommand();
+            } else if (msg.arg1 == 10) {
+                clearCodes(mSocket);
             } else {
                 throw new IllegalStateException("Unexpected value: " + msg.what);
             }
@@ -117,6 +142,7 @@ public class VehicleCheckFragment extends BaseFragment {
     @Override
     public void initView(View view, Bundle savedInstanceState) {
         context = getHoldingActivity();
+        titleBar = getView(R.id.titleBar);
         circleView = getView(R.id.circleView);
         btStart = getView(R.id.btStart);
         recycleCheckContent = getView(R.id.recycleCheckContent);
@@ -143,19 +169,36 @@ public class VehicleCheckFragment extends BaseFragment {
         getVehicleInfoById(getToken(), spUtil.getString("vehicleId", ""));
         btStart.setOnClickListener(v -> {
             if (spUtil.getString(Constant.CONNECT_BT_KEY, "").equals("ON")) {
-                btStart.setText("开始检测");
-                tvConnectObd.setVisibility(View.GONE);
-                circleView.start();
-                handler.sendEmptyMessage(RENZHENG);
+                new Thread(() -> circleView.start()).start();
+                Message message = new Message();
+                message.arg1 = 12;
+                handler.sendMessage(message);
             } else {
                 showTipDialog("请连接OBD设备", TipDialog.TYPE_WARNING);
             }
         });
-        //addRemind(getUserId(), addJsonContent(TripRecordCar.getTripTwoRecode(context).getOBDJson()), getToken());
-        circleView.setCallEndListener(() -> LogE("333333"));
+
+        titleBar.setOnTitleBarListener(new OnTitleBarListener() {
+            @Override
+            public void onLeftClick(View v) {
+
+            }
+
+            @Override
+            public void onTitleClick(View v) {
+
+            }
+
+            @Override
+            public void onRightClick(View v) {
+                if (titleBar.getRightTitle().toString().equals("清除故障")) {
+                    connectBluetooth(ObdPreferences.get(context).getBlueToothDeviceAddress(), 10);
+                }
+            }
+        });
     }
 
-    private void connectBluetooth(String address) {
+    private void connectBluetooth(String address, int arg) {
         BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
         try {
             mSocket = (BluetoothSocket) device.getClass().getMethod("createInsecureRfcommSocket", new Class[]{int.class}).invoke(device, 1);
@@ -168,54 +211,149 @@ public class VehicleCheckFragment extends BaseFragment {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-        executeCommandCheck(address);
+        executeCommandCheck(address, arg);
     }
 
     /**
      * 一旦OBD-2连接，此方法将执行以连续获取数据，直到OBD断开或服务停止。
      */
-    private void executeCommandCheck(String address) {
+    private void executeCommandCheck(String address, int arg) {
         boolean isSockedConnected = mSocket.isConnected();
         if (!isSockedConnected) {
-            connectBluetooth(address);
+            connectBluetooth(address, arg);
         }
         if (isSockedConnected) {
             layoutCar.setVisibility(View.VISIBLE);
-            LogE("在新线程中执行reset命令 :: " + Thread.currentThread().getId());
-            TripRecordCar TripTwoRecord = TripRecordCar.getTripTwoRecode(context);
-            TripTwoRecord.getTripMap().clear();
-            ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfiguration.getmObdCommands().clone();
             final Thread newThread = new Thread(() -> {
-                for (int i = 0; i < commands.size(); i++) {
-                    ObdCommand command = commands.get(i);
-                    try {
-                        LogE("命令运行:: " + command.getName());
-                        command.run(mSocket.getInputStream(), mSocket.getOutputStream());
-                        LogE("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
-                        TripTwoRecord.updateTrip(command.getName(), command);
-                    } catch (Exception e) {
-                        LogE("执行命令异常  :: " + e.getMessage());
-                        if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
-                            LogE("命令异常  :: " + e.getMessage());
-                        }
-                    }
-                }
-
-                if (circleView.isDiffuse()) {
-                    circleView.stop();
-                    btStart.setText("检测完成");
-                }
-                if (!TextUtils.isEmpty(TripTwoRecord.getEngineRpm())) {
-                    showResult(TripTwoRecord.getTripMap());
-                    addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(TripTwoRecord.getOBDJson()), getUserId(), getToken());
-                    reduceAndCumulativeFrequency(getToken(), getUserId());
-                    addRemind(getUserId(), addJsonContent(TripTwoRecord.getOBDJson()), getToken());
+                try {
+                    // 此线程是必需的，因为在Headunit中命令.run方法无限块，因此，线程的最长寿命为15秒，这样就可以处理块了。
+                    new ObdResetCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+                    new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+                    new LineFeedOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+                    new SpacesOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+                    new TimeoutCommand(125).run(mSocket.getInputStream(), mSocket.getOutputStream());
+                    new SelectProtocolCommand(ObdProtocols.AUTO).run(mSocket.getInputStream(), mSocket.getOutputStream());
+                    new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+                    Thread.sleep(100);
+                    Message message = new Message();
+                    message.arg1 = arg;
+                    handler.sendMessage(message);
+                } catch (Exception e) {
+                    LogUtils.i("在新线程中重置命令异常:: " + e.getMessage());
                 }
             });
             newThread.start();
         }
     }
 
+    private void executeCommand() {
+        LogE("在新线程中执行reset命令 :: " + Thread.currentThread().getId());
+        TripRecordCar TripTwoRecord = TripRecordCar.getTripTwoRecode(context);
+        TripTwoRecord.getTripMap().clear();
+        ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfiguration.getmObdCommands().clone();
+        for (int i = 0; i < commands.size(); i++) {
+            ObdCommand command = commands.get(i);
+            try {
+                command.run(mSocket.getInputStream(), mSocket.getOutputStream());
+                LogE("结果是: " + command.getFormattedResult() + " :: name is :: " + command.getName());
+                TripTwoRecord.updateTrip(command.getName(), command);
+                if (mIsFaultCodeRead) {
+                    try {
+                        ModifiedTroubleCodesObdCommand troubleCodesCommand = new ModifiedTroubleCodesObdCommand();//故障代码
+                        troubleCodesCommand.run(mSocket.getInputStream(), mSocket.getOutputStream());
+                        TripTwoRecord.updateTrip(troubleCodesCommand.getName(), troubleCodesCommand);
+
+                        ModifiedPermanentTroubleCodesCommand permanentTroubleCodesCommand = new ModifiedPermanentTroubleCodesCommand();//永久故障码
+                        permanentTroubleCodesCommand.run(mSocket.getInputStream(), mSocket.getOutputStream());
+                        TripTwoRecord.updateTrip(permanentTroubleCodesCommand.getName(), permanentTroubleCodesCommand);
+
+                        ModifiedPendingTroubleCodesCommand pendingTroubleCodesCommand = new ModifiedPendingTroubleCodesCommand();//未解决故障码
+                        pendingTroubleCodesCommand.run(mSocket.getInputStream(), mSocket.getOutputStream());
+                        TripTwoRecord.updateTrip(pendingTroubleCodesCommand.getName(), pendingTroubleCodesCommand);
+                        titleBar.setRightTitle("清除故障");
+                        mIsFaultCodeRead = false;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                LogE("执行命令异常  :: " + e.getMessage());
+                if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
+                    LogE("命令异常  :: " + e.getMessage());
+                }
+            }
+        }
+
+        if (circleView.isDiffuse()) {
+            circleView.stop();
+            btStart.setText("检测完成");
+            btStart.setEnabled(true);
+        }
+        showResult(TripTwoRecord.getTripMap());
+        addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(TripTwoRecord.getOBDJson()), getUserId(), getToken());
+        reduceAndCumulativeFrequency(getToken(), getUserId());
+        addRemind(getUserId(), addJsonContent(TripTwoRecord.getOBDJson()), getToken());
+
+    }
+
+    public static class ModifiedTroubleCodesObdCommand extends TroubleCodesCommand {
+        @Override
+        public String getResult() {
+            //输出中删除不必要的响应，因为这会导致错误的错误代码
+            return rawData.replace("SEARCHING...", "").replace("NODATA", "");
+        }
+    }
+
+    public static class ModifiedPermanentTroubleCodesCommand extends PermanentTroubleCodesCommand {
+        @Override
+        public String getResult() {
+            //输出中删除不必要的响应，因为这会导致错误的错误代码
+            return rawData.replace("SEARCHING...", "").replace("NODATA", "");
+        }
+    }
+
+    public static class ModifiedPendingTroubleCodesCommand extends PendingTroubleCodesCommand {
+        @Override
+        public String getResult() {
+            //输出中删除不必要的响应，因为这会导致错误的错误代码
+            return rawData.replace("SEARCHING...", "").replace("NODATA", "");
+        }
+    }
+
+    /**
+     * @param socket 蓝牙套接字
+     *               清除故障码
+     */
+    private void clearCodes(BluetoothSocket socket) {
+        boolean conn = socket.isConnected();
+        LogE("连接：" + conn);
+        try {
+            LogE("测试复位=====尝试重置");
+            new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
+            LogE("开始清除");
+            ResetTroubleCodesCommand clear = new ResetTroubleCodesCommand();
+            clear.run(socket.getInputStream(), socket.getOutputStream());
+            String result = clear.getFormattedResult();
+            LogE("重置结果: " + result);
+            if (!TextUtils.isEmpty(result)) {
+                titleBar.setRightTitle("");
+                Intent intent = new Intent("com.android.Record");//创建发送广播的Action
+                localBroadcastManager.sendBroadcast(intent);  //发送本地广播
+            }
+        } catch (Exception e) {
+            LogE("建立连接时出错。 -> " + e.getMessage());
+        }
+    }
+
+    public void closeSocket(BluetoothSocket sock) {
+        if (sock != null)
+            // close socket
+            try {
+                sock.close();
+            } catch (IOException e) {
+                LogE(e.getMessage());
+            }
+    }
 
     /**
      * @param token     用户Token
@@ -283,6 +421,11 @@ public class VehicleCheckFragment extends BaseFragment {
         if (adapter == null) {
             adapter = new VehicleCheckAdapter(context);
             adapter.setList(messages);
+            if (spUtil.getString(Constant.CONNECT_BT_KEY, "").equals("ON")) {
+                adapter.setMsg("OBD设备已连接,请进行检测");
+            } else {
+                adapter.setMsg("请连接OBD设备,进行检测");
+            }
             getHoldingActivity().runOnUiThread(() -> recycleCheckContent.setAdapter(adapter));
         } else {
             getHoldingActivity().runOnUiThread(() -> adapter.notifyDataSetChanged());
@@ -312,7 +455,7 @@ public class VehicleCheckFragment extends BaseFragment {
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
                     Intent intent = new Intent("com.android.Record");//创建发送广播的Action
-                    localBroadcastManager.sendBroadcast(intent);                               //发送本地广播
+                    localBroadcastManager.sendBroadcast(intent);  //发送本地广播
                 }
             }
         });

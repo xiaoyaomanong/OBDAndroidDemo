@@ -3,6 +3,7 @@ package com.example.obdandroid.base;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -14,7 +15,11 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.obdandroid.ui.activity.LoginActivity;
 import com.example.obdandroid.ui.entity.BluetoothDeviceEntity;
+import com.example.obdandroid.ui.view.CustomeDialog;
+import com.example.obdandroid.utils.ActivityManager;
+import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.StringUtil;
 import com.example.obdandroid.utils.ToastUtil;
@@ -234,6 +239,27 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    public void dialogError(final Context context, final String msg) {
+        if (msg.equals("token失效，请重新登录")) {
+            new CustomeDialog(context, "你的账号已在其他设备登录或登录时间过长,请检查重新登录", confirm -> {
+                if (confirm) {
+                    JumpUtil.startAct(context, LoginActivity.class);
+                    ActivityManager.getInstance().finishActivitys();
+                }
+            }).setPositiveButton("确定").setTitle("提示").show();
+        } else if (msg.equals("未知异常，请联系管理员")) {
+            new CustomeDialog(context, msg, confirm -> {
+                if (confirm) {
+                    JumpUtil.startAct(context, LoginActivity.class);
+                    ActivityManager.getInstance().finishActivitys();
+                }
+            }).setPositiveButton("确定").setTitle("提示").show();
+        } else {
+            new CustomeDialog(context, msg, confirm -> {
+
+            }).setPositiveButton("确定").setTitle("提示").show();
+        }
+    }
 
     /**
      * @param msg 日志内容

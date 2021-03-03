@@ -6,16 +6,15 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.adapter.OBDProtocolAdapter;
 import com.example.obdandroid.ui.entity.OBDProtocolEntity;
 import com.example.obdandroid.utils.SPUtil;
-import com.github.pires.obd.enums.ObdProtocols;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
+import com.sohrab.obd.reader.enums.ObdProtocols;
 
 import java.util.ArrayList;
 

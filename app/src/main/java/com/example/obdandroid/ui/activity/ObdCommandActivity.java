@@ -11,11 +11,8 @@ import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.ObdConfig;
 import com.example.obdandroid.ui.adapter.ObdCommandAdapter;
 import com.example.obdandroid.utils.SPUtil;
-import com.github.pires.obd.commands.ObdCommand;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
-
-import java.util.ArrayList;
 
 import static com.example.obdandroid.config.Constant.PROTOCOLS_LIST_KEY;
 

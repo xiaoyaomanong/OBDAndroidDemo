@@ -9,10 +9,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.obdandroid.R;
-import com.github.pires.obd.commands.ObdCommand;
+import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 作者：Jealous

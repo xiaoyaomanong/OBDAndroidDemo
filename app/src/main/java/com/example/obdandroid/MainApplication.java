@@ -10,10 +10,13 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.ui.wechatPay.WeiXinConstants;
 import com.example.obdandroid.utils.ExceptionHandler;
 import com.hjq.bar.TitleBar;
 import com.hjq.bar.initializer.LightBarInitializer;
 import com.kongzue.dialog.v2.DialogSettings;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import static com.kongzue.dialog.v2.DialogSettings.STYLE_IOS;
 import static com.kongzue.dialog.v2.DialogSettings.THEME_DARK;
@@ -34,6 +37,8 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         context = this.getApplicationContext();
+        IWXAPI api = WXAPIFactory.createWXAPI(this, WeiXinConstants.APP_ID, false);//通过WXAPIFactory工厂，获取IWXAPI的实例,IWXAPI 是第三方app和微信通信的openapi接口
+        api.registerApp(WeiXinConstants.APP_ID);
         // 初始化 TitleBar
         TitleBar.setDefaultInitializer(new LightBarInitializer() {
             @Override

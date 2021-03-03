@@ -92,6 +92,7 @@ public class TripRecord implements DefineObdReader, Serializable {
     private final long tripStartTime;
     private float idlingDuration;
     private float drivingDuration;
+    private float AverageSpeed;
     private long mAddSpeed;
     private long mSpeedCount;
     private float mDistanceTravel;
@@ -180,6 +181,11 @@ public class TripRecord implements DefineObdReader, Serializable {
             mSpeedCount++;
             mDistanceTravel = (mAddSpeed / mSpeedCount * (drivingDuration / (60 * 60 * 1000)));
         }
+        if (drivingDuration<=0){
+            AverageSpeed=0f;
+        }else {
+            AverageSpeed=mDistanceTravel/(drivingDuration / (60 * 60 * 1000));
+        }
         data.add(new OBDTripEntity("时速", speed + " km/h", R.drawable.icon_speed));
         entity.setSpeed(speed + " km/h");
         data.add(new OBDTripEntity("最高时速", speedMax + " km/h", R.drawable.icon_max_speed));
@@ -222,7 +228,6 @@ public class TripRecord implements DefineObdReader, Serializable {
     }
 
     private void calculateMaf() {
-
         if (mIntakePressure > 0 && mIntakeAirTemp > 0) {
             float rpm = Float.parseFloat(engineRpm);
             float imap = ((rpm * mIntakePressure) / mIntakeAirTemp) / 2;
@@ -262,6 +267,9 @@ public class TripRecord implements DefineObdReader, Serializable {
         return speedMax;
     }
 
+    public float getAverageSpeed() {
+        return AverageSpeed;
+    }
     public float getmDistanceTravel() {
         return mDistanceTravel;
     }
@@ -541,7 +549,7 @@ public class TripRecord implements DefineObdReader, Serializable {
 
             case DTC_NUMBER:
                 mDtcNumber = command.getFormattedResult();
-                data.add(new OBDTripEntity("故障诊断码", TextUtils.isEmpty(mDtcNumber) ? "" : mDtcNumber, R.drawable.icon_dtc_number));
+                data.add(new OBDTripEntity("自从DTC清除后的监控状态", TextUtils.isEmpty(mDtcNumber) ? "" : mDtcNumber, R.drawable.icon_dtc_number));
                 entity.setDtcNumber(TextUtils.isEmpty(mDtcNumber) ? "" : mDtcNumber);
                 break;
 

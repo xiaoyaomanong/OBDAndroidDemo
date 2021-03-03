@@ -10,7 +10,6 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
  * Perhaps in the future we'll extend this to read the 3rd, 4th and 5th bytes of
  * the response in order to store information about the availability and
  * completeness of certain on-board tests.
- *
  */
 public class DtcNumberCommand extends ObdCommand {
 
@@ -26,13 +25,14 @@ public class DtcNumberCommand extends ObdCommand {
 
     /**
      * Copy ctor.
-     *
      */
     public DtcNumberCommand(DtcNumberCommand other) {
         super(other);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void performCalculations() {
         // ignore first two bytes [hh hh] of the response
@@ -47,11 +47,13 @@ public class DtcNumberCommand extends ObdCommand {
      * @return a {@link String} object.
      */
     public String getFormattedResult() {
-        final String res = milOn ? "MIL is ON" : "MIL is OFF";
-        return res + codeCount + " codes";
+        final String res = milOn ? "ON" : "OFF";
+        return "异常指示灯（MIL）状态: " + res + ";DTC的个数: " + codeCount;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getCalculatedResult() {
         return String.valueOf(codeCount);
@@ -75,7 +77,9 @@ public class DtcNumberCommand extends ObdCommand {
         return milOn;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return AvailableCommandNames.DTC_NUMBER.getValue();

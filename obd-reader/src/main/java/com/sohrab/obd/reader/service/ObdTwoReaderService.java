@@ -18,17 +18,9 @@ import android.widget.Toast;
 
 import com.sohrab.obd.reader.application.ObdPreferences;
 import com.sohrab.obd.reader.constants.DefineObdTwoReader;
-import com.sohrab.obd.reader.enums.ObdProtocols;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
 import com.sohrab.obd.reader.obdCommand.control.TroubleCodesCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.ClearDTCCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.SelectProtocolCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
 import com.sohrab.obd.reader.trip.TripRecordCar;
 import com.sohrab.obd.reader.utils.LogUtils;
 

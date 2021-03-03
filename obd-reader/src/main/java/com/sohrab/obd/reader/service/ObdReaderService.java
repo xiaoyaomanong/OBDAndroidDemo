@@ -41,7 +41,6 @@ import com.sohrab.obd.reader.enums.ObdProtocols;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.ObdConfig;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
-import com.sohrab.obd.reader.obdCommand.control.TroubleCodesCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;

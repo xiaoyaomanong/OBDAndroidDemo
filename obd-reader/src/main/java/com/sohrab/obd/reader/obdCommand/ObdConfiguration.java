@@ -112,9 +112,9 @@ public class ObdConfiguration {
         mObdCommands.add(new VinCommand());//"09 02"
         mObdCommands.add(new CommandedEGRCommand());//"01 2C"
         //Trouble codes
-      /*  mObdCommands.add(new TroubleCodesCommand());//"03" 故障代码
-        mObdCommands.add(new PermanentTroubleCodesCommand());//"0A" 永久故障码
-        mObdCommands.add(new PendingTroubleCodesCommand());//"07" 未解决故障码*/
+        mObdCommands.add(new ModifiedTroubleCodesObdCommand());//"03" 故障代码
+        mObdCommands.add(new ModifiedPermanentTroubleCodesCommand());//"0A" 永久故障码
+        mObdCommands.add(new ModifiedPendingTroubleCodesCommand());//"07" 未解决故障码
         //engine
         mObdCommands.add(new AbsoluteLoadCommand());//"01 43"
         mObdCommands.add(new LoadCommand());//"01 04"
@@ -125,5 +125,29 @@ public class ObdConfiguration {
         //protocol
         mObdCommands.add(new DescribeProtocolCommand());//"AT DP"
         mObdCommands.add(new DescribeProtocolNumberCommand());//"AT DPN"
+    }
+
+    public static class ModifiedTroubleCodesObdCommand extends TroubleCodesCommand {
+        @Override
+        public String getResult() {
+            //输出中删除不必要的响应，因为这会导致错误的错误代码
+            return rawData.replace("SEARCHING...", "").replace("NODATA", "");
+        }
+    }
+
+    public static class ModifiedPermanentTroubleCodesCommand extends PermanentTroubleCodesCommand {
+        @Override
+        public String getResult() {
+            //输出中删除不必要的响应，因为这会导致错误的错误代码
+            return rawData.replace("SEARCHING...", "").replace("NODATA", "");
+        }
+    }
+
+    public static class ModifiedPendingTroubleCodesCommand extends PendingTroubleCodesCommand {
+        @Override
+        public String getResult() {
+            //输出中删除不必要的响应，因为这会导致错误的错误代码
+            return rawData.replace("SEARCHING...", "").replace("NODATA", "");
+        }
     }
 }

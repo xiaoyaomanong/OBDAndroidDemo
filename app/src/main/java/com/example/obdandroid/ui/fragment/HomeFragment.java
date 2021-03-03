@@ -4,20 +4,15 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
-import android.location.GpsSatellite;
-import android.location.GpsStatus;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
@@ -25,9 +20,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Chronometer;
@@ -53,28 +46,35 @@ import com.example.obdandroid.ui.adapter.HomeAdapter;
 import com.example.obdandroid.ui.adapter.TestRecordAdapter;
 import com.example.obdandroid.ui.entity.AutomobileBrandEntity;
 import com.example.obdandroid.ui.entity.BluetoothDeviceEntity;
+import com.example.obdandroid.ui.entity.SocketEntity;
 import com.example.obdandroid.ui.entity.TestRecordEntity;
 import com.example.obdandroid.ui.entity.UserInfoEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.ui.view.PhilText;
 import com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight;
+import com.example.obdandroid.utils.BluetoothManager;
 import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
-import com.gc.materialdesign.widgets.Dialog;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
 import com.sohrab.obd.reader.application.ObdPreferences;
+import com.sohrab.obd.reader.obdCommand.ObdCommand;
+import com.sohrab.obd.reader.obdCommand.ObdConfig;
+import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
+import com.sohrab.obd.reader.obdCommand.SpeedCommand;
 import com.sohrab.obd.reader.service.ObdReaderService;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 import com.sohrab.obd.reader.trip.TripRecord;
+import com.sohrab.obd.reader.utils.LogUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -94,7 +94,7 @@ import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_READ_OBD_RE
  * 日期：2020/12/23 0023
  * 描述：
  */
-public class HomeFragment extends BaseFragment implements LocationListener, GpsStatus.Listener {
+public class HomeFragment extends BaseFragment {
     private Context context;
     private TitleBar titleBar;
     private List<BluetoothDeviceEntity> blueList;
@@ -123,13 +123,18 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
     private boolean isConnected = false;
     private String deviceAddress;
     private TripRecord tripRecord;
-    private SharedPreferences sharedPreferences;
-    private LocationManager mLocationManager;
-    private static Data data;
-    private Data.OnGpsServiceUpdate onGpsServiceUpdate;
     private HomeAdapter homeAdapter;
-    private Chronometer time;
     private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
+    private boolean flag = true;
+
+    private BluetoothSocket bluetoothSocket;
+    private final SocketEntity socketEntity = new SocketEntity();
+    ;
+    private final Thread thread = new Thread(() -> {
+        while (isConnected) {
+            executeCommand();
+        }
+    });
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -161,67 +166,29 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         tvHomeObdTip = getView(R.id.tv_home_obd_tip);
         LinearLayout layoutMoreDash = getView(R.id.layoutMoreDash);
         layoutMoreTest = getView(R.id.layoutMoreTest);
-        time = getView(R.id.time);
         titleBar.setTitle("汽车扫描");
         spUtil = new SPUtil(context);
         dialogUtils = new DialogUtils(context);
-        data = new Data(onGpsServiceUpdate);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getHoldingActivity());
         mConnectedDeviceName = ObdPreferences.get(context).getBlueToothDeviceName();
         mConnectedDeviceAddress = ObdPreferences.get(context).getBlueToothDeviceAddress();
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(context);                   //广播变量管理器获
         blueList = getBlueTooth();//初始化蓝牙
-        registerOBDReceiver();//注册OBD数据接收广播
         initReceiver();//注册选择默认车辆广播
         initRecordReceiver();//注册车辆检测记录跟新广播
-        setGPS();
         getUserInfo(getUserId(), getToken(), spUtil.getString("vehicleId", ""));
-        resetData();
         setSpeed();//设置速度仪表盘
         layoutMoreDash.setOnClickListener(v -> {
-            if (tripRecord != null) {
+            if (isConnected) {
+                thread.interrupt();
+                closeSocket();
                 Intent intent = new Intent(context, MyVehicleDash.class);
+                intent.putExtra("data", socketEntity);
                 startActivity(intent);
             } else {
-                showTipDialog("暂未读取到OBD数据,请稍后查看");
+                showTipDialog("OBD II未连接");
             }
         });
         setCheckRecord();
-        time.setText("00:00:00");
-        time.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
-            boolean isPair = true;
-
-            @Override
-            public void onChronometerTick(Chronometer chrono) {
-                long time;
-                if (data.isRunning()) {
-                    time = SystemClock.elapsedRealtime() - chrono.getBase();
-                    data.setTime(time);
-                } else {
-                    time = data.getTime();
-                }
-
-                int h = (int) (time / 3600000);
-                int m = (int) (time - h * 3600000) / 60000;
-                int s = (int) (time - h * 3600000 - m * 60000) / 1000;
-                String hh = h < 10 ? "0" + h : h + "";
-                String mm = m < 10 ? "0" + m : m + "";
-                String ss = s < 10 ? "0" + s : s + "";
-                chrono.setText(hh + ":" + mm + ":" + ss);
-
-                if (data.isRunning()) {
-                    chrono.setText(hh + ":" + mm + ":" + ss);
-                } else {
-                    if (isPair) {
-                        isPair = false;
-                        chrono.setText(hh + ":" + mm + ":" + ss);
-                    } else {
-                        isPair = true;
-                        chrono.setText("");
-                    }
-                }
-            }
-        });
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -235,6 +202,7 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
 
             @Override
             public void onRightClick(View v) {
+                flag = true;
                 showSingleChoiceDialog();
             }
         });
@@ -254,76 +222,6 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
             intent.putExtra("data", entity);
             startActivity(intent);
         });
-    }
-
-    /**
-     * 启动或停止GSP监听服务
-     */
-    public void onStartGPS() {
-        if (!data.isRunning()) {
-            data.setRunning(true);
-            time.setBase(SystemClock.elapsedRealtime() - data.getTime());
-            time.start();
-            data.setFirstTime(true);
-            context.startService(new Intent(context, GpsServices.class));
-        } else {
-            data.setRunning(false);
-            context.stopService(new Intent(context, GpsServices.class));
-        }
-    }
-
-    public void resetData() {
-        tvMaxSpeed.setText("0");
-        tvCurrentSpeed.setText("0");
-        tvAverageSpeed.setText("0");
-        time.stop();
-        time.setText("00:00:00");
-    }
-
-    /**
-     * 设置GPS
-     */
-    @SuppressLint("DefaultLocale")
-    private void setGPS() {
-        onGpsServiceUpdate = () -> {
-            double maxSpeedTemp = data.getMaxSpeed();
-            double distanceTemp = data.getDistance();
-            double averageTemp;
-            if (sharedPreferences.getBoolean("auto_average", false)) {
-                averageTemp = data.getAverageSpeedMotion();
-            } else {
-                averageTemp = data.getAverageSpeed();
-            }
-            String speedUnits;
-            String distanceUnits;
-            if (sharedPreferences.getBoolean("miles_per_hour", false)) {
-                maxSpeedTemp *= 0.62137119;
-                distanceTemp = distanceTemp / 1000.0 * 0.62137119;
-                averageTemp *= 0.62137119;
-                speedUnits = "mi/h";
-                distanceUnits = "mi";
-            } else {
-                speedUnits = "km/h";
-                if (distanceTemp <= 1000.0) {
-                    distanceUnits = "m";
-                } else {
-                    distanceTemp /= 1000.0;
-                    distanceUnits = "km";
-                }
-            }
-
-            SpannableString s = new SpannableString(String.format("%.0f %s", maxSpeedTemp, speedUnits));
-            s.setSpan(new RelativeSizeSpan(0.5f), s.length() - speedUnits.length() - 1, s.length(), 0);
-            // tvMaxSpeed.setText(s.toString().replace("km/h", ""));
-
-            s = new SpannableString(String.format("%.0f %s", averageTemp, speedUnits));
-            s.setSpan(new RelativeSizeSpan(0.5f), s.length() - speedUnits.length() - 1, s.length(), 0);
-            //tvAverageSpeed.setText(s.toString().replace("km/h", ""));
-
-            s = new SpannableString(String.format("%.3f %s", distanceTemp, distanceUnits));
-            s.setSpan(new RelativeSizeSpan(0.5f), s.length() - distanceUnits.length() - 1, s.length(), 0);
-        };
-        mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
     }
 
     /**
@@ -456,7 +354,8 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                     if (!TextUtils.isEmpty(deviceAddress)) {
                         for (int i = 0; i < blueList.size(); i++) {
                             if (blueList.get(i).getBlue_address().equals(deviceAddress)) {
-                                dialogUtils.showProgressDialog("正在连接OBD");
+                                // dialogUtils.showProgressDialog("正在连接OBD");
+                                flag = true;
                                 connectBtDevice(deviceAddress);
                             }
                         }
@@ -543,7 +442,6 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
                         isConnected = blueList.get(yourChoice).getBlue_address().equals(deviceAddress);
                         if (!TextUtils.isEmpty(blueList.get(yourChoice).getBlue_address())) {
                             if (isConnected) {
-                                onStartGPS();
                                 connectBtDevice(blueList.get(yourChoice).getBlue_address());
                             } else {
                                 showTipDialog("当前车辆绑定OBD设备,与连接的OBD设备不一致");
@@ -561,43 +459,79 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
      *                启动与所选蓝牙设备的连接
      */
     private void connectBtDevice(String address) {
-        // 获取BluetoothDevice对象
         dialogUtils.showProgressDialog("正在连接OBD");
         BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
-        startServiceOBD(device);
+
+        try {
+            bluetoothSocket = BluetoothManager.connect(device, (code, msg) -> {
+                LogE("连接状态：" + msg);
+                dialogUtils.dismiss();
+                if (code == 0) {
+                    onConnect();
+                    isConnected = true;
+                    socketEntity.setAddress(address);
+                    socketEntity.setName(device.getName());
+                    socketEntity.setSocket(bluetoothSocket);
+                } else {
+                    onDisconnect();
+                    isConnected = false;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogE("建立连接时出错。 -> " + e.getMessage());
+            LogE("此处在处理程序上收到的消息");
+        }
+        thread.start();
     }
+
+    private void closeSocket() {
+        try {
+            bluetoothSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 一旦OBD-2连接，此方法将执行以连续获取数据，直到OBD断开或服务停止。
+     */
+    private void executeCommand() {
+        tripRecord = TripRecord.getTriRecode(context);
+        try {
+            SpeedCommand command = new SpeedCommand();
+            command.run(bluetoothSocket.getInputStream(), bluetoothSocket.getOutputStream());
+            LogE("结果是:: " + command.getFormattedResult() + "; name is :: " + command.getName());
+            tripRecord.updateTrip(command.getName(), command);
+        } catch (Exception e) {
+            LogE("执行命令异常  :: " + e.getMessage());
+            if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
+                LogE("命令异常  :: " + e.getMessage());
+            }
+        }
+        dashSpeed.setVelocity(tripRecord.getSpeed());
+        tvCurrentSpeed.setText(String.valueOf(tripRecord.getSpeed()));
+        tvMaxSpeed.setText(String.valueOf(tripRecord.getSpeedMax()));
+        tvAverageSpeed.setText(String.valueOf(tripRecord.getAverageSpeed()));
+
+        Intent intentss = new Intent("com.android.ObdMessge");//创建发送广播的Action
+        intentss.putExtra("data", tripRecord);//发送携带的数据
+        mLocalBroadcastManager.sendBroadcast(intentss);                               //发送本地广播
+    }
+
 
     /**
      * 处理建立的蓝牙连接...
      */
     @SuppressLint("StringFormatInvalid")
     private void onConnect() {
-        TipDialog.show(context, getString(R.string.title_connected_to) + mConnectedDeviceName, TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
+        if (flag) {
+            TipDialog.show(context, getString(R.string.title_connected_to) + mConnectedDeviceName, TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
+        }
         dialogUtils.dismiss();
         titleBar.setLeftTitle("已连接");
+        spUtil.put(CONNECT_BT_KEY, "ON");
         titleBar.setRightIcon(R.drawable.action_connect);
-    }
-
-    /**
-     * 注册OBD读取服务
-     */
-    private void registerOBDReceiver() {
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ACTION_READ_OBD_REAL_TIME_DATA);
-        intentFilter.addAction(ACTION_OBD_CONNECTION_STATUS);
-        context.registerReceiver(mObdReaderReceiver, intentFilter);
-    }
-
-
-    /**
-     * @param bluetoothDevice 蓝夜设备
-     *                        启动蓝牙连接服务
-     */
-    private void startServiceOBD(BluetoothDevice bluetoothDevice) {
-        //启动服务，该服务将在后台执行连接，并执行命令，直到您停止
-        Intent intent = new Intent(context, ObdReaderService.class);
-        intent.putExtra("device", bluetoothDevice);
-        context.startService(intent);
     }
 
     /**
@@ -623,46 +557,6 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
     private void showTipDialog(String msg) {
         TipDialog.show(context, msg, TipDialog.TYPE_ERROR, TipDialog.TYPE_WARNING);
     }
-
-    /**
-     * 接收OBD连接状态和实时数据的广播接收器
-     */
-    private final BroadcastReceiver mObdReaderReceiver = new BroadcastReceiver() {
-        @SuppressLint("SetTextI18n")
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(ACTION_OBD_CONNECTION_STATUS)) {
-                String connectionStatusMsg = intent.getStringExtra(ObdReaderService.INTENT_OBD_EXTRA_DATA);
-                if (connectionStatusMsg.equals(getString(R.string.obd_connected))) {
-                    //OBD连接在OBD连接之后做什么
-                    onConnect();
-                } else if (connectionStatusMsg.equals(getString(R.string.connect_lost))) {
-                    //OBD断开连接断开后做什么
-                    onDisconnect();
-                } else if (connectionStatusMsg.contains("未检测到OBD设备")) {
-                    onDisconnect();
-                } else if (connectionStatusMsg.equals("socket closed")) {
-                    onDisconnect();
-                    // spUtil.put(CONNECT_BT_KEY, "ON");
-                    //onStartGPS();
-                }
-            } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA)) {
-                tripRecord = TripRecord.getTriRecode(context);
-                dashSpeed.setVelocity(tripRecord.getSpeed());
-                tvCurrentSpeed.setText(String.valueOf(tripRecord.getSpeed()));
-                tvMaxSpeed.setText(String.valueOf(tripRecord.getSpeedMax()));
-                tvAverageSpeed.setText(String.valueOf(tripRecord.getAverageSpeed()));
-                Intent intents = new Intent("com.android.ObdData");//创建发送广播的Action
-                intents.putExtra("data", tripRecord);//发送携带的数据
-                mLocalBroadcastManager.sendBroadcast(intents);                               //发送本地广播
-                Intent intentss = new Intent("com.android.ObdMessge");//创建发送广播的Action
-                intentss.putExtra("data", tripRecord);//发送携带的数据
-                mLocalBroadcastManager.sendBroadcast(intentss);                               //发送本地广播
-            }
-        }
-    };
-
 
     /**
      * 注册本地广播
@@ -699,136 +593,19 @@ public class HomeFragment extends BaseFragment implements LocationListener, GpsS
         @Override
         public void onReceive(Context context, Intent intent) {
             getTestRecordPageList(getToken(), String.valueOf(1), String.valueOf(5), getUserId());
+            flag = false;
             connectBtDevice(mConnectedDeviceAddress);
         }
-    }
-
-
-    @Override
-    public void onLocationChanged(Location location) {
-        if (location.hasAccuracy()) {
-            double acc = location.getAccuracy();
-            String units;
-            if (sharedPreferences.getBoolean("miles_per_hour", false)) {
-                units = "ft";
-                acc *= 3.28084;
-            } else {
-                units = "m";
-            }
-            SpannableString s = new SpannableString(String.format("%.0f %s", acc, units));
-            s.setSpan(new RelativeSizeSpan(0.75f), s.length() - units.length() - 1, s.length(), 0);
-        }
-
-        if (location.hasSpeed()) {
-            double speed = location.getSpeed() * 3.6;
-            String units;
-            if (sharedPreferences.getBoolean("miles_per_hour", false)) { // Convert to MPH
-                speed *= 0.62137119;
-                units = "mi/h";
-            } else {
-                units = "km/h";
-            }
-            SpannableString s = new SpannableString(String.format(Locale.ENGLISH, "%.0f %s", speed, units));
-            s.setSpan(new RelativeSizeSpan(0.25f), s.length() - units.length() - 1, s.length(), 0);
-            //tvCurrentSpeed.setText(s.toString().replace("km/h", ""));
-            // dashSpeed.setVelocity(Float.parseFloat(s.toString().replace("km/h", "")));
-        }
-
-    }
-
-    @SuppressLint("MissingPermission")
-    @Override
-    public void onGpsStatusChanged(int event) {
-        switch (event) {
-            case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-                GpsStatus gpsStatus = mLocationManager.getGpsStatus(null);
-                int satsUsed = 0;
-                Iterable<GpsSatellite> sats = gpsStatus.getSatellites();
-                for (GpsSatellite sat : sats) {
-                    if (sat.usedInFix()) {
-                        satsUsed++;
-                    }
-                }
-                if (satsUsed == 0) {
-                    data.setRunning(false);
-                    context.stopService(new Intent(context, GpsServices.class));
-                }
-                break;
-
-            case GpsStatus.GPS_EVENT_STOPPED:
-                if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    showGpsDisabledDialog();
-                }
-                break;
-            case GpsStatus.GPS_EVENT_FIRST_FIX:
-                break;
-        }
-    }
-
-    public void showGpsDisabledDialog() {
-        Dialog dialog = new Dialog(context, getResources().getString(R.string.gps_disabled), getResources().getString(R.string.please_enable_gps));
-        dialog.setOnAcceptButtonClickListener(view -> startActivity(new Intent("android.settings.LOCATION_SOURCE_SETTINGS")));
-        dialog.show();
-    }
-
-    public static Data getData() {
-        return data;
-    }
-
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-    }
-
-    @SuppressLint("MissingPermission")
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (data == null) {
-            data = new Data(onGpsServiceUpdate);
-        } else {
-            data.setOnGpsServiceUpdate(onGpsServiceUpdate);
-        }
-        if (!mLocationManager.getAllProviders().contains(LocationManager.GPS_PROVIDER)) {
-            Log.w("MainActivity", "找不到GPS位置提供程序。GPS数据显示将不可用。");
-        } else {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, this);
-        }
-
-        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            showGpsDisabledDialog();
-        }
-        mLocationManager.addGpsStatusListener(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mLocationManager.removeUpdates(this);
-        mLocationManager.removeGpsStatusListener(this);
-
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        //注销接收器
-        context.unregisterReceiver(mObdReaderReceiver);
+        closeSocket();
+        thread.interrupt();
         //解绑
         mLocalBroadcastManager.unregisterReceiver(testReceiver);
-        //停止服务
-        context.stopService(new Intent(context, ObdReaderService.class));
-        context.stopService(new Intent(context, GpsServices.class));
-        // 这将停止后台线程，如果任何运行立即。
-        ObdPreferences.get(context).setServiceRunningStatus(false);
+
     }
 
     @Override

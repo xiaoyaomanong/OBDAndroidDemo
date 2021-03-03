@@ -127,7 +127,7 @@ dependencies {
     implementation 'com.tbruyelle.rxpermissions:rxpermissions:0.9.4@aar'
     implementation 'com.alibaba:fastjson:1.2.75'
     implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.github.pires:obd-java-api:1.0-RC16'
+    //implementation 'com.github.pires:obd-java-api:1.0-RC16'
     implementation 'org.roboguice:roboguice:3.0.1'
     compileOnly 'org.roboguice:roboblender:3.0.1'
     /*PictureSelector*/

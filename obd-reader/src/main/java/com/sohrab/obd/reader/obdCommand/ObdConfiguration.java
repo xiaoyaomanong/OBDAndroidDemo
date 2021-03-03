@@ -112,9 +112,9 @@ public class ObdConfiguration {
         mObdCommands.add(new VinCommand());//"09 02"
         mObdCommands.add(new CommandedEGRCommand());//"01 2C"
         //Trouble codes
-        mObdCommands.add(new TroubleCodesCommand());//"03" 故障代码
+      /*  mObdCommands.add(new TroubleCodesCommand());//"03" 故障代码
         mObdCommands.add(new PermanentTroubleCodesCommand());//"0A" 永久故障码
-        mObdCommands.add(new PendingTroubleCodesCommand());//"07" 未解决故障码
+        mObdCommands.add(new PendingTroubleCodesCommand());//"07" 未解决故障码*/
         //engine
         mObdCommands.add(new AbsoluteLoadCommand());//"01 43"
         mObdCommands.add(new LoadCommand());//"01 04"

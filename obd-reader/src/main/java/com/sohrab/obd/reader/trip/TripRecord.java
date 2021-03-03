@@ -228,7 +228,6 @@ public class TripRecord implements DefineObdReader, Serializable {
     }
 
     private void calculateMaf() {
-
         if (mIntakePressure > 0 && mIntakeAirTemp > 0) {
             float rpm = Float.parseFloat(engineRpm);
             float imap = ((rpm * mIntakePressure) / mIntakeAirTemp) / 2;
@@ -550,7 +549,7 @@ public class TripRecord implements DefineObdReader, Serializable {
 
             case DTC_NUMBER:
                 mDtcNumber = command.getFormattedResult();
-                data.add(new OBDTripEntity("故障诊断码", TextUtils.isEmpty(mDtcNumber) ? "" : mDtcNumber, R.drawable.icon_dtc_number));
+                data.add(new OBDTripEntity("自从DTC清除后的监控状态", TextUtils.isEmpty(mDtcNumber) ? "" : mDtcNumber, R.drawable.icon_dtc_number));
                 entity.setDtcNumber(TextUtils.isEmpty(mDtcNumber) ? "" : mDtcNumber);
                 break;
 

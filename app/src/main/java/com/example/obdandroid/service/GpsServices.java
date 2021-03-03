@@ -44,7 +44,7 @@ public class GpsServices extends Service implements LocationListener, Listener {
 
     @Override
     public void onLocationChanged(Location location) {
-        data = HomeFragment.getData();
+        //data = HomeFragment.getData();
         if (data.isRunning()){
             currentLat = location.getLatitude();
             currentLon = location.getLongitude();

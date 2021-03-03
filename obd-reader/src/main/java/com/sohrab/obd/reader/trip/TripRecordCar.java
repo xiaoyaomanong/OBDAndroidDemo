@@ -541,7 +541,7 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
 
             case DTC_NUMBER:
                 mDtcNumber = command.getFormattedResult();
-                data.add(new OBDTripEntity("故障诊断码", TextUtils.isEmpty(mDtcNumber) ? "" : mDtcNumber, R.drawable.icon_dtc_number));
+                data.add(new OBDTripEntity("自从DTC清除后的监控状态", TextUtils.isEmpty(mDtcNumber) ? "" : mDtcNumber, R.drawable.icon_dtc_number));
                 entity.setDtcNumber(TextUtils.isEmpty(mDtcNumber) ? "" : mDtcNumber);
                 break;
 

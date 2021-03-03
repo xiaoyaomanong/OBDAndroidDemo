@@ -411,6 +411,9 @@ public class CustomerDashboardViewLight extends View {
             return;
         }
         mVelocity = velocity;
+        invalidate();
         postInvalidate();
+        invalidateOutline();
+        postInvalidateOnAnimation();
     }
 }

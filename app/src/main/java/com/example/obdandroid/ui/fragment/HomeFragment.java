@@ -129,7 +129,6 @@ public class HomeFragment extends BaseFragment {
 
     private BluetoothSocket bluetoothSocket;
     private final SocketEntity socketEntity = new SocketEntity();
-    ;
     private final Thread thread = new Thread(() -> {
         while (isConnected) {
             executeCommand();

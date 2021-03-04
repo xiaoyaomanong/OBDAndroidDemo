@@ -3,13 +3,9 @@ package com.example.obdandroid.ui.activity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.GpsStatus;
-import android.location.Location;
-import android.location.LocationListener;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -27,32 +23,21 @@ import android.widget.Toast;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
-import com.example.obdandroid.config.Constant;
-import com.example.obdandroid.listener.Data;
 import com.example.obdandroid.ui.adapter.SimpleFragmentPagerAdapter;
 import com.example.obdandroid.ui.fragment.HomeFragment;
 import com.example.obdandroid.ui.fragment.MsgFragment;
 import com.example.obdandroid.ui.fragment.PersonalFragment;
-import com.example.obdandroid.ui.fragment.VehicleCheckFragment;
-import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.utils.ActivityManager;
-import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.DepthPageTransformer;
-import com.example.obdandroid.utils.GalleryTransformer;
-import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
-import com.example.obdandroid.utils.ScalePageTransformer;
 import com.example.obdandroid.utils.StringUtil;
 import com.gyf.immersionbar.ImmersionBar;
 import com.kongzue.dialog.util.BlurView;
-import com.sohrab.obd.reader.application.ObdPreferences;
-import com.sohrab.obd.reader.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
-import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
 import static com.example.obdandroid.config.Constant.REQUEST_ENABLE_BT;
 import static com.kongzue.dialog.v2.DialogSettings.THEME_DARK;
 import static com.kongzue.dialog.v2.DialogSettings.blur_alpha;
@@ -74,6 +59,7 @@ public class MainActivity extends BaseActivity {
     private int blur_front_color;
     private BlurView blur;
     private SPUtil spUtil;
+    private final HomeFragment ownerFragment = new HomeFragment();
 
     @Override
     protected int getContentViewId() {
@@ -94,13 +80,11 @@ public class MainActivity extends BaseActivity {
         viewPager = findViewById(R.id.viewPager);
         navigation = findViewById(R.id.navigation);
         spUtil = new SPUtil(context);
-        fragments.add(HomeFragment.getInstance());
-        fragments.add(VehicleCheckFragment.getInstance());
+        fragments.add(ownerFragment);
         fragments.add(MsgFragment.getInstance());
         fragments.add(PersonalFragment.getInstance());
         viewPager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
         viewPager.addOnPageChangeListener(mOnPageChangeListener);
-        viewPager.setOffscreenPageLimit(4);
         viewPager.setPageTransformer(true, new DepthPageTransformer());
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -136,18 +120,6 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onPageSelected(int position) {
             navigation.getMenu().getItem(position).setChecked(true);
-            switch (position) {
-                case 0:
-                case 2:
-                case 3:
-                    ImmersionBar.with(MainActivity.this).statusBarColor(R.color.black)
-                            .fitsSystemWindows(true).init();
-                    break;
-                case 1:
-                    ImmersionBar.with(MainActivity.this).statusBarColor(R.color.color_bar)
-                            .fitsSystemWindows(true).init();
-                    break;
-            }
         }
 
         @Override
@@ -169,19 +141,19 @@ public class MainActivity extends BaseActivity {
                     ImmersionBar.with(MainActivity.this).statusBarColor(R.color.black)
                             .fitsSystemWindows(true).init();
                     return true;
-                case R.id.navigation_check:
+               /* case R.id.navigation_check:
                     viewPager.setCurrentItem(1);
                     //沉浸式状态栏
                     ImmersionBar.with(MainActivity.this).statusBarColor(R.color.color_bar)
                             .fitsSystemWindows(true).init();
-                    return true;
+                    return true;*/
                 case R.id.navigation_msg:
-                    viewPager.setCurrentItem(2);
+                    viewPager.setCurrentItem(1);
                     ImmersionBar.with(MainActivity.this).statusBarColor(R.color.black)
                             .fitsSystemWindows(true).init();
                     return true;
                 case R.id.navigation_my:
-                    viewPager.setCurrentItem(3);
+                    viewPager.setCurrentItem(2);
                     ImmersionBar.with(MainActivity.this).statusBarColor(R.color.black)
                             .fitsSystemWindows(true).init();
                     return true;

@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -122,8 +123,11 @@ public class MyVehicleDash extends BaseActivity {
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
-                closeSocket();
-                thread.interrupt();
+                if (isConnected) {
+                    closeSocket();
+                    thread.interrupt();
+                    setResult(100, new Intent());
+                }
                 finish();
             }
 
@@ -144,7 +148,6 @@ public class MyVehicleDash extends BaseActivity {
      *                启动与所选蓝牙设备的连接
      */
     private void connectBtDevice(String address) {
-        // dialogUtils.showProgressDialog("正在连接OBD");
         BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
         try {
             bluetoothSocket = BluetoothManager.connect(device, (code, msg) -> {

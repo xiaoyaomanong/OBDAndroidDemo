@@ -194,6 +194,56 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layoutCheck"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_black"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="@dimen/dp_10"
+                    android:src="@drawable/icon_home_check"
+                    android:tint="@color/white"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:text="全车检测"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    tools:ignore="NestedWeights,RtlSymmetry" />
+
+                <TextView
+                    android:id="@+id/tvCheckTime"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical|right"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="5dp"
+                    android:textColor="@color/gray_light"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/icon_next"
+                    android:tint="@color/gray"
+                    tools:ignore="ContentDescription" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -396,7 +446,6 @@
                     </LinearLayout>
 
                 </LinearLayout>
-
 
             </LinearLayout>
 

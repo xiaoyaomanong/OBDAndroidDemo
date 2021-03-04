@@ -177,6 +177,7 @@
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop" />
+        <activity android:name=".ui.activity.VehicleCheckActivity" />
 
         <service android:name=".service.GpsServices" />
 

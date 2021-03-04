@@ -37,6 +37,7 @@ import com.example.obdandroid.ui.activity.MyVehicleActivity;
 import com.example.obdandroid.ui.activity.MyVehicleDash;
 import com.example.obdandroid.ui.activity.SelectAutomobileBrandActivity;
 import com.example.obdandroid.ui.activity.VehicleActivity;
+import com.example.obdandroid.ui.activity.VehicleCheckActivity;
 import com.example.obdandroid.ui.activity.VehicleInfoActivity;
 import com.example.obdandroid.ui.adapter.HomeAdapter;
 import com.example.obdandroid.ui.adapter.TestRecordAdapter;
@@ -101,6 +102,8 @@ public class HomeFragment extends BaseFragment {
     private LinearLayout layoutOBD;
     private LinearLayout layoutAddCar;
     private LinearLayout layoutMoreTest;
+    private LinearLayout layoutCheck;
+    private TextView tvCheckTime;
     private TextView tvObd;
     private TextView tvHomeObdTip;
     private static String mConnectedDeviceName = null;
@@ -109,15 +112,16 @@ public class HomeFragment extends BaseFragment {
     private TestReceiver testReceiver;
     private DialogUtils dialogUtils;
     private boolean isConnected = false;
+    private boolean isConn = false;
     private String deviceAddress;
     private HomeAdapter homeAdapter;
     private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
 
     private BluetoothSocket bluetoothSocket;
     private final SocketEntity socketEntity = new SocketEntity();
-
     private static final int COMPLETED = 0;
     private static final int COMPLETES = 1;
+    private static final int COMPLETET = 2;
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
 
@@ -125,15 +129,17 @@ public class HomeFragment extends BaseFragment {
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             if (msg.what == COMPLETED) {
-                if (!TextUtils.isEmpty(mConnectedDeviceAddress)) {
-                    connectBtDevice(mConnectedDeviceAddress);
-                }
+                thread.start();
             }
             if (msg.what == COMPLETES) {
-                // connectBtDevice((String) msg.obj);
+                onConnect();
+            }
+            if (msg.what == COMPLETET) {
+                onDisconnect();
             }
         }
     };
+
     private final Thread thread = new Thread(() -> {
         while (isConnected) {
             executeCommand();
@@ -170,6 +176,8 @@ public class HomeFragment extends BaseFragment {
         tvHomeObdTip = getView(R.id.tv_home_obd_tip);
         LinearLayout layoutMoreDash = getView(R.id.layoutMoreDash);
         layoutMoreTest = getView(R.id.layoutMoreTest);
+        layoutCheck = getView(R.id.layoutCheck);
+        tvCheckTime = getView(R.id.tvCheckTime);
         titleBar.setTitle("汽车扫描");
         spUtil = new SPUtil(context);
         dialogUtils = new DialogUtils(context);
@@ -183,16 +191,26 @@ public class HomeFragment extends BaseFragment {
         setSpeed();//设置速度仪表盘
         layoutMoreDash.setOnClickListener(v -> {
             if (isConnected) {
-                thread.interrupt();
                 closeSocket();
+                thread.interrupt();
                 Intent intent = new Intent(context, MyVehicleDash.class);
                 intent.putExtra("data", socketEntity);
                 startActivity(intent);
             } else {
-                showTipDialog("OBD II未连接");
+                showTipDialog(mConnectedDeviceName + "未连接");
             }
         });
         setCheckRecord();
+        layoutCheck.setOnClickListener(v -> {
+            if (isConnected) {
+                closeSocket();
+                thread.interrupt();
+                Intent intent = new Intent(context, VehicleCheckActivity.class);
+                startActivityForResult(intent, 102);
+            } else {
+                showTipDialog(mConnectedDeviceName + "未连接");
+            }
+        });
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -243,6 +261,12 @@ public class HomeFragment extends BaseFragment {
             startActivity(intent);
         });
         layoutMoreTest.setOnClickListener(v -> JumpUtil.startAct(context, CheckRecordActivity.class));
+    }
+
+    private void sendMessage(int what) {
+        Message msg = new Message();
+        msg.what = what;
+        handler.sendMessage(msg);
     }
 
     /**
@@ -310,7 +334,7 @@ public class HomeFragment extends BaseFragment {
                             layoutAddCar.setVisibility(View.GONE);
                             layoutCar.setVisibility(View.VISIBLE);
                             layoutOBD.setVisibility(View.VISIBLE);
-                            getVehicleInfoById(getToken(), vehicleId);
+                            getVehicleInfoById(token, vehicleId);
                             layoutCar.setOnClickListener(v -> JumpUtil.startActToData(context, VehicleInfoActivity.class, vehicleId, 0));
                         }
                     } else {
@@ -355,10 +379,7 @@ public class HomeFragment extends BaseFragment {
                     }
                     deviceAddress = entity.getData().getBluetoothDeviceNumber();
                     if (!TextUtils.isEmpty(deviceAddress)) {
-                        Message msg = new Message();
-                        msg.what = COMPLETES;
-                        msg.obj = deviceAddress;
-                        handler.sendMessage(msg);
+                        connectBtDevice(deviceAddress);
                     }
                     if (entity.getData().getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
                         tvHomeObdTip.setText("将OBD插入车辆并连接");
@@ -402,10 +423,12 @@ public class HomeFragment extends BaseFragment {
 
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(String response, int id) {
                 TestRecordEntity entity = JSON.parseObject(response, TestRecordEntity.class);
                 if (entity.isSuccess()) {
+                    tvCheckTime.setText("上次检测 " + entity.getData().getList().get(0).getDetectionTime());
                     recordAdapter.setList(entity.getData().getList());
                 } else {
                     recordAdapter.setList(null);
@@ -439,9 +462,9 @@ public class HomeFragment extends BaseFragment {
         builder.setPositiveButton("确定",
                 (dialog, which) -> {
                     if (yourChoice != -1) {
-                        isConnected = blueList.get(yourChoice).getBlue_address().equals(deviceAddress);
+                        isConn = blueList.get(yourChoice).getBlue_address().equals(deviceAddress);
                         if (!TextUtils.isEmpty(blueList.get(yourChoice).getBlue_address())) {
-                            if (isConnected) {
+                            if (isConn) {
                                 connectBtDevice(blueList.get(yourChoice).getBlue_address());
                             } else {
                                 showTipDialog("当前车辆绑定OBD设备,与连接的OBD设备不一致");
@@ -461,28 +484,33 @@ public class HomeFragment extends BaseFragment {
     private void connectBtDevice(String address) {
         dialogUtils.showProgressDialog("正在连接OBD");
         BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
-        try {
-            bluetoothSocket = BluetoothManager.connect(device, (code, msg) -> {
-                LogE("连接状态：" + msg);
-                if (code == 0) {
-                    onConnect();
-                    isConnected = true;
-                    socketEntity.setAddress(address);
-                    socketEntity.setName(device.getName());
-                    socketEntity.setSocket(bluetoothSocket);
-                    ObdPreferences.get(context).setBlueToothDeviceAddress(address);
-                    ObdPreferences.get(context).setBlueToothDeviceName(device.getName());
-                } else {
-                    onDisconnect();
-                    isConnected = false;
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            LogE("建立连接时出错。 -> " + e.getMessage());
-            LogE("此处在处理程序上收到的消息");
+        new Thread(() -> {
+            try {
+                bluetoothSocket = BluetoothManager.connect(device, (code, msg) -> {
+                    LogE("连接状态：" + msg);
+                    if (code == 0) {
+                        sendMessage(COMPLETES);
+                        socketEntity.setAddress(address);
+                        socketEntity.setName(device.getName());
+                        socketEntity.setSocket(bluetoothSocket);
+                        ObdPreferences.get(context).setBlueToothDeviceAddress(address);
+                        ObdPreferences.get(context).setBlueToothDeviceName(device.getName());
+                    } else {
+                        sendMessage(COMPLETET);
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                sendMessage(COMPLETET);
+                LogE("建立连接时出错。 -> " + e.getMessage());
+            }
+        }).start();
+
+        if (isConnected) {
+            Message msg = new Message();
+            msg.what = COMPLETED;
+            handler.sendMessage(msg);
         }
-        thread.start();
     }
 
     private void closeSocket() {
@@ -503,7 +531,7 @@ public class HomeFragment extends BaseFragment {
         try {
             SpeedCommand command = new SpeedCommand();
             command.run(bluetoothSocket.getInputStream(), bluetoothSocket.getOutputStream());
-            //LogE("结果是:: " + command.getFormattedResult() + "; name is :: " + command.getName());
+            LogE("结果是:: " + command.getFormattedResult() + "; name is :: " + command.getName());
             tripRecord.updateTrip(command.getName(), command);
         } catch (Exception e) {
             LogE("执行命令异常  :: " + e.getMessage());
@@ -527,11 +555,12 @@ public class HomeFragment extends BaseFragment {
      */
     @SuppressLint("StringFormatInvalid")
     private void onConnect() {
-        dialogUtils.dismiss();
         titleBar.setLeftTitle("已连接");
         spUtil.put(CONNECT_BT_KEY, "ON");
         titleBar.setRightIcon(R.drawable.action_connect);
+        isConnected = true;
         TipDialog.show(context, getString(R.string.title_connected_to) + mConnectedDeviceName, TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
+        dialogUtils.dismiss();
     }
 
     /**
@@ -541,6 +570,8 @@ public class HomeFragment extends BaseFragment {
         titleBar.setLeftTitle("未连接");
         titleBar.setRightIcon(R.drawable.action_disconnect);
         spUtil.put(CONNECT_BT_KEY, "OFF");
+        isConnected = false;
+        TipDialog.show(context, mConnectedDeviceName + getString(R.string.title_connected_fail), TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
         dialogUtils.dismiss();
     }
 
@@ -593,7 +624,6 @@ public class HomeFragment extends BaseFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             getTestRecordPageList(getToken(), String.valueOf(1), String.valueOf(5), getUserId());
-            connectBtDevice(mConnectedDeviceAddress);
         }
     }
 
@@ -606,30 +636,29 @@ public class HomeFragment extends BaseFragment {
         mLocalBroadcastManager.unregisterReceiver(testReceiver);
     }
 
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        LogE("isVisibleToUser222:" + isVisibleToUser);
-        LogE("isConnected4444:" + isConnected);
-        if (!isVisibleToUser) {
-            thread.interrupt();
-            isConnected = false;
-            closeSocket();
-        } else {
-            if (!isConnected) {
-                Message msg = new Message();
-                msg.what = COMPLETED;
-                handler.sendMessage(msg);
-            }
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_ENABLE_BT) {
             if (resultCode == Activity.RESULT_OK) {
+                if (!TextUtils.isEmpty(mConnectedDeviceAddress)) {
+                    connectBtDevice(mConnectedDeviceAddress);
+                } else {
+                    setDefaultMode();
+                    showToast(getString(R.string.text_bluetooth_error_connecting));
+                }
+            }
+        }
+        if (requestCode == 102) {
+            if (resultCode == 101) {
+                if (!TextUtils.isEmpty(mConnectedDeviceAddress)) {
+                    connectBtDevice(mConnectedDeviceAddress);
+                } else {
+                    setDefaultMode();
+                    showToast(getString(R.string.text_bluetooth_error_connecting));
+                }
+            }
+            if (resultCode == 100) {
                 if (!TextUtils.isEmpty(mConnectedDeviceAddress)) {
                     connectBtDevice(mConnectedDeviceAddress);
                 } else {

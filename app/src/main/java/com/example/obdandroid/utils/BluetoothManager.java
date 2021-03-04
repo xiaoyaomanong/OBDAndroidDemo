@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 public class BluetoothManager {
 
     private static String methodName = "createInsecureRfcommSocket";
+    private static BluetoothSocket mSocket;
 
 
     /**
@@ -39,16 +40,15 @@ public class BluetoothManager {
      * @throws IOException
      */
     public static BluetoothSocket connect(BluetoothDevice device, ConnBluetoothSocketListener listener) throws IOException {
-        BluetoothSocket mSocket = null;
         try {
             mSocket = (BluetoothSocket) device.getClass().getMethod(methodName, new Class[]{int.class}).invoke(device, 1);
         } catch (Exception e) {
             Log.e(TAG.TAG_Activity, "createInsecureRfcommSocket failed");
         }
         try {
-            Thread.sleep(500);
+            Thread.sleep(200);
             mSocket.connect();
-        } catch (IOException | InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -69,7 +69,6 @@ public class BluetoothManager {
         } else {
             listener.connectMsg(1, "连接失败");
         }
-
         return mSocket;
     }
 

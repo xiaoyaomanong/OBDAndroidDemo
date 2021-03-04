@@ -1,14 +1,11 @@
-package com.example.obdandroid.ui.fragment;
+package com.example.obdandroid.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -28,7 +25,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
-import com.example.obdandroid.base.BaseFragment;
+import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.adapter.VehicleCheckAdapter;
 import com.example.obdandroid.ui.entity.MessageCheckEntity;
@@ -44,15 +41,11 @@ import com.kongzue.dialog.v2.TipDialog;
 import com.sohrab.obd.reader.application.ObdPreferences;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
-import com.sohrab.obd.reader.obdCommand.control.PendingTroubleCodesCommand;
-import com.sohrab.obd.reader.obdCommand.control.PermanentTroubleCodesCommand;
-import com.sohrab.obd.reader.obdCommand.control.TroubleCodesCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.ResetTroubleCodesCommand;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 import com.sohrab.obd.reader.trip.OBDTripEntity;
 import com.sohrab.obd.reader.trip.TripRecord;
-import com.sohrab.obd.reader.trip.TripRecordCar;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -68,14 +61,13 @@ import static com.example.obdandroid.config.APIConfig.addRemind_URL;
 import static com.example.obdandroid.config.APIConfig.addTestRecord_URL;
 import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
 import static com.example.obdandroid.config.APIConfig.reduceAndCumulativeFrequency_URL;
-import static com.example.obdandroid.config.Constant.BT_ADDRESS_KEY;
 
 /**
  * 作者：Jealous
- * 日期：2021/1/18 0018
- * 描述：车辆检测
+ * 日期：2021/3/4 0004
+ * 描述：
  */
-public class VehicleCheckFragment extends BaseFragment {
+public class VehicleCheckActivity extends BaseActivity {
     private Context context;
     private TitleBar titleBar;
     private CircleWelComeView circleView;
@@ -89,9 +81,7 @@ public class VehicleCheckFragment extends BaseFragment {
     private TextView tvAutomobileBrandName;
     private TextView tvModelName;
     private LocalBroadcastManager localBroadcastManager;
-    private CarReceiver receiver;
     private BluetoothSocket mSocket;
-    private boolean mIsFaultCodeRead = true;
     private boolean isConnected;
     @SuppressLint("HandlerLeak")
     private TripRecord tripRecord;
@@ -128,19 +118,20 @@ public class VehicleCheckFragment extends BaseFragment {
         }
     };
 
-
-    public static VehicleCheckFragment getInstance() {
-        return new VehicleCheckFragment();
-    }
-
     @Override
-    protected int getLayoutId() {
+    protected int getContentViewId() {
         return R.layout.fragment_vehicle_check;
     }
 
     @Override
-    public void initView(View view, Bundle savedInstanceState) {
-        context = getHoldingActivity();
+    protected int getFragmentContentId() {
+        return 0;
+    }
+
+    @Override
+    public void initView() {
+        super.initView();
+        context = this;
         titleBar = getView(R.id.titleBar);
         circleView = getView(R.id.circleView);
         btStart = getView(R.id.btStart);
@@ -156,7 +147,6 @@ public class VehicleCheckFragment extends BaseFragment {
         recycleCheckContent.setLayoutManager(manager);
         //获取实例
         localBroadcastManager = LocalBroadcastManager.getInstance(context);
-        initReceiver();
         /*
          *  配置obd：在arrayList中添加所需命令并设置为ObdConfiguration。
          *  如果您没有设置任何命令或传递null，那么将请求所有命令OBD command。   *
@@ -192,7 +182,12 @@ public class VehicleCheckFragment extends BaseFragment {
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
-
+                if (isConnected) {
+                    closeSocket();
+                    thread.interrupt();
+                    setResult(101, new Intent());
+                }
+                finish();
             }
 
             @Override
@@ -365,9 +360,9 @@ public class VehicleCheckFragment extends BaseFragment {
             } else {
                 adapter.setMsg("请连接OBD设备,进行检测");
             }
-            getHoldingActivity().runOnUiThread(() -> recycleCheckContent.setAdapter(adapter));
+            runOnUiThread(() -> recycleCheckContent.setAdapter(adapter));
         } else {
-            getHoldingActivity().runOnUiThread(() -> adapter.notifyDataSetChanged());
+            runOnUiThread(() -> adapter.notifyDataSetChanged());
         }
     }
 
@@ -393,8 +388,8 @@ public class VehicleCheckFragment extends BaseFragment {
             public void onResponse(String response, int id) {
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
-                   /* Intent intent = new Intent("com.android.Record");//创建发送广播的Action
-                    localBroadcastManager.sendBroadcast(intent);  //发送本地广播*/
+                    Intent intent = new Intent("com.android.Record");//创建发送广播的Action
+                    localBroadcastManager.sendBroadcast(intent);  //发送本地广播
                 }
             }
         });
@@ -422,8 +417,8 @@ public class VehicleCheckFragment extends BaseFragment {
             public void onResponse(String response, int id) {
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
-                   /* Intent intent = new Intent("com.android.Remind");//创建发送广播的Action
-                    localBroadcastManager.sendBroadcast(intent);*/
+                    Intent intent = new Intent("com.android.Remind");//创建发送广播的Action
+                    localBroadcastManager.sendBroadcast(intent);
                 }
             }
         });
@@ -444,7 +439,7 @@ public class VehicleCheckFragment extends BaseFragment {
 
     private void initAinm() {
         //通过加载XML动画设置文件来创建一个Animation对象；
-        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.left);
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.left);
         //得到一个LayoutAnimationController对象；
         LayoutAnimationController lac = new LayoutAnimationController(animation);
         //设置控件显示的顺序；
@@ -460,43 +455,11 @@ public class VehicleCheckFragment extends BaseFragment {
         TipDialog.show(context, msg, TipDialog.TYPE_ERROR, type);
     }
 
-    private void initReceiver() {
-        IntentFilter intentFilter = new IntentFilter("com.android.ObdCar");
-        receiver = new CarReceiver();
-        //绑定
-        localBroadcastManager.registerReceiver(receiver, intentFilter);
-
-    }
-
-    private class CarReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String vehicleId = intent.getStringExtra(Intent.EXTRA_TEXT);
-            getVehicleInfoById(getToken(), vehicleId);
-        }
-    }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-       /* LogE("isVisibleToUser:" + isVisibleToUser);
-        LogE("isConnected:" + isConnected);*/
-        if (!isVisibleToUser) {
-            thread.interrupt();
-            isConnected = false;
-            closeSocket();
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        LogE("onDestroyView");
+    public void onDestroy() {
+        super.onDestroy();
         closeSocket();
         thread.interrupt();
-        //解绑
-        localBroadcastManager.unregisterReceiver(receiver);
-
     }
 }

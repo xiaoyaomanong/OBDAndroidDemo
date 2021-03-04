@@ -139,9 +139,11 @@ public class HomeFragment extends BaseFragment {
             }
         }
     };
+    public class MyThread extends Thread {
 
+    }
     private final Thread thread = new Thread(() -> {
-        while (isConnected) {
+        while (!Thread.interrupted()) {
             executeCommand();
         }
     });
@@ -504,13 +506,14 @@ public class HomeFragment extends BaseFragment {
                 sendMessage(COMPLETET);
                 LogE("建立连接时出错。 -> " + e.getMessage());
             }
+
+            if (isConnected) {
+                Message msg = new Message();
+                msg.what = COMPLETED;
+                handler.sendMessage(msg);
+            }
         }).start();
 
-        if (isConnected) {
-            Message msg = new Message();
-            msg.what = COMPLETED;
-            handler.sendMessage(msg);
-        }
     }
 
     private void closeSocket() {

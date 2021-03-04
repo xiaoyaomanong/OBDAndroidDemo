@@ -46,7 +46,7 @@ public class BluetoothManager {
             Log.e(TAG.TAG_Activity, "createInsecureRfcommSocket failed");
         }
         try {
-            Thread.sleep(200);
+            Thread.sleep(500);
             mSocket.connect();
         } catch (Exception e) {
             e.printStackTrace();

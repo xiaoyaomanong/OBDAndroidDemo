@@ -109,7 +109,7 @@ public class VehicleCheckActivity extends BaseActivity {
                     btStart.setEnabled(true);
                 }
                 layoutCar.setVisibility(View.VISIBLE);
-
+                titleBar.setRightTitle("清除故障");
                 showResult(tripRecord.getTripMap());
                 addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(tripRecord.getOBDJson()), getUserId(), getToken());
                 reduceAndCumulativeFrequency(getToken(), getUserId());

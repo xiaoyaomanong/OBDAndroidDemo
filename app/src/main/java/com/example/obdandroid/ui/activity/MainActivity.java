@@ -138,24 +138,12 @@ public class MainActivity extends BaseActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     viewPager.setCurrentItem(0);
-                    ImmersionBar.with(MainActivity.this).statusBarColor(R.color.black)
-                            .fitsSystemWindows(true).init();
                     return true;
-               /* case R.id.navigation_check:
-                    viewPager.setCurrentItem(1);
-                    //沉浸式状态栏
-                    ImmersionBar.with(MainActivity.this).statusBarColor(R.color.color_bar)
-                            .fitsSystemWindows(true).init();
-                    return true;*/
                 case R.id.navigation_msg:
                     viewPager.setCurrentItem(1);
-                    ImmersionBar.with(MainActivity.this).statusBarColor(R.color.black)
-                            .fitsSystemWindows(true).init();
                     return true;
                 case R.id.navigation_my:
                     viewPager.setCurrentItem(2);
-                    ImmersionBar.with(MainActivity.this).statusBarColor(R.color.black)
-                            .fitsSystemWindows(true).init();
                     return true;
             }
             return false;

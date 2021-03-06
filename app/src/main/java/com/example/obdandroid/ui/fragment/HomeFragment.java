@@ -119,7 +119,6 @@ public class HomeFragment extends BaseFragment {
 
     private BluetoothSocket bluetoothSocket;
     private final SocketEntity socketEntity = new SocketEntity();
-    private static final int COMPLETED = 0;
     private static final int COMPLETES = 1;
     private static final int COMPLETET = 2;
     @SuppressLint("HandlerLeak")
@@ -128,9 +127,6 @@ public class HomeFragment extends BaseFragment {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
-            if (msg.what == COMPLETED) {
-                thread.start();
-            }
             if (msg.what == COMPLETES) {
                 onConnect();
             }
@@ -139,14 +135,6 @@ public class HomeFragment extends BaseFragment {
             }
         }
     };
-    public class MyThread extends Thread {
-
-    }
-    private final Thread thread = new Thread(() -> {
-        while (!Thread.interrupted()) {
-            executeCommand();
-        }
-    });
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -194,7 +182,6 @@ public class HomeFragment extends BaseFragment {
         layoutMoreDash.setOnClickListener(v -> {
             if (isConnected) {
                 closeSocket();
-                thread.interrupt();
                 Intent intent = new Intent(context, MyVehicleDash.class);
                 intent.putExtra("data", socketEntity);
                 startActivity(intent);
@@ -206,7 +193,6 @@ public class HomeFragment extends BaseFragment {
         layoutCheck.setOnClickListener(v -> {
             if (isConnected) {
                 closeSocket();
-                thread.interrupt();
                 Intent intent = new Intent(context, VehicleCheckActivity.class);
                 startActivityForResult(intent, 102);
             } else {
@@ -507,13 +493,10 @@ public class HomeFragment extends BaseFragment {
                 LogE("建立连接时出错。 -> " + e.getMessage());
             }
 
-            if (isConnected) {
-                Message msg = new Message();
-                msg.what = COMPLETED;
-                handler.sendMessage(msg);
+            while (isConnected) {
+                executeCommand();
             }
         }).start();
-
     }
 
     private void closeSocket() {
@@ -634,7 +617,6 @@ public class HomeFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         closeSocket();
-        thread.interrupt();
         //解绑
         mLocalBroadcastManager.unregisterReceiver(testReceiver);
     }

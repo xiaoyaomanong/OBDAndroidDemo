@@ -62,4 +62,12 @@ public class MainApplication extends Application {
     public static Context getContext() {
         return context;
     }
+
+    public static BluetoothSocket getBluetoothSocket() {
+        return bluetoothSocket;
+    }
+
+    public static void setBluetoothSocket(BluetoothSocket bluetoothSocket) {
+        MainApplication.bluetoothSocket = bluetoothSocket;
+    }
 }

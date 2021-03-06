@@ -14,6 +14,7 @@ import com.example.obdandroid.ui.adapter.MyVehicleAdapter;
 import com.example.obdandroid.ui.entity.AutomobileBrandEntity;
 import com.example.obdandroid.ui.entity.BrandPinYinEntity;
 import com.example.obdandroid.ui.entity.VehicleEntity;
+import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.hjq.bar.OnTitleBarListener;
@@ -107,12 +108,22 @@ public class VehicleActivity extends BaseActivity {
             }
 
             @Override
-            public void select(VehicleEntity.DataEntity.ListEntity entity) {
-                spUtil.remove("vehicleId");
-                spUtil.put("vehicleId", String.valueOf(entity.getVehicleId()));
-                Intent intent = new Intent("com.android.ObdCar");//创建发送广播的Action
-                intent.putExtra(Intent.EXTRA_TEXT, String.valueOf(entity.getVehicleId()));//发送携带的数据
-                mLocalBroadcastManager.sendBroadcast(intent);                               //发送本地广播
+            public void select(VehicleEntity.DataEntity.ListEntity entity,int position) {
+                new CustomeDialog(context, "是否选择" + entity.getAutomobileBrandName() + "该车辆", confirm -> {
+                    if (confirm) {
+                        adapter.getMap().put(position, !adapter.getMap().get(position));
+                        //刷新适配器
+                        adapter.notifyDataSetChanged();
+                        //单选
+                        adapter.singlesel(position);
+                        spUtil.remove("vehicleId");
+                        spUtil.put("vehicleId", String.valueOf(entity.getVehicleId()));
+                        Intent intent = new Intent("com.android.ObdCar");//创建发送广播的Action
+                        intent.putExtra("vehicleId", String.valueOf(entity.getVehicleId()));//发送携带的数据
+                        mLocalBroadcastManager.sendBroadcast(intent);                               //发送本地广播
+                        finish();
+                    }
+                }).setPositiveButton("确定").setTitle("选择默认车辆").show();
             }
         });
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {

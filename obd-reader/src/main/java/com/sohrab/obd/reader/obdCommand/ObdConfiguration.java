@@ -99,7 +99,7 @@ public class ObdConfiguration {
         mObdCommands.add(new AirFuelRatioCommand());//"01 44"
         mObdCommands.add(new WidebandAirFuelRatioCommand());//"01 34"
         mObdCommands.add(new FuelSystemStatusCommand());//"01 03"
-        mObdCommands.add(new OdometerCommand());//"01 A6"
+        mObdCommands.add(new ModifiedOdometerCommand());//"01 A6"
 
         //control
         mObdCommands.add(new DistanceMILOnCommand());//"01 21"故障指示灯（MIL）亮时行驶的距离
@@ -144,6 +144,13 @@ public class ObdConfiguration {
     }
 
     public static class ModifiedPendingTroubleCodesCommand extends PendingTroubleCodesCommand {
+        @Override
+        public String getResult() {
+            //输出中删除不必要的响应，因为这会导致错误的错误代码
+            return rawData.replace("SEARCHING...", "").replace("NODATA", "");
+        }
+    }
+    public static class ModifiedOdometerCommand extends OdometerCommand {
         @Override
         public String getResult() {
             //输出中删除不必要的响应，因为这会导致错误的错误代码

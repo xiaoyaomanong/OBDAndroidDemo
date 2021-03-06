@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.adapter.SimpleFragmentPagerAdapter;
@@ -34,6 +35,7 @@ import com.example.obdandroid.utils.StringUtil;
 import com.gyf.immersionbar.ImmersionBar;
 import com.kongzue.dialog.util.BlurView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,12 +82,13 @@ public class MainActivity extends BaseActivity {
         viewPager = findViewById(R.id.viewPager);
         navigation = findViewById(R.id.navigation);
         spUtil = new SPUtil(context);
-        fragments.add(ownerFragment);
+        fragments.add(HomeFragment.getInstance());
         fragments.add(MsgFragment.getInstance());
         fragments.add(PersonalFragment.getInstance());
         viewPager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
         viewPager.addOnPageChangeListener(mOnPageChangeListener);
         viewPager.setPageTransformer(true, new DepthPageTransformer());
+        viewPager.setOffscreenPageLimit(3);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         checkBlueTooth();//检查蓝牙
@@ -182,7 +185,13 @@ public class MainActivity extends BaseActivity {
         }
         btnSelectPositive.setText("确定");
         btnSelectPositive.setOnClickListener(v -> {
-            spUtil.put(CONNECT_BT_KEY, "OFF");
+            try {
+                if (MainApplication.getBluetoothSocket() != null && MainApplication.getBluetoothSocket().isConnected()) {
+                    MainApplication.getBluetoothSocket().close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             exitDialog.dismiss();
             ActivityManager.getInstance().finishActivitys();
         });

@@ -159,7 +159,75 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:orientation="horizontal">
 
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <com.example.obdandroid.ui.view.PhilText
+                            android:id="@+id/tvMaxSpeed"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:fontFamily="@font/calibri"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="30sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:fontFamily="@font/gotham"
+                            android:gravity="center"
+                            android:text="@string/MaxSpeed"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12"
+                            tools:ignore="NestedWeights" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="0.5dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:background="@color/white"
+                        tools:ignore="Suspicious0dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <com.example.obdandroid.ui.view.PhilText
+                            android:id="@+id/tvAverageSpeed"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:fontFamily="@font/calibri"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="30sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:fontFamily="@font/calibri"
+                            android:gravity="center"
+                            android:text="@string/AverageSpeed"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12"
+                            tools:ignore="NestedWeights" />
+
+
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -248,6 +316,7 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_14" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"

@@ -81,7 +81,4 @@ public class ThreadPoolProxy {
         initThreadPoolExecutor();
         mExecutor.remove(task);
     }
-
-
-
 }

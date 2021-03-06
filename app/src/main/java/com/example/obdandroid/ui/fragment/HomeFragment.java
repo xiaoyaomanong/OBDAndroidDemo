@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +27,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
+import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.ui.activity.BindBluetoothDeviceActivity;
@@ -43,14 +43,11 @@ import com.example.obdandroid.ui.adapter.HomeAdapter;
 import com.example.obdandroid.ui.adapter.TestRecordAdapter;
 import com.example.obdandroid.ui.entity.AutomobileBrandEntity;
 import com.example.obdandroid.ui.entity.BluetoothDeviceEntity;
-import com.example.obdandroid.ui.entity.SocketEntity;
 import com.example.obdandroid.ui.entity.TestRecordEntity;
 import com.example.obdandroid.ui.entity.UserInfoEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
-import com.example.obdandroid.ui.view.PhilText;
-import com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight;
-import com.example.obdandroid.utils.BluetoothManager;
+import com.example.obdandroid.utils.BltManagerUtils;
 import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
@@ -58,13 +55,10 @@ import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
 import com.sohrab.obd.reader.application.ObdPreferences;
-import com.sohrab.obd.reader.obdCommand.SpeedCommand;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
-import com.sohrab.obd.reader.trip.TripRecord;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
-import java.io.IOException;
 import java.util.List;
 
 import okhttp3.Call;
@@ -90,10 +84,6 @@ public class HomeFragment extends BaseFragment {
     private int yourChoice;
     private SPUtil spUtil;
     private RecyclerView recycleCar;
-    private PhilText tvCurrentSpeed;
-    private PhilText tvMaxSpeed;
-    private PhilText tvAverageSpeed;
-    private CustomerDashboardViewLight dashSpeed;
     private RecyclerView recycleContent;
     private LinearLayout layoutCar;
     private ImageView ivCarLogo;
@@ -117,8 +107,6 @@ public class HomeFragment extends BaseFragment {
     private HomeAdapter homeAdapter;
     private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
 
-    private BluetoothSocket bluetoothSocket;
-    private final SocketEntity socketEntity = new SocketEntity();
     private static final int COMPLETES = 1;
     private static final int COMPLETET = 2;
     @SuppressLint("HandlerLeak")
@@ -136,6 +124,7 @@ public class HomeFragment extends BaseFragment {
         }
     };
 
+
     public static HomeFragment getInstance() {
         return new HomeFragment();
     }
@@ -152,10 +141,6 @@ public class HomeFragment extends BaseFragment {
         titleBar = getView(R.id.titleBar);
         recycleCar = getView(R.id.recycleCar);
         recycleContent = getView(R.id.recycleContent);
-        dashSpeed = getView(R.id.dashSpeed);
-        tvCurrentSpeed = getView(R.id.tvCurrentSpeed);
-        tvMaxSpeed = getView(R.id.tvMaxSpeed);
-        tvAverageSpeed = getView(R.id.tvAverageSpeed);
         layoutCar = getView(R.id.layoutCar);
         ivCarLogo = getView(R.id.ivCarLogo);
         tvAutomobileBrandName = getView(R.id.tvAutomobileBrandName);
@@ -178,13 +163,10 @@ public class HomeFragment extends BaseFragment {
         initReceiver();//注册选择默认车辆广播
         initRecordReceiver();//注册车辆检测记录跟新广播
         getUserInfo(getUserId(), getToken(), spUtil.getString("vehicleId", ""));
-        setSpeed();//设置速度仪表盘
         layoutMoreDash.setOnClickListener(v -> {
             if (isConnected) {
-                closeSocket();
                 Intent intent = new Intent(context, MyVehicleDash.class);
-                intent.putExtra("data", socketEntity);
-                startActivity(intent);
+                startActivityForResult(intent, 102);
             } else {
                 showTipDialog(mConnectedDeviceName + "未连接");
             }
@@ -192,7 +174,6 @@ public class HomeFragment extends BaseFragment {
         setCheckRecord();
         layoutCheck.setOnClickListener(v -> {
             if (isConnected) {
-                closeSocket();
                 Intent intent = new Intent(context, VehicleCheckActivity.class);
                 startActivityForResult(intent, 102);
             } else {
@@ -258,16 +239,6 @@ public class HomeFragment extends BaseFragment {
     }
 
     /**
-     * 设置车速仪表
-     */
-    private void setSpeed() {
-        dashSpeed.setmSection(8);
-        dashSpeed.setmHeaderText("km/h");
-        dashSpeed.setmMin(240);
-        dashSpeed.setmMin(0);
-    }
-
-    /**
      * @param token 用户token
      *              获取常用车辆
      */
@@ -297,6 +268,7 @@ public class HomeFragment extends BaseFragment {
      *               用户信息
      */
     private void getUserInfo(String userId, String token, String vehicleId) {
+        dialogUtils.showProgressDialog();
         OkHttpUtils.get().url(SERVER_URL + USER_INFO_URL).
                 addParam("userId", userId).
                 addParam("token", token).
@@ -310,6 +282,7 @@ public class HomeFragment extends BaseFragment {
             public void onResponse(String response, int id) {
                 UserInfoEntity entity = JSON.parseObject(response, UserInfoEntity.class);
                 if (entity.isSuccess()) {
+                    dialogUtils.dismiss();
                     if (entity.getData().isTheDeviceBound()) {
                         if (TextUtils.isEmpty(vehicleId)) {
                             //选择已绑定的车辆
@@ -319,11 +292,7 @@ public class HomeFragment extends BaseFragment {
                                 }
                             }).setPositiveButton("确定").setTitle("提示").show();
                         } else {
-                            layoutAddCar.setVisibility(View.GONE);
-                            layoutCar.setVisibility(View.VISIBLE);
-                            layoutOBD.setVisibility(View.VISIBLE);
                             getVehicleInfoById(token, vehicleId);
-                            layoutCar.setOnClickListener(v -> JumpUtil.startActToData(context, VehicleInfoActivity.class, vehicleId, 0));
                         }
                     } else {
                         layoutAddCar.setVisibility(View.VISIBLE);
@@ -334,6 +303,7 @@ public class HomeFragment extends BaseFragment {
                         layoutAddCar.setOnClickListener(v -> JumpUtil.startAct(context, SelectAutomobileBrandActivity.class));
                     }
                 } else {
+                    dialogUtils.dismiss();
                     dialogError(context, entity.getMessage());
                 }
             }
@@ -360,13 +330,17 @@ public class HomeFragment extends BaseFragment {
             public void onResponse(String response, int id) {
                 VehicleInfoEntity entity = JSON.parseObject(response, VehicleInfoEntity.class);
                 if (entity.isSuccess()) {
+                    layoutAddCar.setVisibility(View.GONE);
+                    layoutCar.setVisibility(View.VISIBLE);
+                    layoutOBD.setVisibility(View.VISIBLE);
+                    layoutCar.setOnClickListener(v -> JumpUtil.startActToData(context, VehicleInfoActivity.class, vehicleId, 0));
                     tvAutomobileBrandName.setText(entity.getData().getAutomobileBrandName());
                     tvModelName.setText(entity.getData().getModelName());
                     if (!TextUtils.isEmpty(entity.getData().getLogo())) {
                         Glide.with(context).load(SERVER_URL + entity.getData().getLogo()).into(ivCarLogo);
                     }
                     deviceAddress = entity.getData().getBluetoothDeviceNumber();
-                    if (!TextUtils.isEmpty(deviceAddress)) {
+                    if (!TextUtils.isEmpty(deviceAddress) && !isConnected) {
                         connectBtDevice(deviceAddress);
                     }
                     if (entity.getData().getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
@@ -453,7 +427,11 @@ public class HomeFragment extends BaseFragment {
                         isConn = blueList.get(yourChoice).getBlue_address().equals(deviceAddress);
                         if (!TextUtils.isEmpty(blueList.get(yourChoice).getBlue_address())) {
                             if (isConn) {
-                                connectBtDevice(blueList.get(yourChoice).getBlue_address());
+                                if (!MainApplication.getBluetoothSocket().isConnected()) {
+                                    connectBtDevice(blueList.get(yourChoice).getBlue_address());
+                                } else {
+                                    showTipDialog("当前OBD设备已连接");
+                                }
                             } else {
                                 showTipDialog("当前车辆绑定OBD设备,与连接的OBD设备不一致");
                             }
@@ -472,69 +450,17 @@ public class HomeFragment extends BaseFragment {
     private void connectBtDevice(String address) {
         dialogUtils.showProgressDialog("正在连接OBD");
         BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
-        new Thread(() -> {
-            try {
-                bluetoothSocket = BluetoothManager.connect(device, (code, msg) -> {
+        new Thread(() ->
+                BltManagerUtils.getInstance().createBond(device, (code, msg) -> {
                     LogE("连接状态：" + msg);
                     if (code == 0) {
                         sendMessage(COMPLETES);
-                        socketEntity.setAddress(address);
-                        socketEntity.setName(device.getName());
-                        socketEntity.setSocket(bluetoothSocket);
-                        ObdPreferences.get(context).setBlueToothDeviceAddress(address);
-                        ObdPreferences.get(context).setBlueToothDeviceName(device.getName());
                     } else {
                         sendMessage(COMPLETET);
                     }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-                sendMessage(COMPLETET);
-                LogE("建立连接时出错。 -> " + e.getMessage());
-            }
+                })).start();
 
-            while (isConnected) {
-                executeCommand();
-            }
-        }).start();
     }
-
-    private void closeSocket() {
-        try {
-            if (bluetoothSocket != null) {
-                bluetoothSocket.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 一旦OBD-2连接，此方法将执行以连续获取数据，直到OBD断开或服务停止。
-     */
-    private void executeCommand() {
-        TripRecord tripRecord = TripRecord.getTriRecode(context);
-        try {
-            SpeedCommand command = new SpeedCommand();
-            command.run(bluetoothSocket.getInputStream(), bluetoothSocket.getOutputStream());
-            LogE("结果是:: " + command.getFormattedResult() + "; name is :: " + command.getName());
-            tripRecord.updateTrip(command.getName(), command);
-        } catch (Exception e) {
-            LogE("执行命令异常  :: " + e.getMessage());
-            if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
-                LogE("命令异常  :: " + e.getMessage());
-            }
-        }
-        dashSpeed.setVelocity(tripRecord.getSpeed());
-        tvCurrentSpeed.setText(String.valueOf(tripRecord.getSpeed()));
-        tvMaxSpeed.setText(String.valueOf(tripRecord.getSpeedMax()));
-        tvAverageSpeed.setText(String.valueOf(tripRecord.getAverageSpeed()));
-
-        Intent intentss = new Intent("com.android.ObdMessge");//创建发送广播的Action
-        intentss.putExtra("data", tripRecord);//发送携带的数据
-        mLocalBroadcastManager.sendBroadcast(intentss);                               //发送本地广播
-    }
-
 
     /**
      * 处理建立的蓝牙连接...
@@ -542,7 +468,6 @@ public class HomeFragment extends BaseFragment {
     @SuppressLint("StringFormatInvalid")
     private void onConnect() {
         titleBar.setLeftTitle("已连接");
-        spUtil.put(CONNECT_BT_KEY, "ON");
         titleBar.setRightIcon(R.drawable.action_connect);
         isConnected = true;
         TipDialog.show(context, getString(R.string.title_connected_to) + mConnectedDeviceName, TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
@@ -555,7 +480,6 @@ public class HomeFragment extends BaseFragment {
     private void onDisconnect() {
         titleBar.setLeftTitle("未连接");
         titleBar.setRightIcon(R.drawable.action_disconnect);
-        spUtil.put(CONNECT_BT_KEY, "OFF");
         isConnected = false;
         TipDialog.show(context, mConnectedDeviceName + getString(R.string.title_connected_fail), TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
         dialogUtils.dismiss();
@@ -568,7 +492,6 @@ public class HomeFragment extends BaseFragment {
     private void setDefaultMode() {
         titleBar.setLeftTitle("未连接");
         titleBar.setRightIcon(R.drawable.action_disconnect);
-        spUtil.put(CONNECT_BT_KEY, "OFF");
     }
 
     private void showTipDialog(String msg) {
@@ -616,7 +539,6 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        closeSocket();
         //解绑
         mLocalBroadcastManager.unregisterReceiver(testReceiver);
     }
@@ -626,24 +548,6 @@ public class HomeFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_ENABLE_BT) {
             if (resultCode == Activity.RESULT_OK) {
-                if (!TextUtils.isEmpty(mConnectedDeviceAddress)) {
-                    connectBtDevice(mConnectedDeviceAddress);
-                } else {
-                    setDefaultMode();
-                    showToast(getString(R.string.text_bluetooth_error_connecting));
-                }
-            }
-        }
-        if (requestCode == 102) {
-            if (resultCode == 101) {
-                if (!TextUtils.isEmpty(mConnectedDeviceAddress)) {
-                    connectBtDevice(mConnectedDeviceAddress);
-                } else {
-                    setDefaultMode();
-                    showToast(getString(R.string.text_bluetooth_error_connecting));
-                }
-            }
-            if (resultCode == 100) {
                 if (!TextUtils.isEmpty(mConnectedDeviceAddress)) {
                     connectBtDevice(mConnectedDeviceAddress);
                 } else {

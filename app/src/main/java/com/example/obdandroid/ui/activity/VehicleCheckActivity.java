@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
+import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.Constant;
@@ -33,7 +34,8 @@ import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleWelComeView;
 import com.example.obdandroid.utils.AppDateUtils;
-import com.example.obdandroid.utils.BluetoothManager;
+import com.example.obdandroid.utils.BltManagerUtils;
+import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.SPUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
@@ -43,6 +45,7 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.ResetTroubleCodesCommand;
+import com.sohrab.obd.reader.trip.CheckRecord;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 import com.sohrab.obd.reader.trip.OBDTripEntity;
 import com.sohrab.obd.reader.trip.TripRecord;
@@ -81,21 +84,11 @@ public class VehicleCheckActivity extends BaseActivity {
     private TextView tvAutomobileBrandName;
     private TextView tvModelName;
     private LocalBroadcastManager localBroadcastManager;
-    private BluetoothSocket mSocket;
-    private boolean isConnected;
     @SuppressLint("HandlerLeak")
-    private TripRecord tripRecord;
-    private final Thread thread = new Thread(() -> {
-        if (isConnected) {
-            executeCommand();
-        }
-    });
-    private final Thread newThread = new Thread(() -> {
-        if (isConnected) {
-            clearCodes();
-        }
-    });
+    private CheckRecord tripRecord;
     private static final int COMPLETED = 0;
+    private static final int COMPLETES= 1;
+    private DialogUtils dialogUtils;
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
 
@@ -114,6 +107,13 @@ public class VehicleCheckActivity extends BaseActivity {
                 addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(tripRecord.getOBDJson()), getUserId(), getToken());
                 reduceAndCumulativeFrequency(getToken(), getUserId());
                 addRemind(getUserId(), addJsonContent(tripRecord.getOBDJson()), getToken());
+            }
+            if (msg.what==COMPLETES){
+                showTipDialog("故障码清除成功", TipDialog.TYPE_FINISH);
+                titleBar.setRightTitle("");
+                dialogUtils.dismiss();
+                Intent intent = new Intent("com.android.Record");//创建发送广播的Action
+                localBroadcastManager.sendBroadcast(intent);  //发送本地广播
             }
         }
     };
@@ -142,11 +142,13 @@ public class VehicleCheckActivity extends BaseActivity {
         tvAutomobileBrandName = getView(R.id.tvAutomobileBrandName);
         tvModelName = getView(R.id.tvModelName);
         spUtil = new SPUtil(context);
+        dialogUtils = new DialogUtils(context);
         LinearLayoutManager manager = new LinearLayoutManager(context);
         manager.setOrientation(OrientationHelper.VERTICAL);
         recycleCheckContent.setLayoutManager(manager);
         //获取实例
         localBroadcastManager = LocalBroadcastManager.getInstance(context);
+        CheckRecord.getTriRecode(context).clear();
         /*
          *  配置obd：在arrayList中添加所需命令并设置为ObdConfiguration。
          *  如果您没有设置任何命令或传递null，那么将请求所有命令OBD command。   *
@@ -157,36 +159,20 @@ public class VehicleCheckActivity extends BaseActivity {
         ObdPreferences.get(context).setGasPrice(gasPrice);
         getVehicleInfoById(getToken(), spUtil.getString("vehicleId", ""));
         btStart.setOnClickListener(v -> {
-            if (spUtil.getString(Constant.CONNECT_BT_KEY, "").equals("ON")) {
+            if (MainApplication.getBluetoothSocket().isConnected()) {
                 circleView.start();
                 btStart.setText("开始检测");
                 tvConnectObd.setVisibility(View.GONE);
                 btStart.setEnabled(false);
-                if (!TextUtils.isEmpty(ObdPreferences.get(context).getBlueToothDeviceAddress())) {
-                    connectBtDevice(ObdPreferences.get(context).getBlueToothDeviceAddress(), 1);
-                } else {
-                    new Handler().postDelayed(() -> {
-                        if (circleView.isDiffuse()) {
-                            circleView.stop();
-                            btStart.setText("检测失败");
-                        }
-                        showResult(null);
-                        showToast(getString(R.string.text_bluetooth_error_connecting));
-                    }, 3000);
-                }
+                new Thread(this::executeCommand).start();
             } else {
                 showTipDialog("请连接OBD设备", TipDialog.TYPE_WARNING);
             }
         });
-
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
-                if (isConnected) {
-                    closeSocket();
-                    thread.interrupt();
-                    setResult(101, new Intent());
-                }
+                setResult(101, new Intent());
                 finish();
             }
 
@@ -198,57 +184,24 @@ public class VehicleCheckActivity extends BaseActivity {
             @Override
             public void onRightClick(View v) {
                 if (titleBar.getRightTitle().toString().equals("清除故障")) {
-                    connectBtDevice(ObdPreferences.get(context).getBlueToothDeviceAddress(), 2);
+                    if (MainApplication.getBluetoothSocket().isConnected()) {
+                        dialogUtils.showProgressDialog("正在清除故障码");
+                        new Thread(() -> clearCodes()).start();
+                    }
                 }
             }
         });
     }
 
-    /**
-     * @param address 蓝牙设备MAC地址
-     *                启动与所选蓝牙设备的连接
-     */
-    private void connectBtDevice(String address, int type) {
-        BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
-        try {
-            mSocket = BluetoothManager.connect(device, (code, msg) -> {
-                LogE("连接状态：" + msg);
-                isConnected = code == 0;
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            LogE("建立连接时出错。 -> " + e.getMessage());
-            LogE("此处在处理程序上收到的消息");
-        }
-        switch (type) {
-            case 1:
-                thread.start();
-                break;
-            case 2:
-                newThread.start();
-                break;
-        }
-    }
-
-    private void closeSocket() {
-        try {
-            if (mSocket != null) {
-                mSocket.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     private void executeCommand() {
-        tripRecord = TripRecord.getTriRecode(context);
+        tripRecord = CheckRecord.getTriRecode(context);
         tripRecord.getTripMap().clear();
         ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfiguration.getmObdCommands().clone();
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {
-                command.run(mSocket.getInputStream(), mSocket.getOutputStream());
+                command.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
                 LogE("结果是: " + command.getFormattedResult() + " :: name is :: " + command.getName());
                 tripRecord.updateTrip(command.getName(), command);
             } catch (Exception e) {
@@ -258,7 +211,6 @@ public class VehicleCheckActivity extends BaseActivity {
                 }
             }
         }
-        closeSocket();
         Message msg = new Message();
         msg.what = COMPLETED;
         handler.sendMessage(msg);
@@ -271,17 +223,16 @@ public class VehicleCheckActivity extends BaseActivity {
     private void clearCodes() {
         try {
             LogE("测试复位=====尝试重置");
-            new ObdResetCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("开始清除");
             ResetTroubleCodesCommand clear = new ResetTroubleCodesCommand();
-            clear.run(mSocket.getInputStream(), mSocket.getOutputStream());
+            clear.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             String result = clear.getFormattedResult();
             LogE("重置结果: " + result);
             if (!TextUtils.isEmpty(result)) {
-                showTipDialog("故障码清除成功", TipDialog.TYPE_FINISH);
-                titleBar.setRightTitle("");
-                Intent intent = new Intent("com.android.Record");//创建发送广播的Action
-                localBroadcastManager.sendBroadcast(intent);  //发送本地广播
+                Message msg = new Message();
+                msg.what = COMPLETES;
+                handler.sendMessage(msg);
             }
         } catch (Exception e) {
             LogE("建立连接时出错。 -> " + e.getMessage());
@@ -455,11 +406,4 @@ public class VehicleCheckActivity extends BaseActivity {
         TipDialog.show(context, msg, TipDialog.TYPE_ERROR, type);
     }
 
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        closeSocket();
-        thread.interrupt();
-    }
 }

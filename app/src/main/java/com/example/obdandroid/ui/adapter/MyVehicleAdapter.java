@@ -57,6 +57,10 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.clickCallBack = clickCallBack;
     }
 
+    public HashMap<Integer, Boolean> getMap() {
+        return map;
+    }
+
     public void setList(List<VehicleEntity.DataEntity.ListEntity> list) {
         this.list = list;
         map = new HashMap<>();
@@ -120,12 +124,7 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
             holder1.id_cb_vehicleIndex.setChecked(map.get(position));
             holder1.id_cb_vehicleIndex.setOnClickListener(v -> {
-                map.put(position, !map.get(position));
-                //刷新适配器
-                notifyDataSetChanged();
-                //单选
-                singlesel(position);
-                clickCallBack.select(list.get(position));
+                clickCallBack.select(list.get(position),position);
             });
             holder1.card_view.setOnClickListener(v -> clickCallBack.click(list.get(position)));
         }
@@ -189,7 +188,7 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public interface OnClickCallBack {
         void click(VehicleEntity.DataEntity.ListEntity entity);
 
-        void select(VehicleEntity.DataEntity.ListEntity entity);
+        void select(VehicleEntity.DataEntity.ListEntity entity,int position);
     }
 
     public void addFootItem(List<VehicleEntity.DataEntity.ListEntity> lists) {

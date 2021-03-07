@@ -1,5 +1,6 @@
 package com.example.obdandroid.ui.activity;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,9 +14,12 @@ import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.adapter.MyVehicleAdapter;
+import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.entity.VehicleEntity;
 import com.example.obdandroid.ui.fragment.HomeFragment;
 import com.example.obdandroid.ui.view.CustomeDialog;
+import com.example.obdandroid.ui.view.IosDialog;
+import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.hjq.bar.OnTitleBarListener;
@@ -33,6 +37,7 @@ import okhttp3.Response;
 
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.Vehicle_URL;
+import static com.example.obdandroid.config.APIConfig.deleteVehicle_URL;
 import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_OBD_CONNECTION_STATUS;
 import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_READ_OBD_REAL_TIME_DATA;
 
@@ -51,6 +56,7 @@ public class MyVehicleActivity extends BaseActivity {
     private MyVehicleAdapter adapter;
     private SPUtil spUtil;
     private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
+    private DialogUtils dialogUtils;
 
     @Override
     protected int getContentViewId() {
@@ -69,6 +75,7 @@ public class MyVehicleActivity extends BaseActivity {
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         recycleCar = findViewById(R.id.recycle_Car);
         spUtil = new SPUtil(context);
+        dialogUtils = new DialogUtils(context);
         recycleCar.setLinearLayout();
         //设置是否可以下拉刷新
         recycleCar.setPullRefreshEnable(true);
@@ -126,6 +133,33 @@ public class MyVehicleActivity extends BaseActivity {
                 }).setPositiveButton("确定").setTitle("选择默认车辆").show();
 
             }
+
+            @Override
+            public void delete(VehicleEntity.DataEntity.ListEntity entity) {
+                new IosDialog(context, new IosDialog.DialogClick() {
+                    @Override
+                    public void Confirm(AlertDialog exitDialog, boolean confirm) {
+                        if (confirm) {
+                            if (String.valueOf(entity.getVehicleId()).equals(spUtil.getString("vehicleId", ""))) {
+                                showToast("该车辆已被选中为默认车辆,暂时无法删除");
+                            } else {
+                                deleteVehicle(getToken(), getUserId(), String.valueOf(entity.getVehicleId()));
+                            }
+                            exitDialog.dismiss();
+                        }
+                    }
+
+                    @Override
+                    public void Cancel(AlertDialog exitDialog, boolean confirm) {
+                        if (confirm) {
+                            exitDialog.dismiss();
+                        }
+                    }
+                }).
+                        setMessage("是否删除+" + entity.getAutomobileBrandName() + "该车辆").
+                        setSelectNegative("取消").setSelectPositive("确定").
+                        setTitle("删除车辆提示").showDialog();
+            }
         });
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -146,6 +180,39 @@ public class MyVehicleActivity extends BaseActivity {
         });
     }
 
+    private void deleteVehicle(String token, String userId, String vehicleId) {
+        dialogUtils.showProgressDialog("正在删除车辆...");
+        OkHttpUtils.get().url(SERVER_URL + deleteVehicle_URL).
+                addParam("token", token).
+                addParam("userId", userId).
+                addParam("vehicleId", vehicleId).
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
+                if (entity.isSuccess()) {
+                    dialogUtils.dismiss();
+                    new CustomeDialog(context, "删除成功", confirm -> {
+                        if (confirm) {
+                            pageNum = 1;
+                            pageSize = 10;
+                            getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), true);
+                        }
+                    }).setTitle("删除车辆").setPositiveButton("确定").show();
+                } else {
+                    dialogUtils.dismiss();
+                    showToast(entity.getMessage());
+                }
+
+            }
+        });
+
+    }
 
     /**
      * @param pageNum   页号

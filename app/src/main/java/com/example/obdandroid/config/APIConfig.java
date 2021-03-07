@@ -69,6 +69,10 @@ public class APIConfig {
      */
     public static final String getVehicleInfoById_URL = "/api/getVehicleInfoById";
     /**
+     * 删除车辆
+     */
+    public static final String deleteVehicle_URL = "/api/deleteVehicle";
+    /**
      * 绑定蓝牙
      */
     public static final String bindingVehicle_URL = "/api/bindingVehicle";

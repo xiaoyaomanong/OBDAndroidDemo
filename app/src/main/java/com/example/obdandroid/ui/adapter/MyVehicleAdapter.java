@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
+import static com.example.obdandroid.config.APIConfig.addTestRecord_URL;
 
 /**
  * 作者：Jealous
@@ -127,6 +128,10 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 clickCallBack.select(list.get(position),position);
             });
             holder1.card_view.setOnClickListener(v -> clickCallBack.click(list.get(position)));
+            holder1.card_view.setOnLongClickListener(v -> {
+                clickCallBack.delete(list.get(position));
+                return true;
+            });
         }
     }
 
@@ -189,6 +194,8 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         void click(VehicleEntity.DataEntity.ListEntity entity);
 
         void select(VehicleEntity.DataEntity.ListEntity entity,int position);
+
+        void delete(VehicleEntity.DataEntity.ListEntity entity);
     }
 
     public void addFootItem(List<VehicleEntity.DataEntity.ListEntity> lists) {

@@ -390,7 +390,9 @@ public class HomeFragment extends BaseFragment {
             public void onResponse(String response, int id) {
                 TestRecordEntity entity = JSON.parseObject(response, TestRecordEntity.class);
                 if (entity.isSuccess()) {
-                    tvCheckTime.setText("上次检测 " + entity.getData().getList().get(0).getDetectionTime());
+                    if (entity.getData().getList().size()!=0) {
+                        tvCheckTime.setText("上次检测 " + entity.getData().getList().get(0).getDetectionTime());
+                    }
                     recordAdapter.setList(entity.getData().getList());
                 } else {
                     recordAdapter.setList(null);

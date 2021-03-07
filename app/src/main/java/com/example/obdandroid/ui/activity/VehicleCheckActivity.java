@@ -33,6 +33,7 @@ import com.example.obdandroid.ui.entity.MessageCheckEntity;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleWelComeView;
+import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.BltManagerUtils;
 import com.example.obdandroid.utils.DialogUtils;
@@ -87,7 +88,7 @@ public class VehicleCheckActivity extends BaseActivity {
     @SuppressLint("HandlerLeak")
     private CheckRecord tripRecord;
     private static final int COMPLETED = 0;
-    private static final int COMPLETES= 1;
+    private static final int COMPLETES = 1;
     private DialogUtils dialogUtils;
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
@@ -107,8 +108,16 @@ public class VehicleCheckActivity extends BaseActivity {
                 addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(tripRecord.getOBDJson()), getUserId(), getToken());
                 reduceAndCumulativeFrequency(getToken(), getUserId());
                 addRemind(getUserId(), addJsonContent(tripRecord.getOBDJson()), getToken());
+
+                new CustomeDialog(context, "生成检测报告,请查看!", confirm -> {
+                    if (confirm) {
+                        Intent intent = new Intent(context, CheckReportActivity.class);
+                        intent.putExtra("data", tripRecord);
+                        startActivity(intent);
+                    }
+                }).setTitle("检测报告提示").setPositiveButton("确定").show();
             }
-            if (msg.what==COMPLETES){
+            if (msg.what == COMPLETES) {
                 showTipDialog("故障码清除成功", TipDialog.TYPE_FINISH);
                 titleBar.setRightTitle("");
                 dialogUtils.dismiss();
@@ -215,7 +224,6 @@ public class VehicleCheckActivity extends BaseActivity {
         msg.what = COMPLETED;
         handler.sendMessage(msg);
     }
-
 
     /**
      * 清除故障码

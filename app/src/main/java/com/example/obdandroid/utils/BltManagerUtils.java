@@ -11,6 +11,12 @@ import android.util.Log;
 
 import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.config.Constant;
+import com.github.pires.obd.commands.protocol.AdaptiveTimingCommand;
+import com.github.pires.obd.commands.protocol.AvailablePidsCommand_01_20;
+import com.github.pires.obd.commands.protocol.AvailablePidsCommand_21_40;
+import com.github.pires.obd.commands.protocol.AvailablePidsCommand_41_60;
+import com.github.pires.obd.commands.protocol.HeadersOffCommand;
+import com.github.pires.obd.commands.protocol.ObdWarmstartCommand;
 import com.sohrab.obd.reader.enums.ObdProtocols;
 import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
@@ -94,11 +100,12 @@ public class BltManagerUtils {
                 // 此线程是必需的，因为在Headunit中命令.run方法无限块，因此，线程的最长寿命为15秒，这样就可以处理块了。
                 new ObdResetCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                 new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+                new ObdWarmstartCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());//热启动OBD连接。。。
                 new LineFeedOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                 new SpacesOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+                new HeadersOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                 new TimeoutCommand(125).run(mSocket.getInputStream(), mSocket.getOutputStream());
                 new SelectProtocolCommand(ObdProtocols.AUTO).run(mSocket.getInputStream(), mSocket.getOutputStream());
-                new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
             } catch (Exception e) {
                 LogUtils.i("在新线程中重置命令异常:: " + e.getMessage());
             }

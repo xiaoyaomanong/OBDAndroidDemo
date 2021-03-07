@@ -249,5 +249,7 @@
     <string name="reming">全车检测自动生成体检报告</string>
     <string name="Service">服务协议与隐私政策</string>
     <string name="aboutOfUs">关于我们</string>
+    <string name="troubleNO">2.未解决故障码</string>
+    <string name="trouble">1.故障码</string>
 
 </resources>

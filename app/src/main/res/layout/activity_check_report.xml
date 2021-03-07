@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.hjq.bar.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/color_bar"
+        app:barStyle="ripple"
+        app:title="检测报告" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_check_report"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvCheckTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/color_2C2B30"
+                    android:textSize="@dimen/sp_14" />
+
+                <TextView
+                    android:id="@+id/tvCheckNum"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/green"
+                    android:textSize="@dimen/sp_14" />
+
+                <TextView
+                    android:id="@+id/tvCheckResult"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/green"
+                    android:textSize="@dimen/sp_14" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_check_report"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:text="@string/trouble"
+                    android:textColor="@color/color_2C2B30"
+                    android:textSize="@dimen/sp_14"
+                    android:textStyle="bold"
+                    tools:ignore="RtlSymmetry" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:background="@color/color_000000" />
+
+                <TextView
+                    android:id="@+id/tvDynamicSystem"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/color_2C2B30"
+                    android:textSize="@dimen/sp_14" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:background="@color/color_000000" />
+
+                <TextView
+                    android:id="@+id/tvBody"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/color_2C2B30"
+                    android:textSize="@dimen/sp_14" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:background="@color/color_000000" />
+
+                <TextView
+                    android:id="@+id/tvChassis"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/color_2C2B30"
+                    android:textSize="@dimen/sp_14" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:background="@color/color_000000" />
+
+                <TextView
+                    android:id="@+id/tvNetWork"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/color_2C2B30"
+                    android:textSize="@dimen/sp_14" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_check_report"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:text="@string/troubleNO"
+                    android:textColor="@color/color_2C2B30"
+                    android:textSize="@dimen/sp_14"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:background="@color/color_000000" />
+
+                <TextView
+                    android:id="@+id/tvDynamicSystemNO"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/color_2C2B30"
+                    android:textSize="@dimen/sp_14" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:background="@color/color_000000" />
+
+                <TextView
+                    android:id="@+id/tvBodyNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/color_2C2B30"
+                    android:textSize="@dimen/sp_14" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:background="@color/color_000000" />
+
+                <TextView
+                    android:id="@+id/tvChassisNO"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/color_2C2B30"
+                    android:textSize="@dimen/sp_14" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:background="@color/color_000000" />
+
+                <TextView
+                    android:id="@+id/tvNetWorkNO"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/color_2C2B30"
+                    android:textSize="@dimen/sp_14" />
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

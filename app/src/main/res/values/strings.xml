@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ai车检</string>
+    <string name="app_name">AI车检</string>
     <string name="onMain">立即体验</string>
     <string name="forgot_password">忘记密码?</string>
     <string name="hint_sign_up">没有账号？ 立即注册</string>

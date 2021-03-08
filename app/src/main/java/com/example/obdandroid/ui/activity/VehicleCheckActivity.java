@@ -158,11 +158,6 @@ public class VehicleCheckActivity extends BaseActivity {
         //获取实例
         localBroadcastManager = LocalBroadcastManager.getInstance(context);
         CheckRecord.getTriRecode(context).clear();
-        /*
-         *  配置obd：在arrayList中添加所需命令并设置为ObdConfiguration。
-         *  如果您没有设置任何命令或传递null，那么将请求所有命令OBD command。   *
-         */
-        ObdConfiguration.setmObdCommands(context, null);//传递null意味着我们现在正在执行所有OBD命令，但是您应该添加必需的命令以便像上面注释的行一样快速检索。
         // 设定每升汽油价格，以便计算汽油成本。默认值为7$/l
         float gasPrice = 7; // 每升，你应该根据你的要求初始化。
         ObdPreferences.get(context).setGasPrice(gasPrice);

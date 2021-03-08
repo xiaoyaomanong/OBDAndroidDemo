@@ -27,9 +27,12 @@ import com.sohrab.obd.reader.obdCommand.pressure.IntakeManifoldPressureCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.AirIntakeTemperatureCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.AmbientAirTemperatureCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.EngineCoolantTemperatureCommand;
+import com.sohrab.obd.reader.trip.CheckRecord;
+import com.sohrab.obd.reader.trip.OBDTripEntity;
 import com.sohrab.obd.reader.trip.TripRecord;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * 作者：Jealous
@@ -40,7 +43,6 @@ public class MyVehicleDash extends BaseActivity {
     private TextView tvmControlModuleVoltage;
     private TextView tvmFuelLevel;
     private TextView tvmMassAirFlow;
-    private TextView tvmAirFuelRatio;
     private TextView tvmAmbientAirTemp;
     private PhilText tvmInsFuelConsumption;
     private PhilText tvmOdometer;
@@ -57,16 +59,29 @@ public class MyVehicleDash extends BaseActivity {
     private CustomerDashboardViewLight dashEngineOilTemp;//机油温度
     private Context context;
     private final Thread mSpeedCommand = new Thread(new MySpeedCommand());
-    private final Thread mAirFuelRatioCommand = new Thread(new MyAirFuelRatioCommand());
-    private final Thread mAmbientAirTemperatureCommand = new Thread(new MyAmbientAirTemperatureCommand());
-    private final Thread mEngineCoolantTemperatureCommand = new Thread(new MyEngineCoolantTemperatureCommand());
-    private final Thread mFuelLevelCommand = new Thread(new MyFuelLevelCommand());
-    private final Thread mIntakeManifoldPressureCommand = new Thread(new MyIntakeManifoldPressureCommand());
-    private final Thread mMassAirFlowCommand = new Thread(new MyMassAirFlowCommand());
-    private final Thread mOdometerCommand = new Thread(new MyOdometerCommand());
-    private final Thread mOilTempCommand = new Thread(new MyOilTempCommand());
-    private final Thread mRModuleVoltageCommand = new Thread(new MyRModuleVoltageCommand());
+    /*  private final Thread mAmbientAirTemperatureCommand = new Thread(new MyAmbientAirTemperatureCommand());
+      private final Thread mEngineCoolantTemperatureCommand = new Thread(new MyEngineCoolantTemperatureCommand());
+      private final Thread mFuelLevelCommand = new Thread(new MyFuelLevelCommand());
+      private final Thread mIntakeManifoldPressureCommand = new Thread(new MyIntakeManifoldPressureCommand());
+      private final Thread mMassAirFlowCommand = new Thread(new MyMassAirFlowCommand());
+      private final Thread mOdometerCommand = new Thread(new MyOdometerCommand());
+      private final Thread mOilTempCommand = new Thread(new MyOilTempCommand());
+      private final Thread mRModuleVoltageCommand = new Thread(new MyRModuleVoltageCommand());*/
     private final Thread mRPMCommand = new Thread(new MyRPMCommand());
+    private TripRecord tripRecord;
+    private Integer engineRpmMax = 0;
+    private String engineRpm;
+    private Integer speed = 0;
+    private Integer speedMax = 0;
+    private long mAddSpeed;
+    private long mSpeedCount;
+    private float drivingDuration;
+    private float mDistanceTravel;
+    private float idlingDuration;
+    private long tripStartTime;
+
+    public MyVehicleDash() {
+    }
 
 
     @Override
@@ -87,7 +102,6 @@ public class MyVehicleDash extends BaseActivity {
         tvmControlModuleVoltage = findViewById(R.id.tvmControlModuleVoltage);
         tvmFuelLevel = findViewById(R.id.tvmFuelLevel);
         tvmMassAirFlow = findViewById(R.id.tvmMassAirFlow);
-        tvmAirFuelRatio = findViewById(R.id.tvmAirFuelRatio);
         tvmAmbientAirTemp = findViewById(R.id.tvmAmbientAirTemp);
         tvmInsFuelConsumption = findViewById(R.id.tvmInsFuelConsumption);
         tvmOdometer = findViewById(R.id.tvmOdometer);
@@ -103,6 +117,9 @@ public class MyVehicleDash extends BaseActivity {
         dashIdlingFuelConsumption = findViewById(R.id.dashIdlingFuelConsumption);
         dashEngineOilTemp = findViewById(R.id.dashEngineOilTemp);
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(true);
+        TripRecord.getTriRecode(context).clear();
+        tripRecord = TripRecord.getTriRecode(context);
+        tripStartTime = System.currentTimeMillis();
         setRPM();
         setSpeed();
         setInsFuelConsumption();
@@ -111,12 +128,10 @@ public class MyVehicleDash extends BaseActivity {
         setDrivingFuelConsumption();
         setIdlingFuelConsumption();
         setEngineOilTemp();
-        LogE("中断:" + Thread.interrupted());
         LogE("是否连接:" + MainApplication.getBluetoothSocket().isConnected());
         boolean isConnected = MainApplication.getBluetoothSocket().isConnected();
-
         if (isConnected) {
-            mAirFuelRatioCommand.start();
+          /*  mAirFuelRatioCommand.start();
             mAmbientAirTemperatureCommand.start();
             mEngineCoolantTemperatureCommand.start();
             mFuelLevelCommand.start();
@@ -124,9 +139,11 @@ public class MyVehicleDash extends BaseActivity {
             mMassAirFlowCommand.start();
             mOdometerCommand.start();
             mOilTempCommand.start();
-            mRModuleVoltageCommand.start();
+            mRModuleVoltageCommand.start();*/
             mRPMCommand.start();
             mSpeedCommand.start();
+        } else {
+            showToast("OBD连接已断开");
         }
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -147,38 +164,60 @@ public class MyVehicleDash extends BaseActivity {
         });
     }
 
-
     /**
      * 读取速度
      */
     private synchronized void executeSpeedCommand() {
-        TripRecord tripRecord = TripRecord.getTriRecode(context);
         try {
             SpeedCommand speedCommand = new SpeedCommand();//"01 0D"
             speedCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + speedCommand.getFormattedResult() + " :: name is :: " + speedCommand.getName());
-            tripRecord.updateTrip(speedCommand.getName(), speedCommand);
-            LogE("速度:" + tripRecord.getSpeed());
-            dashSpeed.setVelocity(tripRecord.getSpeed());
-            tvAverageSpeed.setText(String.valueOf(tripRecord.getAverageSpeed()));
-            tvMaxSpeed.setText(String.valueOf(tripRecord.getSpeedMax()));
-            float DrivingDuration = BigDecimal.valueOf(tripRecord.getDrivingDuration())
-                    .setScale(2, BigDecimal.ROUND_HALF_DOWN)
-                    .floatValue();
-            tvDrivingDuration.setText(String.valueOf(DrivingDuration));
+            //tripRecord.updateTrip(speedCommand.getName(), speedCommand);
+            setSpeed(speedCommand.getMetricSpeed());
         } catch (Exception e) {
             LogE("执行命令异常  :: " + e.getMessage());
-            if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
-                LogE("命令异常  :: " + e.getMessage());
-            }
         }
+    }
+
+    public void setSpeed(int currentSpeed) {
+        calculateIdlingAndDrivingTime(currentSpeed);
+        speed = currentSpeed;
+        if (speedMax < currentSpeed)
+            speedMax = currentSpeed;
+        // 查找行驶距离
+        if (speed != 0) {
+            mAddSpeed += speed;
+            mSpeedCount++;
+            mDistanceTravel = (mAddSpeed / mSpeedCount * (drivingDuration / (60 * 60 * 1000)));
+        }
+        float averageSpeed;
+        if (drivingDuration <= 0) {
+            averageSpeed = 0f;
+        } else {
+            averageSpeed = mDistanceTravel / (drivingDuration / (60 * 60 * 1000));
+        }
+
+        dashSpeed.setVelocity(speed);
+        tvAverageSpeed.setText(String.valueOf(averageSpeed));
+        tvMaxSpeed.setText(String.valueOf(speedMax));
+        float DrivingDuration = BigDecimal.valueOf(drivingDuration / 60000)
+                .setScale(2, BigDecimal.ROUND_HALF_DOWN)
+                .floatValue();
+        tvDrivingDuration.setText(String.valueOf(DrivingDuration));
+    }
+
+    private void calculateIdlingAndDrivingTime(int currentSpeed) {
+        long currentTime = System.currentTimeMillis();
+        if ((speed == -1 || speed == 0) && currentSpeed == 0) {
+            idlingDuration = currentTime - tripStartTime - drivingDuration;
+        }
+        drivingDuration = currentTime - tripStartTime - idlingDuration;
     }
 
     /**
      * 读取转速
      */
     private synchronized void executeRPMCommand() {
-        TripRecord tripRecord = TripRecord.getTriRecode(context);
         try {
             RPMCommand rpmCommand = new RPMCommand();//"01 0C"
             rpmCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
@@ -188,9 +227,6 @@ public class MyVehicleDash extends BaseActivity {
             dashRPM.setVelocity(Float.parseFloat(rpm) / 1000);
         } catch (Exception e) {
             LogE("执行命令异常  :: " + e.getMessage());
-            if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
-                LogE("命令异常  :: " + e.getMessage());
-            }
         }
     }
 
@@ -198,7 +234,6 @@ public class MyVehicleDash extends BaseActivity {
      * 读取空气质量流量
      */
     private synchronized void executeMassAirFlowCommand() {
-        TripRecord tripRecord = TripRecord.getTriRecode(context);
         try {
             MassAirFlowCommand massAirFlowCommand = new MassAirFlowCommand();//"01 10"//空气流量感测器（MAF）空气流率
             massAirFlowCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
@@ -209,12 +244,8 @@ public class MyVehicleDash extends BaseActivity {
                     .setScale(2, BigDecimal.ROUND_HALF_DOWN)
                     .floatValue();
             dashDrivingFuelConsumption.setVelocity(DrivingFuelConsumption);
-            //setView(tripRecord);
         } catch (Exception e) {
             LogE("执行命令异常  :: " + e.getMessage());
-            if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
-                LogE("命令异常  :: " + e.getMessage());
-            }
         }
     }
 
@@ -222,7 +253,6 @@ public class MyVehicleDash extends BaseActivity {
      * 读取进气歧管压力
      */
     private synchronized void executeIntakeManifoldPressureCommand() {
-        TripRecord tripRecord = TripRecord.getTriRecode(context);
         try {
             AirIntakeTemperatureCommand airIntakeTemperatureCommand = new AirIntakeTemperatureCommand();
             airIntakeTemperatureCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
@@ -235,9 +265,6 @@ public class MyVehicleDash extends BaseActivity {
             setView(tripRecord);
         } catch (Exception e) {
             LogE("执行命令异常  :: " + e.getMessage());
-            if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
-                LogE("命令异常  :: " + e.getMessage());
-            }
         }
     }
 
@@ -245,19 +272,14 @@ public class MyVehicleDash extends BaseActivity {
      * 读取环境空气温度
      */
     private synchronized void executeAmbientAirTemperatureCommand() {
-        TripRecord tripRecord = TripRecord.getTriRecode(context);
         try {
             AmbientAirTemperatureCommand ambientAirTemperatureCommand = new AmbientAirTemperatureCommand();//"01 46"
             ambientAirTemperatureCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + ambientAirTemperatureCommand.getFormattedResult() + " :: name is :: " + ambientAirTemperatureCommand.getName());
             tripRecord.updateTrip(ambientAirTemperatureCommand.getName(), ambientAirTemperatureCommand);
             tvmAmbientAirTemp.setText(tripRecord.getmAmbientAirTemp());
-            //setView(tripRecord);
         } catch (Exception e) {
             LogE("执行命令异常  :: " + e.getMessage());
-            if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
-                LogE("命令异常  :: " + e.getMessage());
-            }
         }
     }
 
@@ -265,27 +287,21 @@ public class MyVehicleDash extends BaseActivity {
      * 读取发动机冷却液温度
      */
     private synchronized void executeEngineCoolantTemperatureCommand() {
-        TripRecord tripRecord = TripRecord.getTriRecode(context);
         try {
             EngineCoolantTemperatureCommand engineCoolantTemperatureCommand = new EngineCoolantTemperatureCommand();//"01 05"//发动机冷媒温度
             engineCoolantTemperatureCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + engineCoolantTemperatureCommand.getFormattedResult() + " :: name is :: " + engineCoolantTemperatureCommand.getName());
             tripRecord.updateTrip(engineCoolantTemperatureCommand.getName(), engineCoolantTemperatureCommand);
             dashEngineCoolantTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineCoolantTemp()) ? "0" : tripRecord.getmEngineCoolantTemp().replace("C", "")));
-            // setView(tripRecord);
         } catch (Exception e) {
             LogE("执行命令异常  :: " + e.getMessage());
-            if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
-                LogE("命令异常  :: " + e.getMessage());
-            }
         }
     }
 
     /**
      * 读取燃油油位
      */
-    private  synchronized void executeFuelLevelCommand() {
-        TripRecord tripRecord = TripRecord.getTriRecode(context);
+    private synchronized void executeFuelLevelCommand() {
         try {
             FuelLevelCommand fuelLevelCommand = new FuelLevelCommand();//"01 2F"
             fuelLevelCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
@@ -293,32 +309,8 @@ public class MyVehicleDash extends BaseActivity {
             tripRecord.updateTrip(fuelLevelCommand.getName(), fuelLevelCommand);
             tvmFuelLevel.setText(tripRecord.getmFuelLevel());
             dashFuelLevel.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmFuelLevel()) ? "0" : tripRecord.getmFuelLevel().replace("%", "")));
-            // setView(tripRecord);
         } catch (Exception e) {
             LogE("执行命令异常  :: " + e.getMessage());
-            if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
-                LogE("命令异常  :: " + e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * 读取宽带空燃比
-     */
-    private synchronized void executeAirFuelRatioCommand() {
-        TripRecord tripRecord = TripRecord.getTriRecode(context);
-        try {
-            AirFuelRatioCommand airFuelRatioCommand = new AirFuelRatioCommand();//"01 44"
-            airFuelRatioCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
-            LogE("结果是:: " + airFuelRatioCommand.getFormattedResult() + " :: name is :: " + airFuelRatioCommand.getName());
-            tripRecord.updateTrip(airFuelRatioCommand.getName(), airFuelRatioCommand);
-            tvmAirFuelRatio.setText(tripRecord.getmAirFuelRatio());
-            //setView(tripRecord);
-        } catch (Exception e) {
-            LogE("执行命令异常  :: " + e.getMessage());
-            if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
-                LogE("命令异常  :: " + e.getMessage());
-            }
         }
     }
 
@@ -326,19 +318,14 @@ public class MyVehicleDash extends BaseActivity {
      * 读取里程
      */
     private synchronized void executeOdometerCommand() {
-        TripRecord tripRecord = TripRecord.getTriRecode(context);
         try {
             OdometerCommand odometerCommand = new OdometerCommand();//"01 A6"
             odometerCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + odometerCommand.getFormattedResult() + " :: name is :: " + odometerCommand.getName());
             tripRecord.updateTrip(odometerCommand.getName(), odometerCommand);
             tvmOdometer.setText(TextUtils.isEmpty(tripRecord.getmOdometer()) ? "0" : tripRecord.getmOdometer());
-            //setView(tripRecord);
         } catch (Exception e) {
             LogE("执行命令异常  :: " + e.getMessage());
-            if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
-                LogE("命令异常  :: " + e.getMessage());
-            }
         }
     }
 
@@ -346,19 +333,14 @@ public class MyVehicleDash extends BaseActivity {
      * 读取控制模组电压
      */
     private synchronized void executeModuleVoltageCommand() {
-        TripRecord tripRecord = TripRecord.getTriRecode(context);
         try {
             ModuleVoltageCommand moduleVoltageCommand = new ModuleVoltageCommand();//"01 42"
             moduleVoltageCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + moduleVoltageCommand.getFormattedResult() + " :: name is :: " + moduleVoltageCommand.getName());
             tripRecord.updateTrip(moduleVoltageCommand.getName(), moduleVoltageCommand);
             tvmControlModuleVoltage.setText(tripRecord.getmControlModuleVoltage());
-            //setView(tripRecord);
         } catch (Exception e) {
             LogE("执行命令异常  :: " + e.getMessage());
-            if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
-                LogE("命令异常  :: " + e.getMessage());
-            }
         }
     }
 
@@ -366,48 +348,38 @@ public class MyVehicleDash extends BaseActivity {
      * 读取发动机油温
      */
     private synchronized void executeOilTempCommand() {
-        TripRecord tripRecord = TripRecord.getTriRecode(context);
         try {
             OilTempCommand oilTempCommand1 = new OilTempCommand();//"01 5C"
             oilTempCommand1.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + oilTempCommand1.getFormattedResult() + " :: name is :: " + oilTempCommand1.getName());
             tripRecord.updateTrip(oilTempCommand1.getName(), oilTempCommand1);
             dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineOilTemp()) ? "0" : tripRecord.getmEngineOilTemp().replace("C", "")));
-            // setView(tripRecord);
         } catch (Exception e) {
             LogE("执行命令异常  :: " + e.getMessage());
-            if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
-                LogE("命令异常  :: " + e.getMessage());
-            }
         }
     }
 
     /**
      * @param tripRecord OBD数据
      */
-    @SuppressLint("SetTextI18n")
     private void setView(TripRecord tripRecord) {
         if (tripRecord != null) {
             float InsFuelConsumption = BigDecimal.valueOf(tripRecord.getmInsFuelConsumption())
                     .setScale(2, BigDecimal.ROUND_HALF_DOWN)
                     .floatValue();
             tvmInsFuelConsumption.setText(String.valueOf(InsFuelConsumption));
-
             dashInsFuelConsumption.setVelocity(InsFuelConsumption);
-
             dashIdlingFuelConsumption.setVelocity(tripRecord.getmIdlingFuelConsumption());
-
         }
     }
-
 
     /**
      * 设置转速仪表
      */
     private void setRPM() {
-        dashRPM.setmSection(10);
+        dashRPM.setmSection(8);
         dashRPM.setmHeaderText("x1000");
-        dashRPM.setmMax(30);
+        dashRPM.setmMax(8);
         dashRPM.setmMin(0);
     }
 
@@ -483,7 +455,7 @@ public class MyVehicleDash extends BaseActivity {
         dashEngineCoolantTemp.setmMin(-40);
     }
 
-    class MySpeedCommand implements Runnable{
+    class MySpeedCommand implements Runnable {
 
         @Override
         public void run() {
@@ -492,7 +464,8 @@ public class MyVehicleDash extends BaseActivity {
             }
         }
     }
-    class MyRPMCommand implements Runnable{
+
+    class MyRPMCommand implements Runnable {
 
         @Override
         public void run() {
@@ -501,7 +474,8 @@ public class MyVehicleDash extends BaseActivity {
             }
         }
     }
-    class MyMassAirFlowCommand implements Runnable{
+
+    class MyMassAirFlowCommand implements Runnable {
 
         @Override
         public void run() {
@@ -511,7 +485,8 @@ public class MyVehicleDash extends BaseActivity {
             }
         }
     }
-    class MyIntakeManifoldPressureCommand implements Runnable{
+
+    class MyIntakeManifoldPressureCommand implements Runnable {
 
         @Override
         public void run() {
@@ -521,7 +496,8 @@ public class MyVehicleDash extends BaseActivity {
             }
         }
     }
-    class MyAmbientAirTemperatureCommand implements Runnable{
+
+    class MyAmbientAirTemperatureCommand implements Runnable {
 
         @Override
         public void run() {
@@ -531,7 +507,8 @@ public class MyVehicleDash extends BaseActivity {
             }
         }
     }
-    class MyEngineCoolantTemperatureCommand implements Runnable{
+
+    class MyEngineCoolantTemperatureCommand implements Runnable {
 
         @Override
         public void run() {
@@ -541,7 +518,8 @@ public class MyVehicleDash extends BaseActivity {
             }
         }
     }
-    class MyFuelLevelCommand implements Runnable{
+
+    class MyFuelLevelCommand implements Runnable {
 
         @Override
         public void run() {
@@ -551,17 +529,8 @@ public class MyVehicleDash extends BaseActivity {
             }
         }
     }
-    class MyAirFuelRatioCommand implements Runnable{
 
-        @Override
-        public void run() {
-            while (ObdPreferences.get(getApplicationContext()).getServiceRunningStatus()) {
-                executeAirFuelRatioCommand();
-
-            }
-        }
-    }
-    class MyOdometerCommand implements Runnable{
+    class MyOdometerCommand implements Runnable {
 
         @Override
         public void run() {
@@ -571,7 +540,8 @@ public class MyVehicleDash extends BaseActivity {
             }
         }
     }
-    class MyRModuleVoltageCommand implements Runnable{
+
+    class MyRModuleVoltageCommand implements Runnable {
 
         @Override
         public void run() {
@@ -580,7 +550,8 @@ public class MyVehicleDash extends BaseActivity {
             }
         }
     }
-    class MyOilTempCommand implements Runnable{
+
+    class MyOilTempCommand implements Runnable {
 
         @Override
         public void run() {

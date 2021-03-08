@@ -127,7 +127,7 @@ dependencies {
     implementation 'com.tbruyelle.rxpermissions:rxpermissions:0.9.4@aar'
     implementation 'com.alibaba:fastjson:1.2.75'
     implementation 'org.greenrobot:eventbus:3.1.1'
-    //implementation 'com.github.pires:obd-java-api:1.0-RC16'
+    implementation 'com.github.pires:obd-java-api:1.0-RC16'
     implementation 'org.roboguice:roboguice:3.0.1'
     compileOnly 'org.roboguice:roboblender:3.0.1'
     /*PictureSelector*/
@@ -142,9 +142,9 @@ dependencies {
     implementation project(':obd-reader')
 
     // 沉浸式状态栏（根据自己需求进行添加）
-// 基础依赖包，必须要依赖
+    // 基础依赖包，必须要依赖
     implementation 'com.gyf.immersionbar:immersionbar:3.0.0'
-// fragment快速实现（可选）
+    // fragment快速实现（可选）
     implementation 'com.gyf.immersionbar:immersionbar-components:3.0.0'
     implementation 'com.github.navasmdc:MaterialDesign:1.+@aar'
 }

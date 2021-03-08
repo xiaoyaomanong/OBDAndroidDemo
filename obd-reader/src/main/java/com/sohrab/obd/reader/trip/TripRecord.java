@@ -215,7 +215,6 @@ public class TripRecord implements DefineObdReader, Serializable {
     }
 
     private void calculateIdlingAndDrivingTime(int currentSpeed) {
-
         long currentTime = System.currentTimeMillis();
         if ((speed == -1 || speed == 0) && currentSpeed == 0) {
             idlingDuration = currentTime - tripStartTime - drivingDuration;
@@ -482,25 +481,21 @@ public class TripRecord implements DefineObdReader, Serializable {
                 data.add(new OBDTripEntity("大气压", TextUtils.isEmpty(mBarometricPressure) ? "" : mBarometricPressure, R.drawable.icon_dqy));
                 entity.setBarometricPressure(TextUtils.isEmpty(mBarometricPressure) ? "" : mBarometricPressure);
                 break;
-
             case THROTTLE_POS:
                 mThrottlePos = command.getFormattedResult();
                 data.add(new OBDTripEntity("节气门位置", TextUtils.isEmpty(mThrottlePos) ? "" : mThrottlePos, R.drawable.icon_jqmwz));
                 entity.setRelThottlePos(TextUtils.isEmpty(mThrottlePos) ? "" : mThrottlePos);
                 break;
-
             case TIMING_ADVANCE:
                 mTimingAdvance = command.getFormattedResult();
                 data.add(new OBDTripEntity("定时提前", TextUtils.isEmpty(mTimingAdvance) ? "" : mTimingAdvance, R.drawable.icon_timing_advance));
                 entity.setTimingAdvance(TextUtils.isEmpty(mTimingAdvance) ? "" : mTimingAdvance);
                 break;
-
             case PERMANENT_TROUBLE_CODES:
                 mPermanentTroubleCode = command.getFormattedResult();
                 data.add(new OBDTripEntity("永久性故障代码", TextUtils.isEmpty(mPermanentTroubleCode) ? "" : mPermanentTroubleCode, R.drawable.icon_troublecode_three));
                 entity.setPermanentTroubleCode(TextUtils.isEmpty(mPermanentTroubleCode) ? "" : mPermanentTroubleCode);
                 break;
-
             case PENDING_TROUBLE_CODES:
                 mPendingTroubleCode = command.getFormattedResult();
                 data.add(new OBDTripEntity("未决故障代码", TextUtils.isEmpty(mPendingTroubleCode) ? "" : mPendingTroubleCode, R.drawable.icon_troublecode_two));

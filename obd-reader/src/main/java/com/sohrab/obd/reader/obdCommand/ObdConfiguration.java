@@ -59,14 +59,6 @@ public class ObdConfiguration {
         return mObdCommands;
     }
 
-    public static void setmObdCommands(Context context, ArrayList<ObdCommand> obdCommands) {
-        if (mObdCommands == null) {
-            mObdCommands = obdCommands;
-            return;
-        }
-        Toast.makeText(context, "无法在ObdReaderService启动后添加命令!", Toast.LENGTH_SHORT).show();
-    }
-
     private static void getDefaultObdCommand() {
         mObdCommands = new ArrayList<>();
 

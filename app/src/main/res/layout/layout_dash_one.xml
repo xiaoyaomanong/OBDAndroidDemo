@@ -103,34 +103,6 @@
             android:layout_width="30dp"
             android:layout_height="match_parent"
             android:padding="3dp"
-            android:src="@drawable/icon_krb"
-            tools:ignore="ContentDescription" />
-
-        <TextView
-            android:id="@+id/tvmAirFuelRatio"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:fontFamily="@font/gotham"
-            android:gravity="center_vertical"
-            android:hint="空燃比"
-            android:paddingStart="15dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/gray"
-            android:textSize="@dimen/sp_12" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        tools:ignore="UseCompoundDrawables">
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:padding="3dp"
             android:src="@drawable/icon_hjkqwd"
             tools:ignore="ContentDescription" />
 

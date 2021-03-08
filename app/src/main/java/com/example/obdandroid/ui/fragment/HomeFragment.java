@@ -82,7 +82,6 @@ public class HomeFragment extends BaseFragment {
     private TitleBar titleBar;
     private List<BluetoothDeviceEntity> blueList;
     private int yourChoice;
-    private SPUtil spUtil;
     private RecyclerView recycleCar;
     private RecyclerView recycleContent;
     private LinearLayout layoutCar;
@@ -154,7 +153,7 @@ public class HomeFragment extends BaseFragment {
         layoutCheck = getView(R.id.layoutCheck);
         tvCheckTime = getView(R.id.tvCheckTime);
         titleBar.setTitle("汽车扫描");
-        spUtil = new SPUtil(context);
+        SPUtil spUtil = new SPUtil(context);
         dialogUtils = new DialogUtils(context);
         mConnectedDeviceName = ObdPreferences.get(context).getBlueToothDeviceName();
         mConnectedDeviceAddress = ObdPreferences.get(context).getBlueToothDeviceAddress();
@@ -164,21 +163,13 @@ public class HomeFragment extends BaseFragment {
         initRecordReceiver();//注册车辆检测记录跟新广播
         getUserInfo(getUserId(), getToken(), spUtil.getString("vehicleId", ""));
         layoutMoreDash.setOnClickListener(v -> {
-            if (isConnected) {
-                Intent intent = new Intent(context, MyVehicleDash.class);
-                startActivityForResult(intent, 102);
-            } else {
-                showTipDialog(mConnectedDeviceName + "未连接");
-            }
+            Intent intent = new Intent(context, MyVehicleDash.class);
+            startActivityForResult(intent, 102);
         });
         setCheckRecord();
         layoutCheck.setOnClickListener(v -> {
-            if (isConnected) {
-                Intent intent = new Intent(context, VehicleCheckActivity.class);
-                startActivityForResult(intent, 102);
-            } else {
-                showTipDialog(mConnectedDeviceName + "未连接");
-            }
+            Intent intent = new Intent(context, VehicleCheckActivity.class);
+            startActivityForResult(intent, 102);
         });
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -461,7 +452,6 @@ public class HomeFragment extends BaseFragment {
                         sendMessage(COMPLETET);
                     }
                 })).start();
-
     }
 
     /**

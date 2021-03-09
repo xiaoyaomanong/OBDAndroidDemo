@@ -24,6 +24,7 @@ import com.sohrab.obd.reader.obdCommand.engine.RPMCommand;
 import com.sohrab.obd.reader.obdCommand.fuel.AirFuelRatioCommand;
 import com.sohrab.obd.reader.obdCommand.fuel.FuelLevelCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.IntakeManifoldPressureCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.AirIntakeTemperatureCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.AmbientAirTemperatureCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.EngineCoolantTemperatureCommand;
@@ -169,6 +170,7 @@ public class MyVehicleDash extends BaseActivity {
      */
     private synchronized void executeSpeedCommand() {
         try {
+            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             SpeedCommand speedCommand = new SpeedCommand();//"01 0D"
             speedCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + speedCommand.getFormattedResult() + " :: name is :: " + speedCommand.getName());
@@ -235,6 +237,7 @@ public class MyVehicleDash extends BaseActivity {
      */
     private synchronized void executeMassAirFlowCommand() {
         try {
+            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             MassAirFlowCommand massAirFlowCommand = new MassAirFlowCommand();//"01 10"//空气流量感测器（MAF）空气流率
             massAirFlowCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + massAirFlowCommand.getFormattedResult() + " :: name is :: " + massAirFlowCommand.getName());
@@ -254,6 +257,7 @@ public class MyVehicleDash extends BaseActivity {
      */
     private synchronized void executeIntakeManifoldPressureCommand() {
         try {
+            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             AirIntakeTemperatureCommand airIntakeTemperatureCommand = new AirIntakeTemperatureCommand();
             airIntakeTemperatureCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + airIntakeTemperatureCommand.getFormattedResult() + " :: name is :: " + airIntakeTemperatureCommand.getName());
@@ -273,6 +277,7 @@ public class MyVehicleDash extends BaseActivity {
      */
     private synchronized void executeAmbientAirTemperatureCommand() {
         try {
+            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             AmbientAirTemperatureCommand ambientAirTemperatureCommand = new AmbientAirTemperatureCommand();//"01 46"
             ambientAirTemperatureCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + ambientAirTemperatureCommand.getFormattedResult() + " :: name is :: " + ambientAirTemperatureCommand.getName());
@@ -288,6 +293,7 @@ public class MyVehicleDash extends BaseActivity {
      */
     private synchronized void executeEngineCoolantTemperatureCommand() {
         try {
+            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             EngineCoolantTemperatureCommand engineCoolantTemperatureCommand = new EngineCoolantTemperatureCommand();//"01 05"//发动机冷媒温度
             engineCoolantTemperatureCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + engineCoolantTemperatureCommand.getFormattedResult() + " :: name is :: " + engineCoolantTemperatureCommand.getName());
@@ -303,6 +309,7 @@ public class MyVehicleDash extends BaseActivity {
      */
     private synchronized void executeFuelLevelCommand() {
         try {
+            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             FuelLevelCommand fuelLevelCommand = new FuelLevelCommand();//"01 2F"
             fuelLevelCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + fuelLevelCommand.getFormattedResult() + " :: name is :: " + fuelLevelCommand.getName());
@@ -319,6 +326,7 @@ public class MyVehicleDash extends BaseActivity {
      */
     private synchronized void executeOdometerCommand() {
         try {
+            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             OdometerCommand odometerCommand = new OdometerCommand();//"01 A6"
             odometerCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + odometerCommand.getFormattedResult() + " :: name is :: " + odometerCommand.getName());
@@ -334,6 +342,7 @@ public class MyVehicleDash extends BaseActivity {
      */
     private synchronized void executeModuleVoltageCommand() {
         try {
+            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             ModuleVoltageCommand moduleVoltageCommand = new ModuleVoltageCommand();//"01 42"
             moduleVoltageCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + moduleVoltageCommand.getFormattedResult() + " :: name is :: " + moduleVoltageCommand.getName());
@@ -349,6 +358,7 @@ public class MyVehicleDash extends BaseActivity {
      */
     private synchronized void executeOilTempCommand() {
         try {
+            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             OilTempCommand oilTempCommand1 = new OilTempCommand();//"01 5C"
             oilTempCommand1.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + oilTempCommand1.getFormattedResult() + " :: name is :: " + oilTempCommand1.getName());

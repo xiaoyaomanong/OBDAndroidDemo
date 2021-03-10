@@ -16,25 +16,74 @@
         app:lineVisible="false"
         app:title="@string/dashTable" />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/view_pager"
+    <LinearLayout
+        android:id="@+id/layoutDashOne"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/bg_black"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-    </android.support.v4.view.ViewPager>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:contentDescription="@string/dash_one"
+            android:src="@drawable/icon_dash_logo" />
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tab_layout"
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/dp_10"
+            android:text="@string/dash_one"
+            android:textColor="@color/white"
+            tools:ignore="RtlSymmetry" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/dash_one"
+            android:src="@drawable/icon_next" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutDashTwo"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        app:tabBackground="@color/color_2C2B30"
-        app:tabIndicatorHeight="0dp"
-        app:tabMode="fixed"
-        app:tabSelectedTextColor="@color/colorPrimary"
-        app:tabTextAppearance="@style/tabTextSizeStyle"
-        app:tabTextColor="@color/white">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/bg_black"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-    </android.support.design.widget.TabLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:contentDescription="@string/dash_two"
+            android:src="@drawable/icon_dash_logo" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/dp_10"
+            android:text="@string/dash_two"
+            android:textColor="@color/white"
+            tools:ignore="RtlSymmetry" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/dash_two"
+            android:src="@drawable/icon_next" />
+
+    </LinearLayout>
 
 </LinearLayout>

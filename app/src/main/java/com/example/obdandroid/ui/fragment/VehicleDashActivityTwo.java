@@ -1,16 +1,18 @@
 package com.example.obdandroid.ui.fragment;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
 import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
-import com.example.obdandroid.base.BaseFragment;
+import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.view.PhilText;
 import com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight;
+import com.hjq.bar.OnTitleBarListener;
+import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.application.ObdPreferences;
+import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.engine.MassAirFlowCommand;
 import com.sohrab.obd.reader.obdCommand.fuel.FuelLevelCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.IntakeManifoldPressureCommand;
@@ -19,13 +21,15 @@ import com.sohrab.obd.reader.obdCommand.temperature.AirIntakeTemperatureCommand;
 import com.sohrab.obd.reader.trip.TripRecord;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 作者：Jealous
  * 日期：2021/3/10 0010
  * 描述：
  */
-public class VehicleDashFragmentTwo extends BaseFragment {
+public class VehicleDashActivityTwo extends BaseActivity {
     private PhilText tvmIdlingFuelConsumption;
     private PhilText tvmInsFuelConsumption;
     private PhilText tvFuelLevel;
@@ -34,30 +38,28 @@ public class VehicleDashFragmentTwo extends BaseFragment {
     private CustomerDashboardViewLight dashIdlingFuelConsumption;
     private CustomerDashboardViewLight dashFuelLevel;
     private CustomerDashboardViewLight dashDrivingFuelConsumption;
-    private Context context;
     private TripRecord tripRecord;
-    private final Thread mFuelLevelCommand = new Thread(new MyFuelLevelCommand());
-    private final Thread mIntakeManifoldPressureCommand = new Thread(new MyIntakeManifoldPressureCommand());
-    private final Thread mMassAirFlowCommand = new Thread(new MyMassAirFlowCommand());
-    private int flag=1;
-    private boolean show;
+    private Thread mFuelLevelCommand = new Thread(new MyFuelLevelCommand());
+    private Thread mIntakeManifoldPressureCommand = new Thread(new MyIntakeManifoldPressureCommand());
+    private Thread mMassAirFlowCommand = new Thread(new MyMassAirFlowCommand());
+    private List<ObdCommand> commands = new ArrayList<>();
+
 
     @Override
-    protected int getLayoutId() {
+    protected int getContentViewId() {
         return R.layout.fragment_dash_two;
     }
-    /**
-     * 视图是否已经对用户可见，系统的方法
-     */
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        show=isVisibleToUser;
 
-    }
     @Override
-    public void initView(View view, Bundle savedInstanceState) {
-        context = getHoldingActivity();
+    protected int getFragmentContentId() {
+        return 0;
+    }
+
+    @Override
+    public void initView() {
+        super.initView();
+        Context context = this;
+        TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         tvmIdlingFuelConsumption = getView(R.id.tvmIdlingFuelConsumption);
         tvmInsFuelConsumption = getView(R.id.tvmInsFuelConsumption);
         tvFuelLevel = getView(R.id.tvFuelLevel);
@@ -68,23 +70,64 @@ public class VehicleDashFragmentTwo extends BaseFragment {
         dashDrivingFuelConsumption = getView(R.id.dashDrivingFuelConsumption);
         TripRecord.getTriRecode(context).clear();
         tripRecord = TripRecord.getTriRecode(context);
+        ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(true);
+        commands = setCommands();
         setFuelLevel();
         setInsFuelConsumption();
         setDrivingFuelConsumption();
         setIdlingFuelConsumption();
         startCommand();
+        titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
+            @Override
+            public void onLeftClick(View v) {
+                finish();
+            }
+
+            @Override
+            public void onTitleClick(View v) {
+
+            }
+
+            @Override
+            public void onRightClick(View v) {
+
+            }
+        });
     }
 
     private void startCommand() {
-        LogE("是否连接:" + MainApplication.getBluetoothSocket().isConnected());
-        // boolean isConnected = MainApplication.getBluetoothSocket().isConnected();
-        boolean isConnected = true;
+        boolean isConnected = MainApplication.getBluetoothSocket().isConnected();
         if (isConnected) {
-            mFuelLevelCommand.start();
-         /*   mIntakeManifoldPressureCommand.start();
-            mMassAirFlowCommand.start();*/
+            startThread();
         } else {
             showToast("OBD连接已断开");
+        }
+    }
+
+    /**
+     * 开启线程
+     */
+    private void startThread() {
+        mFuelLevelCommand.start();
+        mIntakeManifoldPressureCommand.start();
+        mMassAirFlowCommand.start();
+    }
+
+    /**
+     * 中止线程
+     */
+    private void stopThread() {
+        if (mFuelLevelCommand != null) {
+            mFuelLevelCommand.interrupt();
+            mFuelLevelCommand = null;
+        }
+        if (mIntakeManifoldPressureCommand != null) {
+            mIntakeManifoldPressureCommand.interrupt();
+            mIntakeManifoldPressureCommand = null;
+        }
+        if (mMassAirFlowCommand != null) {
+            mMassAirFlowCommand.interrupt();
+            mMassAirFlowCommand = null;
         }
     }
 
@@ -132,29 +175,34 @@ public class VehicleDashFragmentTwo extends BaseFragment {
     /**
      * 读取进气歧管压力
      */
-    private void executeIntakeManifoldPressureCommand() {
-        try {
-            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
-            AirIntakeTemperatureCommand airIntakeTemperatureCommand = new AirIntakeTemperatureCommand();
-            airIntakeTemperatureCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
-            LogE("结果是:: " + airIntakeTemperatureCommand.getFormattedResult() + " :: name is :: " + airIntakeTemperatureCommand.getName());
-            tripRecord.updateTrip(airIntakeTemperatureCommand.getName(), airIntakeTemperatureCommand);
-            IntakeManifoldPressureCommand intakeManifoldPressureCommand = new IntakeManifoldPressureCommand();//"01 0B"
-            intakeManifoldPressureCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
-            LogE("结果是:: " + intakeManifoldPressureCommand.getFormattedResult() + " :: name is :: " + intakeManifoldPressureCommand.getName());
-            tripRecord.updateTrip(intakeManifoldPressureCommand.getName(), intakeManifoldPressureCommand);
-            setView(tripRecord);
-        } catch (Exception e) {
-            LogE("执行命令异常  :: " + e.getMessage());
+    private synchronized void executeIntakeManifoldPressureCommand() {
+        for (int i = 0; i < commands.size(); i++) {
+            ObdCommand command = commands.get(i);
+            try {
+                command.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
+                LogE("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
+                tripRecord.updateTrip(command.getName(), command);
+                setView(tripRecord);
+            } catch (Exception e) {
+                e.printStackTrace();
+                LogE("执行命令异常  :: " + e.getMessage());
+            }
         }
+    }
+
+    private List<ObdCommand> setCommands() {
+        List<ObdCommand> obdCommands = new ArrayList<>();
+        obdCommands.add(new ObdResetCommand());
+        obdCommands.add(new AirIntakeTemperatureCommand());
+        obdCommands.add(new IntakeManifoldPressureCommand());
+        return obdCommands;
     }
 
     /**
      * 读取燃油油位
      */
-    private void executeFuelLevelCommand() {
+    private synchronized void executeFuelLevelCommand() {
         try {
-            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             FuelLevelCommand fuelLevelCommand = new FuelLevelCommand();//"01 2F"
             fuelLevelCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + fuelLevelCommand.getFormattedResult() + " :: name is :: " + fuelLevelCommand.getName());
@@ -170,9 +218,8 @@ public class VehicleDashFragmentTwo extends BaseFragment {
     /**
      * 读取空气质量流量
      */
-    private void executeMassAirFlowCommand() {
+    private synchronized void executeMassAirFlowCommand() {
         try {
-            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             MassAirFlowCommand massAirFlowCommand = new MassAirFlowCommand();//"01 10"//空气流量感测器（MAF）空气流率
             massAirFlowCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + massAirFlowCommand.getFormattedResult() + " :: name is :: " + massAirFlowCommand.getName());
@@ -202,11 +249,12 @@ public class VehicleDashFragmentTwo extends BaseFragment {
         }
     }
 
+
     class MyIntakeManifoldPressureCommand implements Runnable {
 
         @Override
         public void run() {
-            while (ObdPreferences.get(getContext()).getServiceRunning()) {
+            while (ObdPreferences.get(getApplicationContext()).getServiceRunningStatus()) {
                 executeIntakeManifoldPressureCommand();
             }
         }
@@ -216,11 +264,8 @@ public class VehicleDashFragmentTwo extends BaseFragment {
 
         @Override
         public void run() {
-            while (show) {
-                LogE("2222");
-                flag++;
-                tvFuelLevel.setText(flag+"");
-                // executeFuelLevelCommand();
+            while (ObdPreferences.get(getApplicationContext()).getServiceRunningStatus()) {
+                executeFuelLevelCommand();
             }
         }
     }
@@ -229,9 +274,16 @@ public class VehicleDashFragmentTwo extends BaseFragment {
 
         @Override
         public void run() {
-            while (ObdPreferences.get(getContext()).getServiceRunning()) {
+            while (ObdPreferences.get(getApplicationContext()).getServiceRunningStatus()) {
                 executeMassAirFlowCommand();
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopThread();
+        ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(false);
     }
 }

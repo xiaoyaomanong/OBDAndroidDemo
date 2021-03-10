@@ -8,6 +8,13 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
+    <com.hjq.bar.TitleBar
+        android:id="@+id/titleBarSet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barStyle="night"
+        app:lineVisible="false"
+        app:title="@string/dashTableTwo" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -36,7 +43,7 @@
                     android:layout_marginEnd="40dp"
                     android:background="@drawable/bg_dash_title"
                     android:gravity="center"
-                    android:text="@string/dashTableTwo"
+                    android:text="@string/dashTable"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_14"
                     android:textStyle="bold" />
@@ -50,7 +57,7 @@
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="220dp"
+                        android:layout_height="160dp"
                         android:layout_marginTop="15dp"
                         android:layout_weight="1"
                         android:gravity="center"
@@ -81,7 +88,7 @@
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="220dp"
+                        android:layout_height="160dp"
                         android:layout_marginTop="15dp"
                         android:layout_weight="1"
                         android:gravity="center"

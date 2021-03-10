@@ -73,7 +73,7 @@ import static com.example.obdandroid.config.Constant.REQUEST_ENABLE_BT;
 
 /**
  * 作者：Jealous
- * 日期：2020/12/23 0023
+ * 日期：2020/12/23 0023  y
  * 描述：
  */
 public class HomeFragment extends BaseFragment {

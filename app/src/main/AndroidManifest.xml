@@ -180,6 +180,8 @@
             android:launchMode="singleTop" />
         <activity android:name=".ui.activity.VehicleCheckActivity" />
         <activity android:name=".ui.activity.CheckReportActivity" />
+        <activity android:name=".ui.fragment.VehicleDashActivityOne" />
+        <activity android:name=".ui.fragment.VehicleDashActivityTwo" />
 
         <service android:name=".service.GpsServices" />
 

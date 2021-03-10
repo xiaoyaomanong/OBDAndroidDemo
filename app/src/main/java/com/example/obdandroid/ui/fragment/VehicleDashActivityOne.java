@@ -1,34 +1,37 @@
 package com.example.obdandroid.ui.fragment;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.TextView;
 
 import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
-import com.example.obdandroid.base.BaseFragment;
+import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.view.PhilText;
 import com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight;
+import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.application.ObdPreferences;
+import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.SpeedCommand;
 import com.sohrab.obd.reader.obdCommand.engine.OilTempCommand;
 import com.sohrab.obd.reader.obdCommand.engine.RPMCommand;
+import com.sohrab.obd.reader.obdCommand.pressure.IntakeManifoldPressureCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
+import com.sohrab.obd.reader.obdCommand.temperature.AirIntakeTemperatureCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.EngineCoolantTemperatureCommand;
 import com.sohrab.obd.reader.trip.TripRecord;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 作者：Jealous
  * 日期：2021/3/10 0010
  * 描述：
  */
-public class VehicleDashFragmentOne extends BaseFragment {
+public class VehicleDashActivityOne extends BaseActivity {
     private PhilText tvmSpeed;
     private PhilText tvmRPM;
     private PhilText tvMaxRPM;
@@ -40,39 +43,27 @@ public class VehicleDashFragmentOne extends BaseFragment {
     private CustomerDashboardViewLight dashEngineOilTemp;
     private CustomerDashboardViewLight dashEngineCoolantTemp;
     private TripRecord tripRecord;
-    private final Thread mSpeedCommand = new Thread(new MySpeedCommand());
-    private final Thread mRPMCommand = new Thread(new MyRPMCommand());
-    private final Thread mOilTempCommand = new Thread(new MyOilTempCommand());
-    private final Thread mEngineCoolantTemperatureCommand = new Thread(new MyEngineCoolantTemperatureCommand());
-    private int flag=1;
-    private boolean show;
-    private Handler mHandler = new Handler ();
+    private Thread mSpeedCommand = new Thread(new MySpeedCommand());
+    private Thread mRPMCommand = new Thread(new MyRPMCommand());
+    private Thread mOilTempCommand = new Thread(new MyOilTempCommand());
+    private Thread mEngineCoolantTemperatureCommand = new Thread(new MyEngineCoolantTemperatureCommand());
+    private List<ObdCommand> commands = new ArrayList<>();
 
     @Override
-    protected int getLayoutId() {
+    protected int getContentViewId() {
         return R.layout.fragment_dash_one;
     }
 
-    /**
-     * 视图是否已经对用户可见，系统的方法
-     */
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        show=isVisibleToUser;
-        LogE("isVisibleToUser:"+isVisibleToUser);
-        if (isVisibleToUser){
-            //通过handler启动线程
-            mHandler.post(mEngineCoolantTemperatureCommand);
-        }else {
-            mHandler.removeCallbacks(mEngineCoolantTemperatureCommand);
-        }
+    protected int getFragmentContentId() {
+        return 0;
     }
 
-
     @Override
-    public void initView(View view, Bundle savedInstanceState) {
-        Context context = getHoldingActivity();
+    public void initView() {
+        super.initView();
+        Context context = this;
+        TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         tvmSpeed = getView(R.id.tvmSpeed);
         tvmRPM = getView(R.id.tvmRPM);
         tvMaxRPM = getView(R.id.tvMaxRPM);
@@ -85,24 +76,71 @@ public class VehicleDashFragmentOne extends BaseFragment {
         dashEngineCoolantTemp = getView(R.id.dashEngineCoolantTemp);
         TripRecord.getTriRecode(context).clear();
         tripRecord = TripRecord.getTriRecode(context);
+        ObdPreferences.get(getApplicationContext()).setServiceRunning(true);
+        commands = setCommands();
         setRPM();
         setSpeed();
         setEngineCoolantTemp();
         setEngineOilTemp();
         startCommand();
+        titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
+            @Override
+            public void onLeftClick(View v) {
+                finish();
+            }
+
+            @Override
+            public void onTitleClick(View v) {
+
+            }
+
+            @Override
+            public void onRightClick(View v) {
+
+            }
+        });
     }
 
     private void startCommand() {
         LogE("是否连接:" + MainApplication.getBluetoothSocket().isConnected());
-        // boolean isConnected = MainApplication.getBluetoothSocket().isConnected();
-        boolean isConnected = true;
+        boolean isConnected = MainApplication.getBluetoothSocket().isConnected();
         if (isConnected) {
-            mEngineCoolantTemperatureCommand.start();
-          /*  mOilTempCommand.start();
-            mRPMCommand.start();
-            mSpeedCommand.start();*/
+            startThread();
         } else {
             showToast("OBD连接已断开");
+        }
+    }
+
+    /**
+     * 开启线程
+     */
+    private void startThread() {
+        mSpeedCommand.start();
+        mRPMCommand.start();
+        mOilTempCommand.start();
+        mEngineCoolantTemperatureCommand.start();
+    }
+
+
+    /**
+     * 中止线程
+     */
+    private void stopThread() {
+        if (mSpeedCommand != null) {
+            mSpeedCommand.interrupt();
+            mSpeedCommand = null;
+        }
+        if (mRPMCommand != null) {
+            mRPMCommand.interrupt();
+            mRPMCommand = null;
+        }
+        if (mOilTempCommand != null) {
+            mOilTempCommand.interrupt();
+            mOilTempCommand = null;
+        }
+        if (mEngineCoolantTemperatureCommand != null) {
+            mEngineCoolantTemperatureCommand.interrupt();
+            mEngineCoolantTemperatureCommand = null;
         }
     }
 
@@ -110,8 +148,26 @@ public class VehicleDashFragmentOne extends BaseFragment {
     /**
      * 读取速度
      */
-    private void executeSpeedCommand() {
-        try {
+    private synchronized void executeSpeedCommand() {
+        for (int i = 0; i < commands.size(); i++) {
+            ObdCommand command = commands.get(i);
+            try {
+                command.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
+                LogE("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
+                tripRecord.updateTrip(command.getName(), command);
+                tvmSpeed.setText(String.valueOf(tripRecord.getSpeed()));
+                dashSpeed.setVelocity(tripRecord.getSpeed());
+                tvAverageSpeed.setText(String.valueOf(tripRecord.getAverageSpeed()));
+                tvMaxSpeed.setText(String.valueOf(tripRecord.getSpeedMax()));
+                float DrivingDuration = BigDecimal.valueOf(tripRecord.getDrivingDuration())
+                        .setScale(2, BigDecimal.ROUND_HALF_DOWN)
+                        .floatValue();
+                tvDrivingDuration.setText(String.valueOf(DrivingDuration));
+            } catch (Exception e) {
+                LogE("执行命令异常  :: " + e.getMessage());
+            }
+        }
+       /* try {
             new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             SpeedCommand speedCommand = new SpeedCommand();//"01 0D"
             speedCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
@@ -127,15 +183,21 @@ public class VehicleDashFragmentOne extends BaseFragment {
             tvDrivingDuration.setText(String.valueOf(DrivingDuration));
         } catch (Exception e) {
             LogE("执行命令异常  :: " + e.getMessage());
-        }
+        }*/
+    }
+
+    private List<ObdCommand> setCommands() {
+        List<ObdCommand> obdCommands = new ArrayList<>();
+        obdCommands.add(new ObdResetCommand());
+        obdCommands.add(new SpeedCommand());
+        return obdCommands;
     }
 
     /**
      * 读取转速
      */
-    private void executeRPMCommand() {
+    private synchronized void executeRPMCommand() {
         try {
-            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             RPMCommand rpmCommand = new RPMCommand();//"01 0C"
             rpmCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + rpmCommand.getFormattedResult() + " :: name is :: " + rpmCommand.getName());
@@ -153,9 +215,8 @@ public class VehicleDashFragmentOne extends BaseFragment {
     /**
      * 读取发动机油温
      */
-    private void executeOilTempCommand() {
+    private synchronized void executeOilTempCommand() {
         try {
-            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             OilTempCommand oilTempCommand1 = new OilTempCommand();//"01 5C"
             oilTempCommand1.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + oilTempCommand1.getFormattedResult() + " :: name is :: " + oilTempCommand1.getName());
@@ -169,9 +230,8 @@ public class VehicleDashFragmentOne extends BaseFragment {
     /**
      * 读取发动机冷却液温度
      */
-    private void executeEngineCoolantTemperatureCommand() {
+    private synchronized void executeEngineCoolantTemperatureCommand() {
         try {
-            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             EngineCoolantTemperatureCommand engineCoolantTemperatureCommand = new EngineCoolantTemperatureCommand();//"01 05"//发动机冷媒温度
             engineCoolantTemperatureCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + engineCoolantTemperatureCommand.getFormattedResult() + " :: name is :: " + engineCoolantTemperatureCommand.getName());
@@ -185,7 +245,7 @@ public class VehicleDashFragmentOne extends BaseFragment {
     /**
      * 设置转速仪表
      */
-    private void setRPM() {
+    private synchronized void setRPM() {
         dashRPM.setmSection(8);
         dashRPM.setmHeaderText("x1000");
         dashRPM.setmMax(8);
@@ -222,11 +282,12 @@ public class VehicleDashFragmentOne extends BaseFragment {
         dashEngineCoolantTemp.setmMin(-40);
     }
 
+
     class MySpeedCommand implements Runnable {
 
         @Override
         public void run() {
-            while (ObdPreferences.get(getContext()).getServiceRunningStatus()) {
+            while (ObdPreferences.get(getApplicationContext()).getServiceRunning()) {
                 executeSpeedCommand();
             }
         }
@@ -236,7 +297,7 @@ public class VehicleDashFragmentOne extends BaseFragment {
 
         @Override
         public void run() {
-            while (ObdPreferences.get(getContext()).getServiceRunningStatus()) {
+            while (ObdPreferences.get(getApplicationContext()).getServiceRunning()) {
                 executeRPMCommand();
             }
         }
@@ -246,7 +307,7 @@ public class VehicleDashFragmentOne extends BaseFragment {
 
         @Override
         public void run() {
-            while (ObdPreferences.get(getContext()).getServiceRunningStatus()) {
+            while (ObdPreferences.get(getApplicationContext()).getServiceRunning()) {
                 executeOilTempCommand();
             }
         }
@@ -256,14 +317,17 @@ public class VehicleDashFragmentOne extends BaseFragment {
 
         @Override
         public void run() {
-            while (show) {
-                // executeEngineCoolantTemperatureCommand();
-                flag++;
-                tvMaxRPM.setText(flag+"");
-                LogE("1111");
+            while (ObdPreferences.get(getApplicationContext()).getServiceRunning()) {
+                executeEngineCoolantTemperatureCommand();
             }
-
-            //mHandler.postDelayed(mEngineCoolantTemperatureCommand, 0);
         }
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ObdPreferences.get(getApplicationContext()).setServiceRunning(false);
+        stopThread();
     }
 }

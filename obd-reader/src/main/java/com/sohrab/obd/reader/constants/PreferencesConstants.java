@@ -12,6 +12,7 @@ public interface PreferencesConstants {
     String GAS_PRICE = "gasPrice";
     String IS_OBD_CONNECTED = "IS_OBD_CONNECTED";
     String SERVICE_RUNNING_STATUS = "SERVICE_RUNNING_STATUS";
+    String SERVICE_RUNNING = "SERVICE_RUNNING";
     String FUEL_TYPE_VALUE = "FUEL_TYPE_VALUE";
     String BT_NAME_KEY = "bt_name_preference";
     String BT_ADDRESS_KEY = "bt_address_preference";

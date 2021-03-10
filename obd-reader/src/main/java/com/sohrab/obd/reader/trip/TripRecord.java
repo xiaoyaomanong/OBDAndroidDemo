@@ -339,7 +339,6 @@ public class TripRecord implements DefineObdReader, Serializable {
             mDrivingMafCount++;
             literPerSecond = ((((mDrivingMaf / mDrivingMafCount) / mFuelTypeValue) / gramToLitre));
             mDrivingFuelConsumption = (literPerSecond * (drivingDuration / 1000));
-
         } else {
             mIdleMaf += currentMaf;
             mIdleMafCount++;

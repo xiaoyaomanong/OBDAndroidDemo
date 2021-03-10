@@ -87,6 +87,13 @@ public class ObdPreferences implements PreferencesConstants {
     public void setServiceRunningStatus(boolean status) {
         mEditor.putBoolean(SERVICE_RUNNING_STATUS, status).commit();
     }
+    public boolean getServiceRunning() {
+        return mPrefs.getBoolean(SERVICE_RUNNING, false);
+    }
+
+    public void setServiceRunning(boolean status) {
+        mEditor.putBoolean(SERVICE_RUNNING, status).commit();
+    }
 
     public void setBlueToothDeviceName(String deviceName) {
         mEditor.putString(BT_NAME_KEY, deviceName).commit();

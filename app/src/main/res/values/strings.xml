@@ -166,7 +166,7 @@
     <string name="mOdometer">行驶里程 (km/10)</string>
     <string name="DrivingDuration">行驶时间 (min)</string>
     <string name="dashSpeed">车速仪表</string>
-    <string name="dashRPM">发动机转速仪表</string>
+    <string name="dashRPM">转速仪表</string>
     <string name="mEngineCoolantTemp">冷却液温度</string>
     <string name="InsFuelConsumption">瞬时油耗</string>
     <string name="IdlingFuelConsumption">怠速油耗</string>
@@ -252,6 +252,11 @@
     <string name="troubleNO">2.未解决故障码</string>
     <string name="trouble">1.故障码</string>
     <string name="dashTable">车身状态仪表</string>
+    <string name="dashTableOne">车身状态仪表-1</string>
+    <string name="dashTableTwo">车身状态仪表-2</string>
     <string name="_0_0">0.0</string>
     <string name="_0">0</string>
+    <string name="Driving_fuel_consumption">行驶油耗( L )</string>
+    <string name="oil_level">燃油油位( % )</string>
+    <string name="Idle_fuel_consumption">怠速油耗( L )</string>
 </resources>

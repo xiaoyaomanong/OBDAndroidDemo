@@ -43,7 +43,7 @@
                     android:layout_marginEnd="40dp"
                     android:background="@drawable/bg_dash_title"
                     android:gravity="center"
-                    android:text="车身状态仪表"
+                    android:text="@string/dashTable"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_14"
                     android:textStyle="bold" />
@@ -72,7 +72,7 @@
                             android:layout_weight="1"
                             android:fontFamily="@font/calibri"
                             android:gravity="center"
-                            android:text="0.0"
+                            android:text="@string/_0_0"
                             android:textColor="@color/white"
                             android:textSize="60sp"
                             tools:ignore="NestedWeights" />
@@ -108,7 +108,7 @@
                             android:layout_height="50dp"
                             android:fontFamily="@font/calibri"
                             android:gravity="center"
-                            android:text="0"
+                            android:text="@string/_0"
                             android:textColor="@color/white"
                             android:textSize="30sp"
                             tools:ignore="NestedWeights" />
@@ -143,7 +143,7 @@
                             android:layout_height="50dp"
                             android:fontFamily="@font/calibri"
                             android:gravity="center"
-                            android:text="0"
+                            android:text="@string/_0"
                             android:textColor="@color/white"
                             android:textSize="30sp"
                             tools:ignore="NestedWeights" />
@@ -176,7 +176,7 @@
                             android:layout_height="50dp"
                             android:fontFamily="@font/calibri"
                             android:gravity="center"
-                            android:text="0"
+                            android:text="@string/_0"
                             android:textColor="@color/white"
                             android:textSize="30sp" />
 
@@ -211,7 +211,7 @@
                             android:layout_height="50dp"
                             android:fontFamily="@font/calibri"
                             android:gravity="center"
-                            android:text="0"
+                            android:text="@string/_0"
                             android:textColor="@color/white"
                             android:textSize="30sp" />
 
@@ -234,7 +234,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -273,7 +274,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_margin="5dp"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -305,7 +307,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_margin="5dp"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -362,7 +365,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_margin="5dp"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights" />
 
                     <TextView
                         android:layout_width="match_parent"

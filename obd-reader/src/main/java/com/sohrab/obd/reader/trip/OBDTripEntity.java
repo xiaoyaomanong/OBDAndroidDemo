@@ -1,11 +1,13 @@
 package com.sohrab.obd.reader.trip;
 
+import java.io.Serializable;
+
 /**
  * 作者：Jealous
  * 日期：2021/1/19 0019
  * 描述：
  */
-public class OBDTripEntity {
+public class OBDTripEntity implements Serializable {
 
     /**
      * Name : 车速

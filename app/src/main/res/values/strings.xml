@@ -251,5 +251,7 @@
     <string name="aboutOfUs">关于我们</string>
     <string name="troubleNO">2.未解决故障码</string>
     <string name="trouble">1.故障码</string>
-
+    <string name="dashTable">车身状态仪表</string>
+    <string name="_0_0">0.0</string>
+    <string name="_0">0</string>
 </resources>

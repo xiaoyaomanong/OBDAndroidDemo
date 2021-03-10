@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.sohrab.obd.reader.enums.FuelTrim;
+import com.sohrab.obd.reader.enums.ObdProtocols;
 import com.sohrab.obd.reader.obdCommand.control.CommandedEGRCommand;
 import com.sohrab.obd.reader.obdCommand.control.DistanceMILOnCommand;
 import com.sohrab.obd.reader.obdCommand.control.DistanceSinceCCCommand;
@@ -39,6 +40,12 @@ import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureManifoldVacuumC
 import com.sohrab.obd.reader.obdCommand.pressure.IntakeManifoldPressureCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.DescribeProtocolCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.DescribeProtocolNumberCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SelectProtocolCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.AirIntakeTemperatureCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.AmbientAirTemperatureCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.EngineCoolantTemperatureCommand;
@@ -61,6 +68,14 @@ public class ObdConfiguration {
 
     private static void getDefaultObdCommand() {
         mObdCommands = new ArrayList<>();
+
+        mObdCommands.add( new ObdResetCommand());
+        mObdCommands.add( new EchoOffCommand());
+        mObdCommands.add( new LineFeedOffCommand());
+        mObdCommands.add( new SpacesOffCommand());
+        mObdCommands.add(new TimeoutCommand(62));
+        mObdCommands.add( new SelectProtocolCommand(ObdProtocols.AUTO));
+
 
         mObdCommands.add(new SpeedCommand());//"01 0D"
         mObdCommands.add(new RPMCommand());//"01 0C"

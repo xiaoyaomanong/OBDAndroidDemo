@@ -34,7 +34,7 @@ import com.example.obdandroid.ui.activity.BindBluetoothDeviceActivity;
 import com.example.obdandroid.ui.activity.CheckRecordActivity;
 import com.example.obdandroid.ui.activity.CheckRecordDetailsActivity;
 import com.example.obdandroid.ui.activity.MyVehicleActivity;
-import com.example.obdandroid.ui.activity.MyVehicleDash;
+import com.example.obdandroid.ui.activity.MyVehicleDashActivity;
 import com.example.obdandroid.ui.activity.SelectAutomobileBrandActivity;
 import com.example.obdandroid.ui.activity.VehicleActivity;
 import com.example.obdandroid.ui.activity.VehicleCheckActivity;
@@ -69,7 +69,6 @@ import static com.example.obdandroid.config.APIConfig.USER_INFO_URL;
 import static com.example.obdandroid.config.APIConfig.getCommonBrandList_URL;
 import static com.example.obdandroid.config.APIConfig.getTestRecordPageList_URL;
 import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
-import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
 import static com.example.obdandroid.config.Constant.REQUEST_ENABLE_BT;
 
 /**
@@ -163,7 +162,7 @@ public class HomeFragment extends BaseFragment {
         initRecordReceiver();//注册车辆检测记录跟新广播
         getUserInfo(getUserId(), getToken(), spUtil.getString("vehicleId", ""));
         layoutMoreDash.setOnClickListener(v -> {
-            Intent intent = new Intent(context, MyVehicleDash.class);
+            Intent intent = new Intent(context, MyVehicleDashActivity.class);
             startActivityForResult(intent, 102);
         });
         setCheckRecord();

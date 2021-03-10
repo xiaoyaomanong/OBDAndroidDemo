@@ -12,6 +12,7 @@ import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.view.PhilText;
 import com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight;
+import com.github.pires.obd.commands.protocol.EchoOffCommand;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.application.ObdPreferences;
@@ -40,7 +41,7 @@ import java.util.Objects;
  * 日期：2021/1/26 0026
  * 描述：
  */
-public class MyVehicleDash extends BaseActivity {
+public class MyVehicleDashActivity extends BaseActivity {
     private TextView tvmControlModuleVoltage;
     private TextView tvmFuelLevel;
     private TextView tvmMassAirFlow;
@@ -58,32 +59,17 @@ public class MyVehicleDash extends BaseActivity {
     private CustomerDashboardViewLight dashDrivingFuelConsumption;//行驶油耗
     private CustomerDashboardViewLight dashIdlingFuelConsumption;//怠速油耗
     private CustomerDashboardViewLight dashEngineOilTemp;//机油温度
-    private Context context;
     private final Thread mSpeedCommand = new Thread(new MySpeedCommand());
-    /*  private final Thread mAmbientAirTemperatureCommand = new Thread(new MyAmbientAirTemperatureCommand());
+      private final Thread mAmbientAirTemperatureCommand = new Thread(new MyAmbientAirTemperatureCommand());
       private final Thread mEngineCoolantTemperatureCommand = new Thread(new MyEngineCoolantTemperatureCommand());
       private final Thread mFuelLevelCommand = new Thread(new MyFuelLevelCommand());
       private final Thread mIntakeManifoldPressureCommand = new Thread(new MyIntakeManifoldPressureCommand());
       private final Thread mMassAirFlowCommand = new Thread(new MyMassAirFlowCommand());
       private final Thread mOdometerCommand = new Thread(new MyOdometerCommand());
       private final Thread mOilTempCommand = new Thread(new MyOilTempCommand());
-      private final Thread mRModuleVoltageCommand = new Thread(new MyRModuleVoltageCommand());*/
+      private final Thread mRModuleVoltageCommand = new Thread(new MyRModuleVoltageCommand());
     private final Thread mRPMCommand = new Thread(new MyRPMCommand());
     private TripRecord tripRecord;
-    private Integer engineRpmMax = 0;
-    private String engineRpm;
-    private Integer speed = 0;
-    private Integer speedMax = 0;
-    private long mAddSpeed;
-    private long mSpeedCount;
-    private float drivingDuration;
-    private float mDistanceTravel;
-    private float idlingDuration;
-    private long tripStartTime;
-
-    public MyVehicleDash() {
-    }
-
 
     @Override
     protected int getContentViewId() {
@@ -98,7 +84,7 @@ public class MyVehicleDash extends BaseActivity {
     @Override
     public void initView() {
         super.initView();
-        context = this;
+        Context context = this;
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         tvmControlModuleVoltage = findViewById(R.id.tvmControlModuleVoltage);
         tvmFuelLevel = findViewById(R.id.tvmFuelLevel);
@@ -120,7 +106,6 @@ public class MyVehicleDash extends BaseActivity {
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(true);
         TripRecord.getTriRecode(context).clear();
         tripRecord = TripRecord.getTriRecode(context);
-        tripStartTime = System.currentTimeMillis();
         setRPM();
         setSpeed();
         setInsFuelConsumption();
@@ -132,7 +117,6 @@ public class MyVehicleDash extends BaseActivity {
         LogE("是否连接:" + MainApplication.getBluetoothSocket().isConnected());
         boolean isConnected = MainApplication.getBluetoothSocket().isConnected();
         if (isConnected) {
-          /*  mAirFuelRatioCommand.start();
             mAmbientAirTemperatureCommand.start();
             mEngineCoolantTemperatureCommand.start();
             mFuelLevelCommand.start();
@@ -140,7 +124,7 @@ public class MyVehicleDash extends BaseActivity {
             mMassAirFlowCommand.start();
             mOdometerCommand.start();
             mOilTempCommand.start();
-            mRModuleVoltageCommand.start();*/
+            mRModuleVoltageCommand.start();
             mRPMCommand.start();
             mSpeedCommand.start();
         } else {
@@ -174,46 +158,17 @@ public class MyVehicleDash extends BaseActivity {
             SpeedCommand speedCommand = new SpeedCommand();//"01 0D"
             speedCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + speedCommand.getFormattedResult() + " :: name is :: " + speedCommand.getName());
-            //tripRecord.updateTrip(speedCommand.getName(), speedCommand);
-            setSpeed(speedCommand.getMetricSpeed());
+            tripRecord.updateTrip(speedCommand.getName(), speedCommand);
+            dashSpeed.setVelocity(tripRecord.getSpeed());
+            tvAverageSpeed.setText(String.valueOf(tripRecord.getAverageSpeed()));
+            tvMaxSpeed.setText(String.valueOf(tripRecord.getSpeedMax()));
+            float DrivingDuration = BigDecimal.valueOf(tripRecord.getDrivingDuration())
+                    .setScale(2, BigDecimal.ROUND_HALF_DOWN)
+                    .floatValue();
+            tvDrivingDuration.setText(String.valueOf(DrivingDuration));
         } catch (Exception e) {
             LogE("执行命令异常  :: " + e.getMessage());
         }
-    }
-
-    public void setSpeed(int currentSpeed) {
-        calculateIdlingAndDrivingTime(currentSpeed);
-        speed = currentSpeed;
-        if (speedMax < currentSpeed)
-            speedMax = currentSpeed;
-        // 查找行驶距离
-        if (speed != 0) {
-            mAddSpeed += speed;
-            mSpeedCount++;
-            mDistanceTravel = (mAddSpeed / mSpeedCount * (drivingDuration / (60 * 60 * 1000)));
-        }
-        float averageSpeed;
-        if (drivingDuration <= 0) {
-            averageSpeed = 0f;
-        } else {
-            averageSpeed = mDistanceTravel / (drivingDuration / (60 * 60 * 1000));
-        }
-
-        dashSpeed.setVelocity(speed);
-        tvAverageSpeed.setText(String.valueOf(averageSpeed));
-        tvMaxSpeed.setText(String.valueOf(speedMax));
-        float DrivingDuration = BigDecimal.valueOf(drivingDuration / 60000)
-                .setScale(2, BigDecimal.ROUND_HALF_DOWN)
-                .floatValue();
-        tvDrivingDuration.setText(String.valueOf(DrivingDuration));
-    }
-
-    private void calculateIdlingAndDrivingTime(int currentSpeed) {
-        long currentTime = System.currentTimeMillis();
-        if ((speed == -1 || speed == 0) && currentSpeed == 0) {
-            idlingDuration = currentTime - tripStartTime - drivingDuration;
-        }
-        drivingDuration = currentTime - tripStartTime - idlingDuration;
     }
 
     /**
@@ -221,6 +176,7 @@ public class MyVehicleDash extends BaseActivity {
      */
     private synchronized void executeRPMCommand() {
         try {
+            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             RPMCommand rpmCommand = new RPMCommand();//"01 0C"
             rpmCommand.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             LogE("结果是:: " + rpmCommand.getFormattedResult() + " :: name is :: " + rpmCommand.getName());
@@ -464,6 +420,7 @@ public class MyVehicleDash extends BaseActivity {
         dashEngineCoolantTemp.setmMax(260);
         dashEngineCoolantTemp.setmMin(-40);
     }
+
 
     class MySpeedCommand implements Runnable {
 

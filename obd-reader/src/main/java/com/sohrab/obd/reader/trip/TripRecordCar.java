@@ -88,7 +88,6 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
     private Integer speed = -1;
     private Integer speedMax = 0;
     private String engineRuntime;
-    private String mOdometer;
     private final long tripStartTime;
     private float idlingDuration;
     private float drivingDuration;
@@ -123,7 +122,6 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
     private String mEngineOilTemp;
     private String mFuelConsumptionRate;
     private String mFuelSystemStatus;
-    private String mEngineFuelRate;
     private String mFuelPressure;
     private String mCommandedEGR;
     private String mEngineLoad;
@@ -213,12 +211,12 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
         long currentTime = System.currentTimeMillis();
         if ((speed == -1 || speed == 0) && currentSpeed == 0) {
             idlingDuration = currentTime - tripStartTime - drivingDuration;
-            data.add(new OBDTripEntity("空闲时间", (idlingDuration / 60000) + " m", R.drawable.icon_kxsj));
-            entity.setIdlingDuration((idlingDuration / 60000) + " m");
+            data.add(new OBDTripEntity("空闲时间", (idlingDuration / 60000) + " 分", R.drawable.icon_kxsj));
+            entity.setIdlingDuration((idlingDuration / 60000) + " 分");
         }
         drivingDuration = currentTime - tripStartTime - idlingDuration;
-        data.add(new OBDTripEntity("行驶时间", (drivingDuration / 60000) + " m", R.drawable.icon_driving_time));
-        entity.setDrivingDuration((drivingDuration / 60000) + " m");
+        data.add(new OBDTripEntity("行驶时间", (drivingDuration / 60000) + " 分", R.drawable.icon_driving_time));
+        entity.setDrivingDuration((drivingDuration / 60000) + " 分");
     }
 
     private void calculateMaf() {
@@ -254,9 +252,6 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
         return (idlingDuration / 60000); // time in minutes
     }
 
-    public String getmOdometer() {
-        return mOdometer;
-    }
 
     public Integer getSpeedMax() {
         return speedMax;
@@ -407,8 +402,8 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
                 break;
             case AIR_INTAKE_TEMPERATURE:
                 mIntakeAirTemp = Float.parseFloat(command.getCalculatedResult()) + 273.15f;
-                data.add(new OBDTripEntity("进气温度", mIntakeAirTemp + " C", R.drawable.icon_intake_air_temp));
-                entity.setIntakeAirTemp(mIntakeAirTemp + " C");
+                data.add(new OBDTripEntity("进气温度", mIntakeAirTemp + " ℃", R.drawable.icon_intake_air_temp));
+                entity.setIntakeAirTemp(mIntakeAirTemp + " ℃");
                 calculateMaf();
                 break;
 
@@ -416,18 +411,16 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
                 mFaultCodes = command.getFormattedResult();
                 data.add(new OBDTripEntity("故障代码", TextUtils.isEmpty(mFaultCodes) ? "" : mFaultCodes, R.drawable.icon_troublecode_one));
                 entity.setFaultCodes(TextUtils.isEmpty(mFaultCodes) ? "" : mFaultCodes);
-
                 break;
-
             case AMBIENT_AIR_TEMP:
                 mAmbientAirTemp = command.getFormattedResult();
-                data.add(new OBDTripEntity("环境空气温度", TextUtils.isEmpty(mAmbientAirTemp) ? "" : mAmbientAirTemp + " C", R.drawable.icon_hjkqwd));
+                data.add(new OBDTripEntity("环境空气温度", TextUtils.isEmpty(mAmbientAirTemp) ? "" : mAmbientAirTemp + " ℃", R.drawable.icon_hjkqwd));
                 entity.setAmbientAirTemp(TextUtils.isEmpty(mAmbientAirTemp) ? "" : mAmbientAirTemp);
                 break;
 
             case ENGINE_COOLANT_TEMP:
                 mEngineCoolantTemp = command.getFormattedResult();
-                data.add(new OBDTripEntity("发动机冷却液温度", TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp + " C", R.drawable.icon_fdjlqywd));
+                data.add(new OBDTripEntity("发动机冷却液温度", TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp + " ℃", R.drawable.icon_fdjlqywd));
                 entity.setEngineCoolantTemp(TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp);
                 break;
 
@@ -447,10 +440,6 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
                 data.add(new OBDTripEntity("燃油系统状态", mFuelSystemStatus, R.drawable.icon_system_tats));
                 entity.setFuelSystemStatus(mFuelSystemStatus);
                 break;
-            case ENGINE_FUEL_RATE:
-                mEngineFuelRate = command.getFormattedResult();
-                break;
-
             case FUEL_PRESSURE:
                 mFuelPressure = command.getFormattedResult();
                 data.add(new OBDTripEntity("燃油压力", TextUtils.isEmpty(mFuelPressure) ? "" : mFuelPressure, R.drawable.icon_ryyl));
@@ -465,9 +454,6 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
                 mCommandedEGR = command.getFormattedResult();
                 data.add(new OBDTripEntity("指令EGR", TextUtils.isEmpty(mCommandedEGR) ? "" : mCommandedEGR, R.drawable.icon_zlegr));
                 entity.setRmCommandedEGR(TextUtils.isEmpty(mCommandedEGR) ? "" : mCommandedEGR);
-                break;
-            case ODOMETER:
-                mOdometer = command.getFormattedResult();
                 break;
             case BAROMETRIC_PRESSURE:
                 mBarometricPressure = command.getFormattedResult();
@@ -649,9 +635,6 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
         return mFuelSystemStatus;
     }
 
-    public String getmEngineFuelRate() {
-        return mEngineFuelRate;
-    }
 
     public String getmFuelPressure() {
         return mFuelPressure;
@@ -829,7 +812,6 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
                 "\n" + AvailableCommandNames.FUEL_RAIL_PRESSURE_manifold.getValue() + ":  " + mFuelRailPressurevacuum + " kPa" +
                 "\n" + AvailableCommandNames.FUEL_RAIL_PRESSURE.getValue() + ":  " + mFuelRailPressure + " kPa" +
                 "\n" + AvailableCommandNames.Commanded_EGR.getValue() + ":  " + mCommandedEGR +
-                "\n" + AvailableCommandNames.ENGINE_FUEL_RATE.getValue() + ":  " + mEngineFuelRate +
                 "\n" + AvailableCommandNames.ENGINE_COOLANT_TEMP.getValue() + ":  " + mEngineCoolantTemp +
                 "\n" + AvailableCommandNames.ENGINE_LOAD.getValue() + ":  " + mEngineLoad +
                 "\n" + AvailableCommandNames.ENGINE_OIL_TEMP.getValue() + ":  " + mEngineOilTemp +

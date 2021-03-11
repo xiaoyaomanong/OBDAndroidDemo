@@ -40,7 +40,6 @@ public class MyVehicleDashActivity extends BaseActivity {
         LinearLayout layoutDashTwo = findViewById(R.id.layoutDashTwo);
         layoutDashOne.setOnClickListener(v -> JumpUtil.startAct(context, VehicleDashActivityOne.class));
         layoutDashTwo.setOnClickListener(v -> JumpUtil.startAct(context, VehicleDashActivityTwo.class));
-        ObdResetCommand();
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -57,13 +56,5 @@ public class MyVehicleDashActivity extends BaseActivity {
 
             }
         });
-    }
-
-    private synchronized void ObdResetCommand() {
-        try {
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

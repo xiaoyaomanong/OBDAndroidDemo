@@ -77,6 +77,7 @@ public class ObdConfiguration {
         mObdCommands.add( new SelectProtocolCommand(ObdProtocols.AUTO));
 
 
+        mObdCommands.add(new DtcNumberCommand());//"01 0D"
         mObdCommands.add(new SpeedCommand());//"01 0D"
         mObdCommands.add(new RPMCommand());//"01 0C"
         mObdCommands.add(new RuntimeCommand());//"01 1F" 引擎运行时间
@@ -111,7 +112,6 @@ public class ObdConfiguration {
         //control
         mObdCommands.add(new DistanceMILOnCommand());//"01 21"故障指示灯（MIL）亮时行驶的距离
         mObdCommands.add(new DistanceSinceCCCommand());//"01 31"
-        mObdCommands.add(new DtcNumberCommand());//"01 01"
         mObdCommands.add(new EquivalentRatioCommand());//"01 44"
         mObdCommands.add(new IgnitionMonitorCommand());//"AT IGN"
         mObdCommands.add(new ModuleVoltageCommand());//"01 42"
@@ -127,7 +127,6 @@ public class ObdConfiguration {
         mObdCommands.add(new LoadCommand());//"01 04"
         mObdCommands.add(new OilTempCommand());//"01 5C"
         mObdCommands.add(new ThrottlePositionCommand());//"01 11"
-        //mObdCommands.add(new EngineFuelRateCommand());//"01 5E"
 
         //protocol
         mObdCommands.add(new DescribeProtocolCommand());//"AT DP"

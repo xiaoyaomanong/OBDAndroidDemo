@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         app:barStyle="night"
         app:lineVisible="false"
-        app:title="@string/dashTableTwo" />
+        app:title="@string/dash_two" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"

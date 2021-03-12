@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:contentDescription="@string/dash_one"
-            android:src="@drawable/icon_dash_logo" />
+            android:src="@drawable/icon_dash_one" />
 
         <TextView
             android:layout_width="0dp"
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:contentDescription="@string/dash_two"
-            android:src="@drawable/icon_dash_logo" />
+            android:src="@drawable/icon_dash_two" />
 
         <TextView
             android:layout_width="0dp"

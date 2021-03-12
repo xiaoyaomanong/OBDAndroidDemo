@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_080707"
     android:orientation="vertical">
 
     <com.hjq.bar.TitleBar
         android:id="@+id/titleBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/color_bar"
-        app:barStyle="ripple"
+        app:barStyle="night"
+        app:lineVisible="false"
         app:title="检测报告" />
 
     <android.support.v4.widget.NestedScrollView
@@ -29,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@drawable/bg_check_report"
+                android:background="@drawable/bg_black"
                 android:orientation="vertical">
 
                 <TextView
@@ -39,8 +40,9 @@
                     android:fontFamily="@font/gotham"
                     android:gravity="center_vertical"
                     android:paddingStart="10dp"
-                    android:textColor="@color/color_2C2B30"
-                    android:textSize="@dimen/sp_14" />
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14"
+                    tools:ignore="RtlSymmetry" />
 
                 <TextView
                     android:id="@+id/tvCheckNum"
@@ -50,7 +52,8 @@
                     android:gravity="center_vertical"
                     android:paddingStart="10dp"
                     android:textColor="@color/green"
-                    android:textSize="@dimen/sp_14" />
+                    android:textSize="@dimen/sp_14"
+                    tools:ignore="RtlSymmetry" />
 
                 <TextView
                     android:id="@+id/tvCheckResult"
@@ -60,34 +63,47 @@
                     android:gravity="center_vertical"
                     android:paddingStart="10dp"
                     android:textColor="@color/green"
-                    android:textSize="@dimen/sp_14" />
+                    android:textSize="@dimen/sp_14"
+                    tools:ignore="RtlSymmetry" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@drawable/bg_check_report"
+                android:background="@drawable/bg_black"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:fontFamily="@font/gotham"
+                    android:layout_height="60dp"
                     android:gravity="center_vertical"
-                    android:paddingStart="10dp"
-                    android:text="@string/trouble"
-                    android:textColor="@color/color_2C2B30"
-                    android:textSize="@dimen/sp_14"
-                    android:textStyle="bold"
-                    tools:ignore="RtlSymmetry" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="@dimen/dp_10"
-                    android:layout_marginEnd="@dimen/dp_10"
-                    android:background="@color/color_000000" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center_vertical"
+                        android:paddingStart="10dp"
+                        android:text="@string/tip"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center_vertical"
+                        android:paddingStart="10dp"
+                        android:text="@string/trouble"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold"
+                        tools:ignore="RtlSymmetry" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvDynamicSystem"
@@ -96,15 +112,10 @@
                     android:fontFamily="@font/gotham"
                     android:gravity="center_vertical"
                     android:paddingStart="10dp"
-                    android:textColor="@color/color_2C2B30"
-                    android:textSize="@dimen/sp_14" />
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14"
+                    tools:ignore="RtlSymmetry" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="@dimen/dp_10"
-                    android:layout_marginEnd="@dimen/dp_10"
-                    android:background="@color/color_000000" />
 
                 <TextView
                     android:id="@+id/tvBody"
@@ -113,15 +124,10 @@
                     android:fontFamily="@font/gotham"
                     android:gravity="center_vertical"
                     android:paddingStart="10dp"
-                    android:textColor="@color/color_2C2B30"
-                    android:textSize="@dimen/sp_14" />
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14"
+                    tools:ignore="RtlSymmetry" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="@dimen/dp_10"
-                    android:layout_marginEnd="@dimen/dp_10"
-                    android:background="@color/color_000000" />
 
                 <TextView
                     android:id="@+id/tvChassis"
@@ -130,15 +136,9 @@
                     android:fontFamily="@font/gotham"
                     android:gravity="center_vertical"
                     android:paddingStart="10dp"
-                    android:textColor="@color/color_2C2B30"
-                    android:textSize="@dimen/sp_14" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="@dimen/dp_10"
-                    android:layout_marginEnd="@dimen/dp_10"
-                    android:background="@color/color_000000" />
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14"
+                    tools:ignore="RtlSymmetry" />
 
                 <TextView
                     android:id="@+id/tvNetWork"
@@ -147,33 +147,48 @@
                     android:fontFamily="@font/gotham"
                     android:gravity="center_vertical"
                     android:paddingStart="10dp"
-                    android:textColor="@color/color_2C2B30"
-                    android:textSize="@dimen/sp_14" />
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14"
+                    tools:ignore="RtlSymmetry" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@drawable/bg_check_report"
+                android:background="@drawable/bg_black"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:fontFamily="@font/gotham"
+                    android:layout_height="60dp"
                     android:gravity="center_vertical"
-                    android:paddingStart="10dp"
-                    android:text="@string/troubleNO"
-                    android:textColor="@color/color_2C2B30"
-                    android:textSize="@dimen/sp_14"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="@dimen/dp_10"
-                    android:layout_marginEnd="@dimen/dp_10"
-                    android:background="@color/color_000000" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center_vertical"
+                        android:paddingStart="10dp"
+                        android:text="@string/tip"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center_vertical"
+                        android:paddingStart="10dp"
+                        android:text="@string/troubleNO"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold"
+                        tools:ignore="RtlSymmetry" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvDynamicSystemNO"
@@ -182,15 +197,10 @@
                     android:fontFamily="@font/gotham"
                     android:gravity="center_vertical"
                     android:paddingStart="10dp"
-                    android:textColor="@color/color_2C2B30"
-                    android:textSize="@dimen/sp_14" />
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14"
+                    tools:ignore="RtlSymmetry" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="@dimen/dp_10"
-                    android:layout_marginEnd="@dimen/dp_10"
-                    android:background="@color/color_000000" />
 
                 <TextView
                     android:id="@+id/tvBodyNo"
@@ -199,15 +209,10 @@
                     android:fontFamily="@font/gotham"
                     android:gravity="center_vertical"
                     android:paddingStart="10dp"
-                    android:textColor="@color/color_2C2B30"
-                    android:textSize="@dimen/sp_14" />
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14"
+                    tools:ignore="RtlSymmetry" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="@dimen/dp_10"
-                    android:layout_marginEnd="@dimen/dp_10"
-                    android:background="@color/color_000000" />
 
                 <TextView
                     android:id="@+id/tvChassisNO"
@@ -216,15 +221,10 @@
                     android:fontFamily="@font/gotham"
                     android:gravity="center_vertical"
                     android:paddingStart="10dp"
-                    android:textColor="@color/color_2C2B30"
-                    android:textSize="@dimen/sp_14" />
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14"
+                    tools:ignore="RtlSymmetry" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="@dimen/dp_10"
-                    android:layout_marginEnd="@dimen/dp_10"
-                    android:background="@color/color_000000" />
 
                 <TextView
                     android:id="@+id/tvNetWorkNO"
@@ -233,10 +233,10 @@
                     android:fontFamily="@font/gotham"
                     android:gravity="center_vertical"
                     android:paddingStart="10dp"
-                    android:textColor="@color/color_2C2B30"
-                    android:textSize="@dimen/sp_14" />
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14"
+                    tools:ignore="RtlSymmetry" />
             </LinearLayout>
-
 
 
         </LinearLayout>

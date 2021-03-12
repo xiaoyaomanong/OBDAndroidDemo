@@ -404,9 +404,7 @@ public class VehicleCheckActivity extends BaseActivity {
         recycleCheckContent.setLayoutAnimation(lac);
     }
 
-
     private void showTipDialog(String msg, int type) {
         TipDialog.show(context, msg, TipDialog.TYPE_ERROR, type);
     }
-
 }

@@ -249,16 +249,17 @@
     <string name="reming">全车检测自动生成体检报告</string>
     <string name="Service">服务协议与隐私政策</string>
     <string name="aboutOfUs">关于我们</string>
-    <string name="troubleNO">2.未解决故障码</string>
-    <string name="trouble">1.故障码</string>
+    <string name="troubleNO">未解决故障码</string>
+    <string name="trouble">故障码</string>
     <string name="dashTable">车身状态仪表</string>
-    <string name="dashTableOne">车身状态仪表-1</string>
-    <string name="dashTableTwo">车身状态仪表-2</string>
+    <string name="dashTableOne">车辆状态</string>
+    <string name="dashTableTwo">油耗状态</string>
     <string name="_0_0">0.0</string>
     <string name="_0">0</string>
     <string name="Driving_fuel_consumption">行驶油耗( L )</string>
     <string name="oil_level">燃油油位( % )</string>
     <string name="Idle_fuel_consumption">怠速油耗( L )</string>
-    <string name="dash_one">仪表盘-1</string>
-    <string name="dash_two">仪表盘-2</string>
+    <string name="dash_one">车辆仪表</string>
+    <string name="dash_two">油耗仪表</string>
+    <string name="tip"><![CDATA[</>]]></string>
 </resources>

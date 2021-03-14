@@ -59,12 +59,7 @@ public class BltManagerUtils {
                 MainApplication.setBluetoothSocket(mSocket);
             Log.d("blueTooth", "开始连接...");
             if (!mSocket.isConnected()) {
-                try {
-                    Thread.sleep(200);
-                    mSocket.connect();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                mSocket.connect();
             }
         } catch (Exception e) {
             Log.e("blueTooth", "...链接失败");
@@ -79,6 +74,11 @@ public class BltManagerUtils {
         if (mSocket.isConnected()) {
             try {
                 new ObdResetCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                 new ObdWarmstartCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());//热启动OBD连接。。。
                 new LineFeedOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());

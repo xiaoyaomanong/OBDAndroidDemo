@@ -54,7 +54,7 @@ public class TroubleCodeQueryActivity extends BaseActivity {
         manager.setOrientation(OrientationHelper.VERTICAL);
         recycleContent.setLayoutManager(manager);
         TroubleCodeQueryAdapter adapter = new TroubleCodeQueryAdapter(context);
-        adapter.setList(Arrays.asList(troubleCodes.replaceAll("\r|\n", ",").split(",")));
+        adapter.setList(Arrays.asList(troubleCodes.replaceAll("[\r\n]", ",").split(",")));
         adapter.setToken(getToken());
         recycleContent.setAdapter(adapter);
         adapter.setCallBack(faultCode -> JumpUtil.startActToData(context, TroubleCodeQueryDetailsActivity.class, faultCode, 0));

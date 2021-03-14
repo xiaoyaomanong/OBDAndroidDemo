@@ -55,6 +55,10 @@ public class OBDJsonTripEntity implements Serializable {
     private String EngineCoolantTemp;
     private String AmbientAirTemp;
     private String IntakeAirTemp;
+    private String ShortTermBank1;
+    private String ShortTermBank2;
+    private String LongTermBank1;
+    private String LongTermBank2;
 
     public String getSpeed() {
         return Speed;
@@ -430,5 +434,37 @@ public class OBDJsonTripEntity implements Serializable {
 
     public void setIntakeAirTemp(String intakeAirTemp) {
         IntakeAirTemp = intakeAirTemp;
+    }
+
+    public String getShortTermBank1() {
+        return ShortTermBank1;
+    }
+
+    public void setShortTermBank1(String shortTermBank1) {
+        ShortTermBank1 = shortTermBank1;
+    }
+
+    public String getShortTermBank2() {
+        return ShortTermBank2;
+    }
+
+    public void setShortTermBank2(String shortTermBank2) {
+        ShortTermBank2 = shortTermBank2;
+    }
+
+    public String getLongTermBank1() {
+        return LongTermBank1;
+    }
+
+    public void setLongTermBank1(String longTermBank1) {
+        LongTermBank1 = longTermBank1;
+    }
+
+    public String getLongTermBank2() {
+        return LongTermBank2;
+    }
+
+    public void setLongTermBank2(String longTermBank2) {
+        LongTermBank2 = longTermBank2;
     }
 }

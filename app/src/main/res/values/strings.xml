@@ -171,7 +171,7 @@
     <string name="InsFuelConsumption">瞬时油耗</string>
     <string name="IdlingFuelConsumption">怠速油耗</string>
     <string name="DrivingFuelConsumption">行驶油耗</string>
-    <string name="EngineOilTemp">机油温度</string>
+    <string name="EngineOilTemp">发动机油温</string>
     <string name="cancel">取消</string>
     <string name="selectVehicle">选择车辆</string>
     <string name="car_check_record">车检记录</string>
@@ -262,4 +262,16 @@
     <string name="dash_one">车辆仪表</string>
     <string name="dash_two">油耗仪表</string>
     <string name="tip"><![CDATA[</>]]></string>
+    <string name="other">检测数据</string>
+    <string name="RelThottlePos">节气门位置</string>
+    <string name="dtc">DTC</string>
+    <string name="abs">ABS</string>
+    <string name="ShortTermBank1">短期燃油修正 通道1</string>
+    <string name="ShortTermBank2">短期燃油修正 通道2</string>
+    <string name="LongTermBank1">长期燃油修正 通道2</string>
+    <string name="LongTermBank2">长期燃油修正 通道2</string>
+    <string name="NetWork">网络通讯系统</string>
+    <string name="Chassis">底盘电脑控制系统</string>
+    <string name="Bod">车身电脑控制系统</string>
+    <string name="DynamicSystemNO">动力系统检测</string>
 </resources>

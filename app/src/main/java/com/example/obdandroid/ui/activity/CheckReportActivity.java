@@ -2,17 +2,23 @@ package com.example.obdandroid.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.utils.AppDateUtils;
+import com.example.obdandroid.utils.JumpUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.trip.CheckRecord;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 作者：Jealous
@@ -28,9 +34,50 @@ public class CheckReportActivity extends BaseActivity {
     private TextView tvChassis;
     private TextView tvNetWork;
     private TextView tvDynamicSystemNO;
-    private TextView tvBodyNO;
+    private TextView tvBodyNo;
     private TextView tvChassisNO;
     private TextView tvNetWorkNO;
+    private TextView tvSpeed;
+    private TextView tvEngineRpm;
+    private TextView tvMassAirFlow;
+    private TextView tvEngineRuntime;
+    private TextView tvFuelLevel;
+    private TextView tvIntakePressure;
+    private TextView tvIntakeAirTemp;
+    private TextView tvAmbientAirTemp;
+    private TextView tvEngineCoolantTemp;
+    private TextView tvEngineOilTemp;
+    private TextView tvFuelConsumptionRate;
+    private TextView tvFuelPressure;
+    private TextView tvEngineLoad;
+    private TextView tvBarometricPressure;
+    private TextView tvRelThottlePos;
+    private TextView tvTimingAdvance;
+    private TextView tvEquivRatio;
+    private TextView tvDistanceTraveledAfterCodesCleared;
+    private TextView tvControlModuleVoltage;
+    private TextView tvFuelRailPressure;
+    private TextView tvVehicleIdentificationNumber;
+    private TextView tvDistanceTraveledMilOn;
+    private TextView tvDtcNumber;
+    private TextView tvAbsLoad;
+    private TextView tvAirFuelRatio;
+    private TextView tvDescribeProtocol;
+    private TextView tvIgnitionMonitor;
+    private TextView tvShortTermBank1;
+    private TextView tvShortTermBank2;
+    private TextView tvLongTermBank1;
+    private TextView tvLongTermBank2;
+    private Context context;
+    private final ArrayList<String> dynamicSystemList = new ArrayList<>();
+    private final ArrayList<String> bodyList = new ArrayList<>();
+    private final ArrayList<String> chassisList = new ArrayList<>();
+    private final ArrayList<String> netWorkList = new ArrayList<>();
+    private final ArrayList<String> dynamicSystemNOList = new ArrayList<>();
+    private final ArrayList<String> bodyNOList = new ArrayList<>();
+    private final ArrayList<String> chassisNOList = new ArrayList<>();
+    private final ArrayList<String> netWorkNOList = new ArrayList<>();
+
 
     @Override
     protected int getContentViewId() {
@@ -45,7 +92,7 @@ public class CheckReportActivity extends BaseActivity {
     @Override
     public void initView() {
         super.initView();
-        Context context = this;
+        context = this;
         CheckRecord tripRecord = (CheckRecord) getIntent().getSerializableExtra("data");
         TitleBar titleBar = findViewById(R.id.titleBar);
         tvCheckTime = findViewById(R.id.tvCheckTime);
@@ -56,9 +103,40 @@ public class CheckReportActivity extends BaseActivity {
         tvChassis = findViewById(R.id.tvChassis);
         tvNetWork = findViewById(R.id.tvNetWork);
         tvDynamicSystemNO = findViewById(R.id.tvDynamicSystemNO);
-        tvBodyNO = findViewById(R.id.tvBodyNo);
+        tvBodyNo = findViewById(R.id.tvBodyNo);
         tvChassisNO = findViewById(R.id.tvChassisNO);
         tvNetWorkNO = findViewById(R.id.tvNetWorkNO);
+        tvSpeed = findViewById(R.id.tvSpeed);
+        tvEngineRpm = findViewById(R.id.tvEngineRpm);
+        tvMassAirFlow = findViewById(R.id.tvMassAirFlow);
+        tvEngineRuntime = findViewById(R.id.tvEngineRuntime);
+        tvFuelLevel = findViewById(R.id.tvFuelLevel);
+        tvIntakePressure = findViewById(R.id.tvIntakePressure);
+        tvIntakeAirTemp = findViewById(R.id.tvIntakeAirTemp);
+        tvAmbientAirTemp = findViewById(R.id.tvAmbientAirTemp);
+        tvEngineCoolantTemp = findViewById(R.id.tvEngineCoolantTemp);
+        tvEngineOilTemp = findViewById(R.id.tvEngineOilTemp);
+        tvFuelConsumptionRate = findViewById(R.id.tvFuelConsumptionRate);
+        tvFuelPressure = findViewById(R.id.tvFuelPressure);
+        tvEngineLoad = findViewById(R.id.tvEngineLoad);
+        tvBarometricPressure = findViewById(R.id.tvBarometricPressure);
+        tvRelThottlePos = findViewById(R.id.tvRelThottlePos);
+        tvTimingAdvance = findViewById(R.id.tvTimingAdvance);
+        tvEquivRatio = findViewById(R.id.tvEquivRatio);
+        tvDistanceTraveledAfterCodesCleared = findViewById(R.id.tvDistanceTraveledAfterCodesCleared);
+        tvControlModuleVoltage = findViewById(R.id.tvControlModuleVoltage);
+        tvFuelRailPressure = findViewById(R.id.tvFuelRailPressure);
+        tvVehicleIdentificationNumber = findViewById(R.id.tvVehicleIdentificationNumber);
+        tvDistanceTraveledMilOn = findViewById(R.id.tvDistanceTraveledMilOn);
+        tvDtcNumber = findViewById(R.id.tvDtcNumber);
+        tvAbsLoad = findViewById(R.id.tvAbsLoad);
+        tvAirFuelRatio = findViewById(R.id.tvAirFuelRatio);
+        tvDescribeProtocol = findViewById(R.id.tvDescribeProtocol);
+        tvIgnitionMonitor = findViewById(R.id.tvIgnitionMonitor);
+        tvShortTermBank1 = findViewById(R.id.tvShortTermBank1);
+        tvShortTermBank2 = findViewById(R.id.tvShortTermBank2);
+        tvLongTermBank1 = findViewById(R.id.tvLongTermBank1);
+        tvLongTermBank2 = findViewById(R.id.tvLongTermBank2);
         setView(tripRecord);
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -76,14 +154,13 @@ public class CheckReportActivity extends BaseActivity {
 
             }
         });
-
     }
 
     @SuppressLint("SetTextI18n")
     private void setView(CheckRecord tripRecord) {
         OBDJsonTripEntity entity = tripRecord.getOBDJson();
         tvCheckTime.setText(AppDateUtils.getTodayDateTimeHms());
-        String msg = "";
+        String msg;
         if (TextUtils.isEmpty(entity.getFaultCodes()) && TextUtils.isEmpty(entity.getPendingTroubleCode())) {
             msg = "全部通过";
             tvCheckResult.setText("你的车辆很健康");
@@ -91,86 +168,182 @@ public class CheckReportActivity extends BaseActivity {
             msg = "未通过";
             tvCheckResult.setText("你的车辆有问题,请及时检修");
         }
-        tvCheckNum.setText("检测" + tripRecord.getTripMap().size() + "项" + msg);
-        String[] troubleCodes = entity.getFaultCodes().replaceAll("\r|\n", ",").split(",");
+        tvCheckNum.setText("检测8项" + msg);
+        String[] troubleCodes = entity.getFaultCodes().replaceAll("[\r\n]", ",").split(",");
         int p = 0;
         int c = 0;
         int b = 0;
         int u = 0;
         for (String troubleCode : troubleCodes) {
-            if (troubleCode.contains("P")) {
+            if (troubleCode.startsWith("P")) {
                 p = p + 1;
+                dynamicSystemList.add(troubleCode);
             }
-            if (troubleCode.contains("C")) {
+            if (troubleCode.startsWith("C")) {
                 c = c + 1;
+                chassisList.add(troubleCode);
             }
-            if (troubleCode.contains("B")) {
+            if (troubleCode.startsWith("B")) {
                 b = b + 1;
+                bodyList.add(troubleCode);
             }
-            if (troubleCode.contains("U")) {
+            if (troubleCode.startsWith("U")) {
                 u = u + 1;
+                netWorkList.add(troubleCode);
             }
         }
-        if (p==0) {
-            tvDynamicSystem.setText("(1) 动力系统检测     检测通过,无故障码");
-        }else {
-            tvDynamicSystem.setText("(1) 动力系统检测     检测未通过,发现"+p+"个故障码" );
+        if (p == 0) {
+            tvDynamicSystem.setText("检测通过");
+            tvDynamicSystem.setTextColor(getResources().getColor(R.color.green));
+        } else {
+            tvDynamicSystem.setText("检测未通过,发现" + p + "个故障码");
+            tvDynamicSystem.setTextColor(getResources().getColor(R.color.red));
+            tvDynamicSystem.setOnClickListener(v -> {
+                Intent intent = new Intent(context, TroubleCodeActivity.class);
+                intent.putStringArrayListExtra(Constant.ACT_FLAG, dynamicSystemList);
+                startActivity(intent);
+            });
         }
-        if (c==0) {
-            tvBody.setText("(1) 车身电脑控制系统     检测通过,无故障码");
-        }else {
-            tvBody.setText("(1) 车身电脑控制系统     检测未通过,发现"+c+"个故障码" );
+        if (c == 0) {
+            tvBody.setText("检测通过");
+            tvBody.setTextColor(getResources().getColor(R.color.green));
+        } else {
+            tvBody.setText("检测未通过,发现" + c + "个故障码");
+            tvBody.setTextColor(getResources().getColor(R.color.red));
+            tvBody.setOnClickListener(v -> {
+                Intent intent = new Intent(context, TroubleCodeActivity.class);
+                intent.putStringArrayListExtra(Constant.ACT_FLAG, bodyList);
+                startActivity(intent);
+            });
         }
-        if (b==0) {
-            tvChassis.setText("(1) 底盘电脑控制系统     检测通过,无故障码");
-        }else {
-            tvChassis.setText("(1) 底盘电脑控制系统     检测未通过,发现"+b+"个故障码" );
+        if (b == 0) {
+            tvChassis.setText("检测通过");
+            tvChassis.setTextColor(getResources().getColor(R.color.green));
+        } else {
+            tvChassis.setText("检测未通过,发现" + b + "个故障码");
+            tvChassis.setTextColor(getResources().getColor(R.color.red));
+            tvChassis.setOnClickListener(v -> {
+                Intent intent = new Intent(context, TroubleCodeActivity.class);
+                intent.putStringArrayListExtra(Constant.ACT_FLAG, chassisList);
+                startActivity(intent);
+            });
         }
-        if (u==0) {
-            tvNetWork.setText("(1) 网络通讯系统     检测通过,无故障码");
-        }else {
-            tvNetWork.setText("(1) 网络通讯系统     检测未通过,发现"+u+"个故障码" );
+        if (u == 0) {
+            tvNetWork.setText("检测通过");
+            tvNetWork.setTextColor(getResources().getColor(R.color.green));
+        } else {
+            tvNetWork.setText("检测未通过,发现" + u + "个故障码");
+            tvNetWork.setTextColor(getResources().getColor(R.color.red));
+            tvNetWork.setOnClickListener(v -> {
+                Intent intent = new Intent(context, TroubleCodeActivity.class);
+                intent.putStringArrayListExtra(Constant.ACT_FLAG, netWorkList);
+                startActivity(intent);
+            });
         }
 
 
-        String[] pendingTroubleCodes = entity.getPendingTroubleCode().replaceAll("\r|\n", ",").split(",");
+        String[] pendingTroubleCodes = entity.getPendingTroubleCode().replaceAll("[\r\n]", ",").split(",");
         int pn = 0;
         int cn = 0;
         int bn = 0;
         int un = 0;
         for (String pendingTroubleCode : pendingTroubleCodes) {
-            if (pendingTroubleCode.contains("P")) {
+            if (pendingTroubleCode.startsWith("P")) {
                 pn = pn + 1;
+                dynamicSystemNOList.add(pendingTroubleCode);
             }
-            if (pendingTroubleCode.contains("C")) {
+            if (pendingTroubleCode.startsWith("C")) {
                 cn = cn + 1;
+                chassisNOList.add(pendingTroubleCode);
             }
-            if (pendingTroubleCode.contains("B")) {
+            if (pendingTroubleCode.startsWith("B")) {
                 bn = bn + 1;
+                bodyNOList.add(pendingTroubleCode);
             }
-            if (pendingTroubleCode.contains("U")) {
+            if (pendingTroubleCode.startsWith("U")) {
                 un = un + 1;
+                netWorkNOList.add(pendingTroubleCode);
             }
         }
-        if (p==0) {
-            tvDynamicSystemNO.setText("(1) 动力系统检测     检测通过,无故障码");
-        }else {
-            tvDynamicSystemNO.setText("(1) 动力系统检测     检测未通过,发现"+pn+"个故障码" );
+        if (pn == 0) {
+            tvDynamicSystemNO.setText("检测通过");
+            tvDynamicSystemNO.setTextColor(getResources().getColor(R.color.green));
+        } else {
+            tvDynamicSystemNO.setText("检测未通过,发现" + pn + "个故障码");
+            tvDynamicSystemNO.setTextColor(getResources().getColor(R.color.red));
+            tvDynamicSystemNO.setOnClickListener(v -> {
+                Intent intent = new Intent(context, TroubleCodeActivity.class);
+                intent.putStringArrayListExtra(Constant.ACT_FLAG, dynamicSystemNOList);
+                startActivity(intent);
+            });
         }
-        if (c==0) {
-            tvBodyNO.setText("(1) 车身电脑控制系统     检测通过,无故障码");
-        }else {
-            tvBodyNO.setText("(1) 车身电脑控制系统     检测未通过,发现"+cn+"个故障码" );
+        if (cn == 0) {
+            tvBodyNo.setText("检测通过");
+            tvBodyNo.setTextColor(getResources().getColor(R.color.green));
+        } else {
+            tvBodyNo.setText("检测未通过,发现" + cn + "个故障码");
+            tvBodyNo.setTextColor(getResources().getColor(R.color.red));
+            tvBodyNo.setOnClickListener(v -> {
+                Intent intent = new Intent(context, TroubleCodeActivity.class);
+                intent.putStringArrayListExtra(Constant.ACT_FLAG, bodyNOList);
+                startActivity(intent);
+            });
         }
-        if (b==0) {
-            tvChassisNO.setText("(1) 底盘电脑控制系统     检测通过,无故障码");
-        }else {
-            tvChassisNO.setText("(1) 底盘电脑控制系统     检测未通过,发现"+bn+"个故障码" );
+        if (bn == 0) {
+            tvChassisNO.setText("检测通过");
+            tvChassisNO.setTextColor(getResources().getColor(R.color.green));
+        } else {
+            tvChassisNO.setText("检测未通过,发现" + bn + "个故障码");
+            tvChassisNO.setTextColor(getResources().getColor(R.color.red));
+            tvChassisNO.setOnClickListener(v -> {
+                Intent intent = new Intent(context, TroubleCodeActivity.class);
+                intent.putStringArrayListExtra(Constant.ACT_FLAG, chassisNOList);
+                startActivity(intent);
+            });
         }
-        if (u==0) {
-            tvNetWorkNO.setText("(1) 网络通讯系统     检测通过,无故障码");
-        }else {
-            tvNetWorkNO.setText("(1) 网络通讯系统     检测未通过,发现"+un+"个故障码" );
+        if (un == 0) {
+            tvNetWorkNO.setText("检测通过");
+            tvNetWorkNO.setTextColor(getResources().getColor(R.color.green));
+        } else {
+            tvNetWorkNO.setText("检测未通过,发现" + un + "个故障码");
+            tvNetWorkNO.setTextColor(getResources().getColor(R.color.red));
+            tvNetWorkNO.setOnClickListener(v -> {
+                Intent intent = new Intent(context, TroubleCodeActivity.class);
+                intent.putStringArrayListExtra(Constant.ACT_FLAG, netWorkNOList);
+                startActivity(intent);
+            });
         }
+
+        tvSpeed.setText(entity.getSpeed());
+        tvEngineRpm.setText(entity.getEngineRpm());
+        tvMassAirFlow.setText(entity.getMassAirFlow());
+        tvEngineRuntime.setText(entity.getEngineRuntime());
+        tvFuelLevel.setText(entity.getFuelLevel());
+        tvIntakePressure.setText(entity.getIntakePressure());
+        tvIntakeAirTemp.setText(entity.getIntakeAirTemp());
+        tvAmbientAirTemp.setText(entity.getAmbientAirTemp());
+        tvEngineCoolantTemp.setText(entity.getEngineCoolantTemp());
+        tvEngineOilTemp.setText(entity.getEngineOilTemp());
+        tvFuelConsumptionRate.setText(entity.getFuelConsumptionRate());
+        tvFuelPressure.setText(entity.getFuelPressure());
+        tvEngineLoad.setText(entity.getEngineLoad());
+        tvBarometricPressure.setText(entity.getBarometricPressure());
+        tvRelThottlePos.setText(entity.getRelThottlePos());
+        tvTimingAdvance.setText(entity.getTimingAdvance());
+        tvEquivRatio.setText(entity.getEquivRatio());
+        tvDistanceTraveledAfterCodesCleared.setText(entity.getDistanceTraveledAfterCodesCleared());
+        tvControlModuleVoltage.setText(entity.getControlModuleVoltage());
+        tvFuelRailPressure.setText(entity.getFuelRailPressure());
+        tvVehicleIdentificationNumber.setText(entity.getVehicleIdentificationNumber());
+        tvDistanceTraveledMilOn.setText(entity.getDistanceTraveledMilOn());
+        tvDtcNumber.setText(entity.getDtcNumber());
+        tvAbsLoad.setText(entity.getAbsLoad());
+        tvAirFuelRatio.setText(entity.getAirFuelRatio());
+        tvDescribeProtocol.setText(entity.getDescribeProtocol());
+        tvIgnitionMonitor.setText(entity.getIgnitionMonitor());
+        tvShortTermBank1.setText(entity.getShortTermBank1());
+        tvShortTermBank2.setText(entity.getShortTermBank2());
+        tvLongTermBank1.setText(entity.getLongTermBank1());
+        tvLongTermBank2.setText(entity.getLongTermBank2());
     }
 }

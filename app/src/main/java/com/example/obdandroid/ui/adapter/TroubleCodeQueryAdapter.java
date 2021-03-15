@@ -80,14 +80,7 @@ public class TroubleCodeQueryAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount() {
-        //获取传入adapter的条目数，没有则返回 1
-        if (list != null) {
-            if (list.size() > 0) {
-                return list.size();
-            }
-        }
-        //位空视图保留一个条目
-        return 1;
+        return list.size();
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {

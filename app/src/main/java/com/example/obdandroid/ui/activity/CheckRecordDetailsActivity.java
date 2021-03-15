@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.obdandroid.R;
@@ -67,9 +68,9 @@ public class CheckRecordDetailsActivity extends BaseActivity {
     private TextView tvMEngineCoolantTemp;
     private TextView tvMAmbientAirTemp;
     private TextView tvMIntakeAirTemp;
-    private android.widget.LinearLayout layoutPermanentTroubleCode;
-    private android.widget.LinearLayout layoutPendingTroubleCode;
-    private android.widget.LinearLayout layoutFaultCodes;
+    private LinearLayout layoutPermanentTroubleCode;
+    private LinearLayout layoutPendingTroubleCode;
+    private LinearLayout layoutFaultCodes;
     private Context context;
 
     @Override
@@ -194,13 +195,13 @@ public class CheckRecordDetailsActivity extends BaseActivity {
         tvMFuelTypeValue.setText(entity.getFuelTypeValue());
         tvMFuelLevel.setText(entity.getFuelLevel());
         if (!TextUtils.isEmpty(entity.getPermanentTroubleCode())) {
-            tvMPermanentTroubleCode.setText(entity.getPermanentTroubleCode().replaceAll("\r|\n", ",").split(",").length + "");
+            tvMPermanentTroubleCode.setText(entity.getPermanentTroubleCode().replaceAll("[\r\n]", ",").split(",").length + "");
         }
         if (!TextUtils.isEmpty(entity.getPendingTroubleCode())) {
-            tvMPendingTroubleCode.setText(entity.getPendingTroubleCode().replaceAll("\r|\n", ",").split(",").length + "");
+            tvMPendingTroubleCode.setText(entity.getPendingTroubleCode().replaceAll("[\r\n]", ",").split(",").length + "");
         }
         if (!TextUtils.isEmpty(entity.getFaultCodes())) {
-            tvMFaultCodes.setText(entity.getFaultCodes().replaceAll("\r|\n", ",").split(",").length + "");
+            tvMFaultCodes.setText(entity.getFaultCodes().replaceAll("[\r\n]", ",").split(",").length + "");
         }
         tvMThrottlePos.setText(entity.getRelThottlePos());
         tvMMassAirFlow.setText(entity.getMassAirFlow());
@@ -216,26 +217,26 @@ public class CheckRecordDetailsActivity extends BaseActivity {
             if (!TextUtils.isEmpty(entity.getFaultCodes())) {
                 JumpUtil.startActToData(context, TroubleCodeQueryActivity.class, entity.getFaultCodes(), 0);
             } else {
-                showTipDialog("没有故障码可查询");
+                showTipDialog();
             }
         });
         layoutPendingTroubleCode.setOnClickListener(v -> {
             if (!TextUtils.isEmpty(entity.getPendingTroubleCode())) {
                 JumpUtil.startActToData(context, TroubleCodeQueryActivity.class, entity.getPendingTroubleCode(), 0);
             } else {
-                showTipDialog("没有故障码可查询");
+                showTipDialog();
             }
         });
         layoutPermanentTroubleCode.setOnClickListener(v -> {
             if (!TextUtils.isEmpty(entity.getPermanentTroubleCode())) {
                 JumpUtil.startActToData(context, TroubleCodeQueryActivity.class, entity.getPermanentTroubleCode(), 0);
             } else {
-                showTipDialog("没有故障码可查询");
+                showTipDialog();
             }
         });
     }
 
-    private void showTipDialog(String msg) {
-        TipDialog.show(context, msg, TipDialog.TYPE_ERROR, TipDialog.TYPE_WARNING);
+    private void showTipDialog() {
+        TipDialog.show(context, "没有故障码可查询", TipDialog.TYPE_ERROR, TipDialog.TYPE_WARNING);
     }
 }

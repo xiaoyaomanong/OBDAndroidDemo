@@ -11,14 +11,12 @@ import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.utils.AppDateUtils;
-import com.example.obdandroid.utils.JumpUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.trip.CheckRecord;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 作者：Jealous
@@ -170,33 +168,33 @@ public class CheckReportActivity extends BaseActivity {
         }
         tvCheckNum.setText("检测8项" + msg);
         String[] troubleCodes = entity.getFaultCodes().replaceAll("[\r\n]", ",").split(",");
-        int p = 0;
-        int c = 0;
-        int b = 0;
-        int u = 0;
+        int power = 0;
+        int body = 0;
+        int chassis = 0;
+        int netWork = 0;
         for (String troubleCode : troubleCodes) {
             if (troubleCode.startsWith("P")) {
-                p = p + 1;
+                power = power + 1;
                 dynamicSystemList.add(troubleCode);
             }
             if (troubleCode.startsWith("C")) {
-                c = c + 1;
+                chassis = chassis + 1;
                 chassisList.add(troubleCode);
             }
             if (troubleCode.startsWith("B")) {
-                b = b + 1;
+                body = body + 1;
                 bodyList.add(troubleCode);
             }
             if (troubleCode.startsWith("U")) {
-                u = u + 1;
+                netWork = netWork + 1;
                 netWorkList.add(troubleCode);
             }
         }
-        if (p == 0) {
+        if (power == 0) {
             tvDynamicSystem.setText("检测通过");
             tvDynamicSystem.setTextColor(getResources().getColor(R.color.green));
         } else {
-            tvDynamicSystem.setText("检测未通过,发现" + p + "个故障码");
+            tvDynamicSystem.setText("检测未通过,发现" + power + "个故障码");
             tvDynamicSystem.setTextColor(getResources().getColor(R.color.red));
             tvDynamicSystem.setOnClickListener(v -> {
                 Intent intent = new Intent(context, TroubleCodeActivity.class);
@@ -204,11 +202,11 @@ public class CheckReportActivity extends BaseActivity {
                 startActivity(intent);
             });
         }
-        if (c == 0) {
+        if (body == 0) {
             tvBody.setText("检测通过");
             tvBody.setTextColor(getResources().getColor(R.color.green));
         } else {
-            tvBody.setText("检测未通过,发现" + c + "个故障码");
+            tvBody.setText("检测未通过,发现" + body + "个故障码");
             tvBody.setTextColor(getResources().getColor(R.color.red));
             tvBody.setOnClickListener(v -> {
                 Intent intent = new Intent(context, TroubleCodeActivity.class);
@@ -216,11 +214,11 @@ public class CheckReportActivity extends BaseActivity {
                 startActivity(intent);
             });
         }
-        if (b == 0) {
+        if (chassis == 0) {
             tvChassis.setText("检测通过");
             tvChassis.setTextColor(getResources().getColor(R.color.green));
         } else {
-            tvChassis.setText("检测未通过,发现" + b + "个故障码");
+            tvChassis.setText("检测未通过,发现" + chassis + "个故障码");
             tvChassis.setTextColor(getResources().getColor(R.color.red));
             tvChassis.setOnClickListener(v -> {
                 Intent intent = new Intent(context, TroubleCodeActivity.class);
@@ -228,11 +226,11 @@ public class CheckReportActivity extends BaseActivity {
                 startActivity(intent);
             });
         }
-        if (u == 0) {
+        if (netWork == 0) {
             tvNetWork.setText("检测通过");
             tvNetWork.setTextColor(getResources().getColor(R.color.green));
         } else {
-            tvNetWork.setText("检测未通过,发现" + u + "个故障码");
+            tvNetWork.setText("检测未通过,发现" + netWork + "个故障码");
             tvNetWork.setTextColor(getResources().getColor(R.color.red));
             tvNetWork.setOnClickListener(v -> {
                 Intent intent = new Intent(context, TroubleCodeActivity.class);
@@ -243,33 +241,33 @@ public class CheckReportActivity extends BaseActivity {
 
 
         String[] pendingTroubleCodes = entity.getPendingTroubleCode().replaceAll("[\r\n]", ",").split(",");
-        int pn = 0;
-        int cn = 0;
-        int bn = 0;
-        int un = 0;
+        int powerNO = 0;
+        int bodyNO = 0;
+        int chassisNO = 0;
+        int netWorkNO = 0;
         for (String pendingTroubleCode : pendingTroubleCodes) {
             if (pendingTroubleCode.startsWith("P")) {
-                pn = pn + 1;
+                powerNO = powerNO + 1;
                 dynamicSystemNOList.add(pendingTroubleCode);
             }
             if (pendingTroubleCode.startsWith("C")) {
-                cn = cn + 1;
+                chassisNO = chassisNO + 1;
                 chassisNOList.add(pendingTroubleCode);
             }
             if (pendingTroubleCode.startsWith("B")) {
-                bn = bn + 1;
+                bodyNO = bodyNO + 1;
                 bodyNOList.add(pendingTroubleCode);
             }
             if (pendingTroubleCode.startsWith("U")) {
-                un = un + 1;
+                netWorkNO = netWorkNO + 1;
                 netWorkNOList.add(pendingTroubleCode);
             }
         }
-        if (pn == 0) {
+        if (powerNO == 0) {
             tvDynamicSystemNO.setText("检测通过");
             tvDynamicSystemNO.setTextColor(getResources().getColor(R.color.green));
         } else {
-            tvDynamicSystemNO.setText("检测未通过,发现" + pn + "个故障码");
+            tvDynamicSystemNO.setText("检测未通过,发现" + powerNO + "个故障码");
             tvDynamicSystemNO.setTextColor(getResources().getColor(R.color.red));
             tvDynamicSystemNO.setOnClickListener(v -> {
                 Intent intent = new Intent(context, TroubleCodeActivity.class);
@@ -277,11 +275,11 @@ public class CheckReportActivity extends BaseActivity {
                 startActivity(intent);
             });
         }
-        if (cn == 0) {
+        if (bodyNO == 0) {
             tvBodyNo.setText("检测通过");
             tvBodyNo.setTextColor(getResources().getColor(R.color.green));
         } else {
-            tvBodyNo.setText("检测未通过,发现" + cn + "个故障码");
+            tvBodyNo.setText("检测未通过,发现" + bodyNO + "个故障码");
             tvBodyNo.setTextColor(getResources().getColor(R.color.red));
             tvBodyNo.setOnClickListener(v -> {
                 Intent intent = new Intent(context, TroubleCodeActivity.class);
@@ -289,11 +287,11 @@ public class CheckReportActivity extends BaseActivity {
                 startActivity(intent);
             });
         }
-        if (bn == 0) {
+        if (chassisNO == 0) {
             tvChassisNO.setText("检测通过");
             tvChassisNO.setTextColor(getResources().getColor(R.color.green));
         } else {
-            tvChassisNO.setText("检测未通过,发现" + bn + "个故障码");
+            tvChassisNO.setText("检测未通过,发现" + chassisNO + "个故障码");
             tvChassisNO.setTextColor(getResources().getColor(R.color.red));
             tvChassisNO.setOnClickListener(v -> {
                 Intent intent = new Intent(context, TroubleCodeActivity.class);
@@ -301,11 +299,11 @@ public class CheckReportActivity extends BaseActivity {
                 startActivity(intent);
             });
         }
-        if (un == 0) {
+        if (netWorkNO == 0) {
             tvNetWorkNO.setText("检测通过");
             tvNetWorkNO.setTextColor(getResources().getColor(R.color.green));
         } else {
-            tvNetWorkNO.setText("检测未通过,发现" + un + "个故障码");
+            tvNetWorkNO.setText("检测未通过,发现" + netWorkNO + "个故障码");
             tvNetWorkNO.setTextColor(getResources().getColor(R.color.red));
             tvNetWorkNO.setOnClickListener(v -> {
                 Intent intent = new Intent(context, TroubleCodeActivity.class);

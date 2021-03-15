@@ -19,6 +19,7 @@ import com.sohrab.obd.reader.obdCommand.temperature.AirIntakeTemperatureCommand;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -154,7 +155,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
     private String mLongTermBank1;
     private String mLongTermBank2;
     private List<OBDTripEntity> datas = new ArrayList<>();
-    private List<OBDTripEntity> data = new ArrayList<>();
+    private final List<OBDTripEntity> data = new ArrayList<>();
     private OBDJsonTripEntity entity = new OBDJsonTripEntity();
 
     private CheckRecord() {
@@ -289,6 +290,26 @@ public class CheckRecord implements DefineObdReader, Serializable {
 
     public String getmTripIdentifier() {
         return mTripIdentifier;
+    }
+
+    public static Context getsContext() {
+        return sContext;
+    }
+
+    public String getmShortTermBank1() {
+        return mShortTermBank1;
+    }
+
+    public String getmShortTermBank2() {
+        return mShortTermBank2;
+    }
+
+    public String getmLongTermBank1() {
+        return mLongTermBank1;
+    }
+
+    public String getmLongTermBank2() {
+        return mLongTermBank2;
     }
 
     public float getmGasCost() {
@@ -808,7 +829,20 @@ public class CheckRecord implements DefineObdReader, Serializable {
 
 
     public List<OBDTripEntity> getTripMap() {
-        return data;
+        return removeDuplicate(data);
+    }
+
+    private List<OBDTripEntity> removeDuplicate(List<OBDTripEntity> list) {
+        HashSet<OBDTripEntity> set = new HashSet<>(list.size());
+        List<OBDTripEntity> result = new ArrayList<>(list.size());
+        for (OBDTripEntity str : list) {
+            if (set.add(str)) {
+                result.add(str);
+            }
+        }
+        list.clear();
+        list.addAll(result);
+        return list;
     }
 
     public void setTripMap(List<OBDTripEntity> data) {

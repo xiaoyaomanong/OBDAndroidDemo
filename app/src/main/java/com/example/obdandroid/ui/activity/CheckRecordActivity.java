@@ -36,9 +36,8 @@ public class CheckRecordActivity extends BaseActivity {
     private Context context;
     private PullLoadMoreRecyclerView recycleContent;
     private int pageNum = 1;
-    private int pageSize = 8;
     private boolean isLoadMore;
-    private final List<TestRecordEntity.DataEntity.ListEntity> datas = new ArrayList<>();
+    private final List<TestRecordEntity.DataEntity.ListEntity> list = new ArrayList<>();
     private CheckRecordAdapter adapter;
 
     @Override
@@ -122,7 +121,6 @@ public class CheckRecordActivity extends BaseActivity {
      *                  获取用户检测记录列表
      */
     private void getTestRecordPageList(String pageNum, String token, String appUserId, boolean isRefresh) {
-        LogE("pageNum:" + pageNum);
         OkHttpUtils.get().url(SERVER_URL + getTestRecordPageList_URL).
                 addParam("token", token).
                 addParam("pageNum", pageNum).
@@ -146,9 +144,9 @@ public class CheckRecordActivity extends BaseActivity {
                         recycleContent.setPullLoadMoreCompleted();
                     } else {
                         new Handler().postDelayed(() -> getActivity().runOnUiThread(() -> {
-                            datas.clear();
-                            datas.addAll(entity.getData().getList());
-                            adapter.addFootItem(datas);
+                            list.clear();
+                            list.addAll(entity.getData().getList());
+                            adapter.addFootItem(list);
                             // 加载更多完成后调用，必须在UI线程中
                             recycleContent.setPullLoadMoreCompleted();
                         }), 1000);

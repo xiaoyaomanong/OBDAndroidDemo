@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.ui.entity.TestRecordEntity;
-import com.example.obdandroid.ui.entity.VehicleEntity;
 import com.example.obdandroid.utils.DensityUtil;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 
@@ -33,7 +32,7 @@ public class CheckRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private final int EMPTY_VIEW = 0;//空页面
     private final int NOT_EMPTY_VIEW = 1;//正常页面
     private OnClickCallBack clickCallBack;
-    private Context context;
+    private final Context context;
     private String token;
 
     public CheckRecordAdapter(Context context) {
@@ -103,7 +102,6 @@ public class CheckRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private final TextView txtDateTime;
         private final TextView txt_date_size;
         private final RelativeLayout rlTitle;
-        private final RelativeLayout card_view;
         private final RecyclerView recycleContent;
         private final View vLine;
 
@@ -111,7 +109,6 @@ public class CheckRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             super(itemView);
             rlTitle = itemView.findViewById(R.id.rl_title);
             vLine = itemView.findViewById(R.id.v_line);
-            card_view = itemView.findViewById(R.id.card_view);
             txtDateTime = itemView.findViewById(R.id.txt_date_time);
             txt_date_size = itemView.findViewById(R.id.txt_date_size);
             recycleContent = itemView.findViewById(R.id.recycleContent);
@@ -123,7 +120,7 @@ public class CheckRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             OBDJsonTripEntity tripEntity = JSON.parseObject(timeData.getTestData(), OBDJsonTripEntity.class);
             int size;
             if (!TextUtils.isEmpty(tripEntity.getFaultCodes())) {
-                size = tripEntity.getFaultCodes().replaceAll("\r|\n", ",").split(",").length;
+                size = tripEntity.getFaultCodes().replaceAll("[\r\n]", ",").split(",").length;
             } else {
                 size = 0;
             }
@@ -201,7 +198,7 @@ public class CheckRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             recycleContent.setLayoutManager(manager);
             CheckRecorderAdapter adapter = new CheckRecorderAdapter(context);
             if (!TextUtils.isEmpty(tripEntity.getFaultCodes())) {
-                adapter.setList(Arrays.asList(tripEntity.getFaultCodes().replaceAll("\r|\n", ",").split(",")));
+                adapter.setList(Arrays.asList(tripEntity.getFaultCodes().replaceAll("[\r\n]", ",").split(",")));
                 adapter.setToken(token);
                 recycleContent.setAdapter(adapter);
             }

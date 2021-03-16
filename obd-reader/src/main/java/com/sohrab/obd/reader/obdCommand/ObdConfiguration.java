@@ -53,6 +53,8 @@ import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureManifoldVacuumCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.IntakeManifoldPressureCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.AvailablePidsCommand_01_20;
+import com.sohrab.obd.reader.obdCommand.protocol.AvailablePidsCommand_21_40;
+import com.sohrab.obd.reader.obdCommand.protocol.AvailablePidsCommand_41_60;
 import com.sohrab.obd.reader.obdCommand.protocol.DescribeProtocolCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.DescribeProtocolNumberCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
@@ -110,6 +112,8 @@ public class ObdConfiguration {
         mObdCommands.add(new MassAirFlowCommand());//"01 10"//MAF空气流量速率
         mObdCommands.add(new ThrottlePositionCommand());//"01 11"节气门位置
         mObdCommands.add(new RuntimeCommand());//"01 1F" 引擎运行时间
+
+        mObdCommands.add(new AvailablePidsCommand_21_40());//"01 00" 检索范围从21到40的可用PID。
         mObdCommands.add(new DistanceMILOnCommand());//"01 21"故障指示灯（MIL）亮时行驶的距离
         mObdCommands.add(new FuelRailPressureManifoldVacuumCommand());//"01 22"油轨压力（相对进气歧管真空度）
         mObdCommands.add(new FuelRailPressureCommand());//"01 23" 油轨压力（柴油或汽油直喷）
@@ -133,6 +137,9 @@ public class ObdConfiguration {
         mObdCommands.add(new CatalystTemperatureCommand(CatalystTrim.Catalyst_Temperature_Bank_2_Sensor_1));//"01 3C"催化剂温度:Bank2,感测器1
         mObdCommands.add(new CatalystTemperatureCommand(CatalystTrim.Catalyst_Temperature_Bank_1_Sensor_2));//"01 3C"催化剂温度:Bank1,感测器2
         mObdCommands.add(new CatalystTemperatureCommand(CatalystTrim.Catalyst_Temperature_Bank_2_Sensor_2));//"01 3C"催化剂温度:Bank2,感测器2
+
+
+        mObdCommands.add(new AvailablePidsCommand_41_60());//"01 00" 检索范围从21到40的可用PID。
         mObdCommands.add(new ModuleVoltageCommand());//"01 42" 模块控制组电压
         mObdCommands.add(new AbsoluteLoadCommand());//"01 43"绝对载荷
         mObdCommands.add(new AirFuelRatioCommand());//"01 44" 燃油-空气命令等效比
@@ -146,14 +153,17 @@ public class ObdConfiguration {
         mObdCommands.add(new AcceleratorPedalPositionCommand(AbsThrottleposTrim.THROTTLE_ACTUATOR));//"01 4C"油门执行器控制值
         mObdCommands.add(new TimeRunMILONCommand());//"01 4D"MIL灯亮的行驶时间
         mObdCommands.add(new FindFuelTypeCommand());//"01 51"燃料种类
+        mObdCommands.add(new OilTempCommand());//"01 5C"
+        mObdCommands.add(new ConsumptionRateCommand());//"01 5E"
+        mObdCommands.add(new EngineFuelRateCommand());//"01 5E"
 
 
         //温度
 
-        mObdCommands.add(new OilTempCommand());//"01 5C"
+
         //燃油
 
-        mObdCommands.add(new ConsumptionRateCommand());//"01 5E"
+
 
 
         mObdCommands.add(new ModifiedOdometerCommand());//"01 A6"
@@ -168,8 +178,7 @@ public class ObdConfiguration {
         mObdCommands.add(new ModifiedPendingTroubleCodesCommand());//"07" 未解决故障码
         //发动机
 
-        mObdCommands.add(new OilTempCommand());//"01 5C"
-        mObdCommands.add(new EngineFuelRateCommand());//"01 5E"
+
         //协议
         mObdCommands.add(new DescribeProtocolCommand());//"AT DP"
         mObdCommands.add(new DescribeProtocolNumberCommand());//"AT DPN"

@@ -52,6 +52,7 @@ import com.sohrab.obd.reader.obdCommand.pressure.FuelPressureCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureManifoldVacuumCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.IntakeManifoldPressureCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.AvailablePidsCommand_01_20;
 import com.sohrab.obd.reader.obdCommand.protocol.DescribeProtocolCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.DescribeProtocolNumberCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
@@ -91,6 +92,7 @@ public class ObdConfiguration {
         mObdCommands.add(new SelectProtocolCommand(ObdProtocols.AUTO));//选择要使用的协议
 
 
+        mObdCommands.add(new AvailablePidsCommand_01_20());//"01 00" 检索范围从01到20的可用PID。
         mObdCommands.add(new DtcNumberCommand());//"01 01" DTC情况指示
         mObdCommands.add(new FuelSystemStatusCommand());//"01 03"
         mObdCommands.add(new LoadCommand());//"01 04"

@@ -26,7 +26,6 @@ import com.sohrab.obd.reader.obdCommand.control.TroubleCodesCommand;
 import com.sohrab.obd.reader.obdCommand.control.VinCommand;
 import com.sohrab.obd.reader.obdCommand.control.WarmUpSinceCodesClearedCommand;
 import com.sohrab.obd.reader.obdCommand.engine.AbsoluteLoadCommand;
-import com.sohrab.obd.reader.obdCommand.engine.EngineFuelRateCommand;
 import com.sohrab.obd.reader.obdCommand.engine.LoadCommand;
 import com.sohrab.obd.reader.obdCommand.engine.MassAirFlowCommand;
 import com.sohrab.obd.reader.obdCommand.engine.OilTempCommand;
@@ -52,9 +51,6 @@ import com.sohrab.obd.reader.obdCommand.pressure.FuelPressureCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureManifoldVacuumCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.IntakeManifoldPressureCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.AvailablePidsCommand_01_20;
-import com.sohrab.obd.reader.obdCommand.protocol.AvailablePidsCommand_21_40;
-import com.sohrab.obd.reader.obdCommand.protocol.AvailablePidsCommand_41_60;
 import com.sohrab.obd.reader.obdCommand.protocol.DescribeProtocolCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.DescribeProtocolNumberCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
@@ -93,8 +89,10 @@ public class ObdConfiguration {
         mObdCommands.add(new TimeoutCommand(62));//这将设置OBD接口启动的时间值（毫秒）将等待ECU的响应。如果超过，则响应为“无数据”。
         mObdCommands.add(new SelectProtocolCommand(ObdProtocols.AUTO));//选择要使用的协议
 
+        //mObdCommands.add(new FreezeFrameCommand());//"02 02" 冻结的DTC
 
-        mObdCommands.add(new AvailablePidsCommand_01_20());//"01 00" 检索范围从01到20的可用PID。
+        //mObdCommands.add(new AvailablePidsCommand_01_20());//"01 00" 检索范围从01到20的可用PID。
+
         mObdCommands.add(new DtcNumberCommand());//"01 01" DTC情况指示
         mObdCommands.add(new FuelSystemStatusCommand());//"01 03"
         mObdCommands.add(new LoadCommand());//"01 04"
@@ -113,7 +111,8 @@ public class ObdConfiguration {
         mObdCommands.add(new ThrottlePositionCommand());//"01 11"节气门位置
         mObdCommands.add(new RuntimeCommand());//"01 1F" 引擎运行时间
 
-        mObdCommands.add(new AvailablePidsCommand_21_40());//"01 00" 检索范围从21到40的可用PID。
+        // mObdCommands.add(new AvailablePidsCommand_21_40());//"01 00" 检索范围从21到40的可用PID。
+
         mObdCommands.add(new DistanceMILOnCommand());//"01 21"故障指示灯（MIL）亮时行驶的距离
         mObdCommands.add(new FuelRailPressureManifoldVacuumCommand());//"01 22"油轨压力（相对进气歧管真空度）
         mObdCommands.add(new FuelRailPressureCommand());//"01 23" 油轨压力（柴油或汽油直喷）
@@ -139,7 +138,8 @@ public class ObdConfiguration {
         mObdCommands.add(new CatalystTemperatureCommand(CatalystTrim.Catalyst_Temperature_Bank_2_Sensor_2));//"01 3C"催化剂温度:Bank2,感测器2
 
 
-        mObdCommands.add(new AvailablePidsCommand_41_60());//"01 00" 检索范围从21到40的可用PID。
+        //mObdCommands.add(new AvailablePidsCommand_41_60());//"01 00" 检索范围从21到40的可用PID。
+
         mObdCommands.add(new ModuleVoltageCommand());//"01 42" 模块控制组电压
         mObdCommands.add(new AbsoluteLoadCommand());//"01 43"绝对载荷
         mObdCommands.add(new AirFuelRatioCommand());//"01 44" 燃油-空气命令等效比
@@ -153,33 +153,14 @@ public class ObdConfiguration {
         mObdCommands.add(new AcceleratorPedalPositionCommand(AbsThrottleposTrim.THROTTLE_ACTUATOR));//"01 4C"油门执行器控制值
         mObdCommands.add(new TimeRunMILONCommand());//"01 4D"MIL灯亮的行驶时间
         mObdCommands.add(new FindFuelTypeCommand());//"01 51"燃料种类
-        mObdCommands.add(new OilTempCommand());//"01 5C"
-        mObdCommands.add(new ConsumptionRateCommand());//"01 5E"
-        mObdCommands.add(new EngineFuelRateCommand());//"01 5E"
-
-
-        //温度
-
-
-        //燃油
-
-
-
-
-        mObdCommands.add(new ModifiedOdometerCommand());//"01 A6"
-        //控制
-
-        mObdCommands.add(new IgnitionMonitorCommand());//"AT IGN"
-
-        mObdCommands.add(new VinCommand());//"09 02"
-        //故障码
+        mObdCommands.add(new OilTempCommand());//"01 5C"燃油温度
+        mObdCommands.add(new ConsumptionRateCommand());//"01 5E" 燃油效率
+        mObdCommands.add(new ModifiedOdometerCommand());//"01 A6" 里程
+        mObdCommands.add(new IgnitionMonitorCommand());//"AT IGN"  点火
+        mObdCommands.add(new VinCommand());//"09 02" 车辆识别码*/
         mObdCommands.add(new ModifiedTroubleCodesObdCommand());//"03" 故障代码
         mObdCommands.add(new ModifiedPermanentTroubleCodesCommand());//"0A" 永久故障码
         mObdCommands.add(new ModifiedPendingTroubleCodesCommand());//"07" 未解决故障码
-        //发动机
-
-
-        //协议
         mObdCommands.add(new DescribeProtocolCommand());//"AT DP"
         mObdCommands.add(new DescribeProtocolNumberCommand());//"AT DPN"
     }

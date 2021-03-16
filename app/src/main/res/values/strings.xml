@@ -171,7 +171,7 @@
     <string name="InsFuelConsumption">瞬时油耗</string>
     <string name="IdlingFuelConsumption">怠速油耗</string>
     <string name="DrivingFuelConsumption">行驶油耗</string>
-    <string name="EngineOilTemp">发动机油温</string>
+    <string name="EngineOilTemp">引擎油温</string>
     <string name="cancel">取消</string>
     <string name="selectVehicle">选择车辆</string>
     <string name="car_check_record">车检记录</string>

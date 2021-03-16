@@ -1,24 +1,23 @@
-package com.sohrab.obd.reader.obdCommand.fuel;
-
-import android.annotation.SuppressLint;
+package com.sohrab.obd.reader.obdCommand.control;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
- * Created by "Sohrab" on 1/8/2018.
+ * 作者：Jealous
+ * 日期：2021/3/16 0016
+ * 描述：
  */
+public class TimeRunMILONCommand extends ObdCommand {
 
-public class AirFuelRatioCommand extends ObdCommand {
 
-
-    private float afr = 0;
+    private float time = 0;
 
     /**
      * <p>Constructor for AirFuelRatioCommand.</p>
      */
-    public AirFuelRatioCommand() {
-        super("01 44");
+    public TimeRunMILONCommand() {
+        super("01 4D");
     }
 
     /**
@@ -29,16 +28,15 @@ public class AirFuelRatioCommand extends ObdCommand {
         // ignore first two bytes [01 44] of the response
         float A = buffer.get(2);
         float B = buffer.get(3);
-        afr = (((A * 256) + B) / 32768) * 14.7f;//((A*256)+B)/32768
+        time = 256 * A + B;
     }
 
     /**
      * {@inheritDoc}
      */
-    @SuppressLint("DefaultLocale")
     @Override
     public String getFormattedResult() {
-        return String.format("%.2f", getAirFuelRatio()) + ":1 AFR";
+        return getTime() + " 分";
     }
 
     /**
@@ -46,7 +44,7 @@ public class AirFuelRatioCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return String.valueOf(getAirFuelRatio());
+        return getTime()+" 分";
     }
 
     /**
@@ -54,8 +52,8 @@ public class AirFuelRatioCommand extends ObdCommand {
      *
      * @return a double.
      */
-    public double getAirFuelRatio() {
-        return afr;
+    public double getTime() {
+        return time;
     }
 
     /**
@@ -63,6 +61,6 @@ public class AirFuelRatioCommand extends ObdCommand {
      */
     @Override
     public String getName() {
-        return AvailableCommandNames.AIR_FUEL_RATIO.getValue();
+        return AvailableCommandNames.TIME_TRAVELED_MIL_ON.getValue();
     }
 }

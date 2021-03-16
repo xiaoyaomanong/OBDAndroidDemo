@@ -383,13 +383,11 @@ public class TripRecord implements DefineObdReader, Serializable {
                 findInsFualConsumption(Float.parseFloat(command.getFormattedResult()));
                 setmIsMAFSupported(true);
                 break;
-
             case ENGINE_RUNTIME:
                 engineRuntime = command.getFormattedResult();
                 data.add(new OBDTripEntity("引擎运行时间", TextUtils.isEmpty(engineRuntime) ? "" : engineRuntime, R.drawable.icon_engine_time));
                 entity.setEngineRuntime(TextUtils.isEmpty(engineRuntime) ? "" : engineRuntime);
                 break;
-
             case FUEL_LEVEL:
                 mFuelLevel = command.getFormattedResult();
                 data.add(new OBDTripEntity("燃油油位", TextUtils.isEmpty(mFuelLevel) ? "" : mFuelLevel, R.drawable.icon_fuel_level));
@@ -790,50 +788,5 @@ public class TripRecord implements DefineObdReader, Serializable {
 
     public void setOBDJson(OBDJsonTripEntity entity) {
         this.entity = entity;
-    }
-
-    @Override
-    public String toString() {
-        return "OBD data ::" +
-                "\n" + AvailableCommandNames.SPEED.getValue() + ":  " + speed + " km/h" +
-                "\n" + AvailableCommandNames.ENGINE_RPM.getValue() + ":  " + engineRpm +
-                "\n" + AvailableCommandNames.ENGINE_RUNTIME.getValue() + ":  " + engineRuntime + "hh:mm:ss" +
-                "\n" + AvailableCommandNames.TROUBLE_CODES.getValue() + ":  " + mFaultCodes +
-                "\nIdling Fuel Consumtion: " + getmIdlingFuelConsumption() + " L" +
-                "\nDriving Fuel Consumtion: " + getmDrivingFuelConsumption() + " L" +
-                "\nInstant Fuel Consumtion: " + mInsFuelConsumption + " L/100km" +
-                "\ndriving maf: " + mDrivingMaf + " g/s" +
-                "\nidle maf: " + mIdleMaf + " g/s" +
-                "\n" + AvailableCommandNames.FUEL_TYPE.getValue() + ":  " + mFuelTypeValue +
-                "\nRapid Acceleration Times: " + mRapidAccTimes +
-                "\nRapid Decleration Times: " + mRapidDeclTimes +
-                "\nMax Rpm: " + engineRpmMax +
-                "\nMax Speed: " + speedMax + " km/h" +
-                "\nDriving Duration: " + getDrivingDuration() + " minute" +
-                "\nIdle Duration: " + getIdlingDuration() + " minute" +
-                "\n" + AvailableCommandNames.DISTANCE_TRAVELED_AFTER_CODES_CLEARED.getValue() + ":  " + getmDistanceTraveledAfterCodesCleared() +
-                "\n" + AvailableCommandNames.DISTANCE_TRAVELED_MIL_ON.getValue() + ":  " + mDistanceTraveledMilOn +
-                "\n" + AvailableCommandNames.INTAKE_MANIFOLD_PRESSURE.getValue() + ":  " + mIntakePressure + " kpa" +
-                "\n" + AvailableCommandNames.AIR_INTAKE_TEMP.getValue() + ":  " + mIntakeAirTemp + " C" +
-                "\n" + AvailableCommandNames.FUEL_CONSUMPTION_RATE.getValue() + ":  " + mFuelConsumptionRate + " L/h" +
-                "\n" + AvailableCommandNames.FUEL_SYSTEM_STATUS.getValue() + ":  " + mFuelSystemStatus +
-                "\n" + AvailableCommandNames.THROTTLE_POS.getValue() + ":  " + mRelThottlePos + "%" +
-                "\n" + AvailableCommandNames.FUEL_LEVEL.getValue() + ":  " + mFuelLevel +
-                "\n" + AvailableCommandNames.FUEL_PRESSURE.getValue() + ":  " + mFuelPressure + " kPa" +
-                "\n" + AvailableCommandNames.FUEL_RAIL_PRESSURE_manifold.getValue() + ":  " + mFuelRailPressurevacuum + " kPa" +
-                "\n" + AvailableCommandNames.FUEL_RAIL_PRESSURE.getValue() + ":  " + mFuelRailPressure + " kPa" +
-                "\n" + AvailableCommandNames.Commanded_EGR.getValue() + ":  " + mCommandedEGR +
-                "\n" + AvailableCommandNames.ENGINE_COOLANT_TEMP.getValue() + ":  " + mEngineCoolantTemp +
-                "\n" + AvailableCommandNames.ENGINE_LOAD.getValue() + ":  " + mEngineLoad +
-                "\n" + AvailableCommandNames.ENGINE_OIL_TEMP.getValue() + ":  " + mEngineOilTemp +
-                "\n" + AvailableCommandNames.BAROMETRIC_PRESSURE.getValue() + ":  " + mBarometricPressure +
-                "\n" + AvailableCommandNames.AIR_FUEL_RATIO.getValue() + ":  " + mAirFuelRatio +
-                "\n" + AvailableCommandNames.WIDEBAND_AIR_FUEL_RATIO.getValue() + ":  " + mWideBandAirFuelRatio +
-                "\n" + AvailableCommandNames.ABS_LOAD.getValue() + ":  " + mAbsLoad +
-                "\n" + AvailableCommandNames.CONTROL_MODULE_VOLTAGE.getValue() + ":  " + mControlModuleVoltage +
-                "\n" + AvailableCommandNames.EQUIV_RATIO.getValue() + ":  " + mEquivRatio +
-                "\n" + AvailableCommandNames.DTC_NUMBER.getValue() + ":  " + mDtcNumber +
-                "\n" + AvailableCommandNames.DESCRIBE_PROTOCOL.getValue() + ":  " + mDescribeProtocol +
-                "\n" + AvailableCommandNames.PENDING_TROUBLE_CODES.getValue() + ":  " + mPendingTroubleCode;
     }
 }

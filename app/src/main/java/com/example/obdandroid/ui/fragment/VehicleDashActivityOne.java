@@ -17,13 +17,10 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.SpeedCommand;
 import com.sohrab.obd.reader.obdCommand.engine.OilTempCommand;
 import com.sohrab.obd.reader.obdCommand.engine.RPMCommand;
-import com.sohrab.obd.reader.obdCommand.pressure.IntakeManifoldPressureCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
-import com.sohrab.obd.reader.obdCommand.temperature.AirIntakeTemperatureCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.EngineCoolantTemperatureCommand;
 import com.sohrab.obd.reader.trip.TripRecord;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

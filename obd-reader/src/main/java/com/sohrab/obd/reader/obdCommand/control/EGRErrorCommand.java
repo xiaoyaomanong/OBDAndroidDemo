@@ -1,26 +1,24 @@
 package com.sohrab.obd.reader.obdCommand.control;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
-import com.sohrab.obd.reader.enums.FuelType;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
-import com.sohrab.obd.reader.obdCommand.fuel.FindFuelTypeCommand;
 
 /**
  * 作者：Jealous
- * 日期：2021/1/18 0018
- * 描述：排气再循环（EGR）指令
+ * 日期：2021/3/16 0016
+ * 描述：
  */
-public class CommandedEGRCommand extends ObdCommand {
-    private int CommandedEGR = 0;
+public class EGRErrorCommand extends ObdCommand {
+    private int EGRError = 0;
 
-    public CommandedEGRCommand() {
-        super("01 2C");
+    public EGRErrorCommand() {
+        super("01 2D");
     }
 
     /**
      * Copy ctor
      */
-    public CommandedEGRCommand(CommandedEGRCommand other) {
+    public EGRErrorCommand(EGRErrorCommand other) {
         super(other);
     }
 
@@ -30,7 +28,7 @@ public class CommandedEGRCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [hh hh] of the response
-        CommandedEGR = (buffer.get(2) * 100) / 255;
+        EGRError = ((buffer.get(2) - 128) * 100) / 128;
     }
 
     /**
@@ -38,7 +36,7 @@ public class CommandedEGRCommand extends ObdCommand {
      */
     @Override
     public String getFormattedResult() {
-        return CommandedEGR + "%";
+        return EGRError + "%";
     }
 
     /**
@@ -46,11 +44,11 @@ public class CommandedEGRCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return CommandedEGR + "%";
+        return EGRError + "%";
     }
 
     @Override
     public String getName() {
-        return AvailableCommandNames.Commanded_EGR.getValue();
+        return AvailableCommandNames.EGR_ERROR.getValue();
     }
 }

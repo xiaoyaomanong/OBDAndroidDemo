@@ -79,7 +79,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
     private final static String DESCRIBE_PROTOCOL = "Describe protocol";
     private final static String DESCRIBE_PROTOCOL_NUMBER = "Describe protocol number";
     private final static String IGNITION_MONITOR = "Ignition monitor";
-    private final static String Commanded_EGR = "Commanded EGR";
+    private final static String EGR = "EGR";
     private final static String SHORT_TERM_BANK_1 = "Short Term Fuel Trim Bank 1";
     private final static String SHORT_TERM_BANK_2 = "Short Term Fuel Trim Bank 2";
     private final static String LONG_TERM_BANK_1 = "Long Term Fuel Trim Bank 1";
@@ -127,7 +127,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
     private String mFuelConsumptionRate;
     private String mFuelSystemStatus;
     private String mFuelPressure;
-    private String mCommandedEGR;
+    private String mEGR;
     private String mEngineLoad;
     private String mBarometricPressure;
     private String mThrottlePos;
@@ -137,6 +137,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
     private String mEquivRatio;
     private String mDistanceTraveledAfterCodesCleared;
     private String mControlModuleVoltage;
+    private String mEngineFuelRate;
     private String mFuelRailPressure;
     private String mFuelRailPressurevacuum;
     private String mVehicleIdentificationNumber;
@@ -408,9 +409,9 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 break;
             case MAF:
                 mMassAirFlow = Float.parseFloat(command.getFormattedResult());
+                findInsFualConsumption(mMassAirFlow);
                 data.add(new OBDTripEntity("空气质量流量", mMassAirFlow + "", R.drawable.icon_kqzlll));
                 entity.setMassAirFlow(mMassAirFlow + "");
-                findInsFualConsumption(Float.parseFloat(command.getFormattedResult()));
                 setmIsMAFSupported(true);
                 break;
 
@@ -487,10 +488,10 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 data.add(new OBDTripEntity("发动机负荷", TextUtils.isEmpty(mEngineLoad) ? "" : mEngineLoad, R.drawable.icon_fdjfh));
                 entity.setEngineLoad(TextUtils.isEmpty(mEngineLoad) ? "" : mEngineLoad);
                 break;
-            case Commanded_EGR:
-                mCommandedEGR = command.getFormattedResult();
-                data.add(new OBDTripEntity("指令EGR", TextUtils.isEmpty(mCommandedEGR) ? "" : mCommandedEGR, R.drawable.icon_zlegr));
-                entity.setRmCommandedEGR(TextUtils.isEmpty(mCommandedEGR) ? "" : mCommandedEGR);
+            case EGR:
+                mEGR = command.getFormattedResult();
+                data.add(new OBDTripEntity("废气循环", TextUtils.isEmpty(mEGR) ? "" : mEGR, R.drawable.icon_zlegr));
+                entity.setRmCommandedEGR(TextUtils.isEmpty(mEGR) ? "" : mEGR);
                 break;
             case BAROMETRIC_PRESSURE:
                 mBarometricPressure = command.getFormattedResult();
@@ -538,6 +539,11 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 mControlModuleVoltage = command.getFormattedResult();
                 data.add(new OBDTripEntity("控制模组电压", TextUtils.isEmpty(mControlModuleVoltage) ? "" : mControlModuleVoltage, R.drawable.icon_control_model_voltage));
                 entity.setControlModuleVoltage(TextUtils.isEmpty(mControlModuleVoltage) ? "" : mControlModuleVoltage);
+                break;
+            case ENGINE_FUEL_RATE:
+                mEngineFuelRate = command.getFormattedResult();
+                data.add(new OBDTripEntity("引擎油量消耗速率", TextUtils.isEmpty(mEngineFuelRate) ? "" : mEngineFuelRate, R.drawable.icon_engine_fuel_rate));
+                entity.setEngineFuelRate(TextUtils.isEmpty(mEngineFuelRate) ? "" : mEngineFuelRate);
                 break;
 
             case FUEL_RAIL_PRESSURE:
@@ -703,8 +709,8 @@ public class CheckRecord implements DefineObdReader, Serializable {
         return mFuelPressure;
     }
 
-    public String getmCommandedEGR() {
-        return mCommandedEGR;
+    public String getmEGR() {
+        return mEGR;
     }
 
     public String getmEngineLoad() {

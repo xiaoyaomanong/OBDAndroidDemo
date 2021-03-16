@@ -53,6 +53,7 @@ public class OBDJsonTripEntity implements Serializable {
     private String FuelPressure;
     private String BarometricPressure;
     private String EngineCoolantTemp;
+    private String EngineFuelRate;
     private String AmbientAirTemp;
     private String IntakeAirTemp;
     private String ShortTermBank1;
@@ -466,5 +467,13 @@ public class OBDJsonTripEntity implements Serializable {
 
     public void setLongTermBank2(String longTermBank2) {
         LongTermBank2 = longTermBank2;
+    }
+
+    public String getEngineFuelRate() {
+        return EngineFuelRate;
+    }
+
+    public void setEngineFuelRate(String engineFuelRate) {
+        EngineFuelRate = engineFuelRate;
     }
 }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.fragment.VehicleDashActivityOne;
@@ -12,7 +11,6 @@ import com.example.obdandroid.ui.fragment.VehicleDashActivityTwo;
 import com.example.obdandroid.utils.JumpUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
-import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
 
 /**
  * 作者：Jealous

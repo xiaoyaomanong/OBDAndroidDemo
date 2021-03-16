@@ -1,5 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.control;
 
+import android.annotation.SuppressLint;
+
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.SystemOfUnits;
@@ -41,6 +43,7 @@ public class DistanceMILOnCommand extends ObdCommand
      *
      * @return a {@link String} object.
      */
+    @SuppressLint("DefaultLocale")
     public String getFormattedResult() {
         return useImperialUnits ? String.format("%.2f%s", getImperialUnit(), getResultUnit())
                 : String.format("%d%s", km, getResultUnit());

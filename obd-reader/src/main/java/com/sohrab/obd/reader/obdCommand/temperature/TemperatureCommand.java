@@ -1,6 +1,8 @@
 package com.sohrab.obd.reader.obdCommand.temperature;
 
 
+import android.annotation.SuppressLint;
+
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.SystemOfUnits;
 
@@ -46,6 +48,7 @@ public abstract class TemperatureCommand extends ObdCommand implements
      * Get values from 'buff', since we can't rely on char/string for
      * calculations.
      */
+    @SuppressLint("DefaultLocale")
     @Override
     public String getFormattedResult() {
         return useImperialUnits ? String.format("%.1f%s", getImperialUnit(), getResultUnit())

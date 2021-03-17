@@ -158,7 +158,6 @@ public class ObdConfiguration {
         mObdCommands.add(new EngineFuelRateCommand());//"01 5E"
         //温度
 
-
         //燃油
 
 

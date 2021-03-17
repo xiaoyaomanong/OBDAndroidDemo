@@ -1,4 +1,4 @@
-package com.example.obdandroid.ui.fragment;
+package com.example.obdandroid.ui.activity;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -34,7 +34,7 @@ import java.util.List;
  * 日期：2021/3/10 0010
  * 描述：
  */
-public class VehicleDashActivityTwo extends BaseActivity {
+public class VehicleDashTwoActivity extends BaseActivity {
     private PhilText tvmIdlingFuelConsumption;
     private PhilText tvmInsFuelConsumption;
     private PhilText tvDrivingFuelConsumption;

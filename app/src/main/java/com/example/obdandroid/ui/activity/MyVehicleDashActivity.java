@@ -6,8 +6,6 @@ import android.widget.LinearLayout;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
-import com.example.obdandroid.ui.fragment.VehicleDashActivityOne;
-import com.example.obdandroid.ui.fragment.VehicleDashActivityTwo;
 import com.example.obdandroid.utils.JumpUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
@@ -36,8 +34,8 @@ public class MyVehicleDashActivity extends BaseActivity {
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         LinearLayout layoutDashOne = findViewById(R.id.layoutDashOne);
         LinearLayout layoutDashTwo = findViewById(R.id.layoutDashTwo);
-        layoutDashOne.setOnClickListener(v -> JumpUtil.startAct(context, VehicleDashActivityOne.class));
-        layoutDashTwo.setOnClickListener(v -> JumpUtil.startAct(context, VehicleDashActivityTwo.class));
+        layoutDashOne.setOnClickListener(v -> JumpUtil.startAct(context, VehicleDashOneActivity.class));
+        layoutDashTwo.setOnClickListener(v -> JumpUtil.startAct(context, VehicleDashTwoActivity.class));
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {

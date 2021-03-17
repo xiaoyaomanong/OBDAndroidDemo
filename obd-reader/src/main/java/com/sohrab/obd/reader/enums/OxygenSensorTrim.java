@@ -5,29 +5,32 @@ import java.util.Map;
 
 /**
  * 作者：Jealous
- * 日期：2021/3/16 0016
+ * 日期：2021/3/17 0017
  * 描述：
  */
-public enum CatalystTrim {
-    Catalyst_Temperature_Bank_1_Sensor_1("3C", "Catalyst Temperature: Bank 1, Sensor 1"),
-    Catalyst_Temperature_Bank_2_Sensor_1("3D", "Catalyst Temperature: Bank 2, Sensor 1"),
-    Catalyst_Temperature_Bank_1_Sensor_2("3E", "Catalyst Temperature: Bank 1, Sensor 2"),
-    Catalyst_Temperature_Bank_2_Sensor_2("3F", "Catalyst Temperature: Bank 2, Sensor 2");
+public enum OxygenSensorTrim {
+    SHORT_A_BANK1_B_BANK3("55", "Short term secondary oxygen sensor trim, A: bank 1, B: bank 3"),
+
+    LONG_A_BANK1_B_BANK3("56", "Long term secondary oxygen sensor trim, A: bank 1, B: bank 3"),
+
+    SHORT_A_BANK2_B_BANK4("57", "Short term secondary oxygen sensor trim, A: bank 2, B: bank 4"),
+
+    LONG_A_BANK2_B_BANK4("58", "Long term secondary oxygen sensor trim, A: bank 2, B: bank 4");
 
     /**
      * Constant <code>map</code>
      */
-    private static final Map<String, CatalystTrim> map = new HashMap<>();
+    private static final Map<String, OxygenSensorTrim> map = new HashMap<>();
 
     static {
-        for (CatalystTrim error : CatalystTrim.values())
+        for (OxygenSensorTrim error : OxygenSensorTrim.values())
             map.put(error.getValue(), error);
     }
 
     private final String value;
     private final String bank;
 
-    CatalystTrim(final String value, final String bank) {
+    OxygenSensorTrim(final String value, final String bank) {
         this.value = value;
         this.bank = bank;
     }
@@ -37,7 +40,7 @@ public enum CatalystTrim {
      *
      * @param value a int.
      */
-    public static CatalystTrim fromValue(final int value) {
+    public static OxygenSensorTrim fromValue(final int value) {
         return map.get(value);
     }
 

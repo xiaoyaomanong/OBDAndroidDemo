@@ -5,23 +5,37 @@ import com.sohrab.obd.reader.enums.CatalystTrim;
 import com.sohrab.obd.reader.enums.FuelTrim;
 import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.enums.ObdProtocols;
+import com.sohrab.obd.reader.enums.OxygenSensorTrim;
+import com.sohrab.obd.reader.obdCommand.control.AbsoluteEvapSystemVaporPressureCommand;
 import com.sohrab.obd.reader.obdCommand.control.AbsoluteThrottlePositionCommand;
 import com.sohrab.obd.reader.obdCommand.control.AcceleratorPedalPositionCommand;
+import com.sohrab.obd.reader.obdCommand.control.ActualEnginePercentTorqueCommand;
 import com.sohrab.obd.reader.obdCommand.control.CatalystTemperatureCommand;
+import com.sohrab.obd.reader.obdCommand.control.DPFTemperatureCommand;
 import com.sohrab.obd.reader.obdCommand.control.DistanceMILOnCommand;
 import com.sohrab.obd.reader.obdCommand.control.DistanceSinceCCCommand;
+import com.sohrab.obd.reader.obdCommand.control.DriverDemandEnginePercentTorqueCommand;
 import com.sohrab.obd.reader.obdCommand.control.DtcNumberCommand;
 import com.sohrab.obd.reader.obdCommand.control.EGRCommand;
 import com.sohrab.obd.reader.obdCommand.control.EGRErrorCommand;
+import com.sohrab.obd.reader.obdCommand.control.EngineFrictionPercentTorqueCommand;
+import com.sohrab.obd.reader.obdCommand.control.EngineReferenceTorqueCommand;
+import com.sohrab.obd.reader.obdCommand.control.EthanolFuelRateCommand;
 import com.sohrab.obd.reader.obdCommand.control.EvaporativePurgeCommand;
+import com.sohrab.obd.reader.obdCommand.control.FuelRailAbsPressureCommand;
+import com.sohrab.obd.reader.obdCommand.control.HybridBatteryPackRemainingLifeCommand;
 import com.sohrab.obd.reader.obdCommand.control.IgnitionMonitorCommand;
+import com.sohrab.obd.reader.obdCommand.control.MaxAirFlowMassRateCommand;
 import com.sohrab.obd.reader.obdCommand.control.ModuleVoltageCommand;
 import com.sohrab.obd.reader.obdCommand.control.OdometerCommand;
+import com.sohrab.obd.reader.obdCommand.control.OxygenSensorTrimCommand;
 import com.sohrab.obd.reader.obdCommand.control.PendingTroubleCodesCommand;
 import com.sohrab.obd.reader.obdCommand.control.PermanentTroubleCodesCommand;
+import com.sohrab.obd.reader.obdCommand.control.RelativeAcceleratorPedalPosCommand;
 import com.sohrab.obd.reader.obdCommand.control.RelativeThrottlePositionCommand;
 import com.sohrab.obd.reader.obdCommand.control.SystemVaporPressureCommand;
 import com.sohrab.obd.reader.obdCommand.control.TimeRunMILONCommand;
+import com.sohrab.obd.reader.obdCommand.control.TimeSinceTroubleCodesClearedCommand;
 import com.sohrab.obd.reader.obdCommand.control.TimingAdvanceCommand;
 import com.sohrab.obd.reader.obdCommand.control.TroubleCodesCommand;
 import com.sohrab.obd.reader.obdCommand.control.VinCommand;
@@ -48,6 +62,7 @@ import com.sohrab.obd.reader.obdCommand.fuel.WidebandAirFuelRatioSixCommand;
 import com.sohrab.obd.reader.obdCommand.fuel.WidebandAirFuelRatioThreeCommand;
 import com.sohrab.obd.reader.obdCommand.fuel.WidebandAirFuelRatioTwoCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.BarometricPressureCommand;
+import com.sohrab.obd.reader.obdCommand.pressure.EvapSystemVaporPressureCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelPressureCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureManifoldVacuumCommand;
@@ -99,10 +114,10 @@ public class ObdConfiguration {
         mObdCommands.add(new FuelSystemStatusCommand(ModeTrim.MODE_01));//"01 03"燃油系统状态
         mObdCommands.add(new LoadCommand(ModeTrim.MODE_01));//"01 04" 发动机负荷
         mObdCommands.add(new EngineCoolantTemperatureCommand(ModeTrim.MODE_01));//"01 05"//发动机冷媒温度
-        mObdCommands.add(new FuelTrimCommand(ModeTrim.MODE_01,FuelTrim.LONG_TERM_BANK_1));//燃油调节命令 长期燃油调节库1
-        mObdCommands.add(new FuelTrimCommand(ModeTrim.MODE_01,FuelTrim.LONG_TERM_BANK_2));//燃油调节命令  长期燃油调节库2
-        mObdCommands.add(new FuelTrimCommand(ModeTrim.MODE_01,FuelTrim.SHORT_TERM_BANK_1));//燃油调节命令 短期燃油调节库1
-        mObdCommands.add(new FuelTrimCommand(ModeTrim.MODE_01,FuelTrim.SHORT_TERM_BANK_2));//燃油调节命令  短期燃油调节库2
+        mObdCommands.add(new FuelTrimCommand(ModeTrim.MODE_01, FuelTrim.LONG_TERM_BANK_1));//燃油调节命令 长期燃油调节库1
+        mObdCommands.add(new FuelTrimCommand(ModeTrim.MODE_01, FuelTrim.LONG_TERM_BANK_2));//燃油调节命令  长期燃油调节库2
+        mObdCommands.add(new FuelTrimCommand(ModeTrim.MODE_01, FuelTrim.SHORT_TERM_BANK_1));//燃油调节命令 短期燃油调节库1
+        mObdCommands.add(new FuelTrimCommand(ModeTrim.MODE_01, FuelTrim.SHORT_TERM_BANK_2));//燃油调节命令  短期燃油调节库2
         mObdCommands.add(new FuelPressureCommand(ModeTrim.MODE_01));//"01 0A" 油压
         mObdCommands.add(new IntakeManifoldPressureCommand(ModeTrim.MODE_01));//"01 0B" 邮箱压力绝对值
         mObdCommands.add(new RPMCommand(ModeTrim.MODE_01));//"01 0C" 发动机转速
@@ -111,7 +126,7 @@ public class ObdConfiguration {
         mObdCommands.add(new AirIntakeTemperatureCommand(ModeTrim.MODE_01));//"01 0F" 邮箱空气温度
         mObdCommands.add(new MassAirFlowCommand(ModeTrim.MODE_01));//"01 10" MAF空气流量速率
         mObdCommands.add(new ThrottlePositionCommand(ModeTrim.MODE_01));//"01 11"节气门位置
-        mObdCommands.add(new RuntimeCommand(ModeTrim.MODE_01));//"01 1F" 引擎运行时间
+        mObdCommands.add(new RuntimeCommand(ModeTrim.MODE_01));//"01 1F" 发动机启动后的运行时间
 
 
         mObdCommands.add(new DistanceMILOnCommand(ModeTrim.MODE_01));//"01 21" 故障指示灯（MIL）亮时行驶的距离
@@ -124,7 +139,7 @@ public class ObdConfiguration {
         mObdCommands.add(new WarmUpSinceCodesClearedCommand(ModeTrim.MODE_01));//"01 30" 代码清除后的预热
         mObdCommands.add(new DistanceSinceCCCommand(ModeTrim.MODE_01));//"01 31" 故障码清除后行驶里程
         mObdCommands.add(new SystemVaporPressureCommand(ModeTrim.MODE_01));//"01 32" 系统蒸汽压力
-        mObdCommands.add(new BarometricPressureCommand(ModeTrim.MODE_01));//"01 33" 大气压
+        mObdCommands.add(new BarometricPressureCommand(ModeTrim.MODE_01));//"01 33" 绝对大气压
         mObdCommands.add(new WidebandAirFuelRatioOneCommand(ModeTrim.MODE_01));//"01 34" 氧气侦测器1 燃油-空气当量比 电流
         mObdCommands.add(new WidebandAirFuelRatioTwoCommand(ModeTrim.MODE_01));//"01 35" 氧气侦测器2 燃油-空气当量比 电流
         mObdCommands.add(new WidebandAirFuelRatioThreeCommand(ModeTrim.MODE_01));//"01 36" 氧气侦测器3 燃油-空气当量比 电流
@@ -133,10 +148,10 @@ public class ObdConfiguration {
         mObdCommands.add(new WidebandAirFuelRatioSixCommand(ModeTrim.MODE_01));//"01 39" 氧气侦测器6 燃油-空气当量比 电流
         mObdCommands.add(new WidebandAirFuelRatioSevenCommand(ModeTrim.MODE_01));//"01 3A" 氧气侦测器7 燃油-空气当量比 电流
         mObdCommands.add(new WidebandAirFuelRatioEightCommand(ModeTrim.MODE_01));//"01 3B" 氧气侦测器8 燃油-空气当量比 电流
-        mObdCommands.add(new CatalystTemperatureCommand(ModeTrim.MODE_01,CatalystTrim.Catalyst_Temperature_Bank_1_Sensor_1));//"01 3C" 催化剂温度:Bank1,感测器1
-        mObdCommands.add(new CatalystTemperatureCommand(ModeTrim.MODE_01,CatalystTrim.Catalyst_Temperature_Bank_2_Sensor_1));//"01 3C" 催化剂温度:Bank2,感测器1
-        mObdCommands.add(new CatalystTemperatureCommand(ModeTrim.MODE_01,CatalystTrim.Catalyst_Temperature_Bank_1_Sensor_2));//"01 3C" 催化剂温度:Bank1,感测器2
-        mObdCommands.add(new CatalystTemperatureCommand(ModeTrim.MODE_01,CatalystTrim.Catalyst_Temperature_Bank_2_Sensor_2));//"01 3C" 催化剂温度:Bank2,感测器2
+        mObdCommands.add(new CatalystTemperatureCommand(ModeTrim.MODE_01, CatalystTrim.Catalyst_Temperature_Bank_1_Sensor_1));//"01 3C" 催化剂温度:Bank1,感测器1
+        mObdCommands.add(new CatalystTemperatureCommand(ModeTrim.MODE_01, CatalystTrim.Catalyst_Temperature_Bank_2_Sensor_1));//"01 3C" 催化剂温度:Bank2,感测器1
+        mObdCommands.add(new CatalystTemperatureCommand(ModeTrim.MODE_01, CatalystTrim.Catalyst_Temperature_Bank_1_Sensor_2));//"01 3C" 催化剂温度:Bank1,感测器2
+        mObdCommands.add(new CatalystTemperatureCommand(ModeTrim.MODE_01, CatalystTrim.Catalyst_Temperature_Bank_2_Sensor_2));//"01 3C" 催化剂温度:Bank2,感测器2
 
 
         mObdCommands.add(new ModuleVoltageCommand(ModeTrim.MODE_01));//"01 42" 模块控制组电压
@@ -144,20 +159,35 @@ public class ObdConfiguration {
         mObdCommands.add(new AirFuelRatioCommand(ModeTrim.MODE_01));//"01 44" 燃油-空气命令等效比
         mObdCommands.add(new RelativeThrottlePositionCommand(ModeTrim.MODE_01));//"01 45" 相对油门位置
         mObdCommands.add(new AmbientAirTemperatureCommand(ModeTrim.MODE_01));//"01 46" 环境空气温度
-        mObdCommands.add(new AbsoluteThrottlePositionCommand(ModeTrim.MODE_01,AbsThrottlePosTrim.ABS_THROTTLE_POS_B));//"01 47" 绝对油门位置B
-        mObdCommands.add(new AbsoluteThrottlePositionCommand(ModeTrim.MODE_01,AbsThrottlePosTrim.ABS_THROTTLE_POS_C));//"01 48" 绝对油门位置C
-        mObdCommands.add(new AcceleratorPedalPositionCommand(ModeTrim.MODE_01,AbsThrottlePosTrim.ACC_PEDAL_POS_D));//"01 49" 加速踏板位置D
-        mObdCommands.add(new AcceleratorPedalPositionCommand(ModeTrim.MODE_01,AbsThrottlePosTrim.ACC_PEDAL_POS_E));//"01 4A" 加速踏板位置E
-        mObdCommands.add(new AcceleratorPedalPositionCommand(ModeTrim.MODE_01,AbsThrottlePosTrim.ACC_PEDAL_POS_F));//"01 4B" 加速踏板位置F
-        mObdCommands.add(new AcceleratorPedalPositionCommand(ModeTrim.MODE_01,AbsThrottlePosTrim.THROTTLE_ACTUATOR));//"01 4C" 油门执行器控制值
+        mObdCommands.add(new AbsoluteThrottlePositionCommand(ModeTrim.MODE_01, AbsThrottlePosTrim.ABS_THROTTLE_POS_B));//"01 47" 绝对油门位置B
+        mObdCommands.add(new AbsoluteThrottlePositionCommand(ModeTrim.MODE_01, AbsThrottlePosTrim.ABS_THROTTLE_POS_C));//"01 48" 绝对油门位置C
+        mObdCommands.add(new AcceleratorPedalPositionCommand(ModeTrim.MODE_01, AbsThrottlePosTrim.ACC_PEDAL_POS_D));//"01 49" 加速踏板位置D
+        mObdCommands.add(new AcceleratorPedalPositionCommand(ModeTrim.MODE_01, AbsThrottlePosTrim.ACC_PEDAL_POS_E));//"01 4A" 加速踏板位置E
+        mObdCommands.add(new AcceleratorPedalPositionCommand(ModeTrim.MODE_01, AbsThrottlePosTrim.ACC_PEDAL_POS_F));//"01 4B" 加速踏板位置F
+        mObdCommands.add(new AcceleratorPedalPositionCommand(ModeTrim.MODE_01, AbsThrottlePosTrim.THROTTLE_ACTUATOR));//"01 4C" 油门执行器控制值
         mObdCommands.add(new TimeRunMILONCommand(ModeTrim.MODE_01));//"01 4D"MIL灯亮的行驶时间
+        mObdCommands.add(new TimeSinceTroubleCodesClearedCommand(ModeTrim.MODE_01));//"01 4E" 故障代码清除后的时间
+        mObdCommands.add(new MaxAirFlowMassRateCommand(ModeTrim.MODE_01));//"01 50" 质量空气流量计的最大空气流率
         mObdCommands.add(new FindFuelTypeCommand(ModeTrim.MODE_01));//"01 51"燃料种类
-        mObdCommands.add(new OilTempCommand(ModeTrim.MODE_01));//"01 5C"
+        mObdCommands.add(new EthanolFuelRateCommand(ModeTrim.MODE_01));//"01 52"乙醇燃料百分比
+        mObdCommands.add(new AbsoluteEvapSystemVaporPressureCommand(ModeTrim.MODE_01));//"01 53"蒸发系统绝对蒸气压力
+        mObdCommands.add(new EvapSystemVaporPressureCommand(ModeTrim.MODE_01));//"01 54"蒸发系统（相对）蒸气压力
+        mObdCommands.add(new OxygenSensorTrimCommand(ModeTrim.MODE_01, OxygenSensorTrim.SHORT_A_BANK1_B_BANK3));//"01 55"第二侧氧气侦测器短期修正，A：bank 1, B：bank 3
+        mObdCommands.add(new OxygenSensorTrimCommand(ModeTrim.MODE_01, OxygenSensorTrim.LONG_A_BANK1_B_BANK3));//"01 56" 第二侧氧气侦测器长期修正，A：bank 1, B：bank 3
+        mObdCommands.add(new OxygenSensorTrimCommand(ModeTrim.MODE_01, OxygenSensorTrim.SHORT_A_BANK2_B_BANK4));//"01 57" 第二侧氧气侦测器短期修正，A：bank 2, B：bank 4
+        mObdCommands.add(new OxygenSensorTrimCommand(ModeTrim.MODE_01, OxygenSensorTrim.LONG_A_BANK2_B_BANK4));//"01 58" 第二侧氧气侦测器长期修正，A：bank 2, B：bank 4
+        mObdCommands.add(new FuelRailAbsPressureCommand(ModeTrim.MODE_01));//"01 59" 高压共轨绝对压力
+        mObdCommands.add(new RelativeAcceleratorPedalPosCommand(ModeTrim.MODE_01));//"01 5A" 加速踏板相对位置
+        mObdCommands.add(new HybridBatteryPackRemainingLifeCommand(ModeTrim.MODE_01));//"01 5B" 油电混合电池组剩下寿命
+        mObdCommands.add(new OilTempCommand(ModeTrim.MODE_01));//"01 5C"发动机油温
         mObdCommands.add(new ConsumptionRateCommand(ModeTrim.MODE_01));//"01 5E" 燃油效率
+        mObdCommands.add(new DriverDemandEnginePercentTorqueCommand(ModeTrim.MODE_01));//"01 61" 驾驶的发动机命令-力矩百分比
+        mObdCommands.add(new ActualEnginePercentTorqueCommand(ModeTrim.MODE_01));//"01 62" 实际发动机-力矩百分比
+        mObdCommands.add(new EngineReferenceTorqueCommand(ModeTrim.MODE_01));//"01 63" 发动机参考力矩
+        mObdCommands.add(new DPFTemperatureCommand(ModeTrim.MODE_01));//"01 7C" 柴油粒子过滤器（DPF）温度
+        mObdCommands.add(new EngineFrictionPercentTorqueCommand(ModeTrim.MODE_01));//"01 8E" 发动机摩擦力-力矩百分比
         mObdCommands.add(new ModifiedOdometerCommand(ModeTrim.MODE_01));//"01 A6" 里程
-
         mObdCommands.add(new VinCommand(ModeTrim.MODE_09));//"09 02" 车辆识别码
-
         mObdCommands.add(new ModifiedTroubleCodesObdCommand());//"03" 故障代码
         mObdCommands.add(new ModifiedPermanentTroubleCodesCommand());//"0A" 永久故障码
         mObdCommands.add(new ModifiedPendingTroubleCodesCommand());//"07" 未解决故障码

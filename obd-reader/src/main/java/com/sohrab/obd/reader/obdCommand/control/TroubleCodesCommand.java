@@ -1,8 +1,11 @@
 package com.sohrab.obd.reader.obdCommand.control;
 
 
+import android.util.Log;
+
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
+import com.sohrab.obd.reader.utils.LogUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,6 +54,7 @@ public class TroubleCodesCommand extends ObdCommand {
      */
     @Override
     protected void fillBuffer() {
+
     }
 
     /**
@@ -59,6 +63,7 @@ public class TroubleCodesCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         final String result = getResult();
+        LogUtils.i("result :: " + result);
         String workingData;
         int startIndex = 0;//标题大小
         String canOneFrame = result.replaceAll("[\r\n]", "");

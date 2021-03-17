@@ -89,7 +89,7 @@ public class ObdConfiguration {
 
     private static ArrayList<ObdCommand> mObdCommands;
 
-    public static ArrayList<ObdCommand> getmObdCommands() {
+    public static ArrayList<ObdCommand> getObdCommands() {
         if (mObdCommands == null)
             getDefaultObdCommand();
         return mObdCommands;

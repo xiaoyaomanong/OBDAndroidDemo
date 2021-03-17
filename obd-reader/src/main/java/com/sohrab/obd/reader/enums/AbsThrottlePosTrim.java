@@ -5,9 +5,10 @@ import java.util.Map;
 
 /**
  * 作者：Jealous
- * 日期：2021/3/16 0016
+ * 日期：2021/3/17
  * 描述：
  */
+
 public enum AbsThrottlePosTrim {
     ABS_THROTTLE_POS_B("47", "Absolute throttle position B"),
     ABS_THROTTLE_POS_C("48", "Absolute throttle position C"),

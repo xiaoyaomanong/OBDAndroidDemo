@@ -201,7 +201,7 @@ public class VehicleCheckActivity extends BaseActivity {
     private void executeCommand() {
         tripRecord = CheckRecord.getTriRecode(context);
         tripRecord.getTripMap().clear();
-        ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfiguration.getmObdCommands().clone();
+        ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfiguration.getObdCommands().clone();
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {

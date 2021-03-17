@@ -156,8 +156,6 @@ public class ObdConfiguration {
         mObdCommands.add(new OilTempCommand());//"01 5C"
         mObdCommands.add(new ConsumptionRateCommand());//"01 5E"
         mObdCommands.add(new EngineFuelRateCommand());//"01 5E"
-
-
         //温度
 
 

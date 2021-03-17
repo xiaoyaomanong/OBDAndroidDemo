@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.control;
 
-import com.sohrab.obd.reader.enums.AbsThrottleposTrim;
+import com.sohrab.obd.reader.enums.AbsThrottlePosTrim;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -13,7 +14,7 @@ public class AcceleratorPedalPositionCommand extends ObdCommand {
 
     private float Position = 0;
 
-    private final AbsThrottleposTrim bank;
+    private final AbsThrottlePosTrim bank;
 
     /**
      * Default ctor.
@@ -21,8 +22,8 @@ public class AcceleratorPedalPositionCommand extends ObdCommand {
      * Will read the bank from parameters and construct the command accordingly.
      * Please, see FuelTrim enum for more details.
      */
-    public AcceleratorPedalPositionCommand(final AbsThrottleposTrim bank) {
-        super(bank.buildObdCommand());
+    public AcceleratorPedalPositionCommand(final ModeTrim modeTrim,final AbsThrottlePosTrim bank) {
+        super(modeTrim.buildObdCommand()+" "+bank.buildObdCommand());
         this.bank = bank;
     }
 

@@ -2,6 +2,7 @@ package com.sohrab.obd.reader.obdCommand.fuel;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
 import com.sohrab.obd.reader.enums.FuelSystemStatus;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -12,8 +13,8 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 public class FuelSystemStatusCommand extends ObdCommand {
     private int fuelsystemstatus = 0;
 
-    public FuelSystemStatusCommand() {
-        super("01 03");
+    public FuelSystemStatusCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 03");
     }
 
     /**

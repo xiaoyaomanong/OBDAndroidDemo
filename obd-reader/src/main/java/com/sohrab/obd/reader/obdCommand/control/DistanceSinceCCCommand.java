@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.control;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.SystemOfUnits;
 
@@ -16,8 +17,8 @@ public class DistanceSinceCCCommand extends ObdCommand
     /**
      * Default ctor.
      */
-    public DistanceSinceCCCommand() {
-        super("01 31");
+    public DistanceSinceCCCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 31");
     }
 
     /**

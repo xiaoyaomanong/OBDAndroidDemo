@@ -132,7 +132,7 @@
                         android:orientation="vertical">
 
                         <com.example.obdandroid.ui.view.PhilText
-                            android:id="@+id/tvFuelLevel"
+                            android:id="@+id/tvFuelPressure"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
                             android:fontFamily="@font/calibri"
@@ -147,7 +147,7 @@
                             android:layout_height="30dp"
                             android:fontFamily="@font/gotham"
                             android:gravity="center"
-                            android:text="@string/oil_level"
+                            android:text="@string/FuelPressure"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_13sp" />
 
@@ -204,6 +204,65 @@
                     android:orientation="vertical">
 
                     <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
+                        android:id="@+id/dashFuelPressure"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center"
+                        android:text="@string/mFuelPressure"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_14" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
+                        android:id="@+id/dashIntakeAirTemp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        tools:ignore="NestedWeights" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:fontFamily="@font/gotham"
+                        android:gravity="center"
+                        android:text="@string/mIntakeAirTemp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_14" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:baselineAligned="false"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
                         android:id="@+id/dashInsFuelConsumption"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -242,65 +301,6 @@
                         android:fontFamily="@font/gotham"
                         android:gravity="center"
                         android:text="@string/IdlingFuelConsumption"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_14" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:baselineAligned="false"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
-                        android:id="@+id/dashFuelLevel"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_margin="5dp"
-                        android:layout_weight="1"
-                        tools:ignore="NestedWeights" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:fontFamily="@font/gotham"
-                        android:gravity="center"
-                        android:text="@string/mFuelLevel"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sp_14" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
-                        android:id="@+id/dashDrivingFuelConsumption"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_margin="5dp"
-                        android:layout_weight="1"
-                        tools:ignore="NestedWeights" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:fontFamily="@font/gotham"
-                        android:gravity="center"
-                        android:text="@string/DrivingFuelConsumption"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_14" />
                 </LinearLayout>

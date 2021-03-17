@@ -243,6 +243,9 @@ public class TripRecord implements DefineObdReader, Serializable {
         return speed;
     }
 
+    public float getmIntakeAirTemp() {
+        return mIntakeAirTemp;
+    }
 
     public Integer getEngineRpmMax() {
         return this.engineRpmMax;
@@ -391,7 +394,7 @@ public class TripRecord implements DefineObdReader, Serializable {
             case FUEL_LEVEL:
                 mFuelLevel = command.getFormattedResult();
                 data.add(new OBDTripEntity("燃油油位", TextUtils.isEmpty(mFuelLevel) ? "" : mFuelLevel, R.drawable.icon_fuel_level));
-                entity.setFuelLevel(TextUtils.isEmpty(mFuelLevel) ? "" : mFuelLevel + "%");
+                entity.setFuelLevel(TextUtils.isEmpty(mFuelLevel) ? "" : mFuelLevel );
                 break;
             case FUEL_TYPE:
                 if (ObdPreferences.get(sContext.getApplicationContext()).getFuelType() == 0)
@@ -414,7 +417,6 @@ public class TripRecord implements DefineObdReader, Serializable {
                 mFaultCodes = command.getFormattedResult();
                 data.add(new OBDTripEntity("故障代码", TextUtils.isEmpty(mFaultCodes) ? "" : mFaultCodes, R.drawable.icon_troublecode_one));
                 entity.setFaultCodes(TextUtils.isEmpty(mFaultCodes) ? "" : mFaultCodes);
-
                 break;
 
             case AMBIENT_AIR_TEMP:
@@ -740,39 +742,6 @@ public class TripRecord implements DefineObdReader, Serializable {
     public String getmIgnitionMonitor() {
         return mIgnitionMonitor;
     }
-
-    private ArrayList<ObdCommand> mObdCommandArrayList;
-
-    public ArrayList<ObdCommand> getmObdCommandArrayList() {
-
-        if (mObdCommandArrayList == null) {
-
-            mObdCommandArrayList = new ArrayList<>();
-            mObdCommandArrayList.add(new SpeedCommand());
-            mObdCommandArrayList.add(new RPMCommand());
-
-            if (ismIsMAFSupported()) {
-                mObdCommandArrayList.add(new MassAirFlowCommand());
-            } else if (ismIsTempPressureSupported()) {
-                mObdCommandArrayList.add(new IntakeManifoldPressureCommand());
-                mObdCommandArrayList.add(new AirIntakeTemperatureCommand());
-            }
-
-            if (ismIsEngineRuntimeSupported()) {
-                mObdCommandArrayList.add(new RuntimeCommand());
-            }
-            mObdCommandArrayList.add(new FindFuelTypeCommand());
-        }
-        return mObdCommandArrayList;
-    }
-
-    public void addObdCommand(ObdCommand obdCommand) {
-        if (mObdCommandArrayList == null) {
-            mObdCommandArrayList = new ArrayList<>();
-        }
-        mObdCommandArrayList.add(obdCommand);
-    }
-
 
     public List<OBDTripEntity> getTripMap() {
         return data;

@@ -274,4 +274,5 @@
     <string name="Chassis">底盘电脑控制系统</string>
     <string name="Bod">车身电脑控制系统</string>
     <string name="DynamicSystemNO">动力系统检测</string>
+    <string name="FuelPressure">燃油压力(kPa)</string>
 </resources>

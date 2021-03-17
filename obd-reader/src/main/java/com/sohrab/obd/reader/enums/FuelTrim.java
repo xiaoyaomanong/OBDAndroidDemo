@@ -6,27 +6,28 @@ import java.util.Map;
 
 /**
  * Select one of the Fuel Trim percentage banks to access.
- *
  */
 public enum FuelTrim {
 
-    SHORT_TERM_BANK_1(0x06, "Short Term Fuel Trim Bank 1"),
-    LONG_TERM_BANK_1(0x07, "Long Term Fuel Trim Bank 1"),
-    SHORT_TERM_BANK_2(0x08, "Short Term Fuel Trim Bank 2"),
-    LONG_TERM_BANK_2(0x09, "Long Term Fuel Trim Bank 2");
+    SHORT_TERM_BANK_1("06", "Short Term Fuel Trim Bank 1"),
+    LONG_TERM_BANK_1("07", "Long Term Fuel Trim Bank 1"),
+    SHORT_TERM_BANK_2("08", "Short Term Fuel Trim Bank 2"),
+    LONG_TERM_BANK_2("09", "Long Term Fuel Trim Bank 2");
 
-    /** Constant <code>map</code> */
-    private static Map<Integer, FuelTrim> map = new HashMap<>();
+    /**
+     * Constant <code>map</code>
+     */
+    private static Map<String, FuelTrim> map = new HashMap<>();
 
     static {
         for (FuelTrim error : FuelTrim.values())
             map.put(error.getValue(), error);
     }
 
-    private final int value;
+    private final String value;
     private final String bank;
 
-    private FuelTrim(final int value, final String bank) {
+    private FuelTrim(final String value, final String bank) {
         this.value = value;
         this.bank = bank;
     }
@@ -45,7 +46,7 @@ public enum FuelTrim {
      *
      * @return a int.
      */
-    public int getValue() {
+    public String getValue() {
         return value;
     }
 
@@ -64,7 +65,7 @@ public enum FuelTrim {
      * @return a {@link String} object.
      */
     public final String buildObdCommand() {
-        return new String("01 0" + value);
+        return value;
     }
 
 }

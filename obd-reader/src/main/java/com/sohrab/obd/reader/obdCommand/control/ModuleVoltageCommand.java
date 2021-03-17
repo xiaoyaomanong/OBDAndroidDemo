@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.control;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -15,8 +16,8 @@ public class ModuleVoltageCommand extends ObdCommand {
     /**
      * Default ctor.
      */
-    public ModuleVoltageCommand() {
-        super("01 42");
+    public ModuleVoltageCommand(final ModeTrim modeTrim) {
+        super(modeTrim.buildObdCommand()+" 42");
     }
 
     /**

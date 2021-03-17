@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.engine;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.fuel.PercentageObdCommand;
 
 /**
@@ -12,8 +13,8 @@ public class LoadCommand extends PercentageObdCommand {
     /**
      * <p>Constructor for LoadCommand.</p>
      */
-    public LoadCommand() {
-        super("01 04");
+    public LoadCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 04");
     }
 
     /**

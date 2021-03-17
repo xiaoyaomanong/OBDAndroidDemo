@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.temperature;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 
 /**
  * Temperature of intake air.
@@ -13,8 +14,8 @@ public class AirIntakeTemperatureCommand extends TemperatureCommand {
     /**
      * <p>Constructor for AirIntakeTemperatureCommand.</p>
      */
-    public AirIntakeTemperatureCommand() {
-        super("01 0F");
+    public AirIntakeTemperatureCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 0F");
     }
 
     /**

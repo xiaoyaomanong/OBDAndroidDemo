@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.control;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -11,8 +12,8 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 public class WarmUpSinceCodesClearedCommand extends ObdCommand {
     private int Since = 0;
 
-    public WarmUpSinceCodesClearedCommand() {
-        super("01 30");
+    public WarmUpSinceCodesClearedCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 30");
     }
 
     /**

@@ -2,10 +2,10 @@
 package com.sohrab.obd.reader.obdCommand.fuel;
 
 import com.sohrab.obd.reader.enums.FuelTrim;
+import com.sohrab.obd.reader.enums.ModeTrim;
 
 /**
  * Fuel Trim.
- *
  */
 public class FuelTrimCommand extends PercentageObdCommand {
 
@@ -16,18 +16,10 @@ public class FuelTrimCommand extends PercentageObdCommand {
      * <p>
      * Will read the bank from parameters and construct the command accordingly.
      * Please, see FuelTrim enum for more details.
-     *
      */
-    public FuelTrimCommand(final FuelTrim bank) {
-        super(bank.buildObdCommand());
+    public FuelTrimCommand(final ModeTrim modeTrim, final FuelTrim bank) {
+        super(modeTrim.buildObdCommand() + " " + bank.buildObdCommand());
         this.bank = bank;
-    }
-
-    /**
-     * <p>Constructor for FuelTrimCommand.</p>
-     */
-    public FuelTrimCommand() {
-        this(FuelTrim.SHORT_TERM_BANK_1);
     }
 
     /**
@@ -65,7 +57,9 @@ public class FuelTrimCommand extends PercentageObdCommand {
         return bank.getBank();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return bank.getBank();

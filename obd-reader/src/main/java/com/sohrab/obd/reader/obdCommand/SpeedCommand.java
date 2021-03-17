@@ -2,6 +2,7 @@ package com.sohrab.obd.reader.obdCommand;
 
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 
 import java.util.Locale;
 
@@ -18,8 +19,8 @@ public class SpeedCommand extends ObdCommand implements SystemOfUnits {
     /**
      * Default ctor.
      */
-    public SpeedCommand() {
-        super("01 0D");
+    public SpeedCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 0D");
     }
 
     /**

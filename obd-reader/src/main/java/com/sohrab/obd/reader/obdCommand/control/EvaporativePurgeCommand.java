@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.control;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -11,8 +12,8 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 public class EvaporativePurgeCommand extends ObdCommand {
     private int Purge = 0;
 
-    public EvaporativePurgeCommand() {
-        super("01 2E");
+    public EvaporativePurgeCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 2E");
     }
 
     /**

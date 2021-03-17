@@ -3,6 +3,7 @@ package com.sohrab.obd.reader.obdCommand.control;
 import android.annotation.SuppressLint;
 
 import com.sohrab.obd.reader.enums.CatalystTrim;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -22,8 +23,8 @@ public class CatalystTemperatureCommand extends ObdCommand {
      * Will read the bank from parameters and construct the command accordingly.
      * Please, see FuelTrim enum for more details.
      */
-    public CatalystTemperatureCommand(final CatalystTrim bank) {
-        super(bank.buildObdCommand());
+    public CatalystTemperatureCommand(final ModeTrim modeTrim,final CatalystTrim bank) {
+        super(modeTrim.buildObdCommand()+" "+bank.buildObdCommand());
         this.bank = bank;
     }
 

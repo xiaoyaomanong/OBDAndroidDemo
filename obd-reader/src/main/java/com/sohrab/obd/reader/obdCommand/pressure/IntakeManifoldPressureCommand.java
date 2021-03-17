@@ -2,6 +2,7 @@ package com.sohrab.obd.reader.obdCommand.pressure;
 
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 
 /**
  * Created by EMP203 on 6/19/2017.
@@ -15,8 +16,8 @@ public class IntakeManifoldPressureCommand extends PressureCommand {
     /**
      * Default ctor.
      */
-    public IntakeManifoldPressureCommand() {
-        super("01 0B");
+    public IntakeManifoldPressureCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 0B");
     }
 
     /**

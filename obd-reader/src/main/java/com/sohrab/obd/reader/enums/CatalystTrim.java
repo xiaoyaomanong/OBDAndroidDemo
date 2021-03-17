@@ -17,10 +17,10 @@ public enum CatalystTrim {
     /**
      * Constant <code>map</code>
      */
-    private static final Map<Integer, FuelTrim> map = new HashMap<>();
+    private static final Map<String, CatalystTrim> map = new HashMap<>();
 
     static {
-        for (FuelTrim error : FuelTrim.values())
+        for (CatalystTrim error : CatalystTrim.values())
             map.put(error.getValue(), error);
     }
 
@@ -37,7 +37,7 @@ public enum CatalystTrim {
      *
      * @param value a int.
      */
-    public static FuelTrim fromValue(final int value) {
+    public static CatalystTrim fromValue(final int value) {
         return map.get(value);
     }
 
@@ -65,6 +65,6 @@ public enum CatalystTrim {
      * @return a {@link String} object.
      */
     public final String buildObdCommand() {
-        return "01 " + value;
+        return  value;
     }
 }

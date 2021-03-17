@@ -14,9 +14,11 @@ import com.github.pires.obd.commands.fuel.AirFuelRatioCommand;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.application.ObdPreferences;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.engine.MassAirFlowCommand;
 import com.sohrab.obd.reader.obdCommand.fuel.FuelLevelCommand;
+import com.sohrab.obd.reader.obdCommand.pressure.FuelPressureCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.IntakeManifoldPressureCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.AirIntakeTemperatureCommand;
@@ -35,15 +37,15 @@ import java.util.List;
 public class VehicleDashActivityTwo extends BaseActivity {
     private PhilText tvmIdlingFuelConsumption;
     private PhilText tvmInsFuelConsumption;
-    private PhilText tvFuelLevel;
     private PhilText tvDrivingFuelConsumption;
     private CustomerDashboardViewLight dashInsFuelConsumption;
     private CustomerDashboardViewLight dashIdlingFuelConsumption;
-    private CustomerDashboardViewLight dashFuelLevel;
-    private CustomerDashboardViewLight dashDrivingFuelConsumption;
+    private CustomerDashboardViewLight dashIntakeAirTemp;
     private TripRecord tripRecord;
     private Thread mIntakeManifoldPressureCommand = new Thread(new ObdsCommand());
     private List<ObdCommand> commands = new ArrayList<>();
+    private PhilText tvFuelPressure;
+    private CustomerDashboardViewLight dashFuelPressure;
 
 
     @Override
@@ -61,14 +63,14 @@ public class VehicleDashActivityTwo extends BaseActivity {
         super.initView();
         Context context = this;
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
+        tvFuelPressure = findViewById(R.id.tvFuelPressure);
+        dashFuelPressure = findViewById(R.id.dashFuelPressure);
         tvmIdlingFuelConsumption = getView(R.id.tvmIdlingFuelConsumption);
         tvmInsFuelConsumption = getView(R.id.tvmInsFuelConsumption);
-        tvFuelLevel = getView(R.id.tvFuelLevel);
         tvDrivingFuelConsumption = getView(R.id.tvDrivingFuelConsumption);
         dashInsFuelConsumption = getView(R.id.dashInsFuelConsumption);
         dashIdlingFuelConsumption = getView(R.id.dashIdlingFuelConsumption);
-        dashFuelLevel = getView(R.id.dashFuelLevel);
-        dashDrivingFuelConsumption = getView(R.id.dashDrivingFuelConsumption);
+        dashIntakeAirTemp = getView(R.id.dashIntakeAirTemp);
         TripRecord.getTriRecode(context).clear();
         tripRecord = TripRecord.getTriRecode(context);
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(true);
@@ -96,6 +98,7 @@ public class VehicleDashActivityTwo extends BaseActivity {
 
             }
         });
+
     }
 
     private void startCommand() {
@@ -125,13 +128,13 @@ public class VehicleDashActivityTwo extends BaseActivity {
     }
 
     /**
-     * 设置燃油油位仪表
+     * 设置燃油压力仪表
      */
     private void setFuelLevel() {
-        dashFuelLevel.setmSection(10);
-        dashFuelLevel.setmHeaderText(" % ");
-        dashFuelLevel.setmMax(100);
-        dashFuelLevel.setmMin(0);
+        dashFuelPressure.setmSection(8);
+        dashFuelPressure.setmHeaderText("kPa");
+        dashFuelPressure.setmMax(800);
+        dashFuelPressure.setmMin(0);
 
     }
 
@@ -146,13 +149,13 @@ public class VehicleDashActivityTwo extends BaseActivity {
     }
 
     /**
-     * 设置行驶油耗仪表
+     * 设置进气温度仪表
      */
     private void setDrivingFuelConsumption() {
-        dashDrivingFuelConsumption.setmSection(10);
-        dashDrivingFuelConsumption.setmHeaderText(" L ");
-        dashDrivingFuelConsumption.setmMax(50);
-        dashDrivingFuelConsumption.setmMin(0);
+        dashIntakeAirTemp.setmSection(10);
+        dashIntakeAirTemp.setmHeaderText(" ℃ ");
+        dashIntakeAirTemp.setmMax(50);
+        dashIntakeAirTemp.setmMin(0);
     }
 
     /**
@@ -186,11 +189,11 @@ public class VehicleDashActivityTwo extends BaseActivity {
     private List<ObdCommand> setCommands() {
         List<ObdCommand> obdCommands = new ArrayList<>();
         obdCommands.add(new ObdResetCommand());
-        obdCommands.add(new FuelLevelCommand());
-        obdCommands.add(new MassAirFlowCommand());//空气质量流量
+        obdCommands.add(new FuelPressureCommand(ModeTrim.MODE_01));
+        obdCommands.add(new AirIntakeTemperatureCommand(ModeTrim.MODE_01));//进气温度
+        obdCommands.add(new MassAirFlowCommand(ModeTrim.MODE_01));//空气质量流量
         return obdCommands;
     }
-
 
 
     /**
@@ -206,13 +209,13 @@ public class VehicleDashActivityTwo extends BaseActivity {
             dashIdlingFuelConsumption.setVelocity(tripRecord.getmIdlingFuelConsumption());
             tvmIdlingFuelConsumption.setText(String.valueOf(tripRecord.getmIdlingFuelConsumption()));
 
-            tvFuelLevel.setText(tripRecord.getmFuelLevel());
-            dashFuelLevel.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmFuelLevel()) ? "0" : tripRecord.getmFuelLevel().replace("%", "")));
+            tvFuelPressure.setText(TextUtils.isEmpty(tripRecord.getmFuelPressure()) ? "0" : tripRecord.getmFuelPressure());
+            dashFuelPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmFuelPressure()) ? "0" : tripRecord.getmFuelPressure()));
 
+            dashIntakeAirTemp.setVelocity(tripRecord.getmIntakeAirTemp());
             float DrivingFuelConsumption = BigDecimal.valueOf(tripRecord.getmDrivingFuelConsumption())
                     .setScale(2, BigDecimal.ROUND_HALF_DOWN)
                     .floatValue();
-            dashDrivingFuelConsumption.setVelocity(DrivingFuelConsumption);
             tvDrivingFuelConsumption.setText(String.valueOf(DrivingFuelConsumption));
 
         }
@@ -231,7 +234,7 @@ public class VehicleDashActivityTwo extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode==KeyEvent.KEYCODE_BACK){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             stopThread();
             ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(false);
             finish();

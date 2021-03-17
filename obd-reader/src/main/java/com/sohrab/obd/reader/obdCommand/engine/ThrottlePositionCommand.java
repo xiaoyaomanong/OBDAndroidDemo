@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.engine;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.fuel.PercentageObdCommand;
 
 /**
@@ -12,8 +13,8 @@ public class ThrottlePositionCommand extends PercentageObdCommand {
     /**
      * Default ctor.
      */
-    public ThrottlePositionCommand() {
-        super("01 11");
+    public ThrottlePositionCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 11");
     }
 
     /**

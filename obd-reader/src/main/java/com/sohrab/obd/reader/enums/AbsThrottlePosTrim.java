@@ -8,7 +8,7 @@ import java.util.Map;
  * 日期：2021/3/16 0016
  * 描述：
  */
-public enum AbsThrottleposTrim {
+public enum AbsThrottlePosTrim {
     ABS_THROTTLE_POS_B("47", "Absolute throttle position B"),
     ABS_THROTTLE_POS_C("48", "Absolute throttle position C"),
     ACC_PEDAL_POS_D("49", "Accelerator pedal position D"),
@@ -18,17 +18,17 @@ public enum AbsThrottleposTrim {
     /**
      * Constant <code>map</code>
      */
-    private static final Map<Integer, FuelTrim> map = new HashMap<>();
+    private static final Map<String, AbsThrottlePosTrim> map = new HashMap<>();
 
     static {
-        for (FuelTrim error : FuelTrim.values())
+        for (AbsThrottlePosTrim error : AbsThrottlePosTrim.values())
             map.put(error.getValue(), error);
     }
 
     private final String value;
     private final String bank;
 
-    AbsThrottleposTrim(final String value, final String bank) {
+    AbsThrottlePosTrim(final String value, final String bank) {
         this.value = value;
         this.bank = bank;
     }
@@ -38,7 +38,7 @@ public enum AbsThrottleposTrim {
      *
      * @param value a int.
      */
-    public static FuelTrim fromValue(final int value) {
+    public static AbsThrottlePosTrim fromValue(final int value) {
         return map.get(value);
     }
 
@@ -66,6 +66,6 @@ public enum AbsThrottleposTrim {
      * @return a {@link String} object.
      */
     public final String buildObdCommand() {
-        return "01 " + value;
+        return  value;
     }
 }

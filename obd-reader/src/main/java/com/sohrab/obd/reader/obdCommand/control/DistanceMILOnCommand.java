@@ -3,6 +3,7 @@ package com.sohrab.obd.reader.obdCommand.control;
 import android.annotation.SuppressLint;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.SystemOfUnits;
 
@@ -18,8 +19,8 @@ public class DistanceMILOnCommand extends ObdCommand
     /**
      * Default ctor.
      */
-    public DistanceMILOnCommand() {
-        super("01 21");
+    public DistanceMILOnCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 21");
     }
 
     /**

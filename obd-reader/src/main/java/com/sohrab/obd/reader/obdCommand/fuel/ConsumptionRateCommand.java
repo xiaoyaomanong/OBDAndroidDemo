@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.fuel;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -14,8 +15,8 @@ public class ConsumptionRateCommand extends ObdCommand {
     /**
      * <p>Constructor for ConsumptionRateCommand.</p>
      */
-    public ConsumptionRateCommand() {
-        super("01 5E");
+    public ConsumptionRateCommand(final ModeTrim modeTrim) {
+        super(modeTrim.buildObdCommand()+" 5E");
     }
 
     /**

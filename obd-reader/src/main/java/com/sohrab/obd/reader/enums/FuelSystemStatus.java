@@ -16,7 +16,7 @@ public enum FuelSystemStatus {
     system_failure(0x08, "因为系统失效而开路"),
     feedback_system(0x10, "闭回路，利用至少一个氧气侦测器，但回授系统出现故障");
     /** Constant <code>map</code> */
-    private static Map<Integer, FuelSystemStatus> map = new HashMap<>();
+    private static final Map<Integer, FuelSystemStatus> map = new HashMap<>();
 
     static {
         for (FuelSystemStatus error : FuelSystemStatus.values())

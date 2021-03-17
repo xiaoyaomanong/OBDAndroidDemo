@@ -2,6 +2,7 @@ package com.sohrab.obd.reader.obdCommand.fuel;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
 import com.sohrab.obd.reader.enums.FuelType;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -17,8 +18,8 @@ public class FindFuelTypeCommand extends ObdCommand {
     /**
      * Default ctor.
      */
-    public FindFuelTypeCommand() {
-        super("01 51");
+    public FindFuelTypeCommand(final ModeTrim modeTrim) {
+        super(modeTrim.buildObdCommand()+" 51");
     }
 
     /**

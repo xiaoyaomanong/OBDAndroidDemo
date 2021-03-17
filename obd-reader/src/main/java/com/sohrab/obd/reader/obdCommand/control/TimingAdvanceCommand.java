@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.control;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.fuel.PercentageObdCommand;
 
 /**
@@ -12,8 +13,8 @@ public class TimingAdvanceCommand extends PercentageObdCommand {
     /**
      * <p>Constructor for TimingAdvanceCommand.</p>
      */
-    public TimingAdvanceCommand() {
-        super("01 0E");
+    public TimingAdvanceCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 0E");
     }
 
     /**

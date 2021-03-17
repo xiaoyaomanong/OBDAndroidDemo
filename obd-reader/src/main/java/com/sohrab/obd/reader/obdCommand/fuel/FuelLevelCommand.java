@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.fuel;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 
 /**
  * Get fuel level in percentage
@@ -11,8 +12,8 @@ public class FuelLevelCommand extends PercentageObdCommand {
     /**
      * <p>Constructor for FuelLevelCommand.</p>
      */
-    public FuelLevelCommand() {
-        super("01 2F");
+    public FuelLevelCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 2F");
     }
 
     /** {@inheritDoc} */

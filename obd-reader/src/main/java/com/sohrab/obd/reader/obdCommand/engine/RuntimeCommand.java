@@ -4,6 +4,7 @@ package com.sohrab.obd.reader.obdCommand.engine;
 import android.util.Log;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 import java.util.Locale;
@@ -21,8 +22,8 @@ public class RuntimeCommand extends ObdCommand {
     /**
      * Default ctor.
      */
-    public RuntimeCommand() {
-        super("01 1F");
+    public RuntimeCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 1F");
     }
 
     /**

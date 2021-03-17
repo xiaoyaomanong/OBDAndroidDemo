@@ -13,6 +13,7 @@ import com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.application.ObdPreferences;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.SpeedCommand;
 import com.sohrab.obd.reader.obdCommand.engine.OilTempCommand;
@@ -166,13 +167,12 @@ public class VehicleDashActivityOne extends BaseActivity {
     private List<ObdCommand> setCommands() {
         List<ObdCommand> obdCommands = new ArrayList<>();
         obdCommands.add(new ObdResetCommand());
-        obdCommands.add(new SpeedCommand());
-        obdCommands.add(new RPMCommand());
-        obdCommands.add(new OilTempCommand());
-        obdCommands.add(new EngineCoolantTemperatureCommand());
+        obdCommands.add(new SpeedCommand(ModeTrim.MODE_01));
+        obdCommands.add(new RPMCommand(ModeTrim.MODE_01));
+        obdCommands.add(new OilTempCommand(ModeTrim.MODE_01));
+        obdCommands.add(new EngineCoolantTemperatureCommand(ModeTrim.MODE_01));
         return obdCommands;
     }
-
 
 
     /**
@@ -229,7 +229,7 @@ public class VehicleDashActivityOne extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode==KeyEvent.KEYCODE_BACK){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             ObdPreferences.get(getApplicationContext()).setServiceRunning(false);
             stopThread();
             finish();

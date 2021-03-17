@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.control;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -11,8 +12,8 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 public class EGRCommand extends ObdCommand {
     private int CommandedEGR = 0;
 
-    public EGRCommand() {
-        super("01 2C");
+    public EGRCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 2C");
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.control;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -11,8 +12,8 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 public class OdometerCommand extends ObdCommand {
     private double Odometer = 0;
 
-    public OdometerCommand() {
-        super("01 A6");
+    public OdometerCommand(final ModeTrim modeTrim) {
+        super(modeTrim.buildObdCommand()+" A6");
     }
 
     /**

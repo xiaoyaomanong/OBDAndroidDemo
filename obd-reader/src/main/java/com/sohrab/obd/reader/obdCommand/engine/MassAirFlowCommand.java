@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.engine;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 import java.util.Locale;
@@ -18,8 +19,8 @@ public class MassAirFlowCommand extends ObdCommand {
     /**
      * Default ctor.
      */
-    public MassAirFlowCommand() {
-        super("01 10");
+    public MassAirFlowCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 10");
     }
 
     /**

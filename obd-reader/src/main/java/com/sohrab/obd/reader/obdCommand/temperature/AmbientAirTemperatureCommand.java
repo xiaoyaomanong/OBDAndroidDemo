@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.temperature;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 
 /**
  * Ambient Air Temperature.
@@ -11,8 +12,8 @@ public class AmbientAirTemperatureCommand extends TemperatureCommand {
     /**
      * <p>Constructor for AmbientAirTemperatureCommand.</p>
      */
-    public AmbientAirTemperatureCommand() {
-        super("01 46");
+    public AmbientAirTemperatureCommand(final ModeTrim modeTrim) {
+        super(modeTrim.buildObdCommand()+" 46");
     }
 
     /**

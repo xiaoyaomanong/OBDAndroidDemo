@@ -1,6 +1,11 @@
 package com.sohrab.obd.reader.obdCommand;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
+import com.sohrab.obd.reader.utils.LogUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 作者：Jealous
@@ -9,14 +14,23 @@ import com.sohrab.obd.reader.enums.AvailableCommandNames;
  */
 public class FreezeFrameCommand extends ObdCommand {
 
-    private int codeCount = 0;
-    private boolean milOn = false;
+    /**
+     * Constant <code>dtcLetters={'P', 'C', 'B', 'U'}</code>
+     */
+    protected final static char[] dtcLetters = {'P', 'C', 'B', 'U'};
+    /**
+     * Constant <code>hexArray="0123456789ABCDEF".toCharArray()</code>
+     */
+    protected final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+
+    protected StringBuilder codes;
 
     /**
-     * Default ctor.
+     * <p>Constructor for TroubleCodesCommand.</p>
      */
-    public FreezeFrameCommand() {
-        super("02 02");
+    public FreezeFrameCommand(ModeTrim modeTrim) {
+        super(modeTrim.buildObdCommand() + " 02");
+        codes = new StringBuilder();
     }
 
     /**
@@ -24,6 +38,15 @@ public class FreezeFrameCommand extends ObdCommand {
      */
     public FreezeFrameCommand(FreezeFrameCommand other) {
         super(other);
+        codes = new StringBuilder();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void fillBuffer() {
+
     }
 
     /**
@@ -31,19 +54,51 @@ public class FreezeFrameCommand extends ObdCommand {
      */
     @Override
     protected void performCalculations() {
-        // ignore first two bytes [hh hh] of the response
-      /*  final int mil = buffer.get(2);
-        milOn = (mil & 0x80) == 128;
-        codeCount = mil & 0x7F;*/
+        final String result = getResult();
+        LogUtils.i("result :: " + result);
+        String workingData;
+        int startIndex = 0;//标题大小
+        String canOneFrame = result.replaceAll("[\r\n]", "");
+        int canOneFrameLength = canOneFrame.length();
+        if (canOneFrameLength <= 16 && canOneFrameLength % 4 == 0) {//CAN（ISO-15765）协议一帧。
+            workingData = canOneFrame;//43yy{codes}
+            startIndex = 4;//Header is 43yy, yy 显示数据项的数量。
+        } else if (result.contains(":")) {//CAN(ISO-15765) protocol two and more frames.
+            workingData = result.replaceAll("[\r\n].:", "");//xxx43yy{codes}
+            startIndex = 7;//Header is xxx43yy, xxx is bytes of information to follow, yy showing the number of data items.
+        } else {//ISO9141-2, KWP2000 Fast and KWP2000 5Kbps (ISO15031) protocols.
+            workingData = result.replaceAll("^43|[\r\n]43|[\r\n]", "");
+        }
+
+        codes.delete(0, codes.length());
+        for (int begin = startIndex; begin < workingData.length(); begin += 4) {
+            String dtc = "";
+            byte b1 = hexStringToByteArray(workingData.charAt(begin));
+            int ch1 = ((b1 & 0xC0) >> 6);
+            int ch2 = ((b1 & 0x30) >> 4);
+            dtc += dtcLetters[ch1];
+            dtc += hexArray[ch2];
+            dtc += workingData.substring(begin + 1, begin + 4);
+            if (dtc.equals("P0000")) {
+                return;
+            }
+            codes.append(dtc);
+            codes.append('\n');
+        }
+    }
+
+    private byte hexStringToByteArray(char s) {
+        return (byte) ((Character.digit(s, 16) << 4));
     }
 
     /**
-     * <p>getFormattedResult.</p>
+     * <p>formatResult.</p>
      *
-     * @return a {@link String} object.
+     * @return the formatted result of this command in string representation.
+     * @deprecated use #getCalculatedResult instead
      */
-    public String getFormattedResult() {
-        return buffer + "";
+    public String formatResult() {
+        return codes.toString();
     }
 
     /**
@@ -51,7 +106,7 @@ public class FreezeFrameCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return String.valueOf(buffer);
+        return String.valueOf(codes);
     }
 
 
@@ -59,7 +114,46 @@ public class FreezeFrameCommand extends ObdCommand {
      * {@inheritDoc}
      */
     @Override
+    protected void readRawData(InputStream in) throws IOException {
+        byte b;
+        StringBuilder res = new StringBuilder();
+
+        // read until '>' arrives OR end of stream reached (and skip ' ')
+        char c;
+        while (true) {
+            b = (byte) in.read();
+            if (b == -1) // -1 if the end of the stream is reached
+            {
+                break;
+            }
+            c = (char) b;
+            if (c == '>') // read until '>' arrives
+            {
+                break;
+            }
+            if (c != ' ') // skip ' '
+            {
+                res.append(c);
+            }
+        }
+
+        rawData = res.toString().trim();
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getFormattedResult() {
+        return codes.toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String getName() {
-        return AvailableCommandNames.DTC_NUMBER.getValue();
+        return AvailableCommandNames.TROUBLE_CODES.getValue();
     }
 }

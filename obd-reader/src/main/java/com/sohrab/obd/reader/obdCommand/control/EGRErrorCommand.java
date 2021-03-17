@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.control;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -11,8 +12,8 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 public class EGRErrorCommand extends ObdCommand {
     private int EGRError = 0;
 
-    public EGRErrorCommand() {
-        super("01 2D");
+    public EGRErrorCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 2D");
     }
 
     /**

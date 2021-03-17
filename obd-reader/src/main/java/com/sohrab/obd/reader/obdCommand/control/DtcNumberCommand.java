@@ -1,6 +1,8 @@
 package com.sohrab.obd.reader.obdCommand.control;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.FuelTrim;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -19,8 +21,8 @@ public class DtcNumberCommand extends ObdCommand {
     /**
      * Default ctor.
      */
-    public DtcNumberCommand() {
-        super("01 01");
+    public DtcNumberCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 01");
     }
 
     /**

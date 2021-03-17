@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.engine;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.temperature.TemperatureCommand;
 
 /**
@@ -12,8 +13,8 @@ public class OilTempCommand extends TemperatureCommand {
     /**
      * Default ctor.
      */
-    public OilTempCommand() {
-        super("01 5C");
+    public OilTempCommand(final ModeTrim modeTrim) {
+        super(modeTrim.buildObdCommand()+" 5C");
     }
 
     /**

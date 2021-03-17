@@ -3,6 +3,7 @@ package com.sohrab.obd.reader.obdCommand.fuel;
 import android.annotation.SuppressLint;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -16,8 +17,8 @@ public class WidebandAirFuelRatioOneCommand extends ObdCommand {
     /**
      * <p>Constructor for WidebandAirFuelRatioCommand.</p>
      */
-    public WidebandAirFuelRatioOneCommand() {
-        super("01 34");
+    public WidebandAirFuelRatioOneCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 34");
     }
 
     /**

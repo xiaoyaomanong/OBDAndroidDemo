@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.control;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.PersistentCommand;
 
 import java.util.regex.Matcher;
@@ -13,8 +14,8 @@ public class VinCommand extends PersistentCommand {
     /**
      * Default ctor.
      */
-    public VinCommand() {
-        super("09 02");
+    public VinCommand(ModeTrim modeTrim) {
+        super(modeTrim.buildObdCommand()+" 02");
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.pressure;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 
 /**
  * <p>FuelPressureCommand class.</p>
@@ -11,8 +12,8 @@ public class FuelPressureCommand extends PressureCommand {
     /**
      * <p>Constructor for FuelPressureCommand.</p>
      */
-    public FuelPressureCommand() {
-        super("01 0A");
+    public FuelPressureCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 0A");
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.pressure;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 
 /**
  * Barometric pressure.
@@ -11,8 +12,8 @@ public class BarometricPressureCommand extends PressureCommand {
     /**
      * <p>Constructor for BarometricPressureCommand.</p>
      */
-    public BarometricPressureCommand() {
-        super("01 33");
+    public BarometricPressureCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 33");
     }
 
     /**

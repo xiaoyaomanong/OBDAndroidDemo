@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.engine;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.fuel.PercentageObdCommand;
 
 /**
@@ -12,8 +13,8 @@ public class AbsoluteLoadCommand extends PercentageObdCommand {
     /**
      * Default ctor.
      */
-    public AbsoluteLoadCommand() {
-        super("01 43");
+    public AbsoluteLoadCommand(final ModeTrim modeTrim) {
+        super(modeTrim.buildObdCommand()+" 43");
     }
 
     /**

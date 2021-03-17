@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.control;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -16,8 +17,8 @@ public class TimeRunMILONCommand extends ObdCommand {
     /**
      * <p>Constructor for AirFuelRatioCommand.</p>
      */
-    public TimeRunMILONCommand() {
-        super("01 4D");
+    public TimeRunMILONCommand(final ModeTrim modeTrim) {
+        super(modeTrim.buildObdCommand()+" 4D");
     }
 
     /**

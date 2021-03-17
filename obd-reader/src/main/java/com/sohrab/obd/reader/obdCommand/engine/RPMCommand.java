@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.engine;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 import java.util.Locale;
@@ -18,8 +19,8 @@ public class RPMCommand extends ObdCommand {
     /**
      * Default ctor.
      */
-    public RPMCommand() {
-        super("01 0C");
+    public RPMCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 0C");
     }
 
     /**

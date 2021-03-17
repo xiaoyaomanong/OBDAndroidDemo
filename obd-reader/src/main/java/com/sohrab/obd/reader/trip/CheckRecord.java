@@ -801,37 +801,6 @@ public class CheckRecord implements DefineObdReader, Serializable {
         return mIgnitionMonitor;
     }
 
-    private ArrayList<ObdCommand> mObdCommandArrayList;
-
-    public ArrayList<ObdCommand> getmObdCommandArrayList() {
-
-        if (mObdCommandArrayList == null) {
-
-            mObdCommandArrayList = new ArrayList<>();
-            mObdCommandArrayList.add(new SpeedCommand());
-            mObdCommandArrayList.add(new RPMCommand());
-
-            if (ismIsMAFSupported()) {
-                mObdCommandArrayList.add(new MassAirFlowCommand());
-            } else if (ismIsTempPressureSupported()) {
-                mObdCommandArrayList.add(new IntakeManifoldPressureCommand());
-                mObdCommandArrayList.add(new AirIntakeTemperatureCommand());
-            }
-
-            if (ismIsEngineRuntimeSupported()) {
-                mObdCommandArrayList.add(new RuntimeCommand());
-            }
-            mObdCommandArrayList.add(new FindFuelTypeCommand());
-        }
-        return mObdCommandArrayList;
-    }
-
-    public void addObdCommand(ObdCommand obdCommand) {
-        if (mObdCommandArrayList == null) {
-            mObdCommandArrayList = new ArrayList<>();
-        }
-        mObdCommandArrayList.add(obdCommand);
-    }
 
 
     public List<OBDTripEntity> getTripMap() {

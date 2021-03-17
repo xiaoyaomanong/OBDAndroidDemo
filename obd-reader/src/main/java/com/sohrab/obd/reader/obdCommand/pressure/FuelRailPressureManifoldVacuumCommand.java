@@ -1,6 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.pressure;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -13,8 +14,8 @@ public class FuelRailPressureManifoldVacuumCommand extends PressureCommand {
     /**
      * <p>Constructor for FuelRailPressureCommand.</p>
      */
-    public FuelRailPressureManifoldVacuumCommand() {
-        super("01 22");
+    public FuelRailPressureManifoldVacuumCommand(final ModeTrim bank) {
+        super(bank.buildObdCommand()+" 22");
     }
 
     /**

@@ -66,14 +66,12 @@ public class WelcomeGuideActivity extends BaseFullScreenActivity implements OnNo
         BGALocalImageSize localImageSize = new BGALocalImageSize(720, 1280, 320, 640);
         // 设置数据源
         mBackgroundBanner.setData(localImageSize, ImageView.ScaleType.CENTER_CROP,
-                R.drawable.welcomeone,
-                R.drawable.welcometwo,
-                R.drawable.welcomethree);
+                R.drawable.icon_welcome,
+                R.drawable.icon_welcome_one);
 
         mForegroundBanner.setData(localImageSize, ImageView.ScaleType.CENTER_CROP,
-                R.drawable.welcomeone,
-                R.drawable.welcometwo,
-                R.drawable.welcomethree);
+                R.drawable.icon_welcome,
+                R.drawable.icon_welcome_one);
     }
 
     @Override

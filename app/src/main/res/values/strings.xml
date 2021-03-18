@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">AI车检</string>
+    <string name="app_tip">提示</string>
     <string name="onMain">立即体验</string>
     <string name="forgot_password">忘记密码?</string>
     <string name="hint_sign_up">没有账号？ 立即注册</string>
@@ -275,4 +276,12 @@
     <string name="Bod">车身电脑控制系统</string>
     <string name="DynamicSystemNO">动力系统检测</string>
     <string name="FuelPressure">燃油压力(kPa)</string>
+
+    <string name="pay_result_callback_msg" formatted="false">微信支付结果：%s</string>
+    <string name="ok">确 定</string>
+    <string name="okPay">确认支付</string>
+    <string name="onlinePay">在线支付</string>
+    <string name="zfb">支付宝</string>
+    <string name="zfb_content">数亿用户都在用，安全可托付</string>
+    <string name="weChat">微信</string>
 </resources>

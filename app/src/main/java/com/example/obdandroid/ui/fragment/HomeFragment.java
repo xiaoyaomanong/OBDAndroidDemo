@@ -48,6 +48,7 @@ import com.example.obdandroid.ui.entity.UserInfoEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.utils.BltManagerUtils;
+import com.example.obdandroid.utils.CommandUtils;
 import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
@@ -104,7 +105,6 @@ public class HomeFragment extends BaseFragment {
     private String deviceAddress;
     private HomeAdapter homeAdapter;
     private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
-
     private static final int COMPLETES = 1;
     private static final int COMPLETET = 2;
     @SuppressLint("HandlerLeak")
@@ -187,6 +187,22 @@ public class HomeFragment extends BaseFragment {
             }
         });
     }
+
+
+    /**
+     * 发送全部指令(1-19)
+     */
+    private void sendAllCommand() {
+      /*  String[] stringArray = new String[]
+                {"1","2","3","4","5","6","7","8","9","9",
+                        "9","10","11","12","13","14","15","18","19","19","19"};
+        for (String command : stringArray) {
+            command = CommandUtils.numToCommand(command);
+            diagAbs.DiagRequestByXMLString(packageXMLData(DiagXmlUtils.createCommDom(command)));
+        }*/
+    }
+
+
 
     /**
      * 展示默认车辆

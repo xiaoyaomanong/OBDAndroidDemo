@@ -35,11 +35,10 @@ import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
 public class WelcomeActivity extends BaseFullScreenActivity implements OnNotchCallBack {
     private static final int ANIM_TIME = 2000;
     private static final float SCALE_END = 1.15F;
-    private static final int[] Imgs = {R.drawable.welcomeone, R.drawable.welcometwo, R.drawable.welcomethree};
+    private static final int[] Imgs = {R.drawable.icon_welcome, };
     private ImageView ivEntry;
     private ImageView imgBack;
     private Context context;
-    private SPUtil spUtil;
     private boolean ISLOGIN = false;
 
     @Override
@@ -83,11 +82,10 @@ public class WelcomeActivity extends BaseFullScreenActivity implements OnNotchCa
         setContentView(getContentViewId());
         ivEntry = findViewById(R.id.iv_entry);
         imgBack = findViewById(R.id.img_back);
-        spUtil = new SPUtil(context);
+        SPUtil spUtil = new SPUtil(context);
         ISLOGIN = spUtil.getBoolean(Constant.IS_LOGIN, false);
         NotchTools.getFullScreenTools().fullScreenUseStatusForActivityOnCreate(this, this);
-        Random random = new Random(SystemClock.elapsedRealtime());//SystemClock.elapsedRealtime() 从开机到现在的毫秒数（手机睡眠(sleep)的时间也包括在内）
-        ivEntry.setImageResource(Imgs[random.nextInt(Imgs.length)]);
+        ivEntry.setImageResource(R.drawable.icon_welcome_one);
         Observable.timer(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> startAnim());

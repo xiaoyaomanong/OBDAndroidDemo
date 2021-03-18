@@ -56,19 +56,14 @@ public class FreezeFrameCommand extends ObdCommand {
     protected void performCalculations() {
         final String result = getResult();
         LogUtils.i("result :: " + result);
-        String workingData;
+        String workingData = null;
         int startIndex = 0;//标题大小
         String canOneFrame = result.replaceAll("[\r\n]", "");
         int canOneFrameLength = canOneFrame.length();
         if (canOneFrameLength <= 16 && canOneFrameLength % 4 == 0) {//CAN（ISO-15765）协议一帧。
             workingData = canOneFrame;//43yy{codes}
             startIndex = 4;//Header is 43yy, yy 显示数据项的数量。
-        } else if (result.contains(":")) {//CAN(ISO-15765) protocol two and more frames.
-            workingData = result.replaceAll("[\r\n].:", "");//xxx43yy{codes}
-            startIndex = 7;//Header is xxx43yy, xxx is bytes of information to follow, yy showing the number of data items.
-        } else {//ISO9141-2, KWP2000 Fast and KWP2000 5Kbps (ISO15031) protocols.
-            workingData = result.replaceAll("^43|[\r\n]43|[\r\n]", "");
-        }
+        } 
 
         codes.delete(0, codes.length());
         for (int begin = startIndex; begin < workingData.length(); begin += 4) {

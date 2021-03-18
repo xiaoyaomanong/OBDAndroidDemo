@@ -1,8 +1,12 @@
 package com.example.obdandroid.ui.activity;
 
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -11,13 +15,21 @@ import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.adapter.RechargeSetMealAdapter;
 import com.example.obdandroid.ui.entity.ChargeMealEntity;
+import com.example.obdandroid.ui.entity.PlaceAnOrderEntity;
 import com.example.obdandroid.ui.entity.ResultEntity;
+import com.example.obdandroid.ui.fragment.HomeFragment;
 import com.example.obdandroid.ui.view.CustomeDialog;
+import com.example.obdandroid.ui.view.PayChannelDialog;
 import com.example.obdandroid.ui.view.progressButton.CircularProgressButton;
+import com.example.obdandroid.ui.wechatPay.WeiXinConstants;
 import com.example.obdandroid.utils.AppDateUtils;
+import com.example.obdandroid.utils.SPUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
+import com.tencent.mm.sdk.modelpay.PayReq;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -32,6 +44,10 @@ import static com.example.obdandroid.config.APIConfig.CHARGE_URL;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.addRechargeRecordCheck_URL;
 import static com.example.obdandroid.config.APIConfig.addRechargeRecord_URL;
+import static com.example.obdandroid.config.APIConfig.placeAnOrder_URL;
+import static com.example.obdandroid.ui.wechatPay.WeiXinConstants.MEAL_ID;
+import static com.example.obdandroid.ui.wechatPay.WeiXinConstants.PACKAGE_VALUE;
+import static com.example.obdandroid.ui.wechatPay.WeiXinConstants.PAY_MONEY;
 
 
 /**
@@ -49,9 +65,10 @@ public class RechargeSetMealActivity extends BaseActivity {
     private final List<ChargeMealEntity.DataEntity.ListEntity> datas = new ArrayList<>();
     private CircularProgressButton btnBuy;
     private String rechargeSetMealSettingsId = "";
-    private String rechargetAmount = "";
-    private final String paymentChannels = "1";
-    private final String rechargeStatus = "1";
+    private String rechargetAmount = "0";
+    private IWXAPI wxApi;
+    private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
+    private SPUtil spUtil;
 
     @Override
     protected int getContentViewId() {
@@ -70,6 +87,9 @@ public class RechargeSetMealActivity extends BaseActivity {
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         recycleMeal = findViewById(R.id.recycle_meal);
         btnBuy = findViewById(R.id.btnBuy);
+        wxApi = WXAPIFactory.createWXAPI(context, WeiXinConstants.APP_ID);
+        spUtil = new SPUtil(context);
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(context);//广播变量管理器获
         recycleMeal.setLinearLayout();
         //设置是否可以下拉刷新
         recycleMeal.setPullRefreshEnable(true);
@@ -103,7 +123,6 @@ public class RechargeSetMealActivity extends BaseActivity {
             }
         });
         adapter.setClickCallBack(entity -> {
-            LogE("33333");
             rechargeSetMealSettingsId = String.valueOf(entity.getRechargeSetMealSettingsId());
             rechargetAmount = String.valueOf(entity.getRechargeSetMeaAmount());
         });
@@ -117,7 +136,30 @@ public class RechargeSetMealActivity extends BaseActivity {
                 showTipsDialog("请选择套餐类型", TipDialog.TYPE_ERROR);
                 return;
             }
-            addRechargeRecordCheck(getToken(), getUserId());
+            new PayChannelDialog(context, new PayChannelDialog.DialogClick() {
+                @Override
+                public void aliPay(AlertDialog exitDialog, String channel, boolean confirm) {
+                    if (confirm) {
+                        exitDialog.dismiss();
+                    }
+                }
+
+                @Override
+                public void weChat(AlertDialog exitDialog, String channel, boolean confirm) {
+                    if (confirm) {
+                        placeAnOrder(channel, getToken(), getUserId(), rechargeSetMealSettingsId, rechargetAmount);
+                        exitDialog.dismiss();
+                    }
+                }
+
+                @Override
+                public void Cancel(AlertDialog exitDialog, boolean confirm) {
+                    if (confirm) {
+                        exitDialog.dismiss();
+                    }
+                }
+            }).setMoney(rechargetAmount).showDialog();
+
         });
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -138,11 +180,78 @@ public class RechargeSetMealActivity extends BaseActivity {
     }
 
     /**
+     * 注册本地广播
+     */
+    private void initReceiver() {
+        IntentFilter intentFilter = new IntentFilter("com.obd.pay");
+        PayResultReceiver receiver = new PayResultReceiver();
+        //绑定
+        mLocalBroadcastManager.registerReceiver(receiver, intentFilter);
+    }
+
+    private class PayResultReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String payResult = intent.getStringExtra("payResult");
+            String channel = intent.getStringExtra("channel");
+            String amount = intent.getStringExtra("amount");
+            String mealId = intent.getStringExtra("mealId");
+            addRechargeRecordCheck(getToken(), getUserId(), amount, mealId, channel, payResult);
+        }
+    }
+
+    /**
+     * @param paymentChannels           支付渠道
+     * @param token                     用户Token
+     * @param appUserId                 用户id
+     * @param rechargeSetMealSettingsId 套餐ID
+     * @param amount                    支付金额
+     *                                  APP用户购买套餐下单接口
+     */
+    private void placeAnOrder(String paymentChannels, String token, String appUserId, String rechargeSetMealSettingsId, String amount) {
+        OkHttpUtils.post().url(SERVER_URL + placeAnOrder_URL).
+                addParam("paymentChannels", paymentChannels).
+                addParam("token", token).
+                addParam("appUserId", appUserId).
+                addParam("rechargeSetMealSettingsId", rechargeSetMealSettingsId).
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                PlaceAnOrderEntity entity = JSON.parseObject(response, PlaceAnOrderEntity.class);
+                if (entity.isSuccess()) {
+                    PayReq req = new PayReq();
+                    req.appId = WeiXinConstants.APP_ID;
+                    req.partnerId = entity.getData().getMch_id();
+                    req.prepayId = entity.getData().getPrepay_id();
+                    req.packageValue = PACKAGE_VALUE;
+                    req.nonceStr = entity.getData().getNonce_str();
+                    req.timeStamp = String.valueOf(entity.getData().getTimestamp());
+                    req.sign = entity.getData().getSign();
+                    boolean result = wxApi.sendReq(req);
+                    if (result) {
+                        spUtil.put(PAY_MONEY, amount);
+                        spUtil.put(MEAL_ID, rechargeSetMealSettingsId);
+                    }
+                } else {
+                    showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
+                }
+            }
+        });
+    }
+
+    /**
      * @param token     用户Token
      * @param appUserId APP用户ID
      *                  添加购买套餐校验
      */
-    private void addRechargeRecordCheck(String token, String appUserId) {
+    private void addRechargeRecordCheck(String token, String appUserId, String amount, String mealId,
+                                        String paymentChannel, String status) {
         OkHttpUtils.post().url(SERVER_URL + addRechargeRecordCheck_URL).
                 addParam("token", token).
                 addParam("appUserId", appUserId).
@@ -159,7 +268,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                     if (btnBuy.getProgress() == -1) {
                         btnBuy.setProgress(0);
                     }
-                    addRechargeRecord(getUserId(), rechargeSetMealSettingsId, AppDateUtils.getTodayDateTimeHms(), rechargetAmount, paymentChannels, rechargeStatus, getToken());
+                    addRechargeRecord(getUserId(), mealId, AppDateUtils.getTodayDateTimeHms(), amount, paymentChannel, status, getToken());
                 } else {
                     showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
                 }
@@ -235,7 +344,6 @@ public class RechargeSetMealActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("充值套餐:" + response);
                 ChargeMealEntity entity = JSON.parseObject(response, ChargeMealEntity.class);
                 if (entity.isSuccess()) {
                     isLoadMore = entity.getData().getPages() >= Integer.parseInt(pageNum);
@@ -268,5 +376,4 @@ public class RechargeSetMealActivity extends BaseActivity {
     private void showTipsDialog(String msg, int type) {
         TipDialog.show(context, msg, TipDialog.SHOW_TIME_SHORT, type);
     }
-
 }

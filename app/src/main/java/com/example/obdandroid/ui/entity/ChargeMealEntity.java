@@ -249,7 +249,7 @@ public class ChargeMealEntity {
              * effectiveDays : 10
              */
 
-            private long rechargeSetMealSettingsId;
+            private String rechargeSetMealSettingsId;
             private String rechargeSetMeaName;
             private int rechargeSetMeaType;
             private int rechargeSetMeaNum;
@@ -266,11 +266,11 @@ public class ChargeMealEntity {
                 isChecked = checked;
             }
 
-            public long getRechargeSetMealSettingsId() {
+            public String getRechargeSetMealSettingsId() {
                 return rechargeSetMealSettingsId;
             }
 
-            public void setRechargeSetMealSettingsId(long rechargeSetMealSettingsId) {
+            public void setRechargeSetMealSettingsId(String rechargeSetMealSettingsId) {
                 this.rechargeSetMealSettingsId = rechargeSetMealSettingsId;
             }
 

@@ -37,7 +37,8 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         context = this.getApplicationContext();
-        IWXAPI api = WXAPIFactory.createWXAPI(this, WeiXinConstants.APP_ID, false);//通过WXAPIFactory工厂，获取IWXAPI的实例,IWXAPI 是第三方app和微信通信的openapi接口
+        //通过WXAPIFactory工厂，获取IWXAPI的实例,IWXAPI 是第三方app和微信通信的openapi接口
+        IWXAPI api = WXAPIFactory.createWXAPI(this, WeiXinConstants.APP_ID, false);
         api.registerApp(WeiXinConstants.APP_ID);
         // 初始化 TitleBar
         TitleBar.setDefaultInitializer(new LightBarInitializer() {

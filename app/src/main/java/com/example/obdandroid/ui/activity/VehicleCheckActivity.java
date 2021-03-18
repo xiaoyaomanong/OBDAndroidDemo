@@ -104,7 +104,6 @@ public class VehicleCheckActivity extends BaseActivity {
                 }
                 layoutCar.setVisibility(View.VISIBLE);
                 titleBar.setRightTitle("清除故障");
-                showResult(tripRecord.getTripMap());
                 addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(tripRecord.getOBDJson()), getUserId(), getToken());
                 reduceAndCumulativeFrequency(getToken(), getUserId());
                 addRemind(getUserId(), addJsonContent(tripRecord.getOBDJson()), getToken());
@@ -208,6 +207,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 command.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
                 LogE("结果是: " + command.getFormattedResult() + " :: name is :: " + command.getName());
                 tripRecord.updateTrip(command.getName(), command);
+                showResult(tripRecord.getTripMap());
             } catch (Exception e) {
                 LogE("执行命令异常  :: " + e.getMessage());
                 if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {

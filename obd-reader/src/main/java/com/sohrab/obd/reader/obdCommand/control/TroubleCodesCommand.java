@@ -130,6 +130,7 @@ public class TroubleCodesCommand extends ObdCommand {
         char c;
         while (true) {
             b = (byte) in.read();
+            LogUtils.i("result8888 :: " + b);
             if (b == -1) // -1 if the end of the stream is reached
             {
                 break;

@@ -72,6 +72,7 @@ public class BltManagerUtils {
         }
 
         if (mSocket.isConnected()) {
+            listener.connectMsg(0, "连接成功");
             try {
                 new ObdResetCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                 try {
@@ -80,13 +81,13 @@ public class BltManagerUtils {
                     e.printStackTrace();
                 }
                 new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-                new ObdWarmstartCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());//热启动OBD连接。。。
+               // new ObdWarmstartCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());//热启动OBD连接。。。
                 new LineFeedOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                 new SpacesOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                 new HeadersOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
                 new TimeoutCommand(62).run(mSocket.getInputStream(), mSocket.getOutputStream());
                 new SelectProtocolCommand(ObdProtocols.AUTO).run(mSocket.getInputStream(), mSocket.getOutputStream());
-                listener.connectMsg(0, "连接成功");
+                //listener.connectMsg(0, "连接成功");
             } catch (Exception e) {
                 LogUtils.i("在新线程中重置命令异常:: " + e.getMessage());
             }

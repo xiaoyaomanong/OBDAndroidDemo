@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -186,20 +187,6 @@ public class HomeFragment extends BaseFragment {
                 showSingleChoiceDialog();
             }
         });
-    }
-
-
-    /**
-     * 发送全部指令(1-19)
-     */
-    private void sendAllCommand() {
-      /*  String[] stringArray = new String[]
-                {"1","2","3","4","5","6","7","8","9","9",
-                        "9","10","11","12","13","14","15","18","19","19","19"};
-        for (String command : stringArray) {
-            command = CommandUtils.numToCommand(command);
-            diagAbs.DiagRequestByXMLString(packageXMLData(DiagXmlUtils.createCommDom(command)));
-        }*/
     }
 
 

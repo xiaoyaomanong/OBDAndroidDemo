@@ -208,9 +208,9 @@ public class VehicleDashTwoActivity extends BaseActivity {
             dashInsFuelConsumption.setVelocity(InsFuelConsumption);
             dashIdlingFuelConsumption.setVelocity(tripRecord.getmIdlingFuelConsumption());
             tvmIdlingFuelConsumption.setText(String.valueOf(tripRecord.getmIdlingFuelConsumption()));
-
-            tvFuelPressure.setText(TextUtils.isEmpty(tripRecord.getmFuelPressure()) ? "0" : tripRecord.getmFuelPressure());
-            dashFuelPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmFuelPressure()) ? "0" : tripRecord.getmFuelPressure()));
+            String pressure = tripRecord.getmFuelPressure().replace("kPa", "");
+            tvFuelPressure.setText(TextUtils.isEmpty(pressure) ? "0" : pressure);
+            dashFuelPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(pressure) ? "0" : pressure));
 
             dashIntakeAirTemp.setVelocity(tripRecord.getmIntakeAirTemp());
             float DrivingFuelConsumption = BigDecimal.valueOf(tripRecord.getmDrivingFuelConsumption())

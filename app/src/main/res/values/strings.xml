@@ -261,7 +261,7 @@
     <string name="oil_level">燃油油位( % )</string>
     <string name="Idle_fuel_consumption">怠速油耗( L )</string>
     <string name="dash_one">车辆仪表</string>
-    <string name="dash_two">油耗仪表</string>
+    <string name="dash_two">燃油仪表</string>
     <string name="tip"><![CDATA[</>]]></string>
     <string name="other">检测数据</string>
     <string name="RelThottlePos">节气门位置</string>

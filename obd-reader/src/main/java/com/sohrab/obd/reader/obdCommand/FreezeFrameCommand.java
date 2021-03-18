@@ -54,16 +54,16 @@ public class FreezeFrameCommand extends ObdCommand {
      */
     @Override
     protected void performCalculations() {
-        final String result = getResult();
+        final String result = getResult().replace("SEARCHING...", "").replace("NODATA", "");
         LogUtils.i("result :: " + result);
         String workingData = null;
         int startIndex = 0;//标题大小
-        String canOneFrame = result.replaceAll("[\r\n]", "");
-        int canOneFrameLength = canOneFrame.length();
+       // String canOneFrame = result.replaceAll("[\r\n]", "");
+        int canOneFrameLength = result.length();
         if (canOneFrameLength <= 16 && canOneFrameLength % 4 == 0) {//CAN（ISO-15765）协议一帧。
-            workingData = canOneFrame;//43yy{codes}
+            workingData = result;//43yy{codes}
             startIndex = 4;//Header is 43yy, yy 显示数据项的数量。
-        } 
+        }
 
         codes.delete(0, codes.length());
         for (int begin = startIndex; begin < workingData.length(); begin += 4) {
@@ -117,6 +117,7 @@ public class FreezeFrameCommand extends ObdCommand {
         char c;
         while (true) {
             b = (byte) in.read();
+            LogUtils.i("result0000000 :: " + b);
             if (b == -1) // -1 if the end of the stream is reached
             {
                 break;

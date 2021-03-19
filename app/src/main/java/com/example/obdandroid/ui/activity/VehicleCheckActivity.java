@@ -85,6 +85,10 @@ public class VehicleCheckActivity extends BaseActivity {
     private ImageView ivCarLogo;
     private TextView tvAutomobileBrandName;
     private TextView tvModelName;
+    private LinearLayout layoutLook;
+    private TextView tvLook;
+    private ImageView ivNext;
+    private TextView tvCommandResult;
     private LocalBroadcastManager localBroadcastManager;
     @SuppressLint("HandlerLeak")
     private CheckRecord tripRecord;
@@ -102,19 +106,22 @@ public class VehicleCheckActivity extends BaseActivity {
                     btStart.setText("检测完成");
                     btStart.setEnabled(true);
                 }
-                layoutCar.setVisibility(View.VISIBLE);
                 titleBar.setRightTitle("清除故障");
+                tvCommandResult.setText("生成检测报告");
+                tvLook.setText("查看");
+                ivNext.setVisibility(View.VISIBLE);
+                showResult(tripRecord.getTripMap());
                 addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(tripRecord.getOBDJson()), getUserId(), getToken());
                 reduceAndCumulativeFrequency(getToken(), getUserId());
                 addRemind(getUserId(), addJsonContent(tripRecord.getOBDJson()), getToken());
-
-                new CustomeDialog(context, "生成检测报告,请查看!", confirm -> {
-                    if (confirm) {
+                layoutLook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         Intent intent = new Intent(context, CheckReportActivity.class);
                         intent.putExtra("data", tripRecord);
                         startActivity(intent);
                     }
-                }).setTitle("检测报告提示").setPositiveButton("确定").show();
+                });
             }
             if (msg.what == COMPLETES) {
                 showTipDialog("故障码清除成功", TipDialog.TYPE_FINISH);
@@ -125,6 +132,7 @@ public class VehicleCheckActivity extends BaseActivity {
             }
         }
     };
+
 
     @Override
     protected int getContentViewId() {
@@ -149,6 +157,10 @@ public class VehicleCheckActivity extends BaseActivity {
         ivCarLogo = getView(R.id.ivCarLogo);
         tvAutomobileBrandName = getView(R.id.tvAutomobileBrandName);
         tvModelName = getView(R.id.tvModelName);
+        layoutLook = findViewById(R.id.layoutLook);
+        tvLook = findViewById(R.id.tvLook);
+        ivNext = findViewById(R.id.ivNext);
+        tvCommandResult = findViewById(R.id.tvCommandResult);
         spUtil = new SPUtil(context);
         dialogUtils = new DialogUtils(context);
         LinearLayoutManager manager = new LinearLayoutManager(context);
@@ -167,6 +179,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 btStart.setText("开始检测");
                 tvConnectObd.setVisibility(View.GONE);
                 btStart.setEnabled(false);
+                layoutCar.setVisibility(View.VISIBLE);
                 new Thread(this::executeCommand).start();
             } else {
                 showTipDialog("请连接OBD设备", TipDialog.TYPE_WARNING);
@@ -194,20 +207,19 @@ public class VehicleCheckActivity extends BaseActivity {
                 }
             }
         });
-    }
 
+    }
 
     private void executeCommand() {
         tripRecord = CheckRecord.getTriRecode(context);
         tripRecord.getTripMap().clear();
-        ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfiguration.getObdCommands(ModeTrim.MODE_01).clone();
+        ArrayList<ObdCommand> commands = ObdConfiguration.getObdCommands(ModeTrim.MODE_01);
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {
                 command.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
                 LogE("结果是: " + command.getFormattedResult() + " :: name is :: " + command.getName());
-                tripRecord.updateTrip(command.getName(), command);
-                showResult(tripRecord.getTripMap());
+                tripRecord.updateTrip(command.getName(), command, tvCommandResult);
             } catch (Exception e) {
                 LogE("执行命令异常  :: " + e.getMessage());
                 if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
@@ -241,7 +253,6 @@ public class VehicleCheckActivity extends BaseActivity {
             LogE("建立连接时出错。 -> " + e.getMessage());
         }
     }
-
 
     /**
      * @param token     用户Token

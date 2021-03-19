@@ -27,7 +27,7 @@ import com.sohrab.obd.reader.obdCommand.control.HybridBatteryPackRemainingLifeCo
 import com.sohrab.obd.reader.obdCommand.control.IgnitionMonitorCommand;
 import com.sohrab.obd.reader.obdCommand.control.MaxAirFlowMassRateCommand;
 import com.sohrab.obd.reader.obdCommand.control.ModuleVoltageCommand;
-import com.sohrab.obd.reader.obdCommand.control.OdometerCommand;
+import com.sohrab.obd.reader.obdCommand.control.MeterCommand;
 import com.sohrab.obd.reader.obdCommand.control.OxygenSensorTrimCommand;
 import com.sohrab.obd.reader.obdCommand.control.PendingTroubleCodesCommand;
 import com.sohrab.obd.reader.obdCommand.control.PermanentTroubleCodesCommand;
@@ -217,7 +217,7 @@ public class ObdConfiguration {
         }
     }
 
-    public static class ModifiedOdometerCommand extends OdometerCommand {
+    public static class ModifiedOdometerCommand extends MeterCommand {
         public ModifiedOdometerCommand(String mode) {
             super(mode);
         }

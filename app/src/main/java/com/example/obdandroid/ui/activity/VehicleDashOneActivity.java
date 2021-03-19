@@ -167,10 +167,10 @@ public class VehicleDashOneActivity extends BaseActivity {
     private List<ObdCommand> setCommands() {
         List<ObdCommand> obdCommands = new ArrayList<>();
         obdCommands.add(new ObdResetCommand());
-        obdCommands.add(new SpeedCommand(ModeTrim.MODE_01));
-        obdCommands.add(new RPMCommand(ModeTrim.MODE_01));
-        obdCommands.add(new OilTempCommand(ModeTrim.MODE_01));
-        obdCommands.add(new EngineCoolantTemperatureCommand(ModeTrim.MODE_01));
+        obdCommands.add(new SpeedCommand(ModeTrim.MODE_01.buildObdCommand()));
+        obdCommands.add(new RPMCommand(ModeTrim.MODE_01.buildObdCommand()));
+        obdCommands.add(new OilTempCommand(ModeTrim.MODE_01.buildObdCommand()));
+        obdCommands.add(new EngineCoolantTemperatureCommand(ModeTrim.MODE_01.buildObdCommand()));
         return obdCommands;
     }
 

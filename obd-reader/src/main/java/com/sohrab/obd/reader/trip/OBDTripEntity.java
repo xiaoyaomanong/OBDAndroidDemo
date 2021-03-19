@@ -16,12 +16,10 @@ public class OBDTripEntity implements Serializable {
 
     private String name;
     private String value;
-    private int resId;
 
-    public OBDTripEntity(String name, String value,int resId) {
+    public OBDTripEntity(String name, String value) {
         this.name = name;
         this.value = value;
-        this.resId = resId;
     }
 
     public String getName() {
@@ -38,13 +36,5 @@ public class OBDTripEntity implements Serializable {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public int getResId() {
-        return resId;
-    }
-
-    public void setResId(int resId) {
-        this.resId = resId;
     }
 }

@@ -1,7 +1,6 @@
 package com.sohrab.obd.reader.obdCommand.control;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
-import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -9,17 +8,17 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
  * 日期：2021/1/26 0026
  * 描述：
  */
-public class OdometerCommand extends ObdCommand {
+public class MeterCommand extends ObdCommand {
     private double Odometer = 0;
 
-    public OdometerCommand(String mode) {
+    public MeterCommand(String mode) {
         super(mode+" A6");
     }
 
     /**
      * Copy ctor
      */
-    public OdometerCommand(OdometerCommand other) {
+    public MeterCommand(MeterCommand other) {
         super(other);
     }
 

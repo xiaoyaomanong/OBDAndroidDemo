@@ -10,21 +10,17 @@ import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.view.PhilText;
 import com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight;
-import com.github.pires.obd.commands.fuel.AirFuelRatioCommand;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.application.ObdPreferences;
 import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.engine.MassAirFlowCommand;
-import com.sohrab.obd.reader.obdCommand.fuel.FuelLevelCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelPressureCommand;
-import com.sohrab.obd.reader.obdCommand.pressure.IntakeManifoldPressureCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.AirIntakeTemperatureCommand;
 import com.sohrab.obd.reader.trip.TripRecord;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -189,9 +185,9 @@ public class VehicleDashTwoActivity extends BaseActivity {
     private List<ObdCommand> setCommands() {
         List<ObdCommand> obdCommands = new ArrayList<>();
         obdCommands.add(new ObdResetCommand());
-        obdCommands.add(new FuelPressureCommand(ModeTrim.MODE_01));
-        obdCommands.add(new AirIntakeTemperatureCommand(ModeTrim.MODE_01));//进气温度
-        obdCommands.add(new MassAirFlowCommand(ModeTrim.MODE_01));//空气质量流量
+        obdCommands.add(new FuelPressureCommand(ModeTrim.MODE_01.buildObdCommand()));
+        obdCommands.add(new AirIntakeTemperatureCommand(ModeTrim.MODE_01.buildObdCommand()));//进气温度
+        obdCommands.add(new MassAirFlowCommand(ModeTrim.MODE_01.buildObdCommand()));//空气质量流量
         return obdCommands;
     }
 

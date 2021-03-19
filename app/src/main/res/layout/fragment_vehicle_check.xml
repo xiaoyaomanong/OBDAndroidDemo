@@ -38,44 +38,99 @@
                     <LinearLayout
                         android:id="@+id/layout_Car"
                         android:layout_width="match_parent"
-                        android:layout_height="65dp"
+                        android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:background="@drawable/bg_black"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:visibility="gone">
+                        android:orientation="vertical"
+                        android:visibility="visible">
 
-                        <ImageView
-                            android:id="@+id/ivCarLogo"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@null"
-                            android:tint="@color/white"
-                            tools:ignore="ContentDescription" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_black"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:visibility="visible">
+
+                            <ImageView
+                                android:id="@+id/ivCarLogo"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:background="@null"
+                                android:tint="@color/white"
+                                tools:ignore="ContentDescription" />
+
+                            <TextView
+                                android:id="@+id/tvAutomobileBrandName"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/gotham"
+                                android:gravity="center_vertical"
+                                android:paddingStart="15dp"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                tools:ignore="NestedWeights,RtlSymmetry" />
+
+                            <TextView
+                                android:id="@+id/tvModelName"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/gotham"
+                                android:gravity="center_vertical"
+                                android:paddingStart="15dp"
+                                android:textColor="@color/gray_light"
+                                android:textSize="@dimen/sp_12"
+                                tools:ignore="RtlSymmetry" />
+                        </LinearLayout>
 
                         <TextView
-                            android:id="@+id/tvAutomobileBrandName"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:fontFamily="@font/gotham"
-                            android:gravity="center_vertical"
-                            android:paddingStart="15dp"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            tools:ignore="NestedWeights,RtlSymmetry" />
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginStart="@dimen/dp_10"
+                            android:layout_marginEnd="@dimen/dp_10"
+                            android:background="@color/gray" />
 
-                        <TextView
-                            android:id="@+id/tvModelName"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:fontFamily="@font/gotham"
+                        <LinearLayout
+                            android:id="@+id/layoutLook"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_black"
                             android:gravity="center_vertical"
-                            android:paddingStart="15dp"
-                            android:textColor="@color/gray_light"
-                            android:textSize="@dimen/sp_12"
-                            tools:ignore="RtlSymmetry" />
+                            android:orientation="horizontal"
+                            android:visibility="visible">
+
+                            <TextView
+                                android:id="@+id/tvCommandResult"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/gotham"
+                                android:gravity="center_vertical"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/sp_14"
+                                tools:ignore="NestedWeights,RtlSymmetry" />
+
+                            <TextView
+                                android:id="@+id/tvLook"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:fontFamily="@font/gotham"
+                                android:gravity="center_vertical"
+                                android:textColor="@color/gray_light"
+                                android:textSize="@dimen/sp_14"
+                                tools:ignore="RtlSymmetry" />
+
+                            <ImageView
+                                android:id="@+id/ivNext"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/icon_next"
+                                android:visibility="gone"
+                                tools:ignore="ContentDescription" />
+                        </LinearLayout>
                     </LinearLayout>
 
                     <com.example.obdandroid.ui.view.CircleWelComeView
@@ -105,6 +160,7 @@
                 </RelativeLayout>
 
             </LinearLayout>
+
 
             <RelativeLayout
                 android:layout_width="match_parent"

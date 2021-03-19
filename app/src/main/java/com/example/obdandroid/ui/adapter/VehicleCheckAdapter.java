@@ -67,7 +67,7 @@ public class VehicleCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             viewHolder.mEmptyTextView.setText(msg);
         } else if (NOT_EMPTY_VIEW == itemViewType) {
             final MyViewHolder holder1 = (MyViewHolder) holder;
-            holder1.ivName.setImageResource(list.get(position).getResId());
+            holder1.tvIndex.setText(position);
             holder1.tvCheckName.setText(list.get(position).getName() + ": " + list.get(position).getValue());
             holder1.btnCheck.setIndeterminateProgressMode(true);
             holder1.btnCheck.setProgress(0);
@@ -77,7 +77,6 @@ public class VehicleCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             } else {
                 new Handler().postDelayed(() -> holder1.btnCheck.setProgress(100), 1000);
             }
-            //  holder1.card_view.setOnClickListener(v -> clickCallBack.Click(list.get(position)));
         }
     }
 
@@ -108,7 +107,7 @@ public class VehicleCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         View itemView;
-        private final ImageView ivName;
+        private final TextView tvIndex;
         private final TextView tvCheckName;
         private final CircularProgressButton btnCheck;
         private final LinearLayout card_view;
@@ -116,7 +115,7 @@ public class VehicleCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public MyViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
-            ivName = itemView.findViewById(R.id.ivName);
+            tvIndex = itemView.findViewById(R.id.tvIndex);
             tvCheckName = itemView.findViewById(R.id.tvCheckName);
             btnCheck = itemView.findViewById(R.id.btnCheck);
             card_view = itemView.findViewById(R.id.card_view);

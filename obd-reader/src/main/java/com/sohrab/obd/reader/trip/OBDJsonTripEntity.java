@@ -97,6 +97,34 @@ public class OBDJsonTripEntity implements Serializable {
     private  String RelAccPedalPos;
     private  String HyBatteryPackLife;
     private  String ActualEngineTorque;
+    private  String DPFTemp;
+    private  String EngineFrictionPercentTorque;
+
+    public String getEngineFrictionPercentTorque() {
+        return EngineFrictionPercentTorque;
+    }
+
+    public void setEngineFrictionPercentTorque(String engineFrictionPercentTorque) {
+        EngineFrictionPercentTorque = engineFrictionPercentTorque;
+    }
+
+    public String getDPFTemp() {
+        return DPFTemp;
+    }
+
+    public void setDPFTemp(String DPFTemp) {
+        this.DPFTemp = DPFTemp;
+    }
+
+    public String getEngineReferenceTorque() {
+        return EngineReferenceTorque;
+    }
+
+    public void setEngineReferenceTorque(String engineReferenceTorque) {
+        EngineReferenceTorque = engineReferenceTorque;
+    }
+
+    private  String EngineReferenceTorque;
 
     public String getActualEngineTorque() {
         return ActualEngineTorque;

@@ -10,4 +10,5 @@ public class WeiXinConstants {
     public static final String PACKAGE_VALUE = "Sign=WXPay";
     public static final String PAY_MONEY = "payMoney";
     public static final String MEAL_ID = "rechargeSetMealSettingsId";
+    public static final String ORDER_NO = "order_no";
 }

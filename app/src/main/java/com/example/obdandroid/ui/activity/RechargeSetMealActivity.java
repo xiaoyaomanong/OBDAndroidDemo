@@ -17,12 +17,10 @@ import com.example.obdandroid.ui.adapter.RechargeSetMealAdapter;
 import com.example.obdandroid.ui.entity.ChargeMealEntity;
 import com.example.obdandroid.ui.entity.PlaceAnOrderEntity;
 import com.example.obdandroid.ui.entity.ResultEntity;
-import com.example.obdandroid.ui.fragment.HomeFragment;
 import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.ui.view.PayChannelDialog;
 import com.example.obdandroid.ui.view.progressButton.CircularProgressButton;
 import com.example.obdandroid.ui.wechatPay.WeiXinConstants;
-import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.SPUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
@@ -43,9 +41,10 @@ import okhttp3.Response;
 import static com.example.obdandroid.config.APIConfig.CHARGE_URL;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.addRechargeRecordCheck_URL;
-import static com.example.obdandroid.config.APIConfig.addRechargeRecord_URL;
 import static com.example.obdandroid.config.APIConfig.placeAnOrder_URL;
+import static com.example.obdandroid.config.APIConfig.updateRechargeRecord_URL;
 import static com.example.obdandroid.ui.wechatPay.WeiXinConstants.MEAL_ID;
+import static com.example.obdandroid.ui.wechatPay.WeiXinConstants.ORDER_NO;
 import static com.example.obdandroid.ui.wechatPay.WeiXinConstants.PACKAGE_VALUE;
 import static com.example.obdandroid.ui.wechatPay.WeiXinConstants.PAY_MONEY;
 
@@ -147,7 +146,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                 @Override
                 public void weChat(AlertDialog exitDialog, String channel, boolean confirm) {
                     if (confirm) {
-                        placeAnOrder(channel, getToken(), getUserId(), rechargeSetMealSettingsId, rechargetAmount);
+                        addRechargeRecordCheck(getToken(), getUserId(), rechargetAmount, rechargeSetMealSettingsId, channel);
                         exitDialog.dismiss();
                     }
                 }
@@ -161,6 +160,7 @@ public class RechargeSetMealActivity extends BaseActivity {
             }).setMoney(rechargetAmount).showDialog();
 
         });
+        initReceiver();
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -194,10 +194,16 @@ public class RechargeSetMealActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String payResult = intent.getStringExtra("payResult");
-            String channel = intent.getStringExtra("channel");
+           /* String channel = intent.getStringExtra("channel");
             String amount = intent.getStringExtra("amount");
-            String mealId = intent.getStringExtra("mealId");
-            addRechargeRecordCheck(getToken(), getUserId(), amount, mealId, channel, payResult);
+            String mealId = intent.getStringExtra("mealId");*/
+            String orderNo = intent.getStringExtra("orderNo");
+            if (payResult.equals("1")) {
+                btnBuy.setProgress(100);
+            } else {
+                btnBuy.setProgress(-1);
+            }
+            updateRechargeRecord(orderNo, payResult, getToken());
         }
     }
 
@@ -210,6 +216,8 @@ public class RechargeSetMealActivity extends BaseActivity {
      *                                  APP用户购买套餐下单接口
      */
     private void placeAnOrder(String paymentChannels, String token, String appUserId, String rechargeSetMealSettingsId, String amount) {
+        btnBuy.setProgress(0);
+        new Handler().postDelayed(() -> btnBuy.setProgress(50), 3000);
         OkHttpUtils.post().url(SERVER_URL + placeAnOrder_URL).
                 addParam("paymentChannels", paymentChannels).
                 addParam("token", token).
@@ -237,6 +245,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                     if (result) {
                         spUtil.put(PAY_MONEY, amount);
                         spUtil.put(MEAL_ID, rechargeSetMealSettingsId);
+                        spUtil.put(ORDER_NO, entity.getData().getOrder_no());
                     }
                 } else {
                     showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
@@ -250,8 +259,7 @@ public class RechargeSetMealActivity extends BaseActivity {
      * @param appUserId APP用户ID
      *                  添加购买套餐校验
      */
-    private void addRechargeRecordCheck(String token, String appUserId, String amount, String mealId,
-                                        String paymentChannel, String status) {
+    private void addRechargeRecordCheck(String token, String appUserId, String amount, String mealId, String paymentChannel) {
         OkHttpUtils.post().url(SERVER_URL + addRechargeRecordCheck_URL).
                 addParam("token", token).
                 addParam("appUserId", appUserId).
@@ -268,7 +276,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                     if (btnBuy.getProgress() == -1) {
                         btnBuy.setProgress(0);
                     }
-                    addRechargeRecord(getUserId(), mealId, AppDateUtils.getTodayDateTimeHms(), amount, paymentChannel, status, getToken());
+                    placeAnOrder(paymentChannel, getToken(), getUserId(), mealId, amount);
                 } else {
                     showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
                 }
@@ -279,26 +287,15 @@ public class RechargeSetMealActivity extends BaseActivity {
 
 
     /**
-     * @param appUserId                 APP用户ID
-     * @param rechargeSetMealSettingsId 套餐ID
-     * @param rechargeTime              支付时间(格式为：yyyy-MM-dd HH:mm:ss)
-     * @param rechargetAmount           支付金额
-     * @param paymentChannels           支付渠道(1 微信 2 支付宝)
-     * @param rechargeStatus            支付状态(1 成功 2 失败 3 已取消)
-     * @param token                     用户Token
-     *                                  添加购买套餐记录
+     * @param orderNum 订单号
+     * @param payState 支付状态(0 待支付1 成功 2 失败 3 已取消)
+     * @param token    用户Token
+     *                 添加购买套餐记录
      */
-    private void addRechargeRecord(String appUserId, String rechargeSetMealSettingsId, String rechargeTime,
-                                   String rechargetAmount, String paymentChannels, String rechargeStatus, String token) {
-        btnBuy.setProgress(0);
-        new Handler().postDelayed(() -> btnBuy.setProgress(50), 3000);
-        OkHttpUtils.post().url(SERVER_URL + addRechargeRecord_URL).
-                addParam("appUserId", appUserId).
-                addParam("rechargeSetMealSettingsId", rechargeSetMealSettingsId).
-                addParam("rechargeTime", rechargeTime).
-                addParam("rechargetAmount", rechargetAmount).
-                addParam("paymentChannels", paymentChannels).
-                addParam("rechargeStatus", rechargeStatus).
+    private void updateRechargeRecord(String orderNum, String payState, String token) {
+        OkHttpUtils.post().url(SERVER_URL + updateRechargeRecord_URL).
+                addParam("orderNum", orderNum).
+                addParam("payState", payState).
                 addParam("token", token).
                 build().execute(new StringCallback() {
             @Override
@@ -310,15 +307,13 @@ public class RechargeSetMealActivity extends BaseActivity {
             public void onResponse(String response, int id) {
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
-                    btnBuy.setProgress(100);
-                    new CustomeDialog(context, "购买套餐成功！", confirm -> {
+                    new CustomeDialog(context, entity.getMessage(), confirm -> {
                         if (confirm) {
                             setResult(102, new Intent());
                             finish();
                         }
                     }).setPositiveButton("确定").setTitle("支付").show();
                 } else {
-                    btnBuy.setProgress(-1);
                     showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
                 }
             }

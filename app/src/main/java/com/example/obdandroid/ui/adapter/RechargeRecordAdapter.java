@@ -62,15 +62,15 @@ public class RechargeRecordAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 holder.tvRechargeSetMeaName.setText(list.get(position).getRechargeSetMeaName());
             }
             holder.tvRechargeStatusName.setText(list.get(position).getRechargeStatusName());
-            if (list.get(position).getRechargeStatusName().equals("成功")) {
-                holder.tvRechargeStatusName.setTextColor(context.getResources().getColor(R.color.gray_light_d));
-            } else {
-                holder.tvRechargeStatusName.setTextColor(context.getResources().getColor(R.color.red));
+            if (!TextUtils.isEmpty(list.get(position).getRechargeStatusName())) {
+                if (list.get(position).getRechargeStatusName().equals("成功")) {
+                    holder.tvRechargeStatusName.setTextColor(context.getResources().getColor(R.color.gray_light_d));
+                } else {
+                    holder.tvRechargeStatusName.setTextColor(context.getResources().getColor(R.color.red));
+                }
             }
-
             holder.tvPaymentChannelsName.setText("支付渠道: " + list.get(position).getPaymentChannelsName());
-            holder.tvRechargetAmount.setText("￥"+list.get(position).getRechargetAmount());
-
+            holder.tvRechargetAmount.setText("￥" + list.get(position).getRechargetAmount());
         }
     }
 

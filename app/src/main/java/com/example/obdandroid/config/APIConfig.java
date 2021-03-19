@@ -9,8 +9,8 @@ public class APIConfig {
     /**
      * APP服务器地址
      */
-    //public static final String SERVER_URL = "http://192.168.0.188:1021";//本地测试
-    public static final String SERVER_URL = "http://8.136.125.33:1021";//生产
+    public static final String SERVER_URL = "http://192.168.0.188:1021";//本地测试
+   // public static final String SERVER_URL = "http://8.136.125.33:1021";//生产
     /**
      * 注册接口
      */
@@ -98,7 +98,7 @@ public class APIConfig {
     /**
      * 添加购买套餐记录
      */
-    public static final String addRechargeRecord_URL = "/api/addRechargeRecord";
+    public static final String updateRechargeRecord_URL = "/api/updateRechargeRecord";
     /**
      * 获取用户购买套餐记录列表
      */

@@ -9,11 +9,12 @@ import java.util.List;
  */
 public class RechargeRecordEntity {
 
+
     /**
      * success : true
      * code : SUCCESS
      * message : 操作成功
-     * data : {"total":1,"list":[{"rechargeSetMeaName":"1次","rechargeTime":"2021-01-21T09:48:34.000+0000","rechargeStatusName":"成功","rechargetAmount":7,"paymentChannelsName":"微信"}],"pageNum":1,"pageSize":1,"size":1,"startRow":0,"endRow":0,"pages":1,"prePage":0,"nextPage":0,"isFirstPage":true,"isLastPage":true,"hasPreviousPage":false,"hasNextPage":false,"navigatePages":8,"navigatepageNums":[1],"navigateFirstPage":1,"navigateLastPage":1}
+     * data : {"total":14,"list":[{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:34:00.000+0000","rechargeStatusName":"已取消","rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:33:56.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:33:28.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:32:17.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:31:49.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:30:13.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:29:07.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:27:14.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:23:43.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:18:06.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"}],"pageNum":1,"pageSize":10,"size":10,"startRow":1,"endRow":10,"pages":2,"prePage":0,"nextPage":2,"isFirstPage":true,"isLastPage":false,"hasPreviousPage":false,"hasNextPage":true,"navigatePages":8,"navigatepageNums":[1,2],"navigateFirstPage":1,"navigateLastPage":2}
      */
 
     private boolean success;
@@ -55,27 +56,28 @@ public class RechargeRecordEntity {
 
     public static class DataEntity {
         /**
-         * total : 1
-         * list : [{"rechargeSetMeaName":"1次","rechargeTime":"2021-01-21T09:48:34.000+0000","rechargeStatusName":"成功","rechargetAmount":7,"paymentChannelsName":"微信"}]
+         * total : 14
+         * list : [{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:34:00.000+0000","rechargeStatusName":"已取消","rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:33:56.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:33:28.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:32:17.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:31:49.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:30:13.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:29:07.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:27:14.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:23:43.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"},{"rechargeSetMeaName":"10次19.9","rechargeTime":"2021-03-19T09:18:06.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":"微信"}]
          * pageNum : 1
-         * pageSize : 1
-         * size : 1
-         * startRow : 0
-         * endRow : 0
-         * pages : 1
+         * pageSize : 10
+         * size : 10
+         * startRow : 1
+         * endRow : 10
+         * pages : 2
          * prePage : 0
-         * nextPage : 0
+         * nextPage : 2
          * isFirstPage : true
-         * isLastPage : true
+         * isLastPage : false
          * hasPreviousPage : false
-         * hasNextPage : false
+         * hasNextPage : true
          * navigatePages : 8
-         * navigatepageNums : [1]
+         * navigatepageNums : [1,2]
          * navigateFirstPage : 1
-         * navigateLastPage : 1
+         * navigateLastPage : 2
          */
 
         private int total;
+        private List<ListEntity> list;
         private int pageNum;
         private int pageSize;
         private int size;
@@ -89,10 +91,9 @@ public class RechargeRecordEntity {
         private boolean hasPreviousPage;
         private boolean hasNextPage;
         private int navigatePages;
+        private List<Integer> navigatepageNums;
         private int navigateFirstPage;
         private int navigateLastPage;
-        private List<ListEntity> list;
-        private List<Integer> navigatepageNums;
 
         public int getTotal() {
             return total;
@@ -100,6 +101,14 @@ public class RechargeRecordEntity {
 
         public void setTotal(int total) {
             this.total = total;
+        }
+
+        public List<ListEntity> getList() {
+            return list;
+        }
+
+        public void setList(List<ListEntity> list) {
+            this.list = list;
         }
 
         public int getPageNum() {
@@ -206,6 +215,14 @@ public class RechargeRecordEntity {
             this.navigatePages = navigatePages;
         }
 
+        public List<Integer> getNavigatepageNums() {
+            return navigatepageNums;
+        }
+
+        public void setNavigatepageNums(List<Integer> navigatepageNums) {
+            this.navigatepageNums = navigatepageNums;
+        }
+
         public int getNavigateFirstPage() {
             return navigateFirstPage;
         }
@@ -222,35 +239,19 @@ public class RechargeRecordEntity {
             this.navigateLastPage = navigateLastPage;
         }
 
-        public List<ListEntity> getList() {
-            return list;
-        }
-
-        public void setList(List<ListEntity> list) {
-            this.list = list;
-        }
-
-        public List<Integer> getNavigatepageNums() {
-            return navigatepageNums;
-        }
-
-        public void setNavigatepageNums(List<Integer> navigatepageNums) {
-            this.navigatepageNums = navigatepageNums;
-        }
-
         public static class ListEntity {
             /**
-             * rechargeSetMeaName : 1次
-             * rechargeTime : 2021-01-21T09:48:34.000+0000
-             * rechargeStatusName : 成功
-             * rechargetAmount : 7
+             * rechargeSetMeaName : 10次19.9
+             * rechargeTime : 2021-03-19T09:34:00.000+0000
+             * rechargeStatusName : 已取消
+             * rechargetAmount : 0.01
              * paymentChannelsName : 微信
              */
 
             private String rechargeSetMeaName;
             private String rechargeTime;
             private String rechargeStatusName;
-            private int rechargetAmount;
+            private double rechargetAmount;
             private String paymentChannelsName;
 
             public String getRechargeSetMeaName() {
@@ -277,11 +278,11 @@ public class RechargeRecordEntity {
                 this.rechargeStatusName = rechargeStatusName;
             }
 
-            public int getRechargetAmount() {
+            public double getRechargetAmount() {
                 return rechargetAmount;
             }
 
-            public void setRechargetAmount(int rechargetAmount) {
+            public void setRechargetAmount(double rechargetAmount) {
                 this.rechargetAmount = rechargetAmount;
             }
 

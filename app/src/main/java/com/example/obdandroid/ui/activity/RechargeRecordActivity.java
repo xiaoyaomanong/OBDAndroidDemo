@@ -71,19 +71,19 @@ public class RechargeRecordActivity extends BaseActivity {
         //设置上拉刷新文字颜色
         recycleRechargeRecord.setFooterViewTextColor(R.color.color_E0AA79);
         adapter = new RechargeRecordAdapter(context);
-        getRechargeRecordPageList(getToken(),String.valueOf(pageNum), String.valueOf(pageSize), getUserId(), true);
+        getRechargeRecordPageList(getToken(), String.valueOf(pageNum), String.valueOf(pageSize), getUserId(), true);
         recycleRechargeRecord.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
             @Override
             public void onRefresh() {
                 pageNum = 1;
-                getRechargeRecordPageList(getToken(),String.valueOf(pageNum), String.valueOf(pageSize), getUserId(), true);
+                getRechargeRecordPageList(getToken(), String.valueOf(pageNum), String.valueOf(pageSize), getUserId(), true);
             }
 
             @Override
             public void onLoadMore() {
                 if (isLoadMore) {
                     pageNum++;
-                    getRechargeRecordPageList(getToken(),String.valueOf(pageNum), String.valueOf(pageSize), getUserId(), false);
+                    getRechargeRecordPageList(getToken(), String.valueOf(pageNum), String.valueOf(pageSize), getUserId(), false);
                 } else {
                     //设置是否可以上拉刷新
                     recycleRechargeRecord.setPullLoadMoreCompleted();
@@ -115,7 +115,7 @@ public class RechargeRecordActivity extends BaseActivity {
      * @param appUserId APP用户ID
      *                  获取用户购买套餐记录列表
      */
-    private void getRechargeRecordPageList(String token, String pageNum, String pageSize, String appUserId,final boolean isRefresh) {
+    private void getRechargeRecordPageList(String token, String pageNum, String pageSize, String appUserId, final boolean isRefresh) {
         OkHttpUtils.get().url(SERVER_URL + getRechargeRecordPageList_URL).
                 addParam("token", token).
                 addParam("pageNum", pageNum).
@@ -129,6 +129,7 @@ public class RechargeRecordActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
+                LogE("获取用户购买套餐记录列表:" + response);
                 RechargeRecordEntity entity = JSON.parseObject(response, RechargeRecordEntity.class);
                 if (entity.isSuccess()) {
                     isLoadMore = entity.getData().getPages() >= 10;
@@ -138,13 +139,14 @@ public class RechargeRecordActivity extends BaseActivity {
                         // 刷新完成后调用，必须在UI线程中
                         recycleRechargeRecord.setPullLoadMoreCompleted();
                     } else {
-                        new Handler().postDelayed(() -> getActivity().runOnUiThread(() -> {
-                            datas.clear();
-                            datas.addAll(entity.getData().getList());
-                            adapter.addFootItem(datas);
-                            // 加载更多完成后调用，必须在UI线程中
-                            recycleRechargeRecord.setPullLoadMoreCompleted();
-                        }), 1000);
+                        new Handler().postDelayed(() ->
+                                getActivity().runOnUiThread(() -> {
+                                    datas.clear();
+                                    datas.addAll(entity.getData().getList());
+                                    adapter.addFootItem(datas);
+                                    // 加载更多完成后调用，必须在UI线程中
+                                    recycleRechargeRecord.setPullLoadMoreCompleted();
+                                }), 1000);
                     }
                 } else {
                     dialogError(context, entity.getMessage());

@@ -12,8 +12,8 @@ public class FuelPressureCommand extends PressureCommand {
     /**
      * <p>Constructor for FuelPressureCommand.</p>
      */
-    public FuelPressureCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 0A");
+    public FuelPressureCommand(String mode) {
+        super(mode+" 0A");
     }
 
     /**

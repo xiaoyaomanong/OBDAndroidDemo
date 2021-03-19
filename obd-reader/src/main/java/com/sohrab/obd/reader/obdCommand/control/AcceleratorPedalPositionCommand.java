@@ -22,8 +22,8 @@ public class AcceleratorPedalPositionCommand extends ObdCommand {
      * Will read the bank from parameters and construct the command accordingly.
      * Please, see FuelTrim enum for more details.
      */
-    public AcceleratorPedalPositionCommand(final ModeTrim modeTrim,final AbsThrottlePosTrim bank) {
-        super(modeTrim.buildObdCommand()+" "+bank.buildObdCommand());
+    public AcceleratorPedalPositionCommand(String mode,final AbsThrottlePosTrim bank) {
+        super(mode+" "+bank.buildObdCommand());
         this.bank = bank;
     }
 

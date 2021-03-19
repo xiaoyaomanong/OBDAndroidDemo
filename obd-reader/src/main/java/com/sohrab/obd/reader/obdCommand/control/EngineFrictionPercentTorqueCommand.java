@@ -17,8 +17,8 @@ public class EngineFrictionPercentTorqueCommand extends ObdCommand {
     /**
      * <p>Constructor for AirFuelRatioCommand.</p>
      */
-    public EngineFrictionPercentTorqueCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand() + " 8E");
+    public EngineFrictionPercentTorqueCommand(String mode) {
+        super(mode + " 8E");
     }
 
     /**

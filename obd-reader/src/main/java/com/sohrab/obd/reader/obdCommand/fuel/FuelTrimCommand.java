@@ -17,8 +17,8 @@ public class FuelTrimCommand extends PercentageObdCommand {
      * Will read the bank from parameters and construct the command accordingly.
      * Please, see FuelTrim enum for more details.
      */
-    public FuelTrimCommand(final ModeTrim modeTrim, final FuelTrim bank) {
-        super(modeTrim.buildObdCommand() + " " + bank.buildObdCommand());
+    public FuelTrimCommand(String mode, final FuelTrim bank) {
+        super(mode+ " " + bank.buildObdCommand());
         this.bank = bank;
     }
 

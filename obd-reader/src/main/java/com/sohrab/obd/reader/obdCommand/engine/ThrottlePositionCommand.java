@@ -13,8 +13,8 @@ public class ThrottlePositionCommand extends PercentageObdCommand {
     /**
      * Default ctor.
      */
-    public ThrottlePositionCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 11");
+    public ThrottlePositionCommand(String mode) {
+        super(mode+" 11");
     }
 
     /**

@@ -14,8 +14,8 @@ public class AirIntakeTemperatureCommand extends TemperatureCommand {
     /**
      * <p>Constructor for AirIntakeTemperatureCommand.</p>
      */
-    public AirIntakeTemperatureCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 0F");
+    public AirIntakeTemperatureCommand(String mode) {
+        super(mode+" 0F");
     }
 
     /**

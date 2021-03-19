@@ -17,8 +17,8 @@ public class TimeSinceTroubleCodesClearedCommand extends ObdCommand {
     /**
      * <p>Constructor for AirFuelRatioCommand.</p>
      */
-    public TimeSinceTroubleCodesClearedCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand()+" 4E");
+    public TimeSinceTroubleCodesClearedCommand(String mode) {
+        super(mode+" 4E");
     }
 
     /**

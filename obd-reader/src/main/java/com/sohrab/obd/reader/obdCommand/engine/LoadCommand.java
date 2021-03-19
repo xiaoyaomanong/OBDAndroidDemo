@@ -13,8 +13,8 @@ public class LoadCommand extends PercentageObdCommand {
     /**
      * <p>Constructor for LoadCommand.</p>
      */
-    public LoadCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 04");
+    public LoadCommand(String mode) {
+        super(mode+" 04");
     }
 
     /**

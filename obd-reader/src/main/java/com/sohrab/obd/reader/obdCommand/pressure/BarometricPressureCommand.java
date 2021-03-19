@@ -12,8 +12,8 @@ public class BarometricPressureCommand extends PressureCommand {
     /**
      * <p>Constructor for BarometricPressureCommand.</p>
      */
-    public BarometricPressureCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 33");
+    public BarometricPressureCommand(String mode) {
+        super(mode+" 33");
     }
 
     /**

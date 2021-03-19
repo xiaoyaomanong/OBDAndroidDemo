@@ -17,8 +17,8 @@ public class ActualEnginePercentTorqueCommand extends ObdCommand {
     /**
      * <p>Constructor for AirFuelRatioCommand.</p>
      */
-    public ActualEnginePercentTorqueCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand() + " 62");
+    public ActualEnginePercentTorqueCommand(String mode) {
+        super(mode + " 62");
     }
 
     /**

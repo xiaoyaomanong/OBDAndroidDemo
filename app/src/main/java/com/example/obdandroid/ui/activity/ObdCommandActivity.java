@@ -12,9 +12,6 @@ import com.example.obdandroid.ui.adapter.ObdCommandAdapter;
 import com.example.obdandroid.utils.SPUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
-import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
-
-import static com.example.obdandroid.config.Constant.PROTOCOLS_LIST_KEY;
 
 /**
  * 作者：Jealous
@@ -45,7 +42,7 @@ public class ObdCommandActivity extends BaseActivity {
         manager.setOrientation(OrientationHelper.VERTICAL);
         recycleObdCommand.setLayoutManager(manager);
         ObdCommandAdapter adapter = new ObdCommandAdapter(context);
-        adapter.setList(ObdConfiguration.getObdCommands());
+        //adapter.setList(ObdConfiguration.getObdCommands());
         recycleObdCommand.setAdapter(adapter);
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override

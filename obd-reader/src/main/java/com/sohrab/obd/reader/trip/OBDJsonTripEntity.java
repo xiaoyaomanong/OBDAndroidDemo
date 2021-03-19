@@ -28,6 +28,7 @@ public class OBDJsonTripEntity implements Serializable {
     private String AirFuelRatio;
     private String EngineOilTemp;
     private String RmCommandedEGR;
+    private String EgrError;
     private String AbsLoad;
     private String DistanceTraveledMilOn;
     private String VehicleIdentificationNumber;
@@ -46,6 +47,7 @@ public class OBDJsonTripEntity implements Serializable {
     private String PendingTroubleCode;
     private String FaultCodes;
     private String RelThottlePos;
+    private String ThottlePos;
     private String MassAirFlow;
     private String EngineRuntime;
     private String EngineLoad;
@@ -60,6 +62,337 @@ public class OBDJsonTripEntity implements Serializable {
     private String ShortTermBank2;
     private String LongTermBank1;
     private String LongTermBank2;
+    private String EvaporaivePurge;
+    private String WarmUpSinceCodesCleared;
+    private String SystemVaporPressure;
+    private String WideBandAirFuelRatioOne;
+    private String WideBandAirFuelRatioTwo;
+    private String WideBandAirFuelRatioThree;
+    private String WideBandAirFuelRatioFour;
+    private String WideBandAirFuelRatioFive;
+    private String WideBandAirFuelRatioSix;
+    private String WideBandAirFuelRatioSeven;
+    private String WideBandAirFuelRatioEight;
+    private String CatalystTemperatureBank1Sensor1;
+    private String CatalystTemperatureBank2Sensor1;
+    private String CatalystTemperatureBank1Sensor2;
+    private String CatalystTemperatureBank2Sensor2;
+    private String AbsThrottlePosb ;
+    private String AbsThrottlePosc ;
+    private String AccPedalPosd ;
+    private String AccPedalPose ;
+    private String AccPedalPosf ;
+    private String ThrottleActuator ;
+    private String TimeRunWithMILOn;
+    private String TimeSinceTcClear;
+    private String MaxAirFlowMassRate;
+    private String EthanolFuelRate;
+    private String AbsEvapSystemVaporPressure;
+    private String EvapSystemVaporPressure;
+    private  String ShortA_BANK1_B_BANK3;
+    private  String Long_A_BANK1_B_BANK3;
+    private  String Short_A_BANK2_B_BANK4;
+    private  String Long_A_BANK2_B_BANK4;
+    private  String FuelRailAbsPressure;
+    private  String RelAccPedalPos;
+    private  String HyBatteryPackLife;
+    private  String ActualEngineTorque;
+
+    public String getActualEngineTorque() {
+        return ActualEngineTorque;
+    }
+
+    public void setActualEngineTorque(String actualEngineTorque) {
+        ActualEngineTorque = actualEngineTorque;
+    }
+
+    public String getHyBatteryPackLife() {
+        return HyBatteryPackLife;
+    }
+
+    public void setHyBatteryPackLife(String hyBatteryPackLife) {
+        HyBatteryPackLife = hyBatteryPackLife;
+    }
+
+    public String getRelAccPedalPos() {
+        return RelAccPedalPos;
+    }
+
+    public void setRelAccPedalPos(String relAccPedalPos) {
+        RelAccPedalPos = relAccPedalPos;
+    }
+
+    public String getFuelRailAbsPressure() {
+        return FuelRailAbsPressure;
+    }
+
+    public void setFuelRailAbsPressure(String fuelRailAbsPressure) {
+        FuelRailAbsPressure = fuelRailAbsPressure;
+    }
+
+    public String getShortA_BANK1_B_BANK3() {
+        return ShortA_BANK1_B_BANK3;
+    }
+
+    public void setShortA_BANK1_B_BANK3(String shortA_BANK1_B_BANK3) {
+        ShortA_BANK1_B_BANK3 = shortA_BANK1_B_BANK3;
+    }
+
+    public String getLong_A_BANK1_B_BANK3() {
+        return Long_A_BANK1_B_BANK3;
+    }
+
+    public void setLong_A_BANK1_B_BANK3(String long_A_BANK1_B_BANK3) {
+        Long_A_BANK1_B_BANK3 = long_A_BANK1_B_BANK3;
+    }
+
+    public String getShort_A_BANK2_B_BANK4() {
+        return Short_A_BANK2_B_BANK4;
+    }
+
+    public void setShort_A_BANK2_B_BANK4(String short_A_BANK2_B_BANK4) {
+        Short_A_BANK2_B_BANK4 = short_A_BANK2_B_BANK4;
+    }
+
+    public String getLong_A_BANK2_B_BANK4() {
+        return Long_A_BANK2_B_BANK4;
+    }
+
+    public void setLong_A_BANK2_B_BANK4(String long_A_BANK2_B_BANK4) {
+        Long_A_BANK2_B_BANK4 = long_A_BANK2_B_BANK4;
+    }
+
+    public String getEvapSystemVaporPressure() {
+        return EvapSystemVaporPressure;
+    }
+
+    public void setEvapSystemVaporPressure(String evapSystemVaporPressure) {
+        EvapSystemVaporPressure = evapSystemVaporPressure;
+    }
+
+    public String getAbsEvapSystemVaporPressure() {
+        return AbsEvapSystemVaporPressure;
+    }
+
+    public void setAbsEvapSystemVaporPressure(String absEvapSystemVaporPressure) {
+        AbsEvapSystemVaporPressure = absEvapSystemVaporPressure;
+    }
+
+    public String getEthanolFuelRate() {
+        return EthanolFuelRate;
+    }
+
+    public void setEthanolFuelRate(String ethanolFuelRate) {
+        EthanolFuelRate = ethanolFuelRate;
+    }
+
+    public String getMaxAirFlowMassRate() {
+        return MaxAirFlowMassRate;
+    }
+
+    public void setMaxAirFlowMassRate(String maxAirFlowMassRate) {
+        MaxAirFlowMassRate = maxAirFlowMassRate;
+    }
+
+    public String getTimeSinceTcClear() {
+        return TimeSinceTcClear;
+    }
+
+    public void setTimeSinceTcClear(String mTimeSinceTcClear) {
+        this.TimeSinceTcClear = mTimeSinceTcClear;
+    }
+
+    public String getTimeRunWithMILOn() {
+        return TimeRunWithMILOn;
+    }
+
+    public void setTimeRunWithMILOn(String TimeRunWithMILOn) {
+        this.TimeRunWithMILOn = TimeRunWithMILOn;
+    }
+
+    public String getAbsThrottlePosb() {
+        return AbsThrottlePosb;
+    }
+
+    public void setAbsThrottlePosb(String absThrottlePosb) {
+        AbsThrottlePosb = absThrottlePosb;
+    }
+
+    public String getAbsThrottlePosc() {
+        return AbsThrottlePosc;
+    }
+
+    public void setAbsThrottlePosc(String absThrottlePosc) {
+        AbsThrottlePosc = absThrottlePosc;
+    }
+
+    public String getAccPedalPosd() {
+        return AccPedalPosd;
+    }
+
+    public void setAccPedalPosd(String accPedalPosd) {
+        AccPedalPosd = accPedalPosd;
+    }
+
+    public String getAccPedalPose() {
+        return AccPedalPose;
+    }
+
+    public void setAccPedalPose(String accPedalPose) {
+        AccPedalPose = accPedalPose;
+    }
+
+    public String getAccPedalPosf() {
+        return AccPedalPosf;
+    }
+
+    public void setAccPedalPosf(String accPedalPosf) {
+        AccPedalPosf = accPedalPosf;
+    }
+
+    public String getThrottleActuator() {
+        return ThrottleActuator;
+    }
+
+    public void setThrottleActuator(String throttleActuator) {
+        ThrottleActuator = throttleActuator;
+    }
+
+    public String getThottlePos() {
+        return ThottlePos;
+    }
+
+    public void setThottlePos(String thottlePos) {
+        ThottlePos = thottlePos;
+    }
+
+    public String getCatalystTemperatureBank1Sensor1() {
+        return CatalystTemperatureBank1Sensor1;
+    }
+
+    public void setCatalystTemperatureBank1Sensor1(String catalystTemperatureBank1Sensor1) {
+        CatalystTemperatureBank1Sensor1 = catalystTemperatureBank1Sensor1;
+    }
+
+    public String getCatalystTemperatureBank2Sensor1() {
+        return CatalystTemperatureBank2Sensor1;
+    }
+
+    public void setCatalystTemperatureBank2Sensor1(String catalystTemperatureBank2Sensor1) {
+        CatalystTemperatureBank2Sensor1 = catalystTemperatureBank2Sensor1;
+    }
+
+    public String getCatalystTemperatureBank1Sensor2() {
+        return CatalystTemperatureBank1Sensor2;
+    }
+
+    public void setCatalystTemperatureBank1Sensor2(String catalystTemperatureBank1Sensor2) {
+        CatalystTemperatureBank1Sensor2 = catalystTemperatureBank1Sensor2;
+    }
+
+    public String getCatalystTemperatureBank2Sensor2() {
+        return CatalystTemperatureBank2Sensor2;
+    }
+
+    public void setCatalystTemperatureBank2Sensor2(String catalystTemperatureBank2Sensor2) {
+        CatalystTemperatureBank2Sensor2 = catalystTemperatureBank2Sensor2;
+    }
+
+    public String getWideBandAirFuelRatioOne() {
+        return WideBandAirFuelRatioOne;
+    }
+
+    public void setWideBandAirFuelRatioOne(String wideBandAirFuelRatioOne) {
+        WideBandAirFuelRatioOne = wideBandAirFuelRatioOne;
+    }
+
+    public String getWideBandAirFuelRatioTwo() {
+        return WideBandAirFuelRatioTwo;
+    }
+
+    public void setWideBandAirFuelRatioTwo(String wideBandAirFuelRatioTwo) {
+        WideBandAirFuelRatioTwo = wideBandAirFuelRatioTwo;
+    }
+
+    public String getWideBandAirFuelRatioThree() {
+        return WideBandAirFuelRatioThree;
+    }
+
+    public void setWideBandAirFuelRatioThree(String wideBandAirFuelRatioThree) {
+        WideBandAirFuelRatioThree = wideBandAirFuelRatioThree;
+    }
+
+    public String getWideBandAirFuelRatioFour() {
+        return WideBandAirFuelRatioFour;
+    }
+
+    public void setWideBandAirFuelRatioFour(String wideBandAirFuelRatioFour) {
+        WideBandAirFuelRatioFour = wideBandAirFuelRatioFour;
+    }
+
+    public String getWideBandAirFuelRatioFive() {
+        return WideBandAirFuelRatioFive;
+    }
+
+    public void setWideBandAirFuelRatioFive(String wideBandAirFuelRatioFive) {
+        WideBandAirFuelRatioFive = wideBandAirFuelRatioFive;
+    }
+
+    public String getWideBandAirFuelRatioSix() {
+        return WideBandAirFuelRatioSix;
+    }
+
+    public void setWideBandAirFuelRatioSix(String wideBandAirFuelRatioSix) {
+        WideBandAirFuelRatioSix = wideBandAirFuelRatioSix;
+    }
+
+    public String getWideBandAirFuelRatioSeven() {
+        return WideBandAirFuelRatioSeven;
+    }
+
+    public void setWideBandAirFuelRatioSeven(String wideBandAirFuelRatioSeven) {
+        WideBandAirFuelRatioSeven = wideBandAirFuelRatioSeven;
+    }
+
+    public String getWideBandAirFuelRatioEight() {
+        return WideBandAirFuelRatioEight;
+    }
+
+    public void setWideBandAirFuelRatioEight(String wideBandAirFuelRatioEight) {
+        WideBandAirFuelRatioEight = wideBandAirFuelRatioEight;
+    }
+
+    public String getSystemVaporPressure() {
+        return SystemVaporPressure;
+    }
+
+    public void setSystemVaporPressure(String SystemVaporPressure) {
+        this.SystemVaporPressure = SystemVaporPressure;
+    }
+
+    public String getWarmUpSinceCodesCleared() {
+        return WarmUpSinceCodesCleared;
+    }
+
+    public void setWarmUpSinceCodesCleared(String WarmUpSinceCodesCleared) {
+        this.WarmUpSinceCodesCleared = WarmUpSinceCodesCleared;
+    }
+
+    public String getEvaporaivePurge() {
+        return EvaporaivePurge;
+    }
+
+    public void setEvaporaivePurge(String EvaporaivePurge) {
+        this.EvaporaivePurge = EvaporaivePurge;
+    }
+
+    public String getEgrError() {
+        return EgrError;
+    }
+
+    public void setEgrError(String egrError) {
+        EgrError = egrError;
+    }
 
     public String getSpeed() {
         return Speed;

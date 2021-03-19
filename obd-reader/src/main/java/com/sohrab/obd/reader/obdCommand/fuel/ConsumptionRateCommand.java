@@ -15,8 +15,8 @@ public class ConsumptionRateCommand extends ObdCommand {
     /**
      * <p>Constructor for ConsumptionRateCommand.</p>
      */
-    public ConsumptionRateCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand()+" 5E");
+    public ConsumptionRateCommand(String mode) {
+        super(mode+" 5E");
     }
 
     /**

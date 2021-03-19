@@ -12,8 +12,8 @@ public class AmbientAirTemperatureCommand extends TemperatureCommand {
     /**
      * <p>Constructor for AmbientAirTemperatureCommand.</p>
      */
-    public AmbientAirTemperatureCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand()+" 46");
+    public AmbientAirTemperatureCommand(String mode) {
+        super(mode+" 46");
     }
 
     /**

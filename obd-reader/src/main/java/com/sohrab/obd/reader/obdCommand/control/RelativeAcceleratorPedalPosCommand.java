@@ -17,8 +17,8 @@ public class RelativeAcceleratorPedalPosCommand extends ObdCommand {
     /**
      * <p>Constructor for AirFuelRatioCommand.</p>
      */
-    public RelativeAcceleratorPedalPosCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand() + " 5A");
+    public RelativeAcceleratorPedalPosCommand(String mode) {
+        super(mode+ " 5A");
     }
 
     /**

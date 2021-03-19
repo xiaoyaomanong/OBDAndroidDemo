@@ -22,8 +22,8 @@ public class RuntimeCommand extends ObdCommand {
     /**
      * Default ctor.
      */
-    public RuntimeCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 1F");
+    public RuntimeCommand(String mode) {
+        super(mode+" 1F");
     }
 
     /**

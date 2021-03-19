@@ -17,8 +17,8 @@ public class EthanolFuelRateCommand extends ObdCommand {
     /**
      * <p>Constructor for AirFuelRatioCommand.</p>
      */
-    public EthanolFuelRateCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand() + " 52");
+    public EthanolFuelRateCommand(String mode) {
+        super(mode + " 52");
     }
 
     /**

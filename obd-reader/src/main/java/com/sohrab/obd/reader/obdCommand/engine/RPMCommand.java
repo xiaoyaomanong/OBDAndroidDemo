@@ -19,8 +19,8 @@ public class RPMCommand extends ObdCommand {
     /**
      * Default ctor.
      */
-    public RPMCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 0C");
+    public RPMCommand(String mode) {
+        super(mode+" 0C");
     }
 
     /**

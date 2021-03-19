@@ -13,8 +13,8 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 public class FuelSystemStatusCommand extends ObdCommand {
     private int fuelsystemstatus = 0;
 
-    public FuelSystemStatusCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 03");
+    public FuelSystemStatusCommand(String mode) {
+        super(mode+" 03");
     }
 
     /**

@@ -19,8 +19,8 @@ public class WidebandAirFuelRatioFourCommand extends ObdCommand {
     /**
      * <p>Constructor for WidebandAirFuelRatioCommand.</p>
      */
-    public WidebandAirFuelRatioFourCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 37");
+    public WidebandAirFuelRatioFourCommand(String mode) {
+        super(mode+" 37");
     }
 
     /**
@@ -70,7 +70,7 @@ public class WidebandAirFuelRatioFourCommand extends ObdCommand {
     /** {@inheritDoc} */
     @Override
     public String getName() {
-        return AvailableCommandNames.WIDEBAND_AIR_FUEL_RATIO_4.getValue();
+        return AvailableCommandNames.WIDE_BAND_AIR_FUEL_RATIO_4.getValue();
     }
 
 }

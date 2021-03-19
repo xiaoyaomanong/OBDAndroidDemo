@@ -16,8 +16,8 @@ public class ModuleVoltageCommand extends ObdCommand {
     /**
      * Default ctor.
      */
-    public ModuleVoltageCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand()+" 42");
+    public ModuleVoltageCommand(String mode) {
+        super(mode+" 42");
     }
 
     /**

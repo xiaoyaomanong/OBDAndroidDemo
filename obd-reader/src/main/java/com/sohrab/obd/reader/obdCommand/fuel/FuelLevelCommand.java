@@ -12,8 +12,8 @@ public class FuelLevelCommand extends PercentageObdCommand {
     /**
      * <p>Constructor for FuelLevelCommand.</p>
      */
-    public FuelLevelCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 2F");
+    public FuelLevelCommand(String mode) {
+        super(mode+" 2F");
     }
 
     /** {@inheritDoc} */

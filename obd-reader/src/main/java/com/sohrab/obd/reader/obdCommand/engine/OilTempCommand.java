@@ -13,8 +13,8 @@ public class OilTempCommand extends TemperatureCommand {
     /**
      * Default ctor.
      */
-    public OilTempCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand()+" 5C");
+    public OilTempCommand(String mode) {
+        super(mode+" 5C");
     }
 
     /**

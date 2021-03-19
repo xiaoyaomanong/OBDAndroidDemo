@@ -14,8 +14,8 @@ public class FuelRailPressureManifoldVacuumCommand extends PressureCommand {
     /**
      * <p>Constructor for FuelRailPressureCommand.</p>
      */
-    public FuelRailPressureManifoldVacuumCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 22");
+    public FuelRailPressureManifoldVacuumCommand(String mode) {
+        super(mode+" 22");
     }
 
     /**

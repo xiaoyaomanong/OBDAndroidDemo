@@ -12,8 +12,8 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 public class WarmUpSinceCodesClearedCommand extends ObdCommand {
     private int Since = 0;
 
-    public WarmUpSinceCodesClearedCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 30");
+    public WarmUpSinceCodesClearedCommand(String mode) {
+        super(mode+" 30");
     }
 
     /**
@@ -50,6 +50,6 @@ public class WarmUpSinceCodesClearedCommand extends ObdCommand {
 
     @Override
     public String getName() {
-        return AvailableCommandNames.EGR.getValue();
+        return AvailableCommandNames.WarmUpSinceCodesClearedCommand.getValue();
     }
 }

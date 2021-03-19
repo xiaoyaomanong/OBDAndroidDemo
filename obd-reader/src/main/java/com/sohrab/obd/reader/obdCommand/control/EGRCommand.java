@@ -12,8 +12,8 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 public class EGRCommand extends ObdCommand {
     private int CommandedEGR = 0;
 
-    public EGRCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 2C");
+    public EGRCommand(String mode) {
+        super(mode+" 2C");
     }
 
     /**

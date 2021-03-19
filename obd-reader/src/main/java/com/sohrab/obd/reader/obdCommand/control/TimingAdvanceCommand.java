@@ -13,8 +13,8 @@ public class TimingAdvanceCommand extends PercentageObdCommand {
     /**
      * <p>Constructor for TimingAdvanceCommand.</p>
      */
-    public TimingAdvanceCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 0E");
+    public TimingAdvanceCommand(String mode) {
+        super(mode+" 0E");
     }
 
     /**

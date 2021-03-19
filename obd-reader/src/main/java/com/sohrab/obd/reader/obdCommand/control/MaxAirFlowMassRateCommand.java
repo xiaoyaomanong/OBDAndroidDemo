@@ -17,8 +17,8 @@ public class MaxAirFlowMassRateCommand extends ObdCommand {
     /**
      * <p>Constructor for AirFuelRatioCommand.</p>
      */
-    public MaxAirFlowMassRateCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand()+" 50");
+    public MaxAirFlowMassRateCommand(String mode) {
+        super(mode+" 50");
     }
 
     /**

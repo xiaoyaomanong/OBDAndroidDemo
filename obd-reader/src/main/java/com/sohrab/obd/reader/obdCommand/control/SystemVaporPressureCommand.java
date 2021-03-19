@@ -12,8 +12,8 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 public class SystemVaporPressureCommand extends ObdCommand {
     private int SystemVaporPressure = 0;
 
-    public SystemVaporPressureCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 32");
+    public SystemVaporPressureCommand(String mode) {
+        super(mode+" 32");
     }
 
     /**

@@ -77,7 +77,7 @@ public class PayChannelDialog {
             tvPayMoney.setText("￥" + money);
         }
         layoutAliPay.setOnClickListener(v -> dialogClick.aliPay(exitDialog, "2", true));
-        layoutWeChat.setOnClickListener(v -> dialogClick.aliPay(exitDialog, "1", true));
+        layoutWeChat.setOnClickListener(v -> dialogClick.weChat(exitDialog, "1", true));
         btnCancel.setOnClickListener(v -> dialogClick.Cancel(exitDialog, true));
 
         int bkgResId;

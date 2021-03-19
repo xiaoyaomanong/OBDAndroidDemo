@@ -17,8 +17,8 @@ public class TimeRunMILONCommand extends ObdCommand {
     /**
      * <p>Constructor for AirFuelRatioCommand.</p>
      */
-    public TimeRunMILONCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand()+" 4D");
+    public TimeRunMILONCommand(String mode) {
+        super(mode+" 4D");
     }
 
     /**

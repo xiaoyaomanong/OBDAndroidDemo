@@ -17,8 +17,8 @@ public class DriverDemandEnginePercentTorqueCommand extends ObdCommand {
     /**
      * <p>Constructor for AirFuelRatioCommand.</p>
      */
-    public DriverDemandEnginePercentTorqueCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand() + " 61");
+    public DriverDemandEnginePercentTorqueCommand(String mode) {
+        super(mode + " 61");
     }
 
     /**

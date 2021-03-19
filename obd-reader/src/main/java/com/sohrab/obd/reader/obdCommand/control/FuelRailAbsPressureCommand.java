@@ -17,8 +17,8 @@ public class FuelRailAbsPressureCommand extends ObdCommand {
     /**
      * <p>Constructor for AirFuelRatioCommand.</p>
      */
-    public FuelRailAbsPressureCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand() + " 59");
+    public FuelRailAbsPressureCommand(String mode) {
+        super(mode + " 59");
     }
 
     /**

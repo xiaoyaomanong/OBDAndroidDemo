@@ -17,8 +17,8 @@ public class HybridBatteryPackRemainingLifeCommand extends ObdCommand {
     /**
      * <p>Constructor for AirFuelRatioCommand.</p>
      */
-    public HybridBatteryPackRemainingLifeCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand() + " 5B");
+    public HybridBatteryPackRemainingLifeCommand(String mode) {
+        super(mode + " 5B");
     }
 
     /**

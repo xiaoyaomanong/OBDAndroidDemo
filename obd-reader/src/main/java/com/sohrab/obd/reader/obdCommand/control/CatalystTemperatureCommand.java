@@ -23,8 +23,8 @@ public class CatalystTemperatureCommand extends ObdCommand {
      * Will read the bank from parameters and construct the command accordingly.
      * Please, see FuelTrim enum for more details.
      */
-    public CatalystTemperatureCommand(final ModeTrim modeTrim,final CatalystTrim bank) {
-        super(modeTrim.buildObdCommand()+" "+bank.buildObdCommand());
+    public CatalystTemperatureCommand(String mode,final CatalystTrim bank) {
+        super(mode+" "+bank.buildObdCommand());
         this.bank = bank;
     }
 

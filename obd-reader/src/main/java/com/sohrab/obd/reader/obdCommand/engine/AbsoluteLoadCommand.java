@@ -13,8 +13,8 @@ public class AbsoluteLoadCommand extends PercentageObdCommand {
     /**
      * Default ctor.
      */
-    public AbsoluteLoadCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand()+" 43");
+    public AbsoluteLoadCommand(String mode) {
+        super(mode+" 43");
     }
 
     /**

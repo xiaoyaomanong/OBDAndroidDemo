@@ -12,8 +12,8 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 public class EGRErrorCommand extends ObdCommand {
     private int EGRError = 0;
 
-    public EGRErrorCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 2D");
+    public EGRErrorCommand(String mode) {
+        super(mode+" 2D");
     }
 
     /**

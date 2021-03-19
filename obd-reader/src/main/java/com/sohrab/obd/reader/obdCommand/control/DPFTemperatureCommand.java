@@ -17,8 +17,8 @@ public class DPFTemperatureCommand extends ObdCommand {
     /**
      * <p>Constructor for AirFuelRatioCommand.</p>
      */
-    public DPFTemperatureCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand() + " 7C");
+    public DPFTemperatureCommand(String mode) {
+        super(mode + " 7C");
     }
 
     /**

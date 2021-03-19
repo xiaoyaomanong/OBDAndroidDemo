@@ -42,6 +42,7 @@ import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
 import com.sohrab.obd.reader.application.ObdPreferences;
+import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
@@ -92,7 +93,6 @@ public class VehicleCheckActivity extends BaseActivity {
     private DialogUtils dialogUtils;
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
-
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
@@ -200,7 +200,7 @@ public class VehicleCheckActivity extends BaseActivity {
     private void executeCommand() {
         tripRecord = CheckRecord.getTriRecode(context);
         tripRecord.getTripMap().clear();
-        ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfiguration.getObdCommands().clone();
+        ArrayList<ObdCommand> commands = (ArrayList<ObdCommand>) ObdConfiguration.getObdCommands(ModeTrim.MODE_01).clone();
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {

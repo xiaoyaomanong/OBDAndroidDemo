@@ -21,8 +21,8 @@ public class DtcNumberCommand extends ObdCommand {
     /**
      * Default ctor.
      */
-    public DtcNumberCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 01");
+    public DtcNumberCommand(String mode) {
+        super(mode+" 01");
     }
 
     /**

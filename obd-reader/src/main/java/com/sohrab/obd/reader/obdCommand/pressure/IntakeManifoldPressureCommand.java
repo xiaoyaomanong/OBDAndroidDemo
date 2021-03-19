@@ -16,8 +16,8 @@ public class IntakeManifoldPressureCommand extends PressureCommand {
     /**
      * Default ctor.
      */
-    public IntakeManifoldPressureCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 0B");
+    public IntakeManifoldPressureCommand(String mode) {
+        super(mode+" 0B");
     }
 
     /**

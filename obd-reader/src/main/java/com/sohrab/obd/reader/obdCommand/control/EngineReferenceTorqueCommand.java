@@ -17,8 +17,8 @@ public class EngineReferenceTorqueCommand extends ObdCommand {
     /**
      * <p>Constructor for AirFuelRatioCommand.</p>
      */
-    public EngineReferenceTorqueCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand() + " 63");
+    public EngineReferenceTorqueCommand(String mode) {
+        super(mode + " 63");
     }
 
     /**

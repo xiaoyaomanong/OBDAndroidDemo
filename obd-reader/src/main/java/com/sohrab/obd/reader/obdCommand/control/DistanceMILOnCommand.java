@@ -19,8 +19,8 @@ public class DistanceMILOnCommand extends ObdCommand
     /**
      * Default ctor.
      */
-    public DistanceMILOnCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 21");
+    public DistanceMILOnCommand(String mode) {
+        super(mode+" 21");
     }
 
     /**
@@ -80,8 +80,6 @@ public class DistanceMILOnCommand extends ObdCommand
     /** {@inheritDoc} */
     @Override
     public String getName() {
-        return AvailableCommandNames.DISTANCE_TRAVELED_MIL_ON
-                .getValue();
+        return AvailableCommandNames.DISTANCE_TRAVELED_MIL_ON.getValue();
     }
-
 }

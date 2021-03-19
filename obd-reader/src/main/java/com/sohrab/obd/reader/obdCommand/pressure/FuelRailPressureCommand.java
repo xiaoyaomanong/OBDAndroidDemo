@@ -12,8 +12,8 @@ public class FuelRailPressureCommand extends PressureCommand {
     /**
      * <p>Constructor for FuelRailPressureCommand.</p>
      */
-    public FuelRailPressureCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 23");
+    public FuelRailPressureCommand(String mode) {
+        super(mode+" 23");
     }
 
     /**

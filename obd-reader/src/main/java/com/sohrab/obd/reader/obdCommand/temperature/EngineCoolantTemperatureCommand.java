@@ -12,8 +12,8 @@ public class EngineCoolantTemperatureCommand extends TemperatureCommand {
     /**
      * <p>Constructor for EngineCoolantTemperatureCommand.</p>
      */
-    public EngineCoolantTemperatureCommand(ModeTrim bank) {
-        super(bank.buildObdCommand()+" 05");
+    public EngineCoolantTemperatureCommand(String mode) {
+        super(mode+" 05");
     }
 
     /**

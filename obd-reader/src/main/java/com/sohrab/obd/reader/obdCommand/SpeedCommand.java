@@ -19,8 +19,8 @@ public class SpeedCommand extends ObdCommand implements SystemOfUnits {
     /**
      * Default ctor.
      */
-    public SpeedCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 0D");
+    public SpeedCommand(String mode) {
+        super(mode+" 0D");
     }
 
     /**

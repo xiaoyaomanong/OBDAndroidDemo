@@ -18,8 +18,8 @@ public class AirFuelRatioCommand extends ObdCommand {
     /**
      * <p>Constructor for AirFuelRatioCommand.</p>
      */
-    public AirFuelRatioCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand()+" 44");
+    public AirFuelRatioCommand(String mode) {
+        super(mode+" 44");
     }
 
     /**

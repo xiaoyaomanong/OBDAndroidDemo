@@ -18,8 +18,8 @@ public class FindFuelTypeCommand extends ObdCommand {
     /**
      * Default ctor.
      */
-    public FindFuelTypeCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand()+" 51");
+    public FindFuelTypeCommand(String mode) {
+        super(mode+" 51");
     }
 
     /**

@@ -17,8 +17,8 @@ public class RelativeThrottlePositionCommand extends ObdCommand {
     /**
      * <p>Constructor for AirFuelRatioCommand.</p>
      */
-    public RelativeThrottlePositionCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand()+" 45");
+    public RelativeThrottlePositionCommand(String mode) {
+        super(mode+" 45");
     }
 
     /**

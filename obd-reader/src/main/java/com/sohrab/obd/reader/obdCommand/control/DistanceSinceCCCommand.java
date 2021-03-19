@@ -17,8 +17,8 @@ public class DistanceSinceCCCommand extends ObdCommand
     /**
      * Default ctor.
      */
-    public DistanceSinceCCCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 31");
+    public DistanceSinceCCCommand(String mode) {
+        super(mode+" 31");
     }
 
     /**
@@ -86,8 +86,7 @@ public class DistanceSinceCCCommand extends ObdCommand
     /** {@inheritDoc} */
     @Override
     public String getName() {
-        return AvailableCommandNames.DISTANCE_TRAVELED_AFTER_CODES_CLEARED
-                .getValue();
+        return AvailableCommandNames.DISTANCE_TRAVELED_AFTER_CODES_CLEARED.getValue();
     }
 
 }

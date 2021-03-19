@@ -12,8 +12,8 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 public class EvaporativePurgeCommand extends ObdCommand {
     private int Purge = 0;
 
-    public EvaporativePurgeCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 2E");
+    public EvaporativePurgeCommand(String mode) {
+        super(mode+" 2E");
     }
 
     /**

@@ -17,8 +17,8 @@ public class EvapSystemVaporPressureCommand extends ObdCommand {
     /**
      * <p>Constructor for AirFuelRatioCommand.</p>
      */
-    public EvapSystemVaporPressureCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand() + " 54");
+    public EvapSystemVaporPressureCommand(String mode) {
+        super(mode + " 54");
     }
 
     /**

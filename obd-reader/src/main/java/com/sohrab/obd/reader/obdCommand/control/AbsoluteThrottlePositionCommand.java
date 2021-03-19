@@ -22,8 +22,8 @@ public class AbsoluteThrottlePositionCommand extends ObdCommand {
      * Will read the bank from parameters and construct the command accordingly.
      * Please, see FuelTrim enum for more details.
      */
-    public AbsoluteThrottlePositionCommand(final ModeTrim modeTrim,final AbsThrottlePosTrim bank) {
-        super(modeTrim.buildObdCommand()+" "+bank.buildObdCommand());
+    public AbsoluteThrottlePositionCommand(String mode,final AbsThrottlePosTrim bank) {
+        super(mode+" "+bank.buildObdCommand());
         this.bank = bank;
     }
 

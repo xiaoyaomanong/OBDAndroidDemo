@@ -25,8 +25,8 @@ public class OxygenSensorTrimCommand extends ObdCommand {
      * Will read the bank from parameters and construct the command accordingly.
      * Please, see FuelTrim enum for more details.
      */
-    public OxygenSensorTrimCommand(final ModeTrim modeTrim, final OxygenSensorTrim bank) {
-        super(modeTrim.buildObdCommand() + " " + bank.buildObdCommand());
+    public OxygenSensorTrimCommand(String mode, final OxygenSensorTrim bank) {
+        super(mode + " " + bank.buildObdCommand());
         this.bank = bank;
     }
 

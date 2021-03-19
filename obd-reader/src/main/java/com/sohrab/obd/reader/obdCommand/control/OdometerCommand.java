@@ -12,8 +12,8 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 public class OdometerCommand extends ObdCommand {
     private double Odometer = 0;
 
-    public OdometerCommand(final ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand()+" A6");
+    public OdometerCommand(String mode) {
+        super(mode+" A6");
     }
 
     /**

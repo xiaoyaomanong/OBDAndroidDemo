@@ -19,8 +19,8 @@ public class MassAirFlowCommand extends ObdCommand {
     /**
      * Default ctor.
      */
-    public MassAirFlowCommand(final ModeTrim bank) {
-        super(bank.buildObdCommand()+" 10");
+    public MassAirFlowCommand(String mode) {
+        super(mode+" 10");
     }
 
     /**

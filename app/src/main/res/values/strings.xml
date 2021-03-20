@@ -228,7 +228,7 @@
     <string name="mFuelPressure">燃油压力</string>
     <string name="mBarometricPressure">大气压</string>
     <string name="mAmbientAirTemp">环境空气温度</string>
-    <string name="mIntakeAirTemp">进气温度</string>
+    <string name="mIntakeAirTemp">油箱空气温度</string>
     <string name="mIntakePressure">进气歧管压力</string>
     <string name="check_detaisl">车检详情</string>
     <string name="running">Route in process…</string>
@@ -284,4 +284,6 @@
     <string name="zfb">支付宝</string>
     <string name="zfb_content">数亿用户都在用，安全可托付</string>
     <string name="weChat">微信</string>
+    <string name="fuelRate">燃油消耗率</string>
+    <string name="FuelRailPressure">油轨压力</string>
 </resources>

@@ -263,7 +263,7 @@
                     android:orientation="vertical">
 
                     <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
-                        android:id="@+id/dashInsFuelConsumption"
+                        android:id="@+id/dashfuelRate"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_margin="5dp"
@@ -275,7 +275,7 @@
                         android:layout_height="50dp"
                         android:fontFamily="@font/gotham"
                         android:gravity="center"
-                        android:text="@string/InsFuelConsumption"
+                        android:text="@string/fuelRate"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_14" />
                 </LinearLayout>
@@ -288,7 +288,7 @@
                     android:orientation="vertical">
 
                     <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
-                        android:id="@+id/dashIdlingFuelConsumption"
+                        android:id="@+id/dashFuelRailPressure"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_margin="5dp"
@@ -300,7 +300,7 @@
                         android:layout_height="50dp"
                         android:fontFamily="@font/gotham"
                         android:gravity="center"
-                        android:text="@string/IdlingFuelConsumption"
+                        android:text="@string/FuelRailPressure"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_14" />
                 </LinearLayout>

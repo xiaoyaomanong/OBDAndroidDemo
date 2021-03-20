@@ -512,7 +512,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
         if (value != null && this.engineRpmMax < Integer.parseInt(value)) {
             this.engineRpmMax = Integer.parseInt(value);
         }
-        data.add(new OBDTripEntity("发动机转速", TextUtils.isEmpty(engineRpm) ? "" : engineRpm));
+        data.add(new OBDTripEntity("引擎转速", TextUtils.isEmpty(engineRpm) ? "" : engineRpm));
         entity.setEngineRpm(TextUtils.isEmpty(engineRpm) ? "" : engineRpm);
         data.add(new OBDTripEntity("最大转速", engineRpmMax + " "));
         entity.setEngineRpmMax(String.valueOf(engineRpmMax));
@@ -572,7 +572,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 setSpeed(((SpeedCommand) command).getMetricSpeed());
                 break;
             case ENGINE_RPM:
-                textView.setText("发动机转速:" + command.getCalculatedResult());
+                textView.setText("引擎转速:" + command.getCalculatedResult());
                 setEngineRpm(command.getCalculatedResult());
                 setmIsEngineRuntimeSupported(true);
                 break;
@@ -586,8 +586,8 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 break;
             case ENGINE_RUNTIME:
                 engineRuntime = command.getFormattedResult();
-                textView.setText("发动机启动后的运行时间:" + (TextUtils.isEmpty(engineRuntime) ? "" : engineRuntime));
-                data.add(new OBDTripEntity("发动机启动后的运行时间", TextUtils.isEmpty(engineRuntime) ? "" : engineRuntime));
+                textView.setText("引擎启动后的运行时间:" + (TextUtils.isEmpty(engineRuntime) ? "" : engineRuntime));
+                data.add(new OBDTripEntity("引擎启动后的运行时间", TextUtils.isEmpty(engineRuntime) ? "" : engineRuntime));
                 entity.setEngineRuntime(TextUtils.isEmpty(engineRuntime) ? "" : engineRuntime);
                 break;
 
@@ -629,15 +629,15 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 break;
             case ENGINE_COOLANT_TEMP:
                 mEngineCoolantTemp = command.getFormattedResult();
-                textView.setText("发动机冷媒温度:" + (TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp));
-                data.add(new OBDTripEntity("发动机冷媒温度", TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp + " ℃"));
+                textView.setText("引擎冷媒温度:" + (TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp));
+                data.add(new OBDTripEntity("引擎冷媒温度", TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp + " ℃"));
                 entity.setEngineCoolantTemp(TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp);
                 break;
 
             case ENGINE_OIL_TEMP:
                 mEngineOilTemp = command.getFormattedResult();
-                textView.setText("发动机油温:" + (TextUtils.isEmpty(mEngineOilTemp) ? "" : mEngineOilTemp));
-                data.add(new OBDTripEntity("发动机油温", TextUtils.isEmpty(mEngineOilTemp) ? "" : mEngineOilTemp));
+                textView.setText("引擎油温:" + (TextUtils.isEmpty(mEngineOilTemp) ? "" : mEngineOilTemp));
+                data.add(new OBDTripEntity("引擎油温", TextUtils.isEmpty(mEngineOilTemp) ? "" : mEngineOilTemp));
                 entity.setEngineOilTemp(TextUtils.isEmpty(mEngineOilTemp) ? "" : mEngineOilTemp);
                 break;
 
@@ -661,8 +661,8 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 break;
             case ENGINE_LOAD:
                 mEngineLoad = command.getFormattedResult();
-                textView.setText("发动机载荷:" + (TextUtils.isEmpty(mEngineLoad) ? "" : mEngineLoad));
-                data.add(new OBDTripEntity("发动机载荷", TextUtils.isEmpty(mEngineLoad) ? "" : mEngineLoad));
+                textView.setText("引擎载荷:" + (TextUtils.isEmpty(mEngineLoad) ? "" : mEngineLoad));
+                data.add(new OBDTripEntity("引擎载荷", TextUtils.isEmpty(mEngineLoad) ? "" : mEngineLoad));
                 entity.setEngineLoad(TextUtils.isEmpty(mEngineLoad) ? "" : mEngineLoad);
                 break;
             case EGR:
@@ -889,20 +889,20 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 break;
             case DRIVER_ENGINE_TORQUE:
                 mDriverEngineTorque = command.getFormattedResult();
-                textView.setText("驾驶的发动机命令-力矩百分比:" + (TextUtils.isEmpty(mDriverEngineTorque) ? "" : mDriverEngineTorque));
-                data.add(new OBDTripEntity("驾驶的发动机命令-力矩百分比", TextUtils.isEmpty(mDriverEngineTorque) ? "" : mDriverEngineTorque));
+                textView.setText("驾驶的引擎命令-扭矩百分比:" + (TextUtils.isEmpty(mDriverEngineTorque) ? "" : mDriverEngineTorque));
+                data.add(new OBDTripEntity("驾驶的引擎命令-扭矩百分比", TextUtils.isEmpty(mDriverEngineTorque) ? "" : mDriverEngineTorque));
                 entity.setHyBatteryPackLife(TextUtils.isEmpty(mDriverEngineTorque) ? "" : mDriverEngineTorque);
                 break;
             case ACTUAL_ENGINE_TORQUE:
                 mActualEngineTorque = command.getFormattedResult();
-                textView.setText("实际发动机-力矩百分比:" + (TextUtils.isEmpty(mActualEngineTorque) ? "" : mActualEngineTorque));
-                data.add(new OBDTripEntity("实际发动机-力矩百分比", TextUtils.isEmpty(mActualEngineTorque) ? "" : mActualEngineTorque));
+                textView.setText("实际引擎-扭矩百分比:" + (TextUtils.isEmpty(mActualEngineTorque) ? "" : mActualEngineTorque));
+                data.add(new OBDTripEntity("实际引擎-扭矩百分比", TextUtils.isEmpty(mActualEngineTorque) ? "" : mActualEngineTorque));
                 entity.setActualEngineTorque(TextUtils.isEmpty(mActualEngineTorque) ? "" : mActualEngineTorque);
                 break;
             case ENGINE_REFERENCE_TORQUE:
                 mEngineReferenceTorque = command.getFormattedResult();
-                textView.setText("发动机参考力矩:" + (TextUtils.isEmpty(mEngineReferenceTorque) ? "" : mEngineReferenceTorque));
-                data.add(new OBDTripEntity("发动机参考力矩", TextUtils.isEmpty(mEngineReferenceTorque) ? "" : mEngineReferenceTorque));
+                textView.setText("引擎参考扭矩:" + (TextUtils.isEmpty(mEngineReferenceTorque) ? "" : mEngineReferenceTorque));
+                data.add(new OBDTripEntity("引擎参考扭矩", TextUtils.isEmpty(mEngineReferenceTorque) ? "" : mEngineReferenceTorque));
                 entity.setEngineReferenceTorque(TextUtils.isEmpty(mEngineReferenceTorque) ? "" : mEngineReferenceTorque);
                 break;
             case DPF_TEMP:
@@ -913,8 +913,8 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 break;
             case ENGINE_FRICTION_PERCENT_TORQUE:
                 mEngineFrictionPercentTorque = command.getFormattedResult();
-                textView.setText("发动机摩擦力-力矩百分比:" + (TextUtils.isEmpty(mEngineFrictionPercentTorque) ? "" : mEngineFrictionPercentTorque));
-                data.add(new OBDTripEntity("发动机摩擦力-力矩百分比", TextUtils.isEmpty(mEngineFrictionPercentTorque) ? "" : mEngineFrictionPercentTorque));
+                textView.setText("引擎摩擦力-扭矩百分比:" + (TextUtils.isEmpty(mEngineFrictionPercentTorque) ? "" : mEngineFrictionPercentTorque));
+                data.add(new OBDTripEntity("引擎摩擦力-扭矩百分比", TextUtils.isEmpty(mEngineFrictionPercentTorque) ? "" : mEngineFrictionPercentTorque));
                 entity.setEngineFrictionPercentTorque(TextUtils.isEmpty(mEngineFrictionPercentTorque) ? "" : mEngineFrictionPercentTorque);
                 break;
             case PERMANENT_TROUBLE_CODES:

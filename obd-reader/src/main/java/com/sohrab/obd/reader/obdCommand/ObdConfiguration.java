@@ -157,7 +157,7 @@ public class ObdConfiguration {
         mObdCommands.add(new ModuleVoltageCommand(modeTrim.buildObdCommand()));//"01 42" 模块控制组电压
         mObdCommands.add(new AbsoluteLoadCommand(modeTrim.buildObdCommand()));//"01 43" 绝对载荷
         mObdCommands.add(new AirFuelRatioCommand(modeTrim.buildObdCommand()));//"01 44" 燃油-空气命令等效比
-        mObdCommands.add(new RelativeThrottlePositionCommand(modeTrim.buildObdCommand()));//"01 45" 相对油门位置
+        mObdCommands.add(new RelativeThrottlePositionCommand(modeTrim.buildObdCommand()));//"01 45" 相对节气门位置
         mObdCommands.add(new AmbientAirTemperatureCommand(modeTrim.buildObdCommand()));//"01 46" 环境空气温度
         mObdCommands.add(new AbsoluteThrottlePositionCommand(modeTrim.buildObdCommand(), AbsThrottlePosTrim.ABS_THROTTLE_POS_B));//"01 47" 绝对油门位置B
         mObdCommands.add(new AbsoluteThrottlePositionCommand(modeTrim.buildObdCommand(), AbsThrottlePosTrim.ABS_THROTTLE_POS_C));//"01 48" 绝对油门位置C

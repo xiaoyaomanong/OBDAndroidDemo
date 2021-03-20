@@ -15,8 +15,9 @@ import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.application.ObdPreferences;
 import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
-import com.sohrab.obd.reader.obdCommand.engine.MassAirFlowCommand;
+import com.sohrab.obd.reader.obdCommand.fuel.ConsumptionRateCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelPressureCommand;
+import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.AirIntakeTemperatureCommand;
 import com.sohrab.obd.reader.trip.TripRecord;
@@ -34,14 +35,14 @@ public class VehicleDashTwoActivity extends BaseActivity {
     private PhilText tvmIdlingFuelConsumption;
     private PhilText tvmInsFuelConsumption;
     private PhilText tvDrivingFuelConsumption;
-    private CustomerDashboardViewLight dashInsFuelConsumption;
-    private CustomerDashboardViewLight dashIdlingFuelConsumption;
     private CustomerDashboardViewLight dashIntakeAirTemp;
     private TripRecord tripRecord;
     private Thread mIntakeManifoldPressureCommand = new Thread(new ObdsCommand());
     private List<ObdCommand> commands = new ArrayList<>();
     private PhilText tvFuelPressure;
     private CustomerDashboardViewLight dashFuelPressure;
+    private CustomerDashboardViewLight dashfuelRate;
+    private CustomerDashboardViewLight dashFuelRailPressure;
 
 
     @Override
@@ -64,9 +65,9 @@ public class VehicleDashTwoActivity extends BaseActivity {
         tvmIdlingFuelConsumption = getView(R.id.tvmIdlingFuelConsumption);
         tvmInsFuelConsumption = getView(R.id.tvmInsFuelConsumption);
         tvDrivingFuelConsumption = getView(R.id.tvDrivingFuelConsumption);
-        dashInsFuelConsumption = getView(R.id.dashInsFuelConsumption);
-        dashIdlingFuelConsumption = getView(R.id.dashIdlingFuelConsumption);
         dashIntakeAirTemp = getView(R.id.dashIntakeAirTemp);
+        dashfuelRate = findViewById(R.id.dashfuelRate);
+        dashFuelRailPressure = findViewById(R.id.dashFuelRailPressure);
         TripRecord.getTriRecode(context).clear();
         tripRecord = TripRecord.getTriRecode(context);
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(true);
@@ -94,7 +95,6 @@ public class VehicleDashTwoActivity extends BaseActivity {
 
             }
         });
-
     }
 
     private void startCommand() {
@@ -135,13 +135,13 @@ public class VehicleDashTwoActivity extends BaseActivity {
     }
 
     /**
-     * 设置瞬时油耗仪表
+     * 设置燃油效率仪表
      */
     private void setInsFuelConsumption() {
-        dashInsFuelConsumption.setmSection(8);
-        dashInsFuelConsumption.setmHeaderText("L/100km");
-        dashInsFuelConsumption.setmMax(240);
-        dashInsFuelConsumption.setmMin(0);
+        dashfuelRate.setmSection(8);
+        dashfuelRate.setmHeaderText("L/h");
+        dashfuelRate.setmMax(240);
+        dashfuelRate.setmMin(0);
     }
 
     /**
@@ -155,13 +155,13 @@ public class VehicleDashTwoActivity extends BaseActivity {
     }
 
     /**
-     * 设置怠速油耗仪表
+     * 设置油轨压力（柴油或汽油直喷）仪表
      */
     private void setIdlingFuelConsumption() {
-        dashIdlingFuelConsumption.setmSection(10);
-        dashIdlingFuelConsumption.setmHeaderText(" L ");
-        dashIdlingFuelConsumption.setmMax(100);
-        dashIdlingFuelConsumption.setmMin(0);
+        dashFuelRailPressure.setmSection(10);
+        dashFuelRailPressure.setmHeaderText("kPa");
+        dashFuelRailPressure.setmMax(100);
+        dashFuelRailPressure.setmMin(0);
     }
 
     /**
@@ -185,9 +185,10 @@ public class VehicleDashTwoActivity extends BaseActivity {
     private List<ObdCommand> setCommands() {
         List<ObdCommand> obdCommands = new ArrayList<>();
         obdCommands.add(new ObdResetCommand());
-        obdCommands.add(new FuelPressureCommand(ModeTrim.MODE_01.buildObdCommand()));
-        obdCommands.add(new AirIntakeTemperatureCommand(ModeTrim.MODE_01.buildObdCommand()));//进气温度
-        obdCommands.add(new MassAirFlowCommand(ModeTrim.MODE_01.buildObdCommand()));//空气质量流量
+        obdCommands.add(new FuelPressureCommand(ModeTrim.MODE_01.buildObdCommand()));//油压
+       obdCommands.add(new AirIntakeTemperatureCommand(ModeTrim.MODE_01.buildObdCommand()));//邮箱空气温度
+        obdCommands.add(new ConsumptionRateCommand(ModeTrim.MODE_01.buildObdCommand()));//燃油效率
+        obdCommands.add(new FuelRailPressureCommand(ModeTrim.MODE_01.buildObdCommand()));//油轨压力（柴油或汽油直喷）
         return obdCommands;
     }
 
@@ -201,8 +202,10 @@ public class VehicleDashTwoActivity extends BaseActivity {
                     .setScale(2, BigDecimal.ROUND_HALF_DOWN)
                     .floatValue();
             tvmInsFuelConsumption.setText(String.valueOf(InsFuelConsumption));
-            dashInsFuelConsumption.setVelocity(InsFuelConsumption);
-            dashIdlingFuelConsumption.setVelocity(tripRecord.getmIdlingFuelConsumption());
+            String FuelRailPressure= tripRecord.getmFuelRailPressure().replace("kPa", "");
+            dashFuelRailPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(FuelRailPressure) ? "0" : FuelRailPressure));
+            String fuelRate= tripRecord.getmFuelConsumptionRate().replace("L/h", "");
+            dashfuelRate.setVelocity(Float.parseFloat(TextUtils.isEmpty(fuelRate) ? "0" : fuelRate));
             tvmIdlingFuelConsumption.setText(String.valueOf(tripRecord.getmIdlingFuelConsumption()));
             String pressure = tripRecord.getmFuelPressure().replace("kPa", "");
             tvFuelPressure.setText(TextUtils.isEmpty(pressure) ? "0" : pressure);

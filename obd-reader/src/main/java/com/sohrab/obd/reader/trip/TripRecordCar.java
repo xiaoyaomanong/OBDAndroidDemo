@@ -313,7 +313,7 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
         if (value != null && this.engineRpmMax < Integer.parseInt(value)) {
             this.engineRpmMax = Integer.parseInt(value);
         }
-        data.add(new OBDTripEntity("发动机转速", TextUtils.isEmpty(engineRpm) ? "" : engineRpm));
+        data.add(new OBDTripEntity("引擎转速", TextUtils.isEmpty(engineRpm) ? "" : engineRpm));
         entity.setEngineRpm(TextUtils.isEmpty(engineRpm) ? "" : engineRpm);
         data.add(new OBDTripEntity("最大转速", engineRpmMax + ""));
         entity.setEngineRpmMax(String.valueOf(engineRpmMax));
@@ -419,13 +419,13 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
 
             case ENGINE_COOLANT_TEMP:
                 mEngineCoolantTemp = command.getFormattedResult();
-                data.add(new OBDTripEntity("发动机冷却液温度", TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp + " ℃"));
+                data.add(new OBDTripEntity("引擎冷却液温度", TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp + " ℃"));
                 entity.setEngineCoolantTemp(TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp);
                 break;
 
             case ENGINE_OIL_TEMP:
                 mEngineOilTemp = command.getFormattedResult();
-                data.add(new OBDTripEntity("发动机油温", TextUtils.isEmpty(mEngineOilTemp) ? "" : mEngineOilTemp));
+                data.add(new OBDTripEntity("引擎油温", TextUtils.isEmpty(mEngineOilTemp) ? "" : mEngineOilTemp));
                 entity.setEngineOilTemp(TextUtils.isEmpty(mEngineOilTemp) ? "" : mEngineOilTemp);
                 break;
 
@@ -446,7 +446,7 @@ public class TripRecordCar implements DefineObdTwoReader, Serializable {
                 break;
             case ENGINE_LOAD:
                 mEngineLoad = command.getFormattedResult();
-                data.add(new OBDTripEntity("发动机负荷", TextUtils.isEmpty(mEngineLoad) ? "" : mEngineLoad));
+                data.add(new OBDTripEntity("引擎负荷", TextUtils.isEmpty(mEngineLoad) ? "" : mEngineLoad));
                 entity.setEngineLoad(TextUtils.isEmpty(mEngineLoad) ? "" : mEngineLoad);
                 break;
             case Commanded_EGR:

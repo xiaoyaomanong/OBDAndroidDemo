@@ -114,13 +114,10 @@ public class VehicleCheckActivity extends BaseActivity {
                 addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(tripRecord.getOBDJson()), getUserId(), getToken());
                 reduceAndCumulativeFrequency(getToken(), getUserId());
                 addRemind(getUserId(), addJsonContent(tripRecord.getOBDJson()), getToken());
-                layoutLook.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, CheckReportActivity.class);
-                        intent.putExtra("data", tripRecord);
-                        startActivity(intent);
-                    }
+                layoutLook.setOnClickListener(v -> {
+                    Intent intent = new Intent(context, CheckReportActivity.class);
+                    intent.putExtra("data", tripRecord);
+                    startActivity(intent);
                 });
             }
             if (msg.what == COMPLETES) {

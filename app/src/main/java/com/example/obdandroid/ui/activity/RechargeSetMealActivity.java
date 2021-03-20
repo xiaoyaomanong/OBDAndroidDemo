@@ -307,12 +307,8 @@ public class RechargeSetMealActivity extends BaseActivity {
             public void onResponse(String response, int id) {
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
-                    new CustomeDialog(context, entity.getMessage(), confirm -> {
-                        if (confirm) {
-                            setResult(102, new Intent());
-                            finish();
-                        }
-                    }).setPositiveButton("确定").setTitle("支付").show();
+                    setResult(102, new Intent());
+                    finish();
                 } else {
                     showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
                 }

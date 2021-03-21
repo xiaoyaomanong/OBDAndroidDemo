@@ -80,13 +80,12 @@ public class VehicleCheckActivity extends BaseActivity {
     private VehicleCheckAdapter adapter;
     private RecyclerView recycleCheckContent;
     private SPUtil spUtil;
-    private TextView tvConnectObd;
     private LinearLayout layoutCar;
     private ImageView ivCarLogo;
     private TextView tvAutomobileBrandName;
     private TextView tvModelName;
+    private TextView tvOBDState;
     private LinearLayout layoutLook;
-    private TextView tvLook;
     private ImageView ivNext;
     private TextView tvCommandResult;
     private LocalBroadcastManager localBroadcastManager;
@@ -94,9 +93,12 @@ public class VehicleCheckActivity extends BaseActivity {
     private CheckRecord tripRecord;
     private static final int COMPLETED = 0;
     private static final int COMPLETES = 1;
+    private static final int COMPLETEO = 2;
+    private int size;
     private DialogUtils dialogUtils;
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
+        @SuppressLint({"SetTextI18n", "DefaultLocale"})
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
@@ -107,9 +109,10 @@ public class VehicleCheckActivity extends BaseActivity {
                     btStart.setEnabled(true);
                 }
                 titleBar.setRightTitle("清除故障");
-                tvCommandResult.setText("生成检测报告");
-                tvLook.setText("查看");
+                layoutLook.setVisibility(View.VISIBLE);
+                tvCommandResult.setText("生成检测报告已生成,请查看详细内容!");
                 ivNext.setVisibility(View.VISIBLE);
+                tvOBDState.setVisibility(View.GONE);
                 showResult(tripRecord.getTripMap());
                 addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(tripRecord.getOBDJson()), getUserId(), getToken());
                 reduceAndCumulativeFrequency(getToken(), getUserId());
@@ -127,6 +130,13 @@ public class VehicleCheckActivity extends BaseActivity {
                 Intent intent = new Intent("com.android.Record");//创建发送广播的Action
                 localBroadcastManager.sendBroadcast(intent);  //发送本地广播
             }
+            if (msg.what == COMPLETEO) {
+                double current = (double) msg.obj;
+                LogE("current:" + current);
+                double per = (current / size) * 100.0;
+                LogE("per:" + per);
+                btStart.setText(String.format("%.2f", per) + "%");
+            }
         }
     };
 
@@ -141,6 +151,7 @@ public class VehicleCheckActivity extends BaseActivity {
         return 0;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void initView() {
         super.initView();
@@ -149,14 +160,13 @@ public class VehicleCheckActivity extends BaseActivity {
         circleView = getView(R.id.circleView);
         btStart = getView(R.id.btStart);
         recycleCheckContent = getView(R.id.recycleCheckContent);
-        tvConnectObd = getView(R.id.tv_connect_obd);
         layoutCar = getView(R.id.layout_Car);
         ivCarLogo = getView(R.id.ivCarLogo);
         tvAutomobileBrandName = getView(R.id.tvAutomobileBrandName);
         tvModelName = getView(R.id.tvModelName);
         layoutLook = findViewById(R.id.layoutLook);
-        tvLook = findViewById(R.id.tvLook);
         ivNext = findViewById(R.id.ivNext);
+        tvOBDState = findViewById(R.id.tvOBDState);
         tvCommandResult = findViewById(R.id.tvCommandResult);
         spUtil = new SPUtil(context);
         dialogUtils = new DialogUtils(context);
@@ -166,17 +176,26 @@ public class VehicleCheckActivity extends BaseActivity {
         //获取实例
         localBroadcastManager = LocalBroadcastManager.getInstance(context);
         CheckRecord.getTriRecode(context).clear();
+        tripRecord = CheckRecord.getTriRecode(context);
         // 设定每升汽油价格，以便计算汽油成本。默认值为7$/l
         float gasPrice = 7; // 每升，你应该根据你的要求初始化。
         ObdPreferences.get(context).setGasPrice(gasPrice);
         getVehicleInfoById(getToken(), spUtil.getString("vehicleId", ""));
+        boolean isConn = MainApplication.getBluetoothSocket().isConnected();
+        if (isConn) {
+            tvOBDState.setText("OBD已连接,请进行检测");
+        } else {
+            tvOBDState.setText("OBD连接失败");
+        }
         btStart.setOnClickListener(v -> {
-            if (MainApplication.getBluetoothSocket().isConnected()) {
+            if (isConn) {
                 circleView.start();
                 btStart.setText("开始检测");
-                tvConnectObd.setVisibility(View.GONE);
+                tvOBDState.setVisibility(View.VISIBLE);
+                tvOBDState.setText("正在检测中....");
                 btStart.setEnabled(false);
                 layoutCar.setVisibility(View.VISIBLE);
+                layoutLook.setVisibility(View.GONE);
                 new Thread(this::executeCommand).start();
             } else {
                 showTipDialog("请连接OBD设备", TipDialog.TYPE_WARNING);
@@ -208,14 +227,18 @@ public class VehicleCheckActivity extends BaseActivity {
     }
 
     private void executeCommand() {
-        tripRecord = CheckRecord.getTriRecode(context);
         tripRecord.getTripMap().clear();
         ArrayList<ObdCommand> commands = ObdConfiguration.getObdCommands(ModeTrim.MODE_01);
+        size = commands.size();
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {
                 command.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
                 LogE("结果是: " + command.getFormattedResult() + " :: name is :: " + command.getName());
+                Message msg = new Message();
+                msg.what = COMPLETEO;
+                msg.obj = (double) (i + 1);
+                handler.sendMessage(msg);
                 tripRecord.updateTrip(command.getName(), command, tvCommandResult);
             } catch (Exception e) {
                 LogE("执行命令异常  :: " + e.getMessage());
@@ -313,19 +336,11 @@ public class VehicleCheckActivity extends BaseActivity {
      *                 展示OBD检测数据
      */
     public void showResult(List<OBDTripEntity> messages) {
-        initAinm();
-        if (adapter == null) {
-            adapter = new VehicleCheckAdapter(context);
-            adapter.setList(messages);
-            if (spUtil.getString(Constant.CONNECT_BT_KEY, "").equals("ON")) {
-                adapter.setMsg("OBD设备已连接,请进行检测");
-            } else {
-                adapter.setMsg("请连接OBD设备,进行检测");
-            }
-            runOnUiThread(() -> recycleCheckContent.setAdapter(adapter));
-        } else {
-            runOnUiThread(() -> adapter.notifyDataSetChanged());
-        }
+        //initAinm();
+        adapter = new VehicleCheckAdapter(context);
+        adapter.setList(messages);
+        recycleCheckContent.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     /**

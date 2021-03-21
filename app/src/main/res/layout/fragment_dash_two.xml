@@ -64,7 +64,7 @@
                         android:orientation="vertical">
 
                         <com.example.obdandroid.ui.view.PhilText
-                            android:id="@+id/tvmIdlingFuelConsumption"
+                            android:id="@+id/tvFuelRate"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
@@ -80,7 +80,7 @@
                             android:layout_height="50dp"
                             android:fontFamily="@font/gotham"
                             android:gravity="center"
-                            android:text="@string/Idle_fuel_consumption"
+                            android:text="@string/fuelRateUnit"
                             android:textColor="@color/white"
                             android:textSize="@dimen/sp_16" />
 
@@ -95,7 +95,7 @@
                         android:orientation="vertical">
 
                         <com.example.obdandroid.ui.view.PhilText
-                            android:id="@+id/tvmInsFuelConsumption"
+                            android:id="@+id/tvIntakeAirTemp"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
@@ -111,7 +111,7 @@
                             android:layout_height="50dp"
                             android:fontFamily="@font/gotham"
                             android:gravity="center"
-                            android:text="@string/mInsFuelConsumption"
+                            android:text="@string/IntakeAirTempUnit"
                             android:textColor="@color/white"
                             android:textSize="@dimen/sp_16" />
 
@@ -167,7 +167,7 @@
                         android:orientation="vertical">
 
                         <com.example.obdandroid.ui.view.PhilText
-                            android:id="@+id/tvDrivingFuelConsumption"
+                            android:id="@+id/tvFuelRailPressure"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
                             android:fontFamily="@font/calibri"
@@ -182,7 +182,7 @@
                             android:layout_height="30dp"
                             android:fontFamily="@font/gotham"
                             android:gravity="center"
-                            android:text="@string/Driving_fuel_consumption"
+                            android:text="油轨压力(1000 kPa)"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_13sp" />
                     </LinearLayout>
@@ -263,7 +263,7 @@
                     android:orientation="vertical">
 
                     <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
-                        android:id="@+id/dashfuelRate"
+                        android:id="@+id/dashFuelRate"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_margin="5dp"

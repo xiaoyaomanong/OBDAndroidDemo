@@ -32,16 +32,16 @@ import java.util.List;
  * 描述：
  */
 public class VehicleDashTwoActivity extends BaseActivity {
-    private PhilText tvmIdlingFuelConsumption;
-    private PhilText tvmInsFuelConsumption;
-    private PhilText tvDrivingFuelConsumption;
+    private PhilText tvFuelRate;
+    private PhilText tvIntakeAirTemp;
+    private PhilText tvFuelRailPressure;
     private CustomerDashboardViewLight dashIntakeAirTemp;
     private TripRecord tripRecord;
     private Thread mIntakeManifoldPressureCommand = new Thread(new ObdsCommand());
     private List<ObdCommand> commands = new ArrayList<>();
     private PhilText tvFuelPressure;
     private CustomerDashboardViewLight dashFuelPressure;
-    private CustomerDashboardViewLight dashfuelRate;
+    private CustomerDashboardViewLight dashFuelRate;
     private CustomerDashboardViewLight dashFuelRailPressure;
 
 
@@ -62,11 +62,11 @@ public class VehicleDashTwoActivity extends BaseActivity {
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         tvFuelPressure = findViewById(R.id.tvFuelPressure);
         dashFuelPressure = findViewById(R.id.dashFuelPressure);
-        tvmIdlingFuelConsumption = getView(R.id.tvmIdlingFuelConsumption);
-        tvmInsFuelConsumption = getView(R.id.tvmInsFuelConsumption);
-        tvDrivingFuelConsumption = getView(R.id.tvDrivingFuelConsumption);
+        tvFuelRate = getView(R.id.tvFuelRate);
+        tvIntakeAirTemp = getView(R.id.tvIntakeAirTemp);
+        tvFuelRailPressure = getView(R.id.tvFuelRailPressure);
         dashIntakeAirTemp = getView(R.id.dashIntakeAirTemp);
-        dashfuelRate = findViewById(R.id.dashfuelRate);
+        dashFuelRate = findViewById(R.id.dashFuelRate);
         dashFuelRailPressure = findViewById(R.id.dashFuelRailPressure);
         TripRecord.getTriRecode(context).clear();
         tripRecord = TripRecord.getTriRecode(context);
@@ -138,10 +138,10 @@ public class VehicleDashTwoActivity extends BaseActivity {
      * 设置燃油效率仪表
      */
     private void setInsFuelConsumption() {
-        dashfuelRate.setmSection(8);
-        dashfuelRate.setmHeaderText("L/h");
-        dashfuelRate.setmMax(240);
-        dashfuelRate.setmMin(0);
+        dashFuelRate.setmSection(10);
+        dashFuelRate.setmHeaderText("100L/h");
+        dashFuelRate.setmMax(3300);
+        dashFuelRate.setmMin(0);
     }
 
     /**
@@ -149,9 +149,9 @@ public class VehicleDashTwoActivity extends BaseActivity {
      */
     private void setDrivingFuelConsumption() {
         dashIntakeAirTemp.setmSection(10);
-        dashIntakeAirTemp.setmHeaderText(" ℃ ");
-        dashIntakeAirTemp.setmMax(50);
-        dashIntakeAirTemp.setmMin(0);
+        dashIntakeAirTemp.setmHeaderText(" °C ");
+        dashIntakeAirTemp.setmMax(260);
+        dashIntakeAirTemp.setmMin(-40);
     }
 
     /**
@@ -159,8 +159,8 @@ public class VehicleDashTwoActivity extends BaseActivity {
      */
     private void setIdlingFuelConsumption() {
         dashFuelRailPressure.setmSection(10);
-        dashFuelRailPressure.setmHeaderText("kPa");
-        dashFuelRailPressure.setmMax(100);
+        dashFuelRailPressure.setmHeaderText("1000kPa");
+        dashFuelRailPressure.setmMax(660);
         dashFuelRailPressure.setmMin(0);
     }
 
@@ -198,25 +198,20 @@ public class VehicleDashTwoActivity extends BaseActivity {
      */
     private void setView(TripRecord tripRecord) {
         if (tripRecord != null) {
-            float InsFuelConsumption = BigDecimal.valueOf(tripRecord.getmInsFuelConsumption())
-                    .setScale(2, BigDecimal.ROUND_HALF_DOWN)
-                    .floatValue();
-            tvmInsFuelConsumption.setText(String.valueOf(InsFuelConsumption));
             String FuelRailPressure= tripRecord.getmFuelRailPressure().replace("kPa", "");
-            dashFuelRailPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(FuelRailPressure) ? "0" : FuelRailPressure));
+            dashFuelRailPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(FuelRailPressure) ? "0" : FuelRailPressure)/1000);
+            tvFuelRailPressure.setText(String.valueOf(Float.parseFloat(TextUtils.isEmpty(FuelRailPressure) ? "0" : FuelRailPressure)/1000));
+
             String fuelRate= tripRecord.getmFuelConsumptionRate().replace("L/h", "");
-            dashfuelRate.setVelocity(Float.parseFloat(TextUtils.isEmpty(fuelRate) ? "0" : fuelRate));
-            tvmIdlingFuelConsumption.setText(String.valueOf(tripRecord.getmIdlingFuelConsumption()));
+            dashFuelRate.setVelocity(Float.parseFloat(TextUtils.isEmpty(fuelRate) ? "0" : fuelRate));
+            tvFuelRate.setText(TextUtils.isEmpty(fuelRate) ? "0" : fuelRate);
+
             String pressure = tripRecord.getmFuelPressure().replace("kPa", "");
             tvFuelPressure.setText(TextUtils.isEmpty(pressure) ? "0" : pressure);
             dashFuelPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(pressure) ? "0" : pressure));
 
-            dashIntakeAirTemp.setVelocity(tripRecord.getmIntakeAirTemp());
-            float DrivingFuelConsumption = BigDecimal.valueOf(tripRecord.getmDrivingFuelConsumption())
-                    .setScale(2, BigDecimal.ROUND_HALF_DOWN)
-                    .floatValue();
-            tvDrivingFuelConsumption.setText(String.valueOf(DrivingFuelConsumption));
-
+            dashIntakeAirTemp.setVelocity(tripRecord.getmIntakeAirTemps());
+            tvIntakeAirTemp.setText(String.valueOf(tripRecord.getmIntakeAirTemps()));
         }
     }
 

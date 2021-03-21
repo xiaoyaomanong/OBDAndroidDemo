@@ -28,7 +28,6 @@ public class RelativeThrottlePositionCommand extends ObdCommand {
     protected void performCalculations() {
         // ignore first two bytes [01 44] of the response
         float A = buffer.get(2);
-        float B = buffer.get(3);
         RelativeThrottlePosition = (100 * A) / 255;
     }
 

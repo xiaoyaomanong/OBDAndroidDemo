@@ -10,6 +10,8 @@ import com.example.obdandroid.utils.JumpUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 
+
+
 /**
  * 作者：Jealous
  * 日期：2021/1/26 0026
@@ -52,5 +54,6 @@ public class MyVehicleDashActivity extends BaseActivity {
 
             }
         });
+
     }
 }

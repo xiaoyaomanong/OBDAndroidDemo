@@ -116,6 +116,7 @@ public class TripRecord implements DefineObdReader, Serializable {
     private boolean mIsEngineRuntimeSupported = true;
     private boolean mIsTempPressureSupported = true;
     private float mIntakeAirTemp = 0.0f;
+    private float mIntakeAirTemps = 0.0f;
     private float mIntakePressure = 0.0f;
     private String mFaultCodes = "";
     private String mAmbientAirTemp;
@@ -245,6 +246,9 @@ public class TripRecord implements DefineObdReader, Serializable {
 
     public float getmIntakeAirTemp() {
         return mIntakeAirTemp;
+    }
+    public float getmIntakeAirTemps() {
+        return mIntakeAirTemps;
     }
 
     public Integer getEngineRpmMax() {
@@ -408,8 +412,9 @@ public class TripRecord implements DefineObdReader, Serializable {
                 break;
             case AIR_INTAKE_TEMPERATURE:
                 mIntakeAirTemp = Float.parseFloat(command.getCalculatedResult()) + 273.15f;
-                data.add(new OBDTripEntity("进气温度", mIntakeAirTemp + " ℃"));
-                entity.setIntakeAirTemp(mIntakeAirTemp + " ℃");
+                mIntakeAirTemps = Float.parseFloat(command.getCalculatedResult());
+                data.add(new OBDTripEntity("油箱空气温度", mIntakeAirTemps + " ℃"));
+                entity.setIntakeAirTemp(mIntakeAirTemps + " ℃");
                 calculateMaf();
                 break;
 

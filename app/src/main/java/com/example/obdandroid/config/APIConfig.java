@@ -9,8 +9,8 @@ public class APIConfig {
     /**
      * APP服务器地址
      */
-   // public static final String SERVER_URL = "http://192.168.0.188:1021";//本地测试
-   public static final String SERVER_URL = "http://8.136.125.33:1021";//生产
+    // public static final String SERVER_URL = "http://192.168.0.188:1021";//本地测试
+    public static final String SERVER_URL = "http://8.136.125.33:1021";//生产
     /**
      * 注册接口
      */
@@ -127,5 +127,8 @@ public class APIConfig {
      * APP用户购买套餐下单接口
      */
     public static final String placeAnOrder_URL = "/api/placeAnOrder";
+    /**
+     * 检测故障码
+     */
     public static final String getInquireAboutFaultCodeDetails_URL = "/api/getInquireAboutFaultCodeDetails";
 }

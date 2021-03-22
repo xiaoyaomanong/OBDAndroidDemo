@@ -167,29 +167,33 @@ public class CheckReportActivity extends BaseActivity {
             tvCheckResult.setText("你的车辆有问题,请及时检修");
         }
         tvCheckNum.setText("检测8项" + msg);
-        String[] troubleCodes = entity.getFaultCodes().replaceAll("[\r\n]", ",").split(",");
         int power = 0;
         int body = 0;
         int chassis = 0;
         int netWork = 0;
-        for (String troubleCode : troubleCodes) {
-            if (troubleCode.startsWith("P")) {
-                power = power + 1;
-                dynamicSystemList.add(troubleCode);
-            }
-            if (troubleCode.startsWith("C")) {
-                chassis = chassis + 1;
-                chassisList.add(troubleCode);
-            }
-            if (troubleCode.startsWith("B")) {
-                body = body + 1;
-                bodyList.add(troubleCode);
-            }
-            if (troubleCode.startsWith("U")) {
-                netWork = netWork + 1;
-                netWorkList.add(troubleCode);
+        String[] troubleCodes;
+        if (!TextUtils.isEmpty(entity.getFaultCodes())) {
+            troubleCodes = entity.getFaultCodes().replaceAll("[\r\n]", ",").split(",");
+            for (String troubleCode : troubleCodes) {
+                if (troubleCode.startsWith("P")) {
+                    power = power + 1;
+                    dynamicSystemList.add(troubleCode);
+                }
+                if (troubleCode.startsWith("C")) {
+                    chassis = chassis + 1;
+                    chassisList.add(troubleCode);
+                }
+                if (troubleCode.startsWith("B")) {
+                    body = body + 1;
+                    bodyList.add(troubleCode);
+                }
+                if (troubleCode.startsWith("U")) {
+                    netWork = netWork + 1;
+                    netWorkList.add(troubleCode);
+                }
             }
         }
+
         if (power == 0) {
             tvDynamicSystem.setText("检测通过");
             tvDynamicSystem.setTextColor(getResources().getColor(R.color.green));
@@ -238,31 +242,34 @@ public class CheckReportActivity extends BaseActivity {
                 startActivity(intent);
             });
         }
-
-
-        String[] pendingTroubleCodes = entity.getPendingTroubleCode().replaceAll("[\r\n]", ",").split(",");
         int powerNO = 0;
         int bodyNO = 0;
         int chassisNO = 0;
         int netWorkNO = 0;
-        for (String pendingTroubleCode : pendingTroubleCodes) {
-            if (pendingTroubleCode.startsWith("P")) {
-                powerNO = powerNO + 1;
-                dynamicSystemNOList.add(pendingTroubleCode);
-            }
-            if (pendingTroubleCode.startsWith("C")) {
-                chassisNO = chassisNO + 1;
-                chassisNOList.add(pendingTroubleCode);
-            }
-            if (pendingTroubleCode.startsWith("B")) {
-                bodyNO = bodyNO + 1;
-                bodyNOList.add(pendingTroubleCode);
-            }
-            if (pendingTroubleCode.startsWith("U")) {
-                netWorkNO = netWorkNO + 1;
-                netWorkNOList.add(pendingTroubleCode);
+        String[] pendingTroubleCodes;
+        if (!TextUtils.isEmpty(entity.getPendingTroubleCode())) {
+            pendingTroubleCodes = entity.getPendingTroubleCode().replaceAll("[\r\n]", ",").split(",");
+            for (String pendingTroubleCode : pendingTroubleCodes) {
+                if (pendingTroubleCode.startsWith("P")) {
+                    powerNO = powerNO + 1;
+                    dynamicSystemNOList.add(pendingTroubleCode);
+                }
+                if (pendingTroubleCode.startsWith("C")) {
+                    chassisNO = chassisNO + 1;
+                    chassisNOList.add(pendingTroubleCode);
+                }
+                if (pendingTroubleCode.startsWith("B")) {
+                    bodyNO = bodyNO + 1;
+                    bodyNOList.add(pendingTroubleCode);
+                }
+                if (pendingTroubleCode.startsWith("U")) {
+                    netWorkNO = netWorkNO + 1;
+                    netWorkNOList.add(pendingTroubleCode);
+                }
             }
         }
+
+
         if (powerNO == 0) {
             tvDynamicSystemNO.setText("检测通过");
             tvDynamicSystemNO.setTextColor(getResources().getColor(R.color.green));

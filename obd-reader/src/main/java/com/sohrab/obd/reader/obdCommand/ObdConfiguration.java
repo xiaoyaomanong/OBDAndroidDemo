@@ -108,8 +108,6 @@ public class ObdConfiguration {
         mObdCommands.add(new DescribeProtocolCommand());//"AT DP"
         mObdCommands.add(new DescribeProtocolNumberCommand());//"AT DPN"
 
-        // mObdCommands.add(new FreezeFrameCommand(ModeTrim.MODE_02));//"02 02" 冻结的DTC
-        //mObdCommands.add(new ModifiedTroubleCodesObdCommand());//"03" 故障代码
         mObdCommands.add(new DtcNumberCommand(modeTrim.buildObdCommand()));//"01 01" DTC情况指示
         mObdCommands.add(new FuelSystemStatusCommand(modeTrim.buildObdCommand()));//"01 03"燃油系统状态
         mObdCommands.add(new LoadCommand(modeTrim.buildObdCommand()));//"01 04" 发动机负荷

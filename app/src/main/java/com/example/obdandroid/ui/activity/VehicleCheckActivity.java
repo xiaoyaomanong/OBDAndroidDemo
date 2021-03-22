@@ -124,9 +124,7 @@ public class VehicleCheckActivity extends BaseActivity {
             }
             if (msg.what == COMPLETEO) {
                 double current = (double) msg.obj;
-                LogE("current:" + current);
                 double per = (current / size) * 100.0;
-                LogE("per:" + per);
                 btStart.setText(String.format("%.2f", per) + "%");
             }
         }
@@ -167,8 +165,8 @@ public class VehicleCheckActivity extends BaseActivity {
         recycleCheckContent.setLayoutManager(manager);
         //获取实例
         localBroadcastManager = LocalBroadcastManager.getInstance(context);
-        CheckRecord.getTriRecode(context).clear();
-        tripRecord = CheckRecord.getTriRecode(context);
+        CheckRecord.getTriRecode(context, getToken()).clear();
+        tripRecord = CheckRecord.getTriRecode(context, getToken());
         // 设定每升汽油价格，以便计算汽油成本。默认值为7$/l
         float gasPrice = 7; // 每升，你应该根据你的要求初始化。
         ObdPreferences.get(context).setGasPrice(gasPrice);
@@ -226,7 +224,7 @@ public class VehicleCheckActivity extends BaseActivity {
             ObdCommand command = commands.get(i);
             try {
                 command.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
-                LogE("结果是: " + command.getFormattedResult() + " :: name is :: " + command.getName());
+               // LogE("结果是: " + command.getFormattedResult() + " :: name is :: " + command.getName());
                 Message msg = new Message();
                 msg.what = COMPLETEO;
                 msg.obj = (double) (i + 1);
@@ -234,9 +232,6 @@ public class VehicleCheckActivity extends BaseActivity {
                 tripRecord.updateTrip(command.getName(), command);
             } catch (Exception e) {
                 LogE("执行命令异常  :: " + e.getMessage());
-                if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
-                    LogE("命令异常  :: " + e.getMessage());
-                }
             }
         }
         Message msg = new Message();

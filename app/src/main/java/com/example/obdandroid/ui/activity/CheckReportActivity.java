@@ -13,7 +13,7 @@ import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.utils.AppDateUtils;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
-import com.sohrab.obd.reader.trip.CheckRecord;
+import com.example.obdandroid.config.CheckRecord;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 
 import java.util.ArrayList;

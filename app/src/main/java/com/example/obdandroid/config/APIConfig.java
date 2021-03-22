@@ -127,4 +127,5 @@ public class APIConfig {
      * APP用户购买套餐下单接口
      */
     public static final String placeAnOrder_URL = "/api/placeAnOrder";
+    public static final String getInquireAboutFaultCodeDetails_URL = "/api/getInquireAboutFaultCodeDetails";
 }

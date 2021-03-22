@@ -66,5 +66,4 @@ public class ConsumptionRateCommand extends ObdCommand {
     public String getName() {
         return AvailableCommandNames.FUEL_CONSUMPTION_RATE.getValue();
     }
-
 }

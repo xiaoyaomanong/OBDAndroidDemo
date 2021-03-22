@@ -1,9 +1,6 @@
 package com.example.obdandroid.ui.activity;
 
 import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -27,15 +24,12 @@ import com.bumptech.glide.Glide;
 import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
-import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.adapter.VehicleCheckAdapter;
 import com.example.obdandroid.ui.entity.MessageCheckEntity;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleWelComeView;
-import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.utils.AppDateUtils;
-import com.example.obdandroid.utils.BltManagerUtils;
 import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.SPUtil;
 import com.hjq.bar.OnTitleBarListener;
@@ -47,14 +41,12 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.ResetTroubleCodesCommand;
-import com.sohrab.obd.reader.trip.CheckRecord;
+import com.example.obdandroid.config.CheckRecord;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 import com.sohrab.obd.reader.trip.OBDTripEntity;
-import com.sohrab.obd.reader.trip.TripRecord;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -239,7 +231,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 msg.what = COMPLETEO;
                 msg.obj = (double) (i + 1);
                 handler.sendMessage(msg);
-                tripRecord.updateTrip(command.getName(), command, tvCommandResult);
+                tripRecord.updateTrip(command.getName(), command);
             } catch (Exception e) {
                 LogE("执行命令异常  :: " + e.getMessage());
                 if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
@@ -251,6 +243,7 @@ public class VehicleCheckActivity extends BaseActivity {
         msg.what = COMPLETED;
         handler.sendMessage(msg);
     }
+
 
     /**
      * 清除故障码

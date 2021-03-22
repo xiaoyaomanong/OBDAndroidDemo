@@ -37,7 +37,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
     private PhilText tvFuelRailPressure;
     private CustomerDashboardViewLight dashIntakeAirTemp;
     private TripRecord tripRecord;
-    private Thread mIntakeManifoldPressureCommand = new Thread(new ObdsCommand());
+    private Thread CommandThread = new Thread(new ObdsCommand());
     private List<ObdCommand> commands = new ArrayList<>();
     private PhilText tvFuelPressure;
     private CustomerDashboardViewLight dashFuelPressure;
@@ -110,16 +110,16 @@ public class VehicleDashTwoActivity extends BaseActivity {
      * 开启线程
      */
     private void startThread() {
-        mIntakeManifoldPressureCommand.start();
+        CommandThread.start();
     }
 
     /**
      * 中止线程
      */
     private void stopThread() {
-        if (mIntakeManifoldPressureCommand != null) {
-            mIntakeManifoldPressureCommand.interrupt();
-            mIntakeManifoldPressureCommand = null;
+        if (CommandThread != null) {
+            CommandThread.interrupt();
+            CommandThread = null;
         }
     }
 

@@ -188,6 +188,7 @@ public class ObdConfiguration {
         mObdCommands.add(new EngineFrictionPercentTorqueCommand(modeTrim.buildObdCommand()));//"01 8E" 发动机摩擦力-力矩百分比
         mObdCommands.add(new ModifiedOdometerCommand(modeTrim.buildObdCommand()));//"01 A6" 里程
         mObdCommands.add(new VinCommand(ModeTrim.MODE_09));//"09 02" 车辆识别码
+
         mObdCommands.add(new ModifiedTroubleCodesObdCommand());//"03" 故障代码
         mObdCommands.add(new ModifiedPermanentTroubleCodesCommand());//"0A" 永久故障码
         mObdCommands.add(new ModifiedPendingTroubleCodesCommand());//"07" 未解决故障码

@@ -121,7 +121,6 @@ public class PersonalFragment extends BaseFragment {
         } else {
             layoutCar.setVisibility(View.GONE);
         }
-
         layoutGo.setOnClickListener(v -> {
             Intent intent = new Intent(context, RechargeSetMealActivity.class);
             startActivityForResult(intent, 101);

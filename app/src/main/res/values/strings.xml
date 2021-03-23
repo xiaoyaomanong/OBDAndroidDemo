@@ -254,7 +254,7 @@
     <string name="trouble">故障码</string>
     <string name="dashTable">车身状态仪表</string>
     <string name="dashTableOne">车辆状态</string>
-    <string name="dashTableTwo">油耗状态</string>
+    <string name="dashTableTwo">燃油状态</string>
     <string name="_0_0">0.0</string>
     <string name="_0">0</string>
     <string name="Driving_fuel_consumption">行驶油耗( L )</string>

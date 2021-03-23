@@ -43,7 +43,7 @@
                     android:layout_marginEnd="40dp"
                     android:background="@drawable/bg_dash_title"
                     android:gravity="center"
-                    android:text="@string/dashTable"
+                    android:text="@string/dashTableTwo"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_14"
                     android:textStyle="bold" />

@@ -166,7 +166,7 @@ public class CheckReportActivity extends BaseActivity {
             msg = "未通过";
             tvCheckResult.setText("你的车辆有问题,请及时检修");
         }
-        tvCheckNum.setText("检测8项" + msg);
+        tvCheckNum.setText(msg);
         int power = 0;
         int body = 0;
         int chassis = 0;

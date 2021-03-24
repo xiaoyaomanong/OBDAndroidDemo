@@ -3,13 +3,15 @@ package com.example.obdandroid.ui.activity;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
@@ -18,10 +20,8 @@ import com.example.obdandroid.ui.entity.BluetoothDeviceEntity;
 import com.example.obdandroid.utils.ToastUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
-import com.kongzue.dialog.v2.TipDialog;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -99,8 +99,7 @@ public class BluetoothDeviceActivity extends BaseActivity {
             }
             Set<BluetoothDevice> devices = adapter.getBondedDevices();
             List<BluetoothDeviceEntity> blueList = new ArrayList<>();
-            for (BluetoothDevice bluetoothDevice : devices) {
-               LogE("Address:"+ bluetoothDevice.getAddress());
+            for (BluetoothDevice bluetoothDevice : devices) {bluetoothDevice.getBondState();
                 BluetoothDeviceEntity entity = new BluetoothDeviceEntity();
                 entity.setBlue_address(bluetoothDevice.getAddress());
                 entity.setBlue_name(bluetoothDevice.getName());

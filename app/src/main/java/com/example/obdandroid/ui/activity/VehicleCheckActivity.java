@@ -130,7 +130,6 @@ public class VehicleCheckActivity extends BaseActivity {
         }
     };
 
-
     @Override
     protected int getContentViewId() {
         return R.layout.fragment_vehicle_check;

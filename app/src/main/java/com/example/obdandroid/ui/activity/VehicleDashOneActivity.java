@@ -1,5 +1,6 @@
 package com.example.obdandroid.ui.activity;
 
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -132,11 +133,11 @@ public class VehicleDashOneActivity extends BaseActivity {
     /**
      * 读取速度
      */
-    private synchronized void executeSpeedCommand() {
+    private synchronized void executeSpeedCommand(BluetoothSocket socket) {
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {
-                command.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
+                command.run(socket.getInputStream(), socket.getOutputStream());
                 LogE("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
                 tripRecord.updateTrip(command.getName(), command);
                 tvmSpeed.setText(String.valueOf(tripRecord.getSpeed()));
@@ -147,16 +148,12 @@ public class VehicleDashOneActivity extends BaseActivity {
                         .setScale(2, BigDecimal.ROUND_HALF_DOWN)
                         .floatValue();
                 tvDrivingDuration.setText(String.valueOf(DrivingDuration));
-
-
                 String rpm = TextUtils.isEmpty(tripRecord.getEngineRpm()) ? "0" : tripRecord.getEngineRpm();
                 double maxRpm = (double) tripRecord.getEngineRpmMax() / 1000;
                 dashRPM.setVelocity(Float.parseFloat(rpm) / 1000);
                 tvmRPM.setText(String.valueOf(Float.parseFloat(rpm) / 1000));
                 tvMaxRPM.setText(String.valueOf(maxRpm));
-
                 dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineOilTemp()) ? "0" : tripRecord.getmEngineOilTemp().replace("℃", "")));
-
                 dashEngineCoolantTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineCoolantTemp()) ? "0" : tripRecord.getmEngineCoolantTemp().replace("℃", "")));
             } catch (Exception e) {
                 LogE("执行命令异常  :: " + e.getMessage());
@@ -221,7 +218,7 @@ public class VehicleDashOneActivity extends BaseActivity {
         @Override
         public void run() {
             while (ObdPreferences.get(getApplicationContext()).getServiceRunning()) {
-                executeSpeedCommand();
+                executeSpeedCommand(MainApplication.getBluetoothSocket());
             }
         }
     }

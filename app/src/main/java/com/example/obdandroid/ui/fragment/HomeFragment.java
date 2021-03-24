@@ -136,7 +136,7 @@ public class HomeFragment extends BaseFragment {
             }
         }
     };
-    private Commander commander = new Commander();
+    private final Commander commander = new Commander();
 
 
     public static HomeFragment getInstance() {
@@ -306,7 +306,6 @@ public class HomeFragment extends BaseFragment {
             e.printStackTrace();
         }
     }
-
 
     /**
      * 展示默认车辆

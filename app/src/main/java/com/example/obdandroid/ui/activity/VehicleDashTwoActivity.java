@@ -1,5 +1,6 @@
 package com.example.obdandroid.ui.activity;
 
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -167,11 +168,11 @@ public class VehicleDashTwoActivity extends BaseActivity {
     /**
      * 读取进气歧管压力
      */
-    private synchronized void executeObdCommand() {
+    private synchronized void executeObdCommand(BluetoothSocket socket) {
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {
-                command.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
+                command.run(socket.getInputStream(), socket.getOutputStream());
                 LogE("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
                 tripRecord.updateTrip(command.getName(), command);
                 setView(tripRecord);
@@ -221,7 +222,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
         @Override
         public void run() {
             while (ObdPreferences.get(getApplicationContext()).getServiceRunningStatus()) {
-                executeObdCommand();
+                executeObdCommand(MainApplication.getBluetoothSocket());
             }
         }
     }

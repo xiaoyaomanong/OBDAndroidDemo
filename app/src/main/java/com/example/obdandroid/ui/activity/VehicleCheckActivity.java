@@ -1,6 +1,7 @@
 package com.example.obdandroid.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -108,7 +109,6 @@ public class VehicleCheckActivity extends BaseActivity {
                 showResult(tripRecord.getTripMap());
                 addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(tripRecord.getOBDJson()), getUserId(), getToken());
                 reduceAndCumulativeFrequency(getToken(), getUserId());
-                addRemind(getUserId(), addJsonContent(tripRecord.getOBDJson()), getToken());
                 layoutLook.setOnClickListener(v -> {
                     Intent intent = new Intent(context, CheckReportActivity.class);
                     intent.putExtra("data", tripRecord);
@@ -186,7 +186,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 btStart.setEnabled(false);
                 layoutCar.setVisibility(View.VISIBLE);
                 layoutLook.setVisibility(View.GONE);
-                new Thread(this::executeCommand).start();
+                new Thread(() -> executeCommand(MainApplication.getBluetoothSocket())).start();
             } else {
                 showTipDialog("请连接OBD设备", TipDialog.TYPE_WARNING);
             }
@@ -208,7 +208,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 if (titleBar.getRightTitle().toString().equals("清除故障")) {
                     if (MainApplication.getBluetoothSocket().isConnected()) {
                         dialogUtils.showProgressDialog("正在清除故障码");
-                        new Thread(() -> clearCodes()).start();
+                        new Thread(() -> clearCodes(MainApplication.getBluetoothSocket())).start();
                     }
                 }
             }
@@ -216,15 +216,15 @@ public class VehicleCheckActivity extends BaseActivity {
 
     }
 
-    private void executeCommand() {
+    private void executeCommand(BluetoothSocket socket) {
         tripRecord.getTripMap().clear();
         ArrayList<ObdCommand> commands = ObdConfiguration.getObdCommands(ModeTrim.MODE_01);
         size = commands.size();
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {
-                command.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
-               // LogE("结果是: " + command.getFormattedResult() + " :: name is :: " + command.getName());
+                command.run(socket.getInputStream(), socket.getOutputStream());
+                // LogE("结果是: " + command.getFormattedResult() + " :: name is :: " + command.getName());
                 Message msg = new Message();
                 msg.what = COMPLETEO;
                 msg.obj = (double) (i + 1);
@@ -243,10 +243,10 @@ public class VehicleCheckActivity extends BaseActivity {
     /**
      * 清除故障码
      */
-    private void clearCodes() {
+    private void clearCodes(BluetoothSocket socket) {
         try {
             LogE("测试复位=====尝试重置");
-            new ObdResetCommand().run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
+            new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
             LogE("开始清除");
             ResetTroubleCodesCommand clear = new ResetTroubleCodesCommand();
             clear.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
@@ -343,7 +343,9 @@ public class VehicleCheckActivity extends BaseActivity {
                 addParam("vehicleId", vehicleId).
                 addParam("testData", testData).
                 addParam("appUserId", appUserId).
-                addParam("token", token).build().execute(new StringCallback() {
+                addParam("token", token).
+                addParam("platformType", "1").
+                build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Response response, Exception e, int id) {
 
@@ -355,6 +357,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 if (entity.isSuccess()) {
                     Intent intent = new Intent("com.android.Record");//创建发送广播的Action
                     localBroadcastManager.sendBroadcast(intent);  //发送本地广播
+                    addRemind(getUserId(), addJsonContent(tripRecord.getOBDJson()), getToken());
                 }
             }
         });

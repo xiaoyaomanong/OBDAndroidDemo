@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -61,8 +62,21 @@ import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
+import io.github.macfja.obd2.Command;
+import io.github.macfja.obd2.command.ClearDTCsCommand;
+import io.github.macfja.obd2.command.DTCsCommand;
+import io.github.macfja.obd2.command.FrozeCommand;
+import io.github.macfja.obd2.command.LiveCommand;
+import io.github.macfja.obd2.command.OxygenMonitorCommand;
+import io.github.macfja.obd2.command.PendingDTCsCommand;
+import io.github.macfja.obd2.command.VehicleInformationCommand;
+import io.github.macfja.obd2.command.livedata.EngineRPM;
+import io.github.macfja.obd2.elm327.Commander;
+import io.github.macfja.obd2.elm327.command.DeviceDescription;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -122,6 +136,7 @@ public class HomeFragment extends BaseFragment {
             }
         }
     };
+    private Commander commander = new Commander();
 
 
     public static HomeFragment getInstance() {
@@ -187,9 +202,110 @@ public class HomeFragment extends BaseFragment {
                 showSingleChoiceDialog();
             }
         });
-
     }
 
+    private void getOBDData(BluetoothSocket socket) {
+        try {
+            commander.setCommunicationInterface(socket.getOutputStream(), socket.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        liveData();
+        frozeData();
+        getDTC();
+        getOxygenMonitorData();
+        getPendingDTC();
+        getVehicleInfo();
+    }
+
+    /**
+     * 获取实时数据
+     */
+    private void liveData() {
+        try {
+            for (Map.Entry<String, Command> entry : LiveCommand.getService01Commands().entrySet()) {
+                LogE("PID:" + entry.getKey());
+                LogE("结果:" + commander.sendCommand(entry.getValue()).getFormattedString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取冻结帧
+     */
+    private void frozeData() {
+        try {
+            for (Map.Entry<String, FrozeCommand> entry : FrozeCommand.getService02Commands().entrySet()) {
+                LogE("PID:" + entry.getKey());
+                LogE("结果:" + commander.sendCommand(entry.getValue()).getFormattedString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 清除故障码
+     */
+    private void clearDTC() {
+        try {
+            LogE("清除故障码：" + commander.sendCommand(new ClearDTCsCommand()).getFormattedString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取故障码
+     */
+    private void getDTC() {
+        try {
+            LogE("故障码：" + commander.sendCommand(new DTCsCommand()).getFormattedString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 请求氧传感器监测测试结果
+     */
+    private void getOxygenMonitorData() {
+        try {
+            for (Map.Entry<String, Command> entry : OxygenMonitorCommand.getService05Commands().entrySet()) {
+                LogE("PID:" + entry.getKey());
+                LogE("结果:" + commander.sendCommand(entry.getValue()).getFormattedString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 请求未解决故障码
+     */
+    private void getPendingDTC() {
+        try {
+            LogE("未解决故障码：" + commander.sendCommand(new PendingDTCsCommand()).getFormattedString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 请求未解决故障码
+     */
+    private void getVehicleInfo() {
+        try {
+            for (Map.Entry<String, Command> entry : VehicleInformationCommand.getService09Commands().entrySet()) {
+                LogE("PID:" + entry.getKey());
+                LogE("结果:" + commander.sendCommand(entry.getValue()).getFormattedString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     /**
@@ -384,7 +500,7 @@ public class HomeFragment extends BaseFragment {
             public void onResponse(String response, int id) {
                 TestRecordEntity entity = JSON.parseObject(response, TestRecordEntity.class);
                 if (entity.isSuccess()) {
-                    if (entity.getData().getList().size()!=0) {
+                    if (entity.getData().getList().size() != 0) {
                         tvCheckTime.setText("上次检测 " + entity.getData().getList().get(0).getDetectionTime());
                     }
                     recordAdapter.setList(entity.getData().getList());
@@ -467,6 +583,7 @@ public class HomeFragment extends BaseFragment {
         isConnected = true;
         TipDialog.show(context, getString(R.string.title_connected_to) + mConnectedDeviceName, TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
         dialogUtils.dismiss();
+        getOBDData(MainApplication.getBluetoothSocket());
     }
 
     /**

@@ -20,8 +20,6 @@
 package com.example.obdandroid.ui.obd2.response;
 
 import com.example.obdandroid.ui.obd2.Unit;
-import com.example.obdandroid.ui.obd2.response.CalculatedResponse;
-import com.example.obdandroid.ui.obd2.response.RawResponse;
 
 /**
  * <p>This class is the response of a {@link com.example.obdandroid.ui.obd2.command.livedata.OxygenSensor} command.</p>
@@ -44,7 +42,7 @@ public class OxygenSensorFuelTrimResponse extends RawResponse {
     }
 
     public Number getCalculatedVoltage() {
-        return com.example.obdandroid.ui.obd2.response.CalculatedResponse.getIntValue(getRawResult(), 0) / 200;
+        return CalculatedResponse.getIntValue(getRawResult(), 0) / 200;
     }
 
     public String getFormattedShortTermFuelTrim() {

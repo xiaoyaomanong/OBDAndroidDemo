@@ -25,8 +25,6 @@ import com.hjq.bar.TitleBar;
 import java.io.IOException;
 import java.util.Map;
 
-import javax.script.ScriptException;
-
 
 /**
  * 作者：Jealous
@@ -35,6 +33,7 @@ import javax.script.ScriptException;
  */
 public class MyVehicleDashActivity extends BaseActivity {
     private final Commander commander = new Commander();
+
     @Override
     protected int getContentViewId() {
         return R.layout.activity_dash;
@@ -96,10 +95,10 @@ public class MyVehicleDashActivity extends BaseActivity {
         try {
             for (Map.Entry<String, Command> entry : LiveCommand.getService01Commands().entrySet()) {
                 LogE("PID:" + entry.getKey());
-                Response response=commander.sendCommand(entry.getValue());
+                Response response = commander.sendCommand(entry.getValue());
                 LogE("结果:" + response.getFormattedString());
             }
-        } catch (IOException | ScriptException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -114,7 +113,7 @@ public class MyVehicleDashActivity extends BaseActivity {
                 LogE("PID:" + entry.getKey());
                 LogE("结果:" + commander.sendCommand(entry.getValue()).getFormattedString());
             }
-        } catch (IOException | ScriptException e) {
+        } catch (IOException  e) {
             e.printStackTrace();
         }
     }
@@ -126,7 +125,7 @@ public class MyVehicleDashActivity extends BaseActivity {
     private void clearDTC() {
         try {
             LogE("清除故障码：" + commander.sendCommand(new ClearDTCsCommand()).getFormattedString());
-        } catch (IOException | ScriptException e) {
+        } catch (IOException  e) {
             e.printStackTrace();
         }
     }
@@ -138,7 +137,7 @@ public class MyVehicleDashActivity extends BaseActivity {
     private void getDTC() {
         try {
             LogE("故障码：" + commander.sendCommand(new DTCsCommand()).getFormattedString());
-        } catch (IOException | ScriptException e) {
+        } catch (IOException  e) {
             e.printStackTrace();
         }
     }
@@ -153,7 +152,7 @@ public class MyVehicleDashActivity extends BaseActivity {
                 LogE("PID:" + entry.getKey());
                 LogE("结果:" + commander.sendCommand(entry.getValue()).getFormattedString());
             }
-        } catch (IOException | ScriptException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -165,7 +164,7 @@ public class MyVehicleDashActivity extends BaseActivity {
     private void getPendingDTC() {
         try {
             LogE("未解决故障码：" + commander.sendCommand(new PendingDTCsCommand()).getFormattedString());
-        } catch (IOException | ScriptException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -180,7 +179,7 @@ public class MyVehicleDashActivity extends BaseActivity {
                 LogE("PID:" + entry.getKey());
                 LogE("结果:" + commander.sendCommand(entry.getValue()).getFormattedString());
             }
-        } catch (IOException | ScriptException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

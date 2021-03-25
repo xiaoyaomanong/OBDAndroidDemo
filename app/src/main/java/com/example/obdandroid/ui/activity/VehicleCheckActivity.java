@@ -26,6 +26,7 @@ import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.adapter.VehicleCheckAdapter;
+import com.example.obdandroid.ui.entity.AddTestRecordEntity;
 import com.example.obdandroid.ui.entity.MessageCheckEntity;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
@@ -212,7 +213,6 @@ public class VehicleCheckActivity extends BaseActivity {
                 }
             }
         });
-
     }
 
     private void executeCommand(BluetoothSocket socket) {
@@ -323,7 +323,7 @@ public class VehicleCheckActivity extends BaseActivity {
      *                 展示OBD检测数据
      */
     public void showResult(List<OBDTripEntity> messages) {
-        //initAinm();
+        initAinm();
         adapter = new VehicleCheckAdapter(context);
         adapter.setList(messages);
         recycleCheckContent.setAdapter(adapter);
@@ -352,11 +352,11 @@ public class VehicleCheckActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
+                AddTestRecordEntity entity = JSON.parseObject(response, AddTestRecordEntity.class);
                 if (entity.isSuccess()) {
                     Intent intent = new Intent("com.android.Record");//创建发送广播的Action
                     localBroadcastManager.sendBroadcast(intent);  //发送本地广播
-                    addRemind(getUserId(), addJsonContent(tripRecord.getOBDJson()), getToken());
+                    addRemind(getUserId(), addJsonContent(entity.getData(), tripRecord.getOBDJson()), getToken(), String.valueOf(entity.getData().getId()));
                 }
             }
         });
@@ -367,13 +367,14 @@ public class VehicleCheckActivity extends BaseActivity {
      * @param content   消息内容
      * @param token     用户Token
      */
-    private void addRemind(String appUserId, String content, String token) {
+    private void addRemind(String appUserId, String content, String token, String testResultId) {
         OkHttpUtils.post().url(SERVER_URL + addRemind_URL).
                 addParam("appUserId", appUserId).
                 addParam("remindType", "2").
                 addParam("content", content).
                 addParam("title", "全车检测自动生成体检报告").
                 addParam("token", token).
+                addParam("testResultId", testResultId).
                 build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Response response, Exception e, int id) {
@@ -391,16 +392,16 @@ public class VehicleCheckActivity extends BaseActivity {
         });
     }
 
-    private String addJsonContent(OBDJsonTripEntity tripEntity) {
+    private String addJsonContent(AddTestRecordEntity.DataEntity dataEntity, OBDJsonTripEntity tripEntity) {
         MessageCheckEntity entity = new MessageCheckEntity();
-        entity.setCreateTime(AppDateUtils.getTodayDateTime());
+        entity.setCreateTime(AppDateUtils.getTodayDateTimeHms());
         if (TextUtils.isEmpty(tripEntity.getFaultCodes())) {
             entity.setContent("通过检测,无故障码,您的车辆很健康!");
-            entity.setDetails("");
         } else {
             entity.setContent("通过检测,发现你的车辆有故障，请及时处理!");
-            entity.setDetails(JSON.toJSONString(tripEntity));
         }
+        entity.setDetails(String.valueOf(dataEntity.getId()));
+        entity.setPlatformType(dataEntity.getPlatformType());
         return JSON.toJSONString(entity);
     }
 

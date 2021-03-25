@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -93,6 +94,7 @@ public class RemindAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         private final TextView tvRemindTitle;
         private final TextView tvCreateTime;
         private final TextView tvRemindContent;
+        private final ImageView ivRead;
         private final LinearLayout card_view;
 
         public MyViewHolder(View itemView) {
@@ -100,6 +102,7 @@ public class RemindAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             tvRemindTitle = itemView.findViewById(R.id.tvRemindTitle);
             tvCreateTime = itemView.findViewById(R.id.tvCreateTime);
             card_view = itemView.findViewById(R.id.card_view);
+            ivRead = itemView.findViewById(R.id.ivRead);
             tvRemindContent = itemView.findViewById(R.id.tvRemindContent);
         }
 
@@ -123,6 +126,12 @@ public class RemindAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     break;
             }
             tvRemindTitle.setText(listEntity.getTitle());
+            //是否读取 1是 2 否 ,
+            if (listEntity.getIsRead() == 1) {
+                ivRead.setImageResource(R.drawable.icon_read_ok);
+            } else {
+                ivRead.setImageResource(R.drawable.icon_read_no);
+            }
             card_view.setOnClickListener(v -> clickCallBack.click(listEntity));
         }
     }

@@ -24,8 +24,6 @@ import com.example.obdandroid.ui.obd2.Unit;
 import com.example.obdandroid.ui.obd2.command.LiveCommand;
 import com.example.obdandroid.ui.obd2.response.CalculatedResponse;
 
-import javax.script.ScriptException;
-
 /**
  * <p>This class is the OBD-II command for "01 63" (Service 01, PID 0x63).</p>
  * <p>Description: Engine reference torque</p>
@@ -49,7 +47,7 @@ public class EngineReferenceTorque extends LiveCommand {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
+    public Response getResponse(byte[] rawResult)  {
         return new CalculatedResponse(rawResult, "256 * A + B") {
             @Override
             public Unit getUnit() {

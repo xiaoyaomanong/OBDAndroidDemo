@@ -25,8 +25,6 @@ import com.example.obdandroid.ui.obd2.Unit;
 import com.example.obdandroid.ui.obd2.command.LiveCommand;
 import com.example.obdandroid.ui.obd2.response.CalculatedResponse;
 
-import javax.script.ScriptException;
-
 /**
  * <p>This class is the OBD-II command for "01 0E" (Service 01, PID 0x0E).</p>
  * <p>Description: Timing advance</p>
@@ -54,11 +52,8 @@ public class TimingAdvance extends LiveCommand {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
-        return new CalculatedResponse(
-                rawResult,
-                "A / 2 - 64"
-        ) {
+    public Response getResponse(byte[] rawResult)  {
+        return new CalculatedResponse(rawResult, "A / 2 - 64") {
             @Override
             public Unit getUnit() {
                 return Unit.Degree;

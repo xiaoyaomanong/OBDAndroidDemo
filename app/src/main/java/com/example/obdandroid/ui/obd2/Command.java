@@ -19,8 +19,6 @@
 
 package com.example.obdandroid.ui.obd2;
 
-import javax.script.ScriptException;
-
 
 /**
  * An OBD command
@@ -40,7 +38,6 @@ public interface Command {
      *
      * @param rawResult The response of OBD for the command
      * @return The response object
-     * @throws ScriptException If the conversion equation is wrong
      */
-    Response getResponse(byte[] rawResult) throws ScriptException;
+    Response getResponse(byte[] rawResult);
 }

@@ -37,7 +37,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.script.ScriptException;
 
 /**
  * The commander (send and receive) to work with Elm327.
@@ -104,7 +103,7 @@ public class Commander extends AbsCommander {
      * {@inheritDoc}
      */
     @Override
-    public Response sendCommand(Command command) throws IOException, ScriptException {
+    public Response sendCommand(Command command) throws IOException {
         if (command instanceof BooleanCommand && !((BooleanCommand) command).getPrefix().equals("E")) {
             putBooleanCommand((BooleanCommand) command);
         }
@@ -252,7 +251,7 @@ public class Commander extends AbsCommander {
      *
      * @throws IOException If an error occurs during communication with the OBD interfaces
      */
-    public void reduceCommunicationSize() throws IOException, ScriptException {
+    public void reduceCommunicationSize() throws IOException {
         LogUtils.i("Reducing communication by turning off 'Echo', 'Line Feed', 'Space' and 'Header'");
         sendCommand(BooleanCommand.EchoOff);
         sendCommand(BooleanCommand.LinefeedOff);

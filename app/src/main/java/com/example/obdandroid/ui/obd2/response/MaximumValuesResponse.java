@@ -21,8 +21,6 @@ package com.example.obdandroid.ui.obd2.response;
 
 import com.example.obdandroid.ui.obd2.Unit;
 
-import javax.script.ScriptException;
-
 /**
  * <p>This class is the response of a {@link com.example.obdandroid.ui.obd2.command.livedata.MaximumValues} command.</p>
  *
@@ -35,45 +33,41 @@ public class MaximumValuesResponse extends RawResponse {
 
     @Override
     public String getFormattedString() {
-        try {
-            return getFormattedFuelAirEquivalenceRatio() + " / " +
-                    getFormattedOxygenSensorVoltage() + " / " +
-                    getFormattedOxygenSensorCurrent() + " / " +
-                    getFormattedIntakeManifoldAbsolutePressure();
-        } catch (ScriptException e) {
-            return "ERROR";
-        }
+        return getFormattedFuelAirEquivalenceRatio() + " / " +
+                getFormattedOxygenSensorVoltage() + " / " +
+                getFormattedOxygenSensorCurrent() + " / " +
+                getFormattedIntakeManifoldAbsolutePressure();
     }
 
-    public String getFormattedFuelAirEquivalenceRatio() throws ScriptException {
+    public String getFormattedFuelAirEquivalenceRatio()  {
         return getCalculatedFuelAirEquivalenceRatio() + Unit.NoUnit.getSymbol();
     }
 
-    public Number getCalculatedFuelAirEquivalenceRatio() throws ScriptException {
+    public Number getCalculatedFuelAirEquivalenceRatio()  {
         return CalculatedResponse.calculateFromEquation(getRawResult(), "A");
     }
 
-    public String getFormattedOxygenSensorVoltage() throws ScriptException {
+    public String getFormattedOxygenSensorVoltage()  {
         return getCalculatedOxygenSensorVoltage() + Unit.Volt.getSymbol();
     }
 
-    public Number getCalculatedOxygenSensorVoltage() throws ScriptException {
+    public Number getCalculatedOxygenSensorVoltage()  {
         return CalculatedResponse.calculateFromEquation(getRawResult(), "B");
     }
 
-    public String getFormattedOxygenSensorCurrent() throws ScriptException {
+    public String getFormattedOxygenSensorCurrent()  {
         return getCalculatedOxygenSensorCurrent() + Unit.Milliampere.getSymbol();
     }
 
-    public Number getCalculatedOxygenSensorCurrent() throws ScriptException {
+    public Number getCalculatedOxygenSensorCurrent()  {
         return CalculatedResponse.calculateFromEquation(getRawResult(), "C");
     }
 
-    public String getFormattedIntakeManifoldAbsolutePressure() throws ScriptException {
+    public String getFormattedIntakeManifoldAbsolutePressure()  {
         return getCalculatedIntakeManifoldAbsolutePressure() + Unit.KiloPascal.getSymbol();
     }
 
-    public Number getCalculatedIntakeManifoldAbsolutePressure() throws ScriptException {
+    public Number getCalculatedIntakeManifoldAbsolutePressure()  {
         return CalculatedResponse.calculateFromEquation(getRawResult(), "D * 10");
     }
 }

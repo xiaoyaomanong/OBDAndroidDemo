@@ -25,8 +25,6 @@ import com.example.obdandroid.ui.obd2.Response;
 import com.example.obdandroid.ui.obd2.Unit;
 import com.example.obdandroid.ui.obd2.response.CalculatedResponse;
 
-import javax.script.ScriptException;
-
 
 /**
  * <p>This class is the OBD-II command for "09 01" (Service 09, PID 0x01).</p>
@@ -52,7 +50,7 @@ public class VINMessageCount implements Command {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
+    public Response getResponse(byte[] rawResult)  {
         return new CalculatedResponse(rawResult, "A") {
             @Override
             public Unit getUnit() {

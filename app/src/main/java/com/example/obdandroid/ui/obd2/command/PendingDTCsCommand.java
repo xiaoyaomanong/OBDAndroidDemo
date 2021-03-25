@@ -23,8 +23,6 @@ import com.example.obdandroid.ui.obd2.Command;
 import com.example.obdandroid.ui.obd2.Response;
 import com.example.obdandroid.ui.obd2.response.MultipleDiagnosticTroubleCodeResponse;
 
-import javax.script.ScriptException;
-
 /**
  * Service 07 commands
  *
@@ -37,7 +35,7 @@ public class PendingDTCsCommand implements Command {
     }
 
     @Override
-    public Response getResponse(final byte[] rawResult) throws ScriptException {
+    public Response getResponse(final byte[] rawResult)  {
         return new MultipleDiagnosticTroubleCodeResponse(rawResult);
     }
 

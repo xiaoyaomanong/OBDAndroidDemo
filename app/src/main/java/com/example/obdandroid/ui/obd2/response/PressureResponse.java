@@ -20,9 +20,6 @@
 package com.example.obdandroid.ui.obd2.response;
 
 import com.example.obdandroid.ui.obd2.Unit;
-import com.example.obdandroid.ui.obd2.response.CalculatedResponse;
-
-import javax.script.ScriptException;
 
 /**
  * <p>This class is the response of a {@link com.example.obdandroid.ui.obd2.Command} that return a pressure.</p>
@@ -38,7 +35,7 @@ public class PressureResponse extends CalculatedResponse {
         this.kilo = kilo;
     }
 
-    public PressureResponse(byte[] raw, String equation, boolean kilo) throws ScriptException {
+    public PressureResponse(byte[] raw, String equation, boolean kilo) {
         this(raw, calculateFromEquation(raw, equation), kilo);
     }
 

@@ -25,7 +25,6 @@ import com.example.obdandroid.ui.obd2.Response;
 import com.example.obdandroid.ui.obd2.response.CalculatedResponse;
 import com.example.obdandroid.ui.obd2.response.PercentResponse;
 
-import javax.script.ScriptException;
 
 /**
  * <p>This class is the OBD-II command for multiple commands: "01 06" to "01 08".</p>
@@ -72,11 +71,8 @@ public enum FuelTrim implements Command {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
-        return new PercentResponse(
-                rawResult,
-                CalculatedResponse.calculateFromEquation(rawResult, "A / 1.28 - 100")
-        );
+    public Response getResponse(byte[] rawResult) {
+        return new PercentResponse(rawResult, CalculatedResponse.calculateFromEquation(rawResult, "(A - 128) * 100 / 128"));
     }
 
     @Override

@@ -24,7 +24,6 @@ import com.example.obdandroid.ui.obd2.command.LiveCommand;
 import com.example.obdandroid.ui.obd2.response.CalculatedResponse;
 import com.example.obdandroid.ui.obd2.response.PercentResponse;
 
-import javax.script.ScriptException;
 
 /**
  * <p>This class is the OBD-II command for "01 62" (Service 01, PID 0x62).</p>
@@ -49,7 +48,7 @@ public class ActualEngineTorque extends LiveCommand {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
+    public Response getResponse(byte[] rawResult)  {
         return new PercentResponse(rawResult, CalculatedResponse.calculateFromEquation(rawResult, "A - 125"));
     }
 }

@@ -23,15 +23,13 @@ import com.example.obdandroid.ui.obd2.Response;
 import com.example.obdandroid.ui.obd2.elm327.DontFilterResponse;
 import com.example.obdandroid.ui.obd2.elm327.response.TextResponse;
 
-import javax.script.ScriptException;
-
 /**
  * Abstract class for all ELM {@code AT} commands with a text response
  */
 @DontFilterResponse
 public abstract class ATTextCommand extends ATCommand {
     @Override
-    public Response getResponse(final byte[] rawResult) throws ScriptException {
+    public Response getResponse(final byte[] rawResult)  {
         return new TextResponse(rawResult);
     }
 }

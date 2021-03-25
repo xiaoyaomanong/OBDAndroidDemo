@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.script.ScriptException;
 
 /**
  * Send OBD command and return command result.
@@ -44,7 +43,7 @@ public interface CommanderInterface {
      * @return The command response
      * @throws IOException     If an error occurs during communication with the OBD interfaces
      */
-    public Response sendCommand(Command command) throws IOException, ExceptionResponse, ScriptException;
+    public Response sendCommand(Command command) throws IOException, ExceptionResponse;
 
     /**
      * Delete all stored response of persistent command

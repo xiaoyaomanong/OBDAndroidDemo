@@ -26,7 +26,6 @@ import com.example.obdandroid.ui.obd2.command.livedata.FreezeDiagnosticTroubleCo
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.script.ScriptException;
 
 /**
  *
@@ -85,7 +84,7 @@ public class FrozeCommand implements Command {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
+    public Response getResponse(byte[] rawResult)  {
         return service01Command.getResponse(rawResult);
     }
 

@@ -13,7 +13,9 @@ import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.ui.activity.CheckRecordDetailsActivity;
+import com.example.obdandroid.ui.activity.ReadMsgActivity;
 import com.example.obdandroid.ui.adapter.RemindAdapter;
+import com.example.obdandroid.ui.entity.MessageCheckEntity;
 import com.example.obdandroid.ui.entity.RemindPageEntity;
 import com.example.obdandroid.ui.entity.TestRecordEntity;
 import com.hjq.bar.TitleBar;
@@ -40,7 +42,6 @@ public class MsgFragment extends BaseFragment {
     private Context context;
     private PullLoadMoreRecyclerView recycleRemind;
     private int pageNum = 1;
-    private final int pageSize = 10;
     private RemindAdapter adapter;
     private boolean isLoadMore;
     private List<RemindPageEntity.DataEntity.ListEntity> datas = new ArrayList<>();
@@ -95,10 +96,12 @@ public class MsgFragment extends BaseFragment {
         });
 
         adapter.setClickCallBack(entity -> {
-          /*  OBDJsonTripEntity tripEntity = JSON.parseObject(entity.getTestData(), OBDJsonTripEntity.class);
-            Intent intent = new Intent(context, CheckRecordDetailsActivity.class);
-            intent.putExtra("data", tripEntity);
-            startActivity(intent);*/
+            MessageCheckEntity checkEntity = JSON.parseObject(entity.getContent(), MessageCheckEntity.class);
+            Intent intent = new Intent(context, ReadMsgActivity.class);
+            intent.putExtra("data", checkEntity);
+            intent.putExtra("isRead", entity.getIsRead());
+            intent.putExtra("remindId", String.valueOf(entity.getRemindId()));
+            startActivityForResult(intent, 101);
         });
         initRecordReceiver();
     }
@@ -162,5 +165,16 @@ public class MsgFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101) {
+            if (resultCode == 102) {
+                pageNum = 1;
+                getRemindPageList(String.valueOf(pageNum), getToken(), getUserId(), true);
+            }
+        }
     }
 }

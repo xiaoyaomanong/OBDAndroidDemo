@@ -24,8 +24,6 @@ import com.example.obdandroid.ui.obd2.Unit;
 import com.example.obdandroid.ui.obd2.command.LiveCommand;
 import com.example.obdandroid.ui.obd2.response.CalculatedResponse;
 
-import javax.script.ScriptException;
-
 /**
  * <p>This class is the OBD-II command for "01 44" (Service 01, PID 0x44).</p>
  * <p>Description: Fuel–Air commanded equivalence ratio</p>
@@ -53,7 +51,7 @@ public class FuelAirCommandedRatio extends LiveCommand {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
+    public Response getResponse(byte[] rawResult)  {
         return new CalculatedResponse(rawResult, "(2 / 65536) * (256 * A + B)") {
             @Override
             public Unit getUnit() {

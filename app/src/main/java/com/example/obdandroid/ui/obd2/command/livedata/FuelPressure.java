@@ -24,7 +24,6 @@ import com.example.obdandroid.ui.obd2.Response;
 import com.example.obdandroid.ui.obd2.command.LiveCommand;
 import com.example.obdandroid.ui.obd2.response.PressureResponse;
 
-import javax.script.ScriptException;
 
 /**
  * <p>This class is the OBD-II command for "01 0A" (Service 01, PID 0x0A).</p>
@@ -49,11 +48,7 @@ public class FuelPressure extends LiveCommand {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
-        return new PressureResponse(
-                rawResult,
-                "A * 3",
-                true
-        );
+    public Response getResponse(byte[] rawResult) {
+        return new PressureResponse(rawResult, "A * 3", true);
     }
 }

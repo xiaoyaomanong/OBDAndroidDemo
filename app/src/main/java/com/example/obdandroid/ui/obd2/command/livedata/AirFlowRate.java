@@ -25,7 +25,6 @@ import com.example.obdandroid.ui.obd2.Unit;
 import com.example.obdandroid.ui.obd2.command.LiveCommand;
 import com.example.obdandroid.ui.obd2.response.CalculatedResponse;
 
-import javax.script.ScriptException;
 
 /**
  * <p>This class is the OBD-II command for "01 10" (Service 01, PID 0x10).</p>
@@ -54,7 +53,7 @@ public class AirFlowRate extends LiveCommand {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
+    public Response getResponse(byte[] rawResult)  {
         return new CalculatedResponse(rawResult, "(256 * A + B) / 100") {
             @Override
             public Unit getUnit() {

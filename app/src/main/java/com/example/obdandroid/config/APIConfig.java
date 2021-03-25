@@ -88,6 +88,10 @@ public class APIConfig {
      */
     public static final String getTestRecordPageList_URL = "/api/getTestRecordPageList";
     /**
+     * 获取用户检测记录详情
+     */
+    public static final String getTestRecordById_URL = "/api/getTestRecordById";
+    /**
      * 添加检测信息
      */
     public static final String addTestRecord_URL = "/api/addTestRecord";
@@ -115,6 +119,10 @@ public class APIConfig {
      * 获取用户消息列表
      */
     public static final String getRemindPageList_URL = "/api/getRemindPageList";
+    /**
+     * 用户读取消息
+     */
+    public static final String addReadRemind_URL = "/api/addReadRemind";
     /**
      * 添加购买套餐校验
      */

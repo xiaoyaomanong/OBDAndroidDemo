@@ -23,8 +23,6 @@ import com.example.obdandroid.ui.obd2.Response;
 import com.example.obdandroid.ui.obd2.command.LiveCommand;
 import com.example.obdandroid.ui.obd2.response.MaximumValuesResponse;
 
-import javax.script.ScriptException;
-
 /**
  * <p>This class is the OBD-II command for "01 4F" (Service 01, PID 0xF).</p>
  * <p>Description: Maximum value for Fuel–Air equivalence ratio, oxygen sensor voltage, oxygen sensor current,
@@ -54,7 +52,7 @@ public class MaximumValues extends LiveCommand {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
+    public Response getResponse(byte[] rawResult)  {
         return new MaximumValuesResponse(rawResult);
     }
 }

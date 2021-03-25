@@ -21,10 +21,7 @@ package com.example.obdandroid.ui.obd2.elm327.command;
 
 import com.example.obdandroid.ui.obd2.Response;
 import com.example.obdandroid.ui.obd2.Unit;
-import com.example.obdandroid.ui.obd2.elm327.command.ATCommand;
 import com.example.obdandroid.ui.obd2.response.CalculatedResponse;
-
-import javax.script.ScriptException;
 
 /**
  * <p>This class is the ELM327 command for "AT AMC".</p>
@@ -48,7 +45,7 @@ public class ActiveMonitorCount extends ATCommand {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
+    public Response getResponse(byte[] rawResult) {
         return new CalculatedResponse(rawResult, "A * 0.655") {
             @Override
             public Unit getUnit() {

@@ -24,8 +24,6 @@ import com.example.obdandroid.ui.obd2.Unit;
 import com.example.obdandroid.ui.obd2.command.LiveCommand;
 import com.example.obdandroid.ui.obd2.response.CalculatedResponse;
 
-import javax.script.ScriptException;
-
 /**
  * <p>This class is the OBD-II command for "01 4E" (Service 01, PID 0x4E).</p>
  * <p>Description: Time since trouble codes cleared</p>
@@ -49,11 +47,8 @@ public class TimeSinceLastClean extends LiveCommand {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
-        return new CalculatedResponse(
-                rawResult,
-                "A * 256 + B"
-        ) {
+    public Response getResponse(byte[] rawResult)  {
+        return new CalculatedResponse(rawResult, "A * 256 + B") {
             @Override
             public Unit getUnit() {
                 return Unit.Minute;

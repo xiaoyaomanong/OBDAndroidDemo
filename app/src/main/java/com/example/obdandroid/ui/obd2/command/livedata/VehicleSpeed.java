@@ -25,8 +25,6 @@ import com.example.obdandroid.ui.obd2.Unit;
 import com.example.obdandroid.ui.obd2.command.LiveCommand;
 import com.example.obdandroid.ui.obd2.response.CalculatedResponse;
 
-import javax.script.ScriptException;
-
 /**
  * <p>This class is the OBD-II command for "01 0D" (Service 01, PID 0x0D).</p>
  * <p>Description: Vehicle speed</p>
@@ -50,7 +48,7 @@ public class VehicleSpeed extends LiveCommand {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
+    public Response getResponse(byte[] rawResult)  {
         return new CalculatedResponse(rawResult, "A") {
             @Override
             public Unit getUnit() {

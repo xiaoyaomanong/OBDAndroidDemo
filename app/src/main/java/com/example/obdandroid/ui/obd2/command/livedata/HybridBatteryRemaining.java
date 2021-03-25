@@ -23,8 +23,6 @@ import com.example.obdandroid.ui.obd2.Response;
 import com.example.obdandroid.ui.obd2.command.LiveCommand;
 import com.example.obdandroid.ui.obd2.response.PercentResponse;
 
-import javax.script.ScriptException;
-
 /**
  * <p>This class is the OBD-II command for "01 5B" (Service 01, PID 0x5B).</p>
  * <p>Description: 	Hybrid battery pack remaining life</p>
@@ -52,7 +50,7 @@ public class HybridBatteryRemaining extends LiveCommand {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
+    public Response getResponse(byte[] rawResult) {
         return new PercentResponse(rawResult);
     }
 }

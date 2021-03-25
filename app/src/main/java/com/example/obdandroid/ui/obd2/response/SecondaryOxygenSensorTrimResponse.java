@@ -20,8 +20,6 @@
 package com.example.obdandroid.ui.obd2.response;
 
 import com.example.obdandroid.ui.obd2.Unit;
-import com.example.obdandroid.ui.obd2.response.CalculatedResponse;
-import com.example.obdandroid.ui.obd2.response.RawResponse;
 
 /**
  * <p>This class is the response of a {@link com.example.obdandroid.ui.obd2.command.livedata.SecondaryOxygenSensorTrim} command.</p>
@@ -47,7 +45,7 @@ public class SecondaryOxygenSensorTrimResponse extends RawResponse {
     }
 
     public Number getCalculatedPercentFirstBank() {
-        return (com.example.obdandroid.ui.obd2.response.CalculatedResponse.getIntValue(getRawResult(), 0) / 128) - 100;
+        return (CalculatedResponse.getIntValue(getRawResult(), 0) / 128) - 100;
     }
 
     public Number getCalculatedPercentSecondBank() {

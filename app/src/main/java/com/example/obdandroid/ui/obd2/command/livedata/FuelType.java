@@ -24,7 +24,6 @@ import com.example.obdandroid.ui.obd2.Response;
 import com.example.obdandroid.ui.obd2.command.LiveCommand;
 import com.example.obdandroid.ui.obd2.response.FuelTypeResponse;
 
-import javax.script.ScriptException;
 
 /**
  * <p>This class is the OBD-II command for "01 51" (Service 01, PID 0x51).</p>
@@ -50,7 +49,7 @@ public class FuelType extends LiveCommand {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
+    public Response getResponse(byte[] rawResult)  {
         return new FuelTypeResponse(rawResult);
     }
 }

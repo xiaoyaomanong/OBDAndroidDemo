@@ -24,8 +24,6 @@ import com.example.obdandroid.ui.obd2.Response;
 import com.example.obdandroid.ui.obd2.Unit;
 import com.example.obdandroid.ui.obd2.response.CalculatedResponse;
 
-import javax.script.ScriptException;
-
 /**
  * <p>This class is the OBD-II command for multiple commands: "05 0201" to "05 0210".</p>
  * <p>The commands are: "05 0201" (Service 05, PID 0x0201), "05 0202" (Service 05, PID 0x0202),
@@ -95,7 +93,7 @@ public enum LeanToRichMonitorCommand implements Command {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
+    public Response getResponse(byte[] rawResult)  {
         return new CalculatedResponse(rawResult, "A * 0.005") {
             @Override
             public Unit getUnit() {

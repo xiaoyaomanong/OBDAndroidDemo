@@ -23,8 +23,6 @@ import com.example.obdandroid.ui.obd2.Response;
 import com.example.obdandroid.ui.obd2.command.LiveCommand;
 import com.example.obdandroid.ui.obd2.response.PressureResponse;
 
-import javax.script.ScriptException;
-
 /**
  * <p>This class is the OBD-II command for "01 33" (Service 01, PID 0x33).</p>
  * <p>Description: Absolute Barometric Pressure</p>
@@ -48,7 +46,7 @@ public class BarometricPressure extends LiveCommand {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
+    public Response getResponse(byte[] rawResult)  {
         return new PressureResponse(rawResult, "A", true);
     }
 }

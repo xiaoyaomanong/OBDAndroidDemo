@@ -19,9 +19,6 @@
 
 package com.example.obdandroid.ui.obd2.response;
 
-import javax.script.ScriptException;
-
-
 /**
  * <b>DEPRECATED</b>
  * <p>This class is the response of a {@link com.example.obdandroid.ui.obd2.Command} that return a pressure.</p>
@@ -37,7 +34,7 @@ public class PressureResult extends PressureResponse {
         super(raw, calculated, kilo);
     }
 
-    public PressureResult(byte[] raw, String equation, boolean kilo) throws ScriptException {
+    public PressureResult(byte[] raw, String equation, boolean kilo)  {
         super(raw, equation, kilo);
     }
 }

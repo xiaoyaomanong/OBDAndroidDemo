@@ -21,8 +21,6 @@ package com.example.obdandroid.ui.obd2.response;
 
 import com.example.obdandroid.ui.obd2.Unit;
 
-import javax.script.ScriptException;
-
 /**
  * <p>This class is the response of a {@link com.example.obdandroid.ui.obd2.command.livedata.OxygenSensor} command.</p>
  *
@@ -36,26 +34,22 @@ public class OxygenSensorFuelAirCurrentResponse extends RawResponse {
 
     @Override
     public String getFormattedString() {
-        try {
-            return getFormattedCurrent() + " / " + getFormattedFuelAirEquivalenceRatio();
-        } catch (ScriptException e) {
-            return "ERROR";
-        }
+        return getFormattedCurrent() + " / " + getFormattedFuelAirEquivalenceRatio();
     }
 
-    public String getFormattedCurrent() throws ScriptException {
+    public String getFormattedCurrent()  {
         return getCalculatedCurrent() + Unit.Milliampere.getSymbol();
     }
 
-    public Number getCalculatedCurrent() throws ScriptException {
+    public Number getCalculatedCurrent()  {
         return CalculatedResponse.calculateFromEquation(getRawResult(), "(256 * C + D) / 256 - 128");
     }
 
-    public String getFormattedFuelAirEquivalenceRatio() throws ScriptException {
+    public String getFormattedFuelAirEquivalenceRatio()  {
         return getCalculatedFuelAirEquivalenceRatio() + Unit.NoUnit.getSymbol();
     }
 
-    public Number getCalculatedFuelAirEquivalenceRatio() throws ScriptException {
+    public Number getCalculatedFuelAirEquivalenceRatio()  {
         return CalculatedResponse.calculateFromEquation(getRawResult(), "(2 / 65536) * (256 * A + B)");
     }
 

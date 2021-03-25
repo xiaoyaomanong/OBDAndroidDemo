@@ -24,8 +24,6 @@ import com.example.obdandroid.ui.obd2.command.LiveCommand;
 import com.example.obdandroid.ui.obd2.response.CalculatedResponse;
 import com.example.obdandroid.ui.obd2.response.PercentResponse;
 
-import javax.script.ScriptException;
-
 /**
  * <p>This class is the OBD-II command for "01 2D" (Service 01, PID 0x2D).</p>
  * <p>Description: EGR Error</p>
@@ -53,7 +51,7 @@ public class ExhaustGasRecirculationError extends LiveCommand {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
-        return new PercentResponse(rawResult, CalculatedResponse.calculateFromEquation(rawResult, "A / 1.28 - 100"));
+    public Response getResponse(byte[] rawResult) {
+        return new PercentResponse(rawResult, CalculatedResponse.calculateFromEquation(rawResult, "(A - 128) * 100 / 128"));
     }
 }

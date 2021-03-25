@@ -23,8 +23,6 @@ import com.example.obdandroid.ui.obd2.Command;
 import com.example.obdandroid.ui.obd2.Response;
 import com.example.obdandroid.ui.obd2.response.TemperatureResponse;
 
-import javax.script.ScriptException;
-
 /**
  * <p>This class is the OBD-II command for multiple commands: "01 3C" to "01 0F".</p>
  * <p>The commands are: "01 3C" (Service 01, PID 0x3C), "01 3D" (Service 01, PID 0x3D),
@@ -82,7 +80,7 @@ public enum CatalystTemperature implements Command {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
+    public Response getResponse(byte[] rawResult)  {
         return new TemperatureResponse(
                 rawResult,
                 "(256 * A + B ) / 10 - 40"

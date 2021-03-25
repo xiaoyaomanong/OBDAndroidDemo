@@ -24,8 +24,6 @@ import com.example.obdandroid.ui.obd2.Response;
 import com.example.obdandroid.ui.obd2.elm327.ELMCommand;
 import com.example.obdandroid.ui.obd2.response.RawResponse;
 
-import javax.script.ScriptException;
-
 /**
  * Abstract class for all ELM {@code AT} commands
  */
@@ -43,7 +41,7 @@ public abstract class ATCommand implements ELMCommand {
     protected abstract String getCode();
 
     @Override
-    public Response getResponse(final byte[] rawResult) throws ScriptException {
+    public Response getResponse(final byte[] rawResult)  {
         return new RawResponse(rawResult) {
         };
     }

@@ -24,8 +24,6 @@ import com.example.obdandroid.ui.obd2.PersistentCommand;
 import com.example.obdandroid.ui.obd2.Response;
 import com.example.obdandroid.ui.obd2.response.ASCIIResponse;
 
-import javax.script.ScriptException;
-
 
 /**
  * <p>This class is the OBD-II command for "09 0A" (Service 09, PID 0x0A).</p>
@@ -51,7 +49,7 @@ public class ECUName implements Command {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
+    public Response getResponse(byte[] rawResult)  {
         return new ASCIIResponse(rawResult);
     }
 

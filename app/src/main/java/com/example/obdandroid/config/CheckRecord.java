@@ -820,7 +820,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 if (codeEntity.getSuccess()) {
                     codes.append(codeEntity.getData().getFaultCode());
                     codes.append('\n');
-                    Log.e(TAG.TAG_Activity,"故障代码:"+codes.toString()+"ggggg");
+                    Log.e(TAG.TAG_Activity, "故障代码:" + codes.toString() + "ggggg");
                     data.add(new OBDTripEntity("故障代码", TextUtils.isEmpty(codes.toString()) ? "" : codes.toString()));
                     entity.setFaultCodes(TextUtils.isEmpty(codes.toString()) ? "" : codes.toString());
                 }
@@ -850,7 +850,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 if (codeEntity.getSuccess()) {
                     codes.append(codeEntity.getData().getFaultCode());
                     codes.append('\n');
-                    Log.e(TAG.TAG_Activity,"永久性故障代码:"+codes.toString());
+                    Log.e(TAG.TAG_Activity, "永久性故障代码:" + codes.toString());
                     data.add(new OBDTripEntity("永久性故障代码", TextUtils.isEmpty(codes.toString()) ? "" : codes.toString()));
                     entity.setPermanentTroubleCode(TextUtils.isEmpty(codes.toString()) ? "" : codes.toString());
                 }
@@ -880,7 +880,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 if (codeEntity.getSuccess()) {
                     codes.append(codeEntity.getData().getFaultCode());
                     codes.append('\n');
-                    Log.e(TAG.TAG_Activity,"未决故障代码:"+codes.toString());
+                    Log.e(TAG.TAG_Activity, "未决故障代码:" + codes.toString());
                     data.add(new OBDTripEntity("未决故障代码", TextUtils.isEmpty(codes.toString()) ? "" : codes.toString()));
                     entity.setPendingTroubleCode(TextUtils.isEmpty(codes.toString()) ? "" : codes.toString());
                 }
@@ -1444,9 +1444,9 @@ public class CheckRecord implements DefineObdReader, Serializable {
         List<OBDTripEntity> returnList = new ArrayList<>();
         Map<String, OBDTripEntity> map = new HashMap<>();
         for (OBDTripEntity people : list) {
-            String key = people.getName() ;
+            String key = people.getName();
             if (map.containsKey(key)) {
-                continue;
+                map.remove(key);
             }
             map.put(key, people);
         }

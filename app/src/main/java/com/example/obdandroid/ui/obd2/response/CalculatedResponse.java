@@ -20,19 +20,12 @@
 package com.example.obdandroid.ui.obd2.response;
 
 
-import android.util.Log;
-
-import com.example.obdandroid.config.TAG;
 import com.example.obdandroid.ui.obd2.Response;
-import com.example.obdandroid.utils.LogUtils;
+import com.sohrab.obd.reader.obdCommand.obdException.NonNumericResponseException;
+import com.sohrab.obd.reader.utils.LogUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import javax.script.SimpleBindings;
 
 /**
  * @author MacFJA
@@ -40,13 +33,15 @@ import javax.script.SimpleBindings;
 public abstract class CalculatedResponse implements Response {
     private byte[] raw;
     private Number calculated;
+    private static ArrayList<Integer> buffer = null;
 
     public CalculatedResponse(byte[] raw, Number calculated) {
         this.raw = raw;
         this.calculated = calculated;
+        this.buffer = new ArrayList<>();
     }
 
-    public CalculatedResponse(byte[] raw, String equation) throws ScriptException {
+    public CalculatedResponse(byte[] raw, String equation) {
         this(raw, calculateFromEquation(raw, equation));
     }
 
@@ -64,16 +59,85 @@ public abstract class CalculatedResponse implements Response {
         return getIntValue(rawResult, ofGroup - 'A');
     }
 
-    public static Number calculateFromEquation(byte[] raw, String equation) throws ScriptException {
-        Log.e(TAG.TAG_Activity,"raw:"+raw.toString());
-        ScriptEngine mathSolver = new ScriptEngineManager().getEngineByName("JavaScript");
+    public static Number calculateFromEquation(byte[] raw, String equation) {
+      /*  ScriptEngine mathSolver = new ScriptEngineManager().getEngineByName("JavaScript");
         Map<String, Object> vars = new HashMap<>();
         //vars.put("SignedA", getSignedA2(raw));
         for (int index = 0; index < CalculatedResponse.getGroupCount(raw); index++) {
             vars.put(Character.toString((char) ('A' + index)), CalculatedResponse.getIntValue(raw, index));
             vars.put("Signed" + (char) ('A' + index), CalculatedResponse.getSigned(raw, index));
         }
-        return (Number) mathSolver.eval(equation, new SimpleBindings(vars));
+        try {
+            return (Number) mathSolver.eval(equation, new SimpleBindings(vars));
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        }*/
+
+        fillBuffer(raw);
+        float result = 0f;
+        switch (equation) {
+            case "100/255 * (256 * A + B)":
+                result = (buffer.get(2) * 256 + buffer.get(3)) * 100 / 255;
+                break;
+            case "A - 125":
+                result = buffer.get(2) - 125;
+                break;
+            case "(A - 128) * 100/128":
+                result = ((buffer.get(2) - 128) * 100) / 128;
+                break;
+            case "(256 * A + B) / 100":
+                result = (buffer.get(2) * 256 + buffer.get(3)) / 100;
+                break;
+            case "(256 * A + B) / 1000":
+                result = (buffer.get(2) * 256 + buffer.get(3)) / 1000;
+                break;
+            case "256 * A + B":
+                result = buffer.get(2) * 256 + buffer.get(3);
+                break;
+            case "(256 * A + B) / 20":
+                result = (buffer.get(2) * 256 + buffer.get(3)) / 20;
+                break;
+            case "(256 * A + B) /4":
+                result = (buffer.get(2) * 256 + buffer.get(3)) / 4;
+                break;
+            case "((256 * A + B) / 128) - 210":
+                result = ((buffer.get(2) * 256 + buffer.get(3)) / 128) - 210;
+                break;
+            case "A * 10":
+                result = buffer.get(2) * 10;
+                break;
+            case "A / 2 - 64":
+                result = (buffer.get(2) / 2) - 64;
+                break;
+            case "A * 0.005":
+                result = (float) (buffer.get(2) / 0.005);
+                break;
+            case "A * 0.655":
+                result = (float) (buffer.get(2) / 0.655);
+                break;
+            case "A":
+                result = buffer.get(2);
+                break;
+            case "B":
+                result = buffer.get(3);
+                break;
+            case "C":
+                result = buffer.get(4);
+                break;
+            case "D * 10":
+                result = buffer.get(5) * 10;
+                break;
+            case "(256 * C + D) / 256 - 128":
+                result = (256 * buffer.get(4) + buffer.get(5)) / 256 - 128;
+                break;
+            case "(2 / 65536) * (256 * A + B)":
+                result = (2 / 65536) * (256 * buffer.get(2) + buffer.get(3));
+                break;
+            case "(8/65536)*(256 * C + D)":
+                result = (8 / 65536) * (256 * buffer.get(4) + buffer.get(5));
+                break;
+        }
+        return (Number) result;
     }
 
     private static Number getSigned(byte[] raw, int index) {
@@ -104,5 +168,32 @@ public abstract class CalculatedResponse implements Response {
     @Override
     public String getFormattedString() {
         return getCalculated() + getUnit().getSymbol();
+    }
+
+    /**
+     * <p>fillBuffer.</p>
+     */
+    public static void fillBuffer(byte[] rawResult) {
+        String rawData = new String(rawResult);
+        rawData = rawData.replaceAll("\\s", ""); //removes all [ \t\n\x0B\f\r]
+        rawData = rawData.replaceAll("(BUS INIT)|(BUSINIT)|(\\.)", "");
+
+        // L.i("Cmd :: " + cmd + " rawData :: " + rawData);
+        if (!rawData.matches("([0-9A-F])+")) {
+            com.sohrab.obd.reader.utils.LogUtils.i("NonNumericResponseException :: " + rawData);
+            throw new NonNumericResponseException(rawData);
+        }
+
+        // read string each two chars
+        buffer.clear();
+        int begin = 0;
+        int end = 2;
+        while (end <= rawData.length()) {
+            buffer.add(Integer.decode("0x" + rawData.substring(begin, end)));
+            begin = end;
+            end += 2;
+        }
+
+        LogUtils.i("buffer :: " + buffer);
     }
 }

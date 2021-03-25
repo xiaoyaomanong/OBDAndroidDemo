@@ -185,6 +185,7 @@
         <activity android:name=".ui.activity.VehicleDashOneActivity" />
         <activity android:name=".ui.activity.VehicleDashTwoActivity" />
         <activity android:name=".ui.activity.TroubleCodeActivity" />
+        <activity android:name=".ui.activity.ReadMsgActivity" />
 
         <service android:name=".service.GpsServices" />
 

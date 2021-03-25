@@ -24,8 +24,6 @@ import com.example.obdandroid.ui.obd2.PersistentCommand;
 import com.example.obdandroid.ui.obd2.Response;
 import com.example.obdandroid.ui.obd2.response.AvailableOxygenSensorMonitorResponse;
 
-import javax.script.ScriptException;
-
 /**
  * <p>This class is the OBD-II command for "05 0100" (Service 05, PID 0x0100).</p>
  * <p>Description: OBD Monitor IDs supported ($01 – $20)</p>
@@ -50,7 +48,7 @@ public class SupportedOxygenSensorMonitorCommand implements Command {
     }
 
     @Override
-    public Response getResponse(byte[] rawResult) throws ScriptException {
+    public Response getResponse(byte[] rawResult) {
         return new AvailableOxygenSensorMonitorResponse(rawResult);
     }
 

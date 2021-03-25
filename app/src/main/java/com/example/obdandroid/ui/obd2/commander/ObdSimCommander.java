@@ -24,7 +24,6 @@ import com.example.obdandroid.ui.obd2.Response;
 import com.example.obdandroid.ui.obd2.elm327.Commander;
 import com.example.obdandroid.ui.obd2.elm327.command.BooleanCommand;
 
-import javax.script.ScriptException;
 import java.io.IOException;
 
 /**
@@ -40,7 +39,7 @@ public class ObdSimCommander extends Commander {
     private boolean alreadyReceiveNewLine = false;
 
     @Override
-    public Response sendCommand(Command command) throws IOException, ScriptException {
+    public Response sendCommand(Command command) throws IOException {
         if (firstRequest) {
             firstRequest = false;
             super.putBooleanCommand(BooleanCommand.EchoOn);

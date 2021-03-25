@@ -77,28 +77,28 @@ public class OBDJsonTripEntity implements Serializable {
     private String CatalystTemperatureBank2Sensor1;
     private String CatalystTemperatureBank1Sensor2;
     private String CatalystTemperatureBank2Sensor2;
-    private String AbsThrottlePosb ;
-    private String AbsThrottlePosc ;
-    private String AccPedalPosd ;
-    private String AccPedalPose ;
-    private String AccPedalPosf ;
-    private String ThrottleActuator ;
+    private String AbsThrottlePosb;
+    private String AbsThrottlePosc;
+    private String AccPedalPosd;
+    private String AccPedalPose;
+    private String AccPedalPosf;
+    private String ThrottleActuator;
     private String TimeRunWithMILOn;
     private String TimeSinceTcClear;
     private String MaxAirFlowMassRate;
     private String EthanolFuelRate;
     private String AbsEvapSystemVaporPressure;
     private String EvapSystemVaporPressure;
-    private  String ShortA_BANK1_B_BANK3;
-    private  String Long_A_BANK1_B_BANK3;
-    private  String Short_A_BANK2_B_BANK4;
-    private  String Long_A_BANK2_B_BANK4;
-    private  String FuelRailAbsPressure;
-    private  String RelAccPedalPos;
-    private  String HyBatteryPackLife;
-    private  String ActualEngineTorque;
-    private  String DPFTemp;
-    private  String EngineFrictionPercentTorque;
+    private String ShortA_BANK1_B_BANK3;
+    private String Long_A_BANK1_B_BANK3;
+    private String Short_A_BANK2_B_BANK4;
+    private String Long_A_BANK2_B_BANK4;
+    private String FuelRailAbsPressure;
+    private String RelAccPedalPos;
+    private String HyBatteryPackLife;
+    private String ActualEngineTorque;
+    private String DPFTemp;
+    private String EngineFrictionPercentTorque;
 
     public String getEngineFrictionPercentTorque() {
         return EngineFrictionPercentTorque;
@@ -124,7 +124,7 @@ public class OBDJsonTripEntity implements Serializable {
         EngineReferenceTorque = engineReferenceTorque;
     }
 
-    private  String EngineReferenceTorque;
+    private String EngineReferenceTorque;
 
     public String getActualEngineTorque() {
         return ActualEngineTorque;

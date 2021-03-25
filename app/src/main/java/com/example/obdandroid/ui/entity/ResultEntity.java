@@ -17,7 +17,7 @@ public class ResultEntity {
     private boolean success;
     private String code;
     private String message;
-    private Object data;
+    private String data;
 
     public boolean isSuccess() {
         return success;
@@ -43,11 +43,11 @@ public class ResultEntity {
         this.message = message;
     }
 
-    public Object getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(String data) {
         this.data = data;
     }
 }

@@ -30,7 +30,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.script.ScriptException;
 
 /**
  * Send OBD command and return command result.
@@ -53,17 +52,17 @@ public class AbsCommander implements CommanderInterface {
      *
      * @param command The command to send
      * @return The command response
-     * @throws IOException     If an error occurs during communication with the OBD interfaces
+     * @throws IOException If an error occurs during communication with the OBD interfaces
      */
     @Override
-    public Response sendCommand(Command command) throws IOException, ExceptionResponse, ScriptException {
+    public Response sendCommand(Command command) throws IOException, ExceptionResponse {
         String request = command.getRequest();
-        LogUtils.i("Sending command: {}"+request);
+        LogUtils.i("Sending command: {}" + request);
 
         // If we already have the command result, use it directly
         if (persistentResult.containsKey(request)) {
-             LogUtils.d("Already persisted command, return stored response");
-             LogUtils.d("stored response: {}"+ Arrays.toString(persistentResult.get(request)));
+            LogUtils.d("Already persisted command, return stored response");
+            LogUtils.d("stored response: {}" + Arrays.toString(persistentResult.get(request)));
             return command.getResponse(persistentResult.get(request));
         }
 
@@ -93,14 +92,14 @@ public class AbsCommander implements CommanderInterface {
     @Override
     public void unpersistCommand(String request) {
         if (persistentResult.containsKey(request)) {
-            LogUtils.i("Remove command {} from persistent storage"+request);
+            LogUtils.i("Remove command {} from persistent storage" + request);
             persistentResult.remove(request);
         }
     }
 
     @Override
     public void persistCommand(String request, byte[] rawResponse) {
-        LogUtils.i("Persistent command ({}), store result"+request);
+        LogUtils.i("Persistent command ({}), store result" + request);
         persistentResult.put(request, rawResponse);
     }
 
@@ -129,8 +128,11 @@ public class AbsCommander implements CommanderInterface {
             }
         }
 
-         LogUtils.d("Received response: {}"+resultString.toString());
-        return resultString.toString().getBytes();
+        LogUtils.d("Received response: {}" + resultString.toString());
+        String rawData;
+        rawData = resultString.toString().replaceAll("SEARCHING", "");
+        rawData = rawData.replaceAll("\\s", "");//removes all [ \t\n\x0B\f\r]
+        return rawData.getBytes();
     }
 
     /**

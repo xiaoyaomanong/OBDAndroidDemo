@@ -9,11 +9,12 @@ import java.util.List;
  */
 public class RemindPageEntity {
 
+
     /**
      * success : true
      * code : SUCCESS
      * message : 操作成功
-     * data : {"total":6,"list":[{"remindId":null,"appUserId":null,"remindType":1,"content":"APP更新通知","title":"APP更新通知","isRead":0},{"remindId":null,"appUserId":1348930017264144385,"remindType":2,"content":"机油保养，机油使用一段时间会变脏、粘度和耐热性会变差，一定程度后无法起到对发动机的保护左右","title":"全车检测自动生成体检报告","isRead":0},{"remindId":null,"appUserId":null,"remindType":1,"content":"阿萨德阿萨德","title":"啊实打实多","isRead":0},{"remindId":null,"appUserId":null,"remindType":1,"content":" 阿萨德阿萨德","title":"阿萨锁定asd","isRead":0},{"remindId":null,"appUserId":null,"remindType":1,"content":"啊实打实多","title":"阿萨锁定a","isRead":0},{"remindId":null,"appUserId":1348930017264144385,"remindType":2,"content":"{\"content\":\"通过检测,无故障码,您的车辆很健康!\",\"createTime\":\"2021-02-07\",\"details\":\"\"}","title":"车辆检测报告","isRead":0}],"pageNum":1,"pageSize":6,"size":6,"startRow":0,"endRow":5,"pages":1,"prePage":0,"nextPage":0,"isFirstPage":true,"isLastPage":true,"hasPreviousPage":false,"hasNextPage":false,"navigatePages":8,"navigatepageNums":[1],"navigateFirstPage":1,"navigateLastPage":1}
+     * data : {"total":2,"list":[{"remindId":null,"appUserId":"1364419027981832194","remindType":2,"content":"{\"content\":\"通过检测,无故障码,您的车辆很健康!\",\"createTime\":\"2021-03-25\",\"details\":\"1374918713771560962\",\"platformType\":1}","title":"全车检测自动生成体检报告","isRead":0},{"remindId":null,"appUserId":"1364419027981832194","remindType":2,"content":"{\"content\":\"通过检测,无故障码,您的车辆很健康!\",\"createTime\":\"2021-03-25\",\"details\":\"1374919262860480513\",\"platformType\":1}","title":"全车检测自动生成体检报告","isRead":0}],"pageNum":1,"pageSize":10,"size":2,"startRow":1,"endRow":2,"pages":1,"prePage":0,"nextPage":0,"isFirstPage":true,"isLastPage":true,"hasPreviousPage":false,"hasNextPage":false,"navigatePages":8,"navigatepageNums":[1],"navigateFirstPage":1,"navigateLastPage":1}
      */
 
     private boolean success;
@@ -55,13 +56,13 @@ public class RemindPageEntity {
 
     public static class DataEntity {
         /**
-         * total : 6
-         * list : [{"remindId":null,"appUserId":null,"remindType":1,"content":"APP更新通知","title":"APP更新通知","isRead":0},{"remindId":null,"appUserId":1348930017264144385,"remindType":2,"content":"机油保养，机油使用一段时间会变脏、粘度和耐热性会变差，一定程度后无法起到对发动机的保护左右","title":"全车检测自动生成体检报告","isRead":0},{"remindId":null,"appUserId":null,"remindType":1,"content":"阿萨德阿萨德","title":"啊实打实多","isRead":0},{"remindId":null,"appUserId":null,"remindType":1,"content":" 阿萨德阿萨德","title":"阿萨锁定asd","isRead":0},{"remindId":null,"appUserId":null,"remindType":1,"content":"啊实打实多","title":"阿萨锁定a","isRead":0},{"remindId":null,"appUserId":1348930017264144385,"remindType":2,"content":"{\"content\":\"通过检测,无故障码,您的车辆很健康!\",\"createTime\":\"2021-02-07\",\"details\":\"\"}","title":"车辆检测报告","isRead":0}]
+         * total : 2
+         * list : [{"remindId":null,"appUserId":"1364419027981832194","remindType":2,"content":"{\"content\":\"通过检测,无故障码,您的车辆很健康!\",\"createTime\":\"2021-03-25\",\"details\":\"1374918713771560962\",\"platformType\":1}","title":"全车检测自动生成体检报告","isRead":0},{"remindId":null,"appUserId":"1364419027981832194","remindType":2,"content":"{\"content\":\"通过检测,无故障码,您的车辆很健康!\",\"createTime\":\"2021-03-25\",\"details\":\"1374919262860480513\",\"platformType\":1}","title":"全车检测自动生成体检报告","isRead":0}]
          * pageNum : 1
-         * pageSize : 6
-         * size : 6
-         * startRow : 0
-         * endRow : 5
+         * pageSize : 10
+         * size : 2
+         * startRow : 1
+         * endRow : 2
          * pages : 1
          * prePage : 0
          * nextPage : 0
@@ -76,6 +77,7 @@ public class RemindPageEntity {
          */
 
         private int total;
+        private List<ListEntity> list;
         private int pageNum;
         private int pageSize;
         private int size;
@@ -89,10 +91,9 @@ public class RemindPageEntity {
         private boolean hasPreviousPage;
         private boolean hasNextPage;
         private int navigatePages;
+        private List<Integer> navigatepageNums;
         private int navigateFirstPage;
         private int navigateLastPage;
-        private List<ListEntity> list;
-        private List<Integer> navigatepageNums;
 
         public int getTotal() {
             return total;
@@ -100,6 +101,14 @@ public class RemindPageEntity {
 
         public void setTotal(int total) {
             this.total = total;
+        }
+
+        public List<ListEntity> getList() {
+            return list;
+        }
+
+        public void setList(List<ListEntity> list) {
+            this.list = list;
         }
 
         public int getPageNum() {
@@ -206,6 +215,14 @@ public class RemindPageEntity {
             this.navigatePages = navigatePages;
         }
 
+        public List<Integer> getNavigatepageNums() {
+            return navigatepageNums;
+        }
+
+        public void setNavigatepageNums(List<Integer> navigatepageNums) {
+            this.navigatepageNums = navigatepageNums;
+        }
+
         public int getNavigateFirstPage() {
             return navigateFirstPage;
         }
@@ -222,52 +239,36 @@ public class RemindPageEntity {
             this.navigateLastPage = navigateLastPage;
         }
 
-        public List<ListEntity> getList() {
-            return list;
-        }
-
-        public void setList(List<ListEntity> list) {
-            this.list = list;
-        }
-
-        public List<Integer> getNavigatepageNums() {
-            return navigatepageNums;
-        }
-
-        public void setNavigatepageNums(List<Integer> navigatepageNums) {
-            this.navigatepageNums = navigatepageNums;
-        }
-
         public static class ListEntity {
             /**
              * remindId : null
-             * appUserId : null
-             * remindType : 1
-             * content : APP更新通知
-             * title : APP更新通知
+             * appUserId : 1364419027981832194
+             * remindType : 2
+             * content : {"content":"通过检测,无故障码,您的车辆很健康!","createTime":"2021-03-25","details":"1374918713771560962","platformType":1}
+             * title : 全车检测自动生成体检报告
              * isRead : 0
              */
 
-            private Object remindId;
-            private Object appUserId;
+            private long remindId;
+            private String appUserId;
             private int remindType;
             private String content;
             private String title;
             private int isRead;
 
-            public Object getRemindId() {
+            public long getRemindId() {
                 return remindId;
             }
 
-            public void setRemindId(Object remindId) {
+            public void setRemindId(long remindId) {
                 this.remindId = remindId;
             }
 
-            public Object getAppUserId() {
+            public String getAppUserId() {
                 return appUserId;
             }
 
-            public void setAppUserId(Object appUserId) {
+            public void setAppUserId(String appUserId) {
                 this.appUserId = appUserId;
             }
 

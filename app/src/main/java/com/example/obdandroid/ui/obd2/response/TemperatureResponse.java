@@ -22,10 +22,7 @@ package com.example.obdandroid.ui.obd2.response;
 
 import com.example.obdandroid.ui.obd2.Unit;
 
-import javax.script.ScriptException;
-
 /**
- * <p>This class is the response of a {@link io.github.macfja.obd2.Command} that return a temperature.</p>
  * <p>Unit: Degree Celsius (°C)</p>
  *
  * @author MacFJA
@@ -36,7 +33,7 @@ public class TemperatureResponse extends CalculatedResponse {
         super(raw, getIntValue(raw, 0) - 40);
     }
 
-    public TemperatureResponse(byte[] raw, String equation) throws ScriptException {
+    public TemperatureResponse(byte[] raw, String equation)  {
         super(raw, equation);
     }
 

@@ -153,14 +153,14 @@ public class ReadMsgActivity extends BaseActivity {
         tvLongTermBank1 = findViewById(R.id.tvLongTermBank1);
         tvLongTermBank2 = findViewById(R.id.tvLongTermBank2);
         dialogUtils = new DialogUtils(context);
-        if (isRead == 2) {
+        if (isRead != 1) {
             addReadRemind(getUserId(), remindId, getToken());
         }
         getTestRecordById(getToken(), tripRecord.getDetails());
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
-                if (isRead == 2) {
+                if (isRead != 1) {
                     setResult(102, new Intent());
                 }
                 finish();
@@ -178,11 +178,17 @@ public class ReadMsgActivity extends BaseActivity {
         });
     }
 
+    /**
+     * @param appUserId 用户id
+     * @param remindId  消息id
+     * @param token     用户token
+     *                  读取消息
+     */
     private void addReadRemind(String appUserId, String remindId, String token) {
-        OkHttpUtils.get().url(SERVER_URL + addReadRemind_URL).
+        OkHttpUtils.post().url(SERVER_URL + addReadRemind_URL).
                 addParam("appUserId", appUserId).
                 addParam("token", token).
-                addParam("testRecordId", remindId).
+                addParam("remindId", remindId).
                 build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Response response, Exception e, int id) {
@@ -191,6 +197,7 @@ public class ReadMsgActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
+                LogE("读取消息：" + response);
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
                     showToast("消息读取成功");
@@ -430,7 +437,7 @@ public class ReadMsgActivity extends BaseActivity {
     //安卓重写返回键事件
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (isRead == 2) {
+            if (isRead != 1) {
                 setResult(102, new Intent());
             }
             finish();

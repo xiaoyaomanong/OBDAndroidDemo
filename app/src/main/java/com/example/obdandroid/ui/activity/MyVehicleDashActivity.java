@@ -78,7 +78,7 @@ public class MyVehicleDashActivity extends BaseActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //liveData();
+        liveData();
         frozeData();
         getDTC();
         getOxygenMonitorData();
@@ -95,6 +95,7 @@ public class MyVehicleDashActivity extends BaseActivity {
         try {
             for (Map.Entry<String, Command> entry : LiveCommand.getService01Commands().entrySet()) {
                 LogE("PID:" + entry.getKey());
+                commander.reduceCommunicationSize();
                 Response response = commander.sendCommand(entry.getValue());
                 LogE("结果:" + response.getFormattedString());
             }

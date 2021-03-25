@@ -43,7 +43,6 @@ public class VehicleDashTwoActivity extends BaseActivity {
     private CustomerDashboardViewLight dashIntakeAirTemp;
     private TripRecord tripRecord;
     private Thread CommandThread = new Thread(new ObdsCommand());
-    private List<ObdCommand> commands = new ArrayList<>();
     private PhilText tvFuelPressure;
     private CustomerDashboardViewLight dashFuelPressure;
     private CustomerDashboardViewLight dashFuelRate;
@@ -76,7 +75,6 @@ public class VehicleDashTwoActivity extends BaseActivity {
         TripRecord.getTriRecode(context).clear();
         tripRecord = TripRecord.getTriRecode(context);
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(true);
-        commands = setCommands();
         setFuelLevel();
         setInsFuelConsumption();
         setDrivingFuelConsumption();
@@ -172,7 +170,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
     /**
      * 读取进气歧管压力
      */
-    private synchronized void executeObdCommand(BluetoothSocket socket) {
+    private synchronized void executeObdCommand(BluetoothSocket socket, List<ObdCommand> commands) {
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {
@@ -187,14 +185,25 @@ public class VehicleDashTwoActivity extends BaseActivity {
         }
     }
 
-    private List<ObdCommand> setCommands() {
-        List<ObdCommand> obdCommands = new ArrayList<>();
-        obdCommands.add(new ObdResetCommand());
-        obdCommands.add(new EchoOffCommand());
-        obdCommands.add(new LineFeedOffCommand());
-        obdCommands.add(new SpacesOffCommand());
-        obdCommands.add(new TimeoutCommand(62));
+    /**
+     * 读取进气歧管压力
+     */
+    private synchronized void executeCommand(BluetoothSocket socket, List<ObdCommand> commands) {
+        for (int i = 0; i < commands.size(); i++) {
+            ObdCommand command = commands.get(i);
+            try {
+                command.run(socket.getInputStream(), socket.getOutputStream());
+                LogE("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
+            } catch (Exception e) {
+                e.printStackTrace();
+                LogE("执行命令异常  :: " + e.getMessage());
+            }
+        }
+    }
 
+    private List<ObdCommand> getCommands() {
+        List<ObdCommand> obdCommands = new ArrayList<>();
+        obdCommands.clear();
         obdCommands.add(new FuelPressureCommand(ModeTrim.MODE_01.buildObdCommand()));//油压
         obdCommands.add(new AirIntakeTemperatureCommand(ModeTrim.MODE_01.buildObdCommand()));//邮箱空气温度
         obdCommands.add(new ConsumptionRateCommand(ModeTrim.MODE_01.buildObdCommand()));//燃油效率
@@ -202,6 +211,16 @@ public class VehicleDashTwoActivity extends BaseActivity {
         return obdCommands;
     }
 
+    private List<ObdCommand> getElpCommands() {
+        List<ObdCommand> obdCommands = new ArrayList<>();
+        obdCommands.clear();
+        obdCommands.add(new ObdResetCommand());
+        obdCommands.add(new EchoOffCommand());
+        obdCommands.add(new LineFeedOffCommand());
+        obdCommands.add(new SpacesOffCommand());
+        obdCommands.add(new TimeoutCommand(62));
+        return obdCommands;
+    }
 
     /**
      * @param tripRecord OBD数据
@@ -230,8 +249,9 @@ public class VehicleDashTwoActivity extends BaseActivity {
 
         @Override
         public void run() {
+            executeCommand(MainApplication.getBluetoothSocket(), getElpCommands());
             while (ObdPreferences.get(getApplicationContext()).getServiceRunningStatus()) {
-                executeObdCommand(MainApplication.getBluetoothSocket());
+                executeObdCommand(MainApplication.getBluetoothSocket(), getCommands());
             }
         }
     }

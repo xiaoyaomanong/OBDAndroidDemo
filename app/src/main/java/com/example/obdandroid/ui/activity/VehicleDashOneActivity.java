@@ -52,7 +52,6 @@ public class VehicleDashOneActivity extends BaseActivity {
     private CustomerDashboardViewLight dashEngineCoolantTemp;
     private TripRecord tripRecord;
     private Thread mSpeedCommand = new Thread(new MySpeedCommand());
-    private List<ObdCommand> commands = new ArrayList<>();
 
     @Override
     protected int getContentViewId() {
@@ -82,7 +81,6 @@ public class VehicleDashOneActivity extends BaseActivity {
         TripRecord.getTriRecode(context).clear();
         tripRecord = TripRecord.getTriRecode(context);
         ObdPreferences.get(getApplicationContext()).setServiceRunning(true);
-        commands = setCommands();
         setRPM();
         setSpeed();
         setEngineCoolantTemp();
@@ -140,7 +138,7 @@ public class VehicleDashOneActivity extends BaseActivity {
     /**
      * 读取速度
      */
-    private synchronized void executeSpeedCommand(BluetoothSocket socket) {
+    private synchronized void executeCommandData(BluetoothSocket socket, List<ObdCommand> commands) {
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {
@@ -168,19 +166,40 @@ public class VehicleDashOneActivity extends BaseActivity {
         }
     }
 
-    private List<ObdCommand> setCommands() {
-        List<ObdCommand> obdCommands = new ArrayList<>();
-        obdCommands.add(new ObdResetCommand());
-        obdCommands.add(new EchoOffCommand());
-        obdCommands.add(new LineFeedOffCommand());
-        obdCommands.add(new SpacesOffCommand());
-        obdCommands.add(new TimeoutCommand(62));
+    /**
+     * 读取速度
+     */
+    private synchronized void executeCommand(BluetoothSocket socket, List<ObdCommand> commands) {
+        for (int i = 0; i < commands.size(); i++) {
+            ObdCommand command = commands.get(i);
+            try {
+                command.run(socket.getInputStream(), socket.getOutputStream());
+                LogE("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
+            } catch (Exception e) {
+                LogE("执行命令异常  :: " + e.getMessage());
+            }
+        }
+    }
 
+    private List<ObdCommand> getCommands() {
+        List<ObdCommand> obdCommands = new ArrayList<>();
+        obdCommands.clear();
         obdCommands.add(new SelectProtocolCommand(ObdProtocols.AUTO));
         obdCommands.add(new SpeedCommand(ModeTrim.MODE_01.buildObdCommand()));
         obdCommands.add(new RPMCommand(ModeTrim.MODE_01.buildObdCommand()));
         obdCommands.add(new OilTempCommand(ModeTrim.MODE_01.buildObdCommand()));
         obdCommands.add(new EngineCoolantTemperatureCommand(ModeTrim.MODE_01.buildObdCommand()));
+        return obdCommands;
+    }
+
+    private List<ObdCommand> getElpCommands() {
+        List<ObdCommand> obdCommands = new ArrayList<>();
+        obdCommands.clear();
+        obdCommands.add(new ObdResetCommand());
+        obdCommands.add(new EchoOffCommand());
+        obdCommands.add(new LineFeedOffCommand());
+        obdCommands.add(new SpacesOffCommand());
+        obdCommands.add(new TimeoutCommand(62));
         return obdCommands;
     }
 
@@ -230,8 +249,9 @@ public class VehicleDashOneActivity extends BaseActivity {
 
         @Override
         public void run() {
+            executeCommand(MainApplication.getBluetoothSocket(), getElpCommands());
             while (ObdPreferences.get(getApplicationContext()).getServiceRunning()) {
-                executeSpeedCommand(MainApplication.getBluetoothSocket());
+                executeCommandData(MainApplication.getBluetoothSocket(), getCommands());
             }
         }
     }

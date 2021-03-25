@@ -65,10 +65,10 @@ public class Commander extends AbsCommander {
     }
 
     /**
-     * <p>Define the state of the ELM327 interface.</p>
-     * <p>Can be used to restore the state of the ELM327 interface between session</p>
+     * <p>定义ELM327接口的状态.</p>
+     * <p>可用于恢复ELM327接口之间会话的状态</p>
      *
-     * @param states The list of option that define how ELM327 is configured
+     * @param states 定义如何配置ELM327的选项列表
      */
     protected void initState(List<BooleanCommand> states) {
         for (BooleanCommand command : states) {
@@ -77,7 +77,7 @@ public class Commander extends AbsCommander {
     }
 
     /**
-     * Get the list of options ({@link BooleanCommand}) of the current ELM327
+     * 获取当前ELM327的选项列表（{@link BooleanCommand}）
      *
      * @return List of options
      */
@@ -91,7 +91,7 @@ public class Commander extends AbsCommander {
     }
 
     /**
-     * Register a {@link BooleanCommand} to reflect its action on command and response later
+     * 注册一个{@link BooleanCommand}，以反映它对命令和响应的操作
      *
      * @param command The command to save
      */
@@ -247,9 +247,9 @@ public class Commander extends AbsCommander {
     }
 
     /**
-     * Reduce the amount of data send back by turning off several options
+     * 通过关闭多个选项减少发送回的数据量
      *
-     * @throws IOException If an error occurs during communication with the OBD interfaces
+     * @throws IOException 如果在与OBD接口通信期间发生错误
      */
     public void reduceCommunicationSize() throws IOException {
         LogUtils.i("Reducing communication by turning off 'Echo', 'Line Feed', 'Space' and 'Header'");

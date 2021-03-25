@@ -24,7 +24,7 @@ import com.example.obdandroid.ui.obd2.TroubleCode;
 import java.io.IOException;
 
 /**
- * <p>This class is the response of a {@link io.github.macfja.obd2.command.livedata.FreezeDiagnosticTroubleCode} command.</p>
+ * <p>This class is the response of a {@link com.example.obdandroid.ui.obd2.command.livedata.FreezeDiagnosticTroubleCode} command.</p>
  *
  * @author MacFJA
  */

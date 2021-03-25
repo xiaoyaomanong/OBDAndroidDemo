@@ -24,7 +24,6 @@ import com.example.obdandroid.ui.obd2.Response;
 import com.example.obdandroid.ui.obd2.Unit;
 
 /**
- * Base (abstract) class for a {@link Response} of a {@link io.github.macfja.obd2.Command}
  *
  * @author MacFJA
  */

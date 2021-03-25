@@ -31,8 +31,8 @@ public class AuxilaryInputResponse extends BinaryResponse {
     }
 
     /**
-     * Indicate if "Power Take Off" (PTO) is active or not.
-     * @return {@code true} if the "Power Take Off" is active
+     * 指示“动力输出”（PTO）是否激活。
+     * @return {@code true} 如果“动力输出”激活
      */
     public boolean isPowerTakeOffOn() {
         return isOn("A0");

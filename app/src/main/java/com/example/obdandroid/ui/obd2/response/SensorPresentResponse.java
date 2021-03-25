@@ -19,7 +19,6 @@
 
 package com.example.obdandroid.ui.obd2.response;
 
-import com.example.obdandroid.ui.obd2.response.BinaryResponse;
 
 /**
  * <p>This class is the response of a {@link com.example.obdandroid.ui.obd2.command.livedata.OxygenSensorsPresent} command

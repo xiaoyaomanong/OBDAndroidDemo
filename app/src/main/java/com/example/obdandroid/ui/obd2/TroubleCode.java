@@ -18,6 +18,11 @@
  */
 package com.example.obdandroid.ui.obd2;
 
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.example.obdandroid.config.TAG;
+
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;

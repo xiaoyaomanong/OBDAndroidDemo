@@ -20,6 +20,9 @@
 package com.example.obdandroid.ui.obd2.response;
 
 
+import android.util.Log;
+
+import com.example.obdandroid.config.TAG;
 import com.example.obdandroid.ui.obd2.Response;
 import com.sohrab.obd.reader.obdCommand.obdException.NonNumericResponseException;
 import com.sohrab.obd.reader.utils.LogUtils;
@@ -175,25 +178,27 @@ public abstract class CalculatedResponse implements Response {
      */
     public static void fillBuffer(byte[] rawResult) {
         String rawData = new String(rawResult);
+        Log.e(TAG.TAG_Activity,"rawData:"+rawData);
         rawData = rawData.replaceAll("\\s", ""); //removes all [ \t\n\x0B\f\r]
         rawData = rawData.replaceAll("(BUS INIT)|(BUSINIT)|(\\.)", "");
 
         // L.i("Cmd :: " + cmd + " rawData :: " + rawData);
         if (!rawData.matches("([0-9A-F])+")) {
-            com.sohrab.obd.reader.utils.LogUtils.i("NonNumericResponseException :: " + rawData);
+            LogUtils.i("NonNumericResponseException :: " + rawData);
             throw new NonNumericResponseException(rawData);
         }
 
-        // read string each two chars
-        buffer.clear();
-        int begin = 0;
-        int end = 2;
-        while (end <= rawData.length()) {
-            buffer.add(Integer.decode("0x" + rawData.substring(begin, end)));
-            begin = end;
-            end += 2;
+        if (buffer != null) {
+            // read string each two chars
+            buffer.clear();
+            int begin = 0;
+            int end = 2;
+            while (end <= rawData.length()) {
+                buffer.add(Integer.decode("0x" + rawData.substring(begin, end)));
+                begin = end;
+                end += 2;
+            }
         }
-
         LogUtils.i("buffer :: " + buffer);
     }
 }

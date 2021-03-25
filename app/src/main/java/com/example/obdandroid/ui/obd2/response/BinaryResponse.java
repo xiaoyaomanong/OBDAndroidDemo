@@ -21,7 +21,6 @@ package com.example.obdandroid.ui.obd2.response;
 
 
 /**
- * <p>Abstract class for response of a {@link io.github.macfja.obd2.Command} that return binary (ON/OFF bytes).</p>
  *
  * @author MacFJA
  */

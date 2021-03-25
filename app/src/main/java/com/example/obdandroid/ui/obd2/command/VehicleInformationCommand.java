@@ -43,7 +43,7 @@ public abstract class VehicleInformationCommand {
         Map<String, Command> service09 = new HashMap<>();
 
         service09.put("00", new SupportedPid());
-        service09.put("01", new VINMessageCount());
+        //service09.put("01", new VINMessageCount());
         service09.put("02", new VehicleIdentificationNumber());
         service09.put("0A", new ECUName());
 

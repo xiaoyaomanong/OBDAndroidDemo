@@ -19,6 +19,9 @@
 
 package com.example.obdandroid.ui.obd2.response;
 
+import android.util.Log;
+
+import com.example.obdandroid.config.TAG;
 import com.example.obdandroid.ui.obd2.TroubleCode;
 
 import java.util.ArrayList;
@@ -43,15 +46,20 @@ public class MultipleDiagnosticTroubleCodeResponse extends RawResponse {
 
     public List<TroubleCode> getTroubleCodes() {
         List<TroubleCode> troubleCodes = new ArrayList<>();
+        troubleCodes.clear();
         String rawResponse = new String(getRawResult());
         for (int index = 0; index < Math.ceil(rawResponse.length() / 4); index++) {
             String code = rawResponse.substring(index * 4, Math.min((index + 1) * 4, rawResponse.length()));
-            if (code.length() != 4 || code.equals("0000")) {
-                continue;
+            Log.e(TAG.TAG_Activity,"code------"+code);
+            if (code.contains(":")) {
+                code = code.replaceAll(":", "");//xxx43yy{codes}
             }
-            troubleCodes.add(TroubleCode.createFromHex(
-                    rawResponse.substring(index * 4, Math.min((index + 1) * 4, rawResponse.length()))
-            ));
+            if (code.length() >= 4) {
+                troubleCodes.add(TroubleCode.createFromHex(code));
+            }
+            if (!code.equals("0000")) {
+                troubleCodes.add(TroubleCode.createFromHex(code));
+            }
         }
 
         return troubleCodes;

@@ -35,18 +35,14 @@ public class ASCIIResponse extends RawResponse {
     public String getFormattedString() {
         String hex = new String(getRawResult());
         StringBuilder ascii = new StringBuilder();
-
         for (int index = 0; index < hex.length() / 2; index++) {
             int hexValue = Integer.parseInt(hex.substring(index * 2, index * 2 + 2), 16);
-
             // Remove all controls chars
             if (hexValue < 32 || hexValue > 126) {
                 continue;
             }
-
             ascii.append(Character.toChars(hexValue));
         }
-
         return ascii.toString();
     }
 }

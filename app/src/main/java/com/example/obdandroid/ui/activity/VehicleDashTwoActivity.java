@@ -19,7 +19,11 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.fuel.ConsumptionRateCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelPressureCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.AirIntakeTemperatureCommand;
 import com.sohrab.obd.reader.trip.TripRecord;
 
@@ -186,8 +190,13 @@ public class VehicleDashTwoActivity extends BaseActivity {
     private List<ObdCommand> setCommands() {
         List<ObdCommand> obdCommands = new ArrayList<>();
         obdCommands.add(new ObdResetCommand());
+        obdCommands.add(new EchoOffCommand());
+        obdCommands.add(new LineFeedOffCommand());
+        obdCommands.add(new SpacesOffCommand());
+        obdCommands.add(new TimeoutCommand(62));
+
         obdCommands.add(new FuelPressureCommand(ModeTrim.MODE_01.buildObdCommand()));//油压
-       obdCommands.add(new AirIntakeTemperatureCommand(ModeTrim.MODE_01.buildObdCommand()));//邮箱空气温度
+        obdCommands.add(new AirIntakeTemperatureCommand(ModeTrim.MODE_01.buildObdCommand()));//邮箱空气温度
         obdCommands.add(new ConsumptionRateCommand(ModeTrim.MODE_01.buildObdCommand()));//燃油效率
         obdCommands.add(new FuelRailPressureCommand(ModeTrim.MODE_01.buildObdCommand()));//油轨压力（柴油或汽油直喷）
         return obdCommands;
@@ -199,11 +208,11 @@ public class VehicleDashTwoActivity extends BaseActivity {
      */
     private void setView(TripRecord tripRecord) {
         if (tripRecord != null) {
-            String FuelRailPressure= tripRecord.getmFuelRailPressure().replace("kPa", "");
-            dashFuelRailPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(FuelRailPressure) ? "0" : FuelRailPressure)/1000);
-            tvFuelRailPressure.setText(String.valueOf(Float.parseFloat(TextUtils.isEmpty(FuelRailPressure) ? "0" : FuelRailPressure)/1000));
+            String FuelRailPressure = tripRecord.getmFuelRailPressure().replace("kPa", "");
+            dashFuelRailPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(FuelRailPressure) ? "0" : FuelRailPressure) / 1000);
+            tvFuelRailPressure.setText(String.valueOf(Float.parseFloat(TextUtils.isEmpty(FuelRailPressure) ? "0" : FuelRailPressure) / 1000));
 
-            String fuelRate= tripRecord.getmFuelConsumptionRate().replace("L/h", "");
+            String fuelRate = tripRecord.getmFuelConsumptionRate().replace("L/h", "");
             dashFuelRate.setVelocity(Float.parseFloat(TextUtils.isEmpty(fuelRate) ? "0" : fuelRate));
             tvFuelRate.setText(TextUtils.isEmpty(fuelRate) ? "0" : fuelRate);
 

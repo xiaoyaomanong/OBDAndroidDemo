@@ -36,7 +36,7 @@ public class FrozeCommand implements Command {
 
     /**
      * @param service01Command The Service 01 command
-     * @throws IllegalArgumentException If the command is not a Service 01 command or if the command is "01 01"
+     * @throws IllegalArgumentException 如果命令不是Service 01命令或命令是“01 01”
      */
     public FrozeCommand(Command service01Command) throws IllegalArgumentException {
         if (!service01Command.getRequest().startsWith("01")) {
@@ -49,7 +49,7 @@ public class FrozeCommand implements Command {
     }
 
     /**
-     * Get the list of all command that are in or compatible with Service 02
+     * 获取服务02中或与服务02兼容的所有命令的列表
      *
      * @return List of commands
      */
@@ -68,7 +68,7 @@ public class FrozeCommand implements Command {
     }
 
     /**
-     * Get the list of all command that are in or compatible with Mode 02
+     * 获取处于模式02或与模式02兼容的所有命令的列表
      *
      * @deprecated Since 1.1.0, replaced by {@link #getService02Commands()}
      * @return List of commands

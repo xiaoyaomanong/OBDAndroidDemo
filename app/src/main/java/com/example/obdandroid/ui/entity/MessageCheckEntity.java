@@ -11,6 +11,7 @@ public class MessageCheckEntity implements Serializable {
     private String createTime;
     private String content;
     private String details;
+    private String VehicleName;
     private int platformType;
 
     public String getCreateTime() {
@@ -43,5 +44,13 @@ public class MessageCheckEntity implements Serializable {
 
     public void setPlatformType(int platformType) {
         this.platformType = platformType;
+    }
+
+    public String getVehicleName() {
+        return VehicleName;
+    }
+
+    public void setVehicleName(String vehicleName) {
+        VehicleName = vehicleName;
     }
 }

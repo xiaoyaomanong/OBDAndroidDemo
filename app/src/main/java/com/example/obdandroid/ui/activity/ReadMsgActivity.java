@@ -197,7 +197,6 @@ public class ReadMsgActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("读取消息：" + response);
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
                     showToast("消息读取成功");

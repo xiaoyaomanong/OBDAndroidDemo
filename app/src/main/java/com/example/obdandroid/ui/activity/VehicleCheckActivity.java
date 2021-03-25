@@ -372,7 +372,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 addParam("appUserId", appUserId).
                 addParam("remindType", "2").
                 addParam("content", content).
-                addParam("title", "全车检测自动生成体检报告").
+                addParam("title", tvAutomobileBrandName.getText().toString() + " · " + tvModelName.getText().toString() + "检测报告").
                 addParam("token", token).
                 addParam("testResultId", testResultId).
                 build().execute(new StringCallback() {
@@ -396,12 +396,14 @@ public class VehicleCheckActivity extends BaseActivity {
         MessageCheckEntity entity = new MessageCheckEntity();
         entity.setCreateTime(AppDateUtils.getTodayDateTimeHms());
         if (TextUtils.isEmpty(tripEntity.getFaultCodes())) {
-            entity.setContent("通过检测,无故障码,您的车辆很健康!");
+            entity.setContent("您的车辆很健康!");
         } else {
-            entity.setContent("通过检测,发现你的车辆有故障，请及时处理!");
+            String[] troubleCodes = tripEntity.getFaultCodes().replaceAll("[\r\n]", ",").split(",");
+            entity.setContent("你的车辆有" + troubleCodes.length + "个故障，请及时处理!");
         }
         entity.setDetails(String.valueOf(dataEntity.getId()));
         entity.setPlatformType(dataEntity.getPlatformType());
+        entity.setVehicleName(tvAutomobileBrandName.getText().toString() + " · " + tvModelName.getText().toString());
         return JSON.toJSONString(entity);
     }
 

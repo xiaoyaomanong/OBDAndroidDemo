@@ -1,10 +1,8 @@
 package com.example.obdandroid.ui.activity;
 
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
@@ -16,7 +14,6 @@ import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.adapter.MyVehicleAdapter;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.entity.VehicleEntity;
-import com.example.obdandroid.ui.fragment.HomeFragment;
 import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.ui.view.IosDialog;
 import com.example.obdandroid.utils.DialogUtils;
@@ -24,7 +21,6 @@ import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
-import com.sohrab.obd.reader.trip.TripRecord;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -38,8 +34,6 @@ import okhttp3.Response;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.Vehicle_URL;
 import static com.example.obdandroid.config.APIConfig.deleteVehicle_URL;
-import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_OBD_CONNECTION_STATUS;
-import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_READ_OBD_REAL_TIME_DATA;
 
 /**
  * 作者：Jealous

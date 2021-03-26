@@ -130,7 +130,7 @@ public class Commander extends AbsCommander {
 
         if (new String(response.getRawResult()).equals("NO DATA") || new String(response.getRawResult()).equals("NODATA")) {
             LogUtils.w("The ELM327 return a 'NO DATA'");
-            response = (Response) new NoDataResponse();
+            response =  new NoDataResponse();
         }
 
         if (response instanceof ExceptionResponse) {

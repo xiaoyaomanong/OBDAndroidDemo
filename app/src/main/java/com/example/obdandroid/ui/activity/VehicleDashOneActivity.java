@@ -9,9 +9,9 @@ import android.view.View;
 import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.config.CheckRecord;
 import com.example.obdandroid.ui.view.PhilText;
 import com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight;
-import com.github.pires.obd.commands.protocol.HeadersOffCommand;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.application.ObdPreferences;
@@ -28,7 +28,6 @@ import com.sohrab.obd.reader.obdCommand.protocol.SelectProtocolCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.EngineCoolantTemperatureCommand;
-import com.sohrab.obd.reader.trip.TripRecord;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class VehicleDashOneActivity extends BaseActivity {
     private CustomerDashboardViewLight dashRPM;
     private CustomerDashboardViewLight dashEngineOilTemp;
     private CustomerDashboardViewLight dashEngineCoolantTemp;
-    private TripRecord tripRecord;
+    private CheckRecord tripRecord;
     private Thread mSpeedCommand = new Thread(new MySpeedCommand());
 
     @Override
@@ -78,8 +77,8 @@ public class VehicleDashOneActivity extends BaseActivity {
         dashRPM = getView(R.id.dashRPM);
         dashEngineOilTemp = getView(R.id.dashEngineOilTemp);
         dashEngineCoolantTemp = getView(R.id.dashEngineCoolantTemp);
-        TripRecord.getTriRecode(context).clear();
-        tripRecord = TripRecord.getTriRecode(context);
+        CheckRecord.getTriRecode(context, getToken()).clear();
+        tripRecord = CheckRecord.getTriRecode(context, getToken());
         ObdPreferences.get(getApplicationContext()).setServiceRunning(true);
         setRPM();
         setSpeed();
@@ -133,7 +132,6 @@ public class VehicleDashOneActivity extends BaseActivity {
             mSpeedCommand = null;
         }
     }
-
 
     /**
      * 读取速度

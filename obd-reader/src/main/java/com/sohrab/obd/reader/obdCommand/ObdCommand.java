@@ -90,7 +90,7 @@ public abstract class ObdCommand {
      *
      * @param in  a {@link InputStream} object.
      * @param out a {@link OutputStream} object.
-     * @throws IOException            if any.
+     * @throws IOException          if any.
      * @throws InterruptedException if any.
      */
     public void run(InputStream in, OutputStream out) throws Exception {
@@ -107,7 +107,7 @@ public abstract class ObdCommand {
      * TroubleCodesCommand.
      *
      * @param out The output stream.
-     * @throws IOException            if any.
+     * @throws IOException          if any.
      * @throws InterruptedException if any.
      */
     protected void sendCommand(OutputStream out) throws Exception {
@@ -121,10 +121,10 @@ public abstract class ObdCommand {
     }
 
     /**
-     * Resends this command.
+     * 重新发送这个命令。
      *
      * @param out a {@link OutputStream} object.
-     * @throws IOException            if any.
+     * @throws IOException          if any.
      * @throws InterruptedException if any.
      */
     protected void resendCommand(OutputStream out) throws IOException,
@@ -139,7 +139,7 @@ public abstract class ObdCommand {
     /**
      * Reads the OBD-II response.
      * <p>
-     * This method may be overriden in subclasses, such as ObdMultiCommand.
+     * 这个方法可以在子类中被重写，比如ObdMultiCommand。
      *
      * @param in a {@link InputStream} object.
      * @throws IOException if any.
@@ -161,17 +161,15 @@ public abstract class ObdCommand {
      * <p>fillBuffer.</p>
      */
     protected void fillBuffer() {
-
         rawData = rawData.replaceAll("\\s", ""); //removes all [ \t\n\x0B\f\r]
         rawData = rawData.replaceAll("(BUS INIT)|(BUSINIT)|(\\.)", "");
 
-       // L.i("Cmd :: " + cmd + " rawData :: " + rawData);
+        LogUtils.i("Cmd :: " + cmd + " rawData :: " + rawData);
         if (!rawData.matches("([0-9A-F])+")) {
             LogUtils.i("NonNumericResponseException :: " + rawData);
             throw new NonNumericResponseException(rawData);
         }
-
-        // read string each two chars
+        //每两个字符读取字符串
         buffer.clear();
         int begin = 0;
         int end = 2;
@@ -192,8 +190,7 @@ public abstract class ObdCommand {
      * @throws IOException if any.
      */
     protected void readRawData(InputStream in) throws Exception {
-
-        byte b = 0;
+        byte b;
         StringBuilder res = new StringBuilder();
 
         // read until '>' arrives OR end of stream reached
@@ -201,34 +198,31 @@ public abstract class ObdCommand {
         // -1 if the end of the stream is reached
         while (((b = (byte) in.read()) > -1)) {
             c = (char) b;
-            if (c == '>') // read until '>' arrives
-            {
+            if (c == '>') {// read until '>' arrives
                 break;
             }
             res.append(c);
-
-
         }
 
         //    mHandler.removeCallbacksAndMessages(null);
 
-    /*
-     * Imagine the following response 41 0c 00 0d.
-     *
-     * ELM sends strings!! So, ELM puts spaces between each "byte". And pay
-     * attention to the fact that I've put the word byte in quotes, because 41
-     * is actually TWO bytes (two chars) in the socket. So, we must do some more
-     * processing..
-     */
+        /*
+         * Imagine the following response 41 0c 00 0d.
+         *
+         * ELM sends strings!! So, ELM puts spaces between each "byte". And pay
+         * attention to the fact that I've put the word byte in quotes, because 41
+         * is actually TWO bytes (two chars) in the socket. So, we must do some more
+         * processing..
+         */
 
         LogUtils.i("Cmd :: " + cmd + " data :: " + res);
         rawData = res.toString().replaceAll("SEARCHING", "");
 
-    /*
-     * Data may have echo or informative text like "INIT BUS..." or similar.
-     * The response ends with two carriage return characters. So we need to take
-     * everything from the last carriage return before those two (trimmed above).
-     */
+        /*
+         * Data may have echo or informative text like "INIT BUS..." or similar.
+         * The response ends with two carriage return characters. So we need to take
+         * everything from the last carriage return before those two (trimmed above).
+         */
         //kills multiline.. rawData = rawData.substring(rawData.lastIndexOf(13) + 1);
         rawData = rawData.replaceAll("\\s", "");//removes all [ \t\n\x0B\f\r]
 
@@ -237,16 +231,12 @@ public abstract class ObdCommand {
     void checkForErrors() {
         for (Class<? extends ResponseException> errorClass : ERROR_CLASSES) {
             ResponseException messageError;
-
             try {
                 messageError = errorClass.newInstance();
                 messageError.setCommand(this.cmd);
-            } catch (InstantiationException e) {
-                throw new RuntimeException(e);
-            } catch (IllegalAccessException e) {
+            } catch (InstantiationException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
-
             if (messageError.isError(rawData)) {
                 throw messageError;
             }

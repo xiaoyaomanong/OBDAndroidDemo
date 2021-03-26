@@ -9,6 +9,7 @@ import android.view.View;
 import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.config.CheckRecord;
 import com.example.obdandroid.ui.view.PhilText;
 import com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight;
 import com.hjq.bar.OnTitleBarListener;
@@ -25,7 +26,6 @@ import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.AirIntakeTemperatureCommand;
-import com.sohrab.obd.reader.trip.TripRecord;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
     private PhilText tvIntakeAirTemp;
     private PhilText tvFuelRailPressure;
     private CustomerDashboardViewLight dashIntakeAirTemp;
-    private TripRecord tripRecord;
+    private CheckRecord tripRecord;
     private Thread CommandThread = new Thread(new ObdsCommand());
     private PhilText tvFuelPressure;
     private CustomerDashboardViewLight dashFuelPressure;
@@ -72,8 +72,8 @@ public class VehicleDashTwoActivity extends BaseActivity {
         dashIntakeAirTemp = getView(R.id.dashIntakeAirTemp);
         dashFuelRate = findViewById(R.id.dashFuelRate);
         dashFuelRailPressure = findViewById(R.id.dashFuelRailPressure);
-        TripRecord.getTriRecode(context).clear();
-        tripRecord = TripRecord.getTriRecode(context);
+        CheckRecord.getTriRecode(context,getToken()).clear();
+        tripRecord = CheckRecord.getTriRecode(context,getToken());
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(true);
         setFuelLevel();
         setInsFuelConsumption();
@@ -225,7 +225,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
     /**
      * @param tripRecord OBD数据
      */
-    private void setView(TripRecord tripRecord) {
+    private void setView(CheckRecord tripRecord) {
         if (tripRecord != null) {
             String FuelRailPressure = tripRecord.getmFuelRailPressure().replace("kPa", "");
             dashFuelRailPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(FuelRailPressure) ? "0" : FuelRailPressure) / 1000);
@@ -239,8 +239,8 @@ public class VehicleDashTwoActivity extends BaseActivity {
             tvFuelPressure.setText(TextUtils.isEmpty(pressure) ? "0" : pressure);
             dashFuelPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(pressure) ? "0" : pressure));
 
-            dashIntakeAirTemp.setVelocity(tripRecord.getmIntakeAirTemps());
-            tvIntakeAirTemp.setText(String.valueOf(tripRecord.getmIntakeAirTemps()));
+            dashIntakeAirTemp.setVelocity(tripRecord.getmIntakeAirTemp());
+            tvIntakeAirTemp.setText(String.valueOf(tripRecord.getmIntakeAirTemp()));
         }
     }
 

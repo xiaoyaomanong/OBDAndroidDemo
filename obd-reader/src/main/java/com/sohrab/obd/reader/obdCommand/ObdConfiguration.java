@@ -185,6 +185,8 @@ public class ObdConfiguration {
         mObdCommands.add(new DPFTemperatureCommand(modeTrim.buildObdCommand()));//"01 7C" 柴油粒子过滤器（DPF）温度
         mObdCommands.add(new EngineFrictionPercentTorqueCommand(modeTrim.buildObdCommand()));//"01 8E" 发动机摩擦力-力矩百分比
         mObdCommands.add(new ModifiedOdometerCommand(modeTrim.buildObdCommand()));//"01 A6" 里程
+
+
         mObdCommands.add(new VinCommand(ModeTrim.MODE_09));//"09 02" 车辆识别码
 
         mObdCommands.add(new ModifiedTroubleCodesObdCommand());//"03" 故障代码

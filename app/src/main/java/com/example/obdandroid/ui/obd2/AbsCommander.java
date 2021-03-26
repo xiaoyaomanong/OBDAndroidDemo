@@ -61,7 +61,7 @@ public class AbsCommander implements CommanderInterface {
 
         // If we already have the command result, use it directly
         if (persistentResult.containsKey(request)) {
-            LogUtils.d("Already persisted command, return stored response");
+            LogUtils.d("已经持久化的命令，返回存储的响应");
             LogUtils.d("stored response: {}" + Arrays.toString(persistentResult.get(request)));
             return command.getResponse(persistentResult.get(request));
         }

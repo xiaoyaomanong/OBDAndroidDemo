@@ -67,6 +67,7 @@ import com.sohrab.obd.reader.obdCommand.pressure.FuelPressureCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureManifoldVacuumCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.IntakeManifoldPressureCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.BaseDataCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.DescribeProtocolCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.DescribeProtocolNumberCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
@@ -107,6 +108,7 @@ public class ObdConfiguration {
         mObdCommands.add(new IgnitionMonitorCommand());//"AT IGN" 点火
         mObdCommands.add(new DescribeProtocolCommand());//"AT DP"
         mObdCommands.add(new DescribeProtocolNumberCommand());//"AT DPN"
+        mObdCommands.add(new BaseDataCommand());//"AT BDAT"
 
         mObdCommands.add(new DtcNumberCommand(modeTrim.buildObdCommand()));//"01 01" DTC情况指示
         mObdCommands.add(new FuelSystemStatusCommand(modeTrim.buildObdCommand()));//"01 03"燃油系统状态
@@ -150,7 +152,6 @@ public class ObdConfiguration {
         mObdCommands.add(new CatalystTemperatureCommand(modeTrim.buildObdCommand(), CatalystTrim.Catalyst_Temperature_Bank_2_Sensor_1));//"01 3C" 催化剂温度:Bank2,感测器1
         mObdCommands.add(new CatalystTemperatureCommand(modeTrim.buildObdCommand(), CatalystTrim.Catalyst_Temperature_Bank_1_Sensor_2));//"01 3C" 催化剂温度:Bank1,感测器2
         mObdCommands.add(new CatalystTemperatureCommand(modeTrim.buildObdCommand(), CatalystTrim.Catalyst_Temperature_Bank_2_Sensor_2));//"01 3C" 催化剂温度:Bank2,感测器2
-
 
         mObdCommands.add(new ModuleVoltageCommand(modeTrim.buildObdCommand()));//"01 42" 模块控制组电压
         mObdCommands.add(new AbsoluteLoadCommand(modeTrim.buildObdCommand()));//"01 43" 绝对载荷

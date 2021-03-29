@@ -5,7 +5,6 @@ import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.obd2.Command;
@@ -69,7 +68,6 @@ public class MyVehicleDashActivity extends BaseActivity {
 
             }
         });
-        //getOBDData(MainApplication.getBluetoothSocket());
     }
 
     private void getOBDData(BluetoothSocket socket) {
@@ -79,11 +77,11 @@ public class MyVehicleDashActivity extends BaseActivity {
             e.printStackTrace();
         }
         liveData();
-       /* frozeData();
+        frozeData();
         getDTC();
         getOxygenMonitorData();
         getPendingDTC();
-        getVehicleInfo();*/
+        getVehicleInfo();
 
     }
 

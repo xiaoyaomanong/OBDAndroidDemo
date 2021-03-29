@@ -69,7 +69,7 @@ public class MyVehicleDashActivity extends BaseActivity {
 
             }
         });
-        //getOBDData(MainApplication.getBluetoothSocket());
+
     }
 
     private void getOBDData(BluetoothSocket socket) {
@@ -79,12 +79,11 @@ public class MyVehicleDashActivity extends BaseActivity {
             e.printStackTrace();
         }
         liveData();
-       /* frozeData();
+        frozeData();
         getDTC();
         getOxygenMonitorData();
         getPendingDTC();
-        getVehicleInfo();*/
-
+        getVehicleInfo();
     }
 
 

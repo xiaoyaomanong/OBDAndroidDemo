@@ -17,6 +17,7 @@ import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.application.ObdPreferences;
 import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
+import com.sohrab.obd.reader.obdCommand.engine.ThrottlePositionCommand;
 import com.sohrab.obd.reader.obdCommand.fuel.ConsumptionRateCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelPressureCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureCommand;
@@ -40,7 +41,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
     private PhilText tvFuelRate;
     private PhilText tvIntakeAirTemp;
     private PhilText tvFuelRailPressure;
-    private CustomerDashboardViewLight dashIntakeAirTemp;
+    private CustomerDashboardViewLight dashThrottlePos;
     private CheckRecord tripRecord;
     private Thread CommandThread = new Thread(new ObdsCommand());
     private PhilText tvFuelPressure;
@@ -69,11 +70,11 @@ public class VehicleDashTwoActivity extends BaseActivity {
         tvFuelRate = getView(R.id.tvFuelRate);
         tvIntakeAirTemp = getView(R.id.tvIntakeAirTemp);
         tvFuelRailPressure = getView(R.id.tvFuelRailPressure);
-        dashIntakeAirTemp = getView(R.id.dashIntakeAirTemp);
+        dashThrottlePos = getView(R.id.dashThrottlePos);
         dashFuelRate = findViewById(R.id.dashFuelRate);
         dashFuelRailPressure = findViewById(R.id.dashFuelRailPressure);
-        CheckRecord.getTriRecode(context,getToken()).clear();
-        tripRecord = CheckRecord.getTriRecode(context,getToken());
+        CheckRecord.getTriRecode(context, getToken()).clear();
+        tripRecord = CheckRecord.getTriRecode(context, getToken());
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(true);
         setFuelLevel();
         setInsFuelConsumption();
@@ -148,13 +149,13 @@ public class VehicleDashTwoActivity extends BaseActivity {
     }
 
     /**
-     * 设置进气温度仪表
+     * 设置油门位置仪表
      */
     private void setDrivingFuelConsumption() {
-        dashIntakeAirTemp.setmSection(10);
-        dashIntakeAirTemp.setmHeaderText(" °C ");
-        dashIntakeAirTemp.setmMax(260);
-        dashIntakeAirTemp.setmMin(-40);
+        dashThrottlePos.setmSection(10);
+        dashThrottlePos.setmHeaderText(" % ");
+        dashThrottlePos.setmMax(100);
+        dashThrottlePos.setmMin(0);
     }
 
     /**
@@ -205,7 +206,8 @@ public class VehicleDashTwoActivity extends BaseActivity {
         List<ObdCommand> obdCommands = new ArrayList<>();
         obdCommands.clear();
         obdCommands.add(new FuelPressureCommand(ModeTrim.MODE_01.buildObdCommand()));//油压
-        obdCommands.add(new AirIntakeTemperatureCommand(ModeTrim.MODE_01.buildObdCommand()));//邮箱空气温度
+        // obdCommands.add(new AirIntakeTemperatureCommand(ModeTrim.MODE_01.buildObdCommand()));//邮箱空气温度
+        obdCommands.add(new ThrottlePositionCommand(ModeTrim.MODE_01.buildObdCommand()));//邮箱空气温度
         obdCommands.add(new ConsumptionRateCommand(ModeTrim.MODE_01.buildObdCommand()));//燃油效率
         obdCommands.add(new FuelRailPressureCommand(ModeTrim.MODE_01.buildObdCommand()));//油轨压力（柴油或汽油直喷）
         return obdCommands;
@@ -239,8 +241,9 @@ public class VehicleDashTwoActivity extends BaseActivity {
             tvFuelPressure.setText(TextUtils.isEmpty(pressure) ? "0" : pressure);
             dashFuelPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(pressure) ? "0" : pressure));
 
-            dashIntakeAirTemp.setVelocity(tripRecord.getmIntakeAirTemp());
-            tvIntakeAirTemp.setText(String.valueOf(tripRecord.getmIntakeAirTemp()));
+            String ThrottlePos = tripRecord.getmThrottlePos().replace("%", "");
+            dashThrottlePos.setVelocity(Float.parseFloat(TextUtils.isEmpty(ThrottlePos) ? "0" : ThrottlePos));
+            tvIntakeAirTemp.setText(TextUtils.isEmpty(ThrottlePos) ? "0" : ThrottlePos);
         }
     }
 

@@ -1,5 +1,7 @@
 package com.sohrab.obd.reader.obdCommand;
 
+import android.util.Log;
+
 import com.sohrab.obd.reader.obdCommand.obdException.BusInitException;
 import com.sohrab.obd.reader.obdCommand.obdException.MisunderstoodCommandException;
 import com.sohrab.obd.reader.obdCommand.obdException.NoDataException;
@@ -165,6 +167,7 @@ public abstract class ObdCommand {
         rawData = rawData.replaceAll("(BUS INIT)|(BUSINIT)|(\\.)", "");
 
         LogUtils.i("Cmd :: " + cmd + " rawData :: " + rawData);
+        Log.e("BaseActivity","Cmd :: " + cmd + " rawData :: " + rawData);
         if (!rawData.matches("([0-9A-F])+")) {
             LogUtils.i("NonNumericResponseException :: " + rawData);
             throw new NonNumericResponseException(rawData);
@@ -178,7 +181,7 @@ public abstract class ObdCommand {
             begin = end;
             end += 2;
         }
-
+        Log.e("BaseActivity","buffer:"+buffer);
         LogUtils.i("buffer :: " + buffer);
     }
 
@@ -215,7 +218,9 @@ public abstract class ObdCommand {
          * processing..
          */
 
-        LogUtils.i("Cmd :: " + cmd + " data :: " + res);
+       // LogUtils.i("Cmd :: " + cmd + " data :: " + res);
+        Log.e("BaseActivity","Cmd :: " + cmd + " res :: " + res.toString());
+        //Log.e("BaseActivity","rawData:"+rawData);
         rawData = res.toString().replaceAll("SEARCHING", "");
 
         /*

@@ -102,7 +102,7 @@ public class ObdConfiguration {
         mObdCommands.add(new EchoOffCommand());//关闭回声
         mObdCommands.add(new LineFeedOffCommand());//关闭换行
         mObdCommands.add(new SpacesOffCommand());//关闭空格
-        mObdCommands.add(new TimeoutCommand(62));//这将设置OBD接口启动的时间值（毫秒）将等待ECU的响应。如果超过，则响应为“无数据”。
+        mObdCommands.add(new TimeoutCommand(200));//这将设置OBD接口启动的时间值（毫秒）将等待ECU的响应。如果超过，则响应为“无数据”。
         mObdCommands.add(new SelectProtocolCommand(ObdProtocols.AUTO));//选择要使用的协议
         mObdCommands.add(new IgnitionMonitorCommand());//"AT IGN" 点火
         mObdCommands.add(new DescribeProtocolCommand());//"AT DP"

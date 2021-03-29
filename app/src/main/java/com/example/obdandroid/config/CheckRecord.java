@@ -321,7 +321,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 break;
             case AIR_INTAKE_TEMPERATURE:
                 mIntakeAirTemp = Float.parseFloat(command.getCalculatedResult()) + 273.15f;
-                data.add(new OBDTripEntity("邮箱空气温度", mIntakeAirTemp + " ℃"));
+                data.add(new OBDTripEntity("油箱空气温度", mIntakeAirTemp + " ℃"));
                 entity.setIntakeAirTemp(mIntakeAirTemp + " ℃");
                 calculateMaf();
                 break;
@@ -385,7 +385,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 break;
             case THROTTLE_POS:
                 mThrottlePos = command.getFormattedResult();
-                data.add(new OBDTripEntity("节气门位置", TextUtils.isEmpty(mThrottlePos) ? "" : mThrottlePos));
+                data.add(new OBDTripEntity("油门位置", TextUtils.isEmpty(mThrottlePos) ? "" : mThrottlePos));
                 entity.setThottlePos(TextUtils.isEmpty(mThrottlePos) ? "" : mThrottlePos);
                 break;
             case TIMING_ADVANCE:

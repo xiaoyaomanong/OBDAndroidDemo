@@ -286,6 +286,8 @@
     <string name="weChat">微信</string>
     <string name="fuelRate">燃油消耗率</string>
     <string name="FuelRailPressure">油轨压力</string>
-    <string name="fuelRateUnit">燃油消耗率(L/h)</string>
+    <string name="fuelRateUnit">燃油消耗率(100L/h)</string>
     <string name="IntakeAirTempUnit">油箱空气温度( ℃ )</string>
+    <string name="ThrottlePos">油门位置</string>
+    <string name="throttle">油门位置(%)</string>
 </resources>

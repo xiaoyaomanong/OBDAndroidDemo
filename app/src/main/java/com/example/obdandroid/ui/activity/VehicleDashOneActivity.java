@@ -106,7 +106,6 @@ public class VehicleDashOneActivity extends BaseActivity {
     }
 
     private void startCommand() {
-        LogE("是否连接:" + MainApplication.getBluetoothSocket().isConnected());
         boolean isConnected = MainApplication.getBluetoothSocket().isConnected();
         if (isConnected) {
             startThread();

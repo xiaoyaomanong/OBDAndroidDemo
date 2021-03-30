@@ -4,6 +4,10 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -33,6 +37,7 @@ import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleWelComeView;
 import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.DialogUtils;
+import com.example.obdandroid.utils.ExceptionHandler;
 import com.example.obdandroid.utils.SPUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
@@ -49,7 +54,13 @@ import com.sohrab.obd.reader.trip.OBDTripEntity;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.Call;
@@ -90,6 +101,10 @@ public class VehicleCheckActivity extends BaseActivity {
     private static final int COMPLETEO = 2;
     private int size;
     private DialogUtils dialogUtils;
+
+    private File saveSpacePath;
+    private File localErrorSave;
+    private StringBuilder sb = new StringBuilder();
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
         @SuppressLint({"SetTextI18n", "DefaultLocale"})
@@ -213,6 +228,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 }
             }
         });
+       // initConfig();
     }
 
     private void executeCommand(BluetoothSocket socket) {
@@ -223,7 +239,7 @@ public class VehicleCheckActivity extends BaseActivity {
             ObdCommand command = commands.get(i);
             try {
                 command.run(socket.getInputStream(), socket.getOutputStream());
-                // LogE("结果是: " + command.getFormattedResult() + " :: name is :: " + command.getName());
+               // LogE("结果是: " + command.getFormattedResult() + " :: name is :: " + command.getName());
                 Message msg = new Message();
                 msg.what = COMPLETEO;
                 msg.obj = (double) (i + 1);
@@ -231,12 +247,48 @@ public class VehicleCheckActivity extends BaseActivity {
                 tripRecord.updateTrip(command.getName(), command);
             } catch (Exception e) {
                 LogE("执行命令异常  :: " + e.getMessage());
+                //writeErrorToLocal(e);
             }
         }
         Message msg = new Message();
         msg.what = COMPLETED;
         handler.sendMessage(msg);
     }
+
+
+
+    public void initConfig() {
+        saveSpacePath = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/ODBCar/OBDLog/");
+        localErrorSave = new File(saveSpacePath, "OBDPID.txt");
+        if (!saveSpacePath.exists()) {
+            saveSpacePath.mkdirs();
+        }
+        if (!localErrorSave.exists()) {
+            try {
+                localErrorSave.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private void writeErrorToLocal(Exception e) {
+        try {
+            BufferedWriter fos = new BufferedWriter(new FileWriter(localErrorSave, true));
+            String line = "\n----------------------------------------------------------------------------------------\n";
+            sb.append(line);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                sb.append("\tat " + e.getMessage());
+            }
+            fos.write(sb.toString());
+            fos.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+    }
+
 
 
     /**

@@ -111,7 +111,7 @@
                             android:layout_height="50dp"
                             android:fontFamily="@font/gotham"
                             android:gravity="center"
-                            android:text="@string/IntakeAirTempUnit"
+                            android:text="@string/throttle"
                             android:textColor="@color/white"
                             android:textSize="@dimen/sp_16" />
 
@@ -229,7 +229,7 @@
                     android:orientation="vertical">
 
                     <com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight
-                        android:id="@+id/dashIntakeAirTemp"
+                        android:id="@+id/dashThrottlePos"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_margin="5dp"
@@ -241,7 +241,7 @@
                         android:layout_height="50dp"
                         android:fontFamily="@font/gotham"
                         android:gravity="center"
-                        android:text="@string/mIntakeAirTemp"
+                        android:text="@string/ThrottlePos"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp_14" />
                 </LinearLayout>

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
@@ -56,6 +58,7 @@ public class VehicleActivity extends BaseActivity {
     private AutomobileBrandEntity.DataEntity dataEntity;
     private BrandPinYinEntity yinEntity;
     private DialogUtils dialogUtils;
+    private String CarId;
 
     @Override
     protected int getContentViewId() {
@@ -76,7 +79,7 @@ public class VehicleActivity extends BaseActivity {
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         recycleCar = findViewById(R.id.recycle_Car);
         spUtil = new SPUtil(context);
-        dialogUtils=new DialogUtils(context);
+        dialogUtils = new DialogUtils(context);
         recycleCar.setLinearLayout();
         //设置是否可以下拉刷新
         recycleCar.setPullRefreshEnable(true);
@@ -126,6 +129,7 @@ public class VehicleActivity extends BaseActivity {
                         adapter.singlesel(position);
                         spUtil.remove("vehicleId");
                         spUtil.put("vehicleId", String.valueOf(entity.getVehicleId()));
+                        CarId = String.valueOf(entity.getVehicleId());
                         Intent intent = new Intent("com.android.ObdCar");//创建发送广播的Action
                         intent.putExtra("vehicleId", String.valueOf(entity.getVehicleId()));//发送携带的数据
                         mLocalBroadcastManager.sendBroadcast(intent);                               //发送本地广播
@@ -139,7 +143,7 @@ public class VehicleActivity extends BaseActivity {
                 new IosDialog(context, new IosDialog.DialogClick() {
                     @Override
                     public void Confirm(AlertDialog exitDialog, boolean confirm) {
-                        if (confirm){
+                        if (confirm) {
                             if (String.valueOf(entity.getVehicleId()).equals(spUtil.getString("vehicleId", ""))) {
                                 showToast("该车辆已被选中为默认车辆,暂时无法删除");
                             } else {
@@ -151,7 +155,7 @@ public class VehicleActivity extends BaseActivity {
 
                     @Override
                     public void Cancel(AlertDialog exitDialog, boolean confirm) {
-                        if (confirm){
+                        if (confirm) {
                             exitDialog.dismiss();
                         }
                     }
@@ -164,7 +168,11 @@ public class VehicleActivity extends BaseActivity {
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
-                finish();
+                if (TextUtils.isEmpty(spUtil.getString("vehicleId", ""))) {
+                    showTipDialog("您还未选择检测车辆,请选择一辆车");
+                }else {
+                    finish();
+                }
             }
 
             @Override
@@ -263,6 +271,20 @@ public class VehicleActivity extends BaseActivity {
         });
 
     }
+
+    @Override
+    //安卓重写返回键事件
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (TextUtils.isEmpty(spUtil.getString("vehicleId", ""))) {
+                showTipDialog("您还未选择检测车辆,请选择一辆车");
+            }else {
+                finish();
+            }
+        }
+        return true;
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

@@ -19,6 +19,7 @@ import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.StringUtil;
 import com.hacknife.immersive.Immersive;
+import com.kongzue.dialog.v2.TipDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -149,6 +150,10 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public void showToast(String text) {
         Toast.makeText(mContext, text, Toast.LENGTH_SHORT).show();
+    }
+
+    public void showTipDialog(String msg) {
+        TipDialog.show(mContext, msg, TipDialog.TYPE_ERROR, TipDialog.TYPE_WARNING);
     }
 
     public AppCompatActivity getActivity() {

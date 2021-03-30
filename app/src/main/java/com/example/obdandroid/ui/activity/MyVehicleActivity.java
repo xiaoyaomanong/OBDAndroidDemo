@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
@@ -51,6 +53,7 @@ public class MyVehicleActivity extends BaseActivity {
     private SPUtil spUtil;
     private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
     private DialogUtils dialogUtils;
+    private String CarId;
 
     @Override
     protected int getContentViewId() {
@@ -158,7 +161,11 @@ public class MyVehicleActivity extends BaseActivity {
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
-                finish();
+                if (TextUtils.isEmpty(spUtil.getString("vehicleId", ""))) {
+                    showTipDialog("您还未选择检测车辆,请选择一辆车");
+                } else {
+                    finish();
+                }
             }
 
             @Override
@@ -254,6 +261,18 @@ public class MyVehicleActivity extends BaseActivity {
         });
     }
 
+    @Override
+    //安卓重写返回键事件
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (TextUtils.isEmpty(spUtil.getString("vehicleId", ""))) {
+                showTipDialog("您还未选择检测车辆,请选择一辆车");
+            } else {
+                finish();
+            }
+        }
+        return true;
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

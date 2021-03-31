@@ -228,7 +228,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 }
             }
         });
-       // initConfig();
+        // initConfig();
     }
 
     private void executeCommand(BluetoothSocket socket) {
@@ -239,7 +239,7 @@ public class VehicleCheckActivity extends BaseActivity {
             ObdCommand command = commands.get(i);
             try {
                 command.run(socket.getInputStream(), socket.getOutputStream());
-               // LogE("结果是: " + command.getFormattedResult() + " :: name is :: " + command.getName());
+                // LogE("结果是: " + command.getFormattedResult() + " :: name is :: " + command.getName());
                 Message msg = new Message();
                 msg.what = COMPLETEO;
                 msg.obj = (double) (i + 1);
@@ -254,7 +254,6 @@ public class VehicleCheckActivity extends BaseActivity {
         msg.what = COMPLETED;
         handler.sendMessage(msg);
     }
-
 
 
     public void initConfig() {
@@ -279,16 +278,14 @@ public class VehicleCheckActivity extends BaseActivity {
             BufferedWriter fos = new BufferedWriter(new FileWriter(localErrorSave, true));
             String line = "\n----------------------------------------------------------------------------------------\n";
             sb.append(line);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                sb.append("\tat " + e.getMessage());
-            }
+            sb.append("\tat ");
+            sb.append(e.getMessage());
             fos.write(sb.toString());
             fos.close();
         } catch (IOException e1) {
             e1.printStackTrace();
         }
     }
-
 
 
     /**

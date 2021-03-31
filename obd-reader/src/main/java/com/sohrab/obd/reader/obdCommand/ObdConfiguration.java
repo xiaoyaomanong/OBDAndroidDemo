@@ -67,6 +67,10 @@ import com.sohrab.obd.reader.obdCommand.pressure.FuelPressureCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureManifoldVacuumCommand;
 import com.sohrab.obd.reader.obdCommand.pressure.IntakeManifoldPressureCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.AvailablePidsCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.AvailablePidsCommand_01_20;
+import com.sohrab.obd.reader.obdCommand.protocol.AvailablePidsCommand_21_40;
+import com.sohrab.obd.reader.obdCommand.protocol.AvailablePidsCommand_41_60;
 import com.sohrab.obd.reader.obdCommand.protocol.BaseDataCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.DescribeProtocolCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.DescribeProtocolNumberCommand;
@@ -110,6 +114,7 @@ public class ObdConfiguration {
         mObdCommands.add(new DescribeProtocolNumberCommand());//"AT DPN"
         mObdCommands.add(new BaseDataCommand());//"AT BDAT"
 
+        mObdCommands.add(new AvailablePidsCommand_01_20());//
         mObdCommands.add(new DtcNumberCommand(modeTrim.buildObdCommand()));//"01 01" DTC情况指示
         mObdCommands.add(new FuelSystemStatusCommand(modeTrim.buildObdCommand()));//"01 03"燃油系统状态
         mObdCommands.add(new LoadCommand(modeTrim.buildObdCommand()));//"01 04" 发动机负荷
@@ -128,7 +133,7 @@ public class ObdConfiguration {
         mObdCommands.add(new ThrottlePositionCommand(modeTrim.buildObdCommand()));//"01 11"节气门位置
         mObdCommands.add(new RuntimeCommand(modeTrim.buildObdCommand()));//"01 1F" 发动机启动后的运行时间
 
-
+        mObdCommands.add(new AvailablePidsCommand_21_40());//
         mObdCommands.add(new DistanceMILOnCommand(modeTrim.buildObdCommand()));//"01 21" 故障指示灯（MIL）亮时行驶的距离
         mObdCommands.add(new FuelRailPressureManifoldVacuumCommand(modeTrim.buildObdCommand()));//"01 22" 油轨压力（相对进气歧管真空度）
         mObdCommands.add(new FuelRailPressureCommand(modeTrim.buildObdCommand()));//"01 23" 油轨压力（柴油或汽油直喷）
@@ -153,6 +158,7 @@ public class ObdConfiguration {
         mObdCommands.add(new CatalystTemperatureCommand(modeTrim.buildObdCommand(), CatalystTrim.Catalyst_Temperature_Bank_1_Sensor_2));//"01 3C" 催化剂温度:Bank1,感测器2
         mObdCommands.add(new CatalystTemperatureCommand(modeTrim.buildObdCommand(), CatalystTrim.Catalyst_Temperature_Bank_2_Sensor_2));//"01 3C" 催化剂温度:Bank2,感测器2
 
+        mObdCommands.add(new AvailablePidsCommand_41_60());//
         mObdCommands.add(new ModuleVoltageCommand(modeTrim.buildObdCommand()));//"01 42" 模块控制组电压
         mObdCommands.add(new AbsoluteLoadCommand(modeTrim.buildObdCommand()));//"01 43" 绝对载荷
         mObdCommands.add(new AirFuelRatioCommand(modeTrim.buildObdCommand()));//"01 44" 燃油-空气命令等效比

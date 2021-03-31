@@ -82,7 +82,6 @@ public class MyVehicleDashActivity extends BaseActivity {
         getOxygenMonitorData();
         getPendingDTC();
         getVehicleInfo();
-
     }
 
 

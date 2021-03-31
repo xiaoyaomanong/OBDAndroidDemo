@@ -280,7 +280,6 @@ public class VehicleCheckActivity extends BaseActivity {
         }
     }
 
-
     private void writeErrorToLocal(String msg) {
         try {
             BufferedWriter fos = new BufferedWriter(new FileWriter(localErrorSave, true));

@@ -43,6 +43,7 @@ import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
 import com.sohrab.obd.reader.application.ObdPreferences;
+import com.sohrab.obd.reader.enums.AvailableCommandNames;
 import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
@@ -104,7 +105,6 @@ public class VehicleCheckActivity extends BaseActivity {
 
     private File saveSpacePath;
     private File localErrorSave;
-    private StringBuilder sb = new StringBuilder();
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
         @SuppressLint({"SetTextI18n", "DefaultLocale"})
@@ -228,7 +228,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 }
             }
         });
-        // initConfig();
+        initConfig();
     }
 
     private void executeCommand(BluetoothSocket socket) {
@@ -239,7 +239,15 @@ public class VehicleCheckActivity extends BaseActivity {
             ObdCommand command = commands.get(i);
             try {
                 command.run(socket.getInputStream(), socket.getOutputStream());
-                // LogE("结果是: " + command.getFormattedResult() + " :: name is :: " + command.getName());
+                if (command.getName().equals(AvailableCommandNames.PIDS_01_20.getValue())) {
+                    writeErrorToLocal("结果是: " + command.getFormattedResult());
+                }
+                if (command.getName().equals(AvailableCommandNames.PIDS_21_40.getValue())) {
+                    writeErrorToLocal("结果是: " + command.getFormattedResult());
+                }
+                if (command.getName().equals(AvailableCommandNames.PIDS_41_60.getValue())) {
+                    writeErrorToLocal("结果是: " + command.getFormattedResult());
+                }
                 Message msg = new Message();
                 msg.what = COMPLETEO;
                 msg.obj = (double) (i + 1);
@@ -247,7 +255,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 tripRecord.updateTrip(command.getName(), command);
             } catch (Exception e) {
                 LogE("执行命令异常  :: " + e.getMessage());
-                //writeErrorToLocal(e);
+                writeErrorToLocal(e.getMessage());
             }
         }
         Message msg = new Message();
@@ -273,14 +281,10 @@ public class VehicleCheckActivity extends BaseActivity {
     }
 
 
-    private void writeErrorToLocal(Exception e) {
+    private void writeErrorToLocal(String msg) {
         try {
             BufferedWriter fos = new BufferedWriter(new FileWriter(localErrorSave, true));
-            String line = "\n----------------------------------------------------------------------------------------\n";
-            sb.append(line);
-            sb.append("\tat ");
-            sb.append(e.getMessage());
-            fos.write(sb.toString());
+            fos.write("\tat " + msg);
             fos.close();
         } catch (IOException e1) {
             e1.printStackTrace();

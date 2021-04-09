@@ -233,7 +233,7 @@ public class VehicleCheckActivity extends BaseActivity {
 
     private void executeCommand(BluetoothSocket socket) {
         tripRecord.getTripMap().clear();
-        ArrayList<ObdCommand> commands = ObdConfiguration.getObdCommands(ModeTrim.MODE_01);
+        ArrayList<ObdCommand> commands = ObdConfiguration.getObdCommands(ModeTrim.MODE_02);
         size = commands.size();
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
@@ -241,6 +241,12 @@ public class VehicleCheckActivity extends BaseActivity {
                 command.run(socket.getInputStream(), socket.getOutputStream());
                 if (command.getName().equals(AvailableCommandNames.PIDS_01_20.getValue())) {
                     writeErrorToLocal("结果是: " + command.getFormattedResult());
+                }
+                if (command.getName().equals(AvailableCommandNames.DESCRIBE_PROTOCOL.getValue())) {
+                    writeErrorToLocal("协议名称: " + command.getFormattedResult());
+                }
+                if (command.getName().equals(AvailableCommandNames.DESCRIBE_PROTOCOL_NUMBER.getValue())) {
+                    writeErrorToLocal("协议编号: " + command.getFormattedResult());
                 }
                 if (command.getName().equals(AvailableCommandNames.PIDS_21_40.getValue())) {
                     writeErrorToLocal("结果是: " + command.getFormattedResult());
@@ -283,7 +289,7 @@ public class VehicleCheckActivity extends BaseActivity {
     private void writeErrorToLocal(String msg) {
         try {
             BufferedWriter fos = new BufferedWriter(new FileWriter(localErrorSave, true));
-            fos.write("\tat " + msg);
+            fos.write("\n" + msg);
             fos.close();
         } catch (IOException e1) {
             e1.printStackTrace();

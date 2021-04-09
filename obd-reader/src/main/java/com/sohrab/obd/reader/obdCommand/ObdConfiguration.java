@@ -110,11 +110,15 @@ public class ObdConfiguration {
         mObdCommands.add(new TimeoutCommand(200));//这将设置OBD接口启动的时间值（毫秒）将等待ECU的响应。如果超过，则响应为“无数据”。
         mObdCommands.add(new SelectProtocolCommand(ObdProtocols.AUTO));//选择要使用的协议
         mObdCommands.add(new IgnitionMonitorCommand());//"AT IGN" 点火
-        mObdCommands.add(new DescribeProtocolCommand());//"AT DP"
-        mObdCommands.add(new DescribeProtocolNumberCommand());//"AT DPN"
-        mObdCommands.add(new BaseDataCommand());//"AT BDAT"
+       // mObdCommands.add(new DescribeProtocolCommand());//"AT DP"
+        //mObdCommands.add(new DescribeProtocolNumberCommand());//"AT DPN"
+        //mObdCommands.add(new BaseDataCommand());//"AT BDAT"
 
         mObdCommands.add(new AvailablePidsCommand_01_20());//
+        mObdCommands.add(new DescribeProtocolCommand());//"AT DP"
+        mObdCommands.add(new DescribeProtocolNumberCommand());//"AT DPN"
+
+
         mObdCommands.add(new DtcNumberCommand(modeTrim.buildObdCommand()));//"01 01" DTC情况指示
         mObdCommands.add(new FuelSystemStatusCommand(modeTrim.buildObdCommand()));//"01 03"燃油系统状态
         mObdCommands.add(new LoadCommand(modeTrim.buildObdCommand()));//"01 04" 发动机负荷

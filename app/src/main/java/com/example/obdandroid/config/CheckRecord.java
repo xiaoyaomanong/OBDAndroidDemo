@@ -654,12 +654,12 @@ public class CheckRecord implements DefineObdReader, Serializable {
 
             case DESCRIBE_PROTOCOL:
                 mDescribeProtocol = command.getFormattedResult();
-                data.add(new OBDTripEntity("描述协议", TextUtils.isEmpty(mDescribeProtocol) ? "" : mDescribeProtocol));
+                data.add(new OBDTripEntity("协议", TextUtils.isEmpty(mDescribeProtocol) ? "" : mDescribeProtocol));
                 entity.setDescribeProtocol(TextUtils.isEmpty(mDescribeProtocol) ? "" : mDescribeProtocol);
                 break;
             case DESCRIBE_PROTOCOL_NUMBER:
                 mDescribeProtocolNumber = command.getFormattedResult();
-                data.add(new OBDTripEntity("描述协议编号", TextUtils.isEmpty(mDescribeProtocolNumber) ? "" : mDescribeProtocolNumber));
+                data.add(new OBDTripEntity("协议编号", TextUtils.isEmpty(mDescribeProtocolNumber) ? "" : mDescribeProtocolNumber));
                 entity.setDescribeProtocolNumber(TextUtils.isEmpty(mDescribeProtocolNumber) ? "" : mDescribeProtocolNumber);
                 break;
             case IGNITION_MONITOR:

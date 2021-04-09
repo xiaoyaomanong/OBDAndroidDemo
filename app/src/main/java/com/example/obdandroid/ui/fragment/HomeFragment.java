@@ -103,6 +103,7 @@ public class HomeFragment extends BaseFragment {
     private boolean isConn = false;
     private String deviceAddress;
     private HomeAdapter homeAdapter;
+    private boolean isVip;
     private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
     private static final int COMPLETES = 1;
     private static final int COMPLETET = 2;
@@ -166,8 +167,12 @@ public class HomeFragment extends BaseFragment {
         });
         setCheckRecord();
         layoutCheck.setOnClickListener(v -> {
-            Intent intent = new Intent(context, VehicleCheckActivity.class);
-            startActivityForResult(intent, 102);
+            if (isVip) {
+                Intent intent = new Intent(context, VehicleCheckActivity.class);
+                startActivityForResult(intent, 102);
+            } else {
+                showTipDialog("请购买服务");
+            }
         });
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -273,6 +278,7 @@ public class HomeFragment extends BaseFragment {
                 UserInfoEntity entity = JSON.parseObject(response, UserInfoEntity.class);
                 if (entity.isSuccess()) {
                     dialogUtils.dismiss();
+                    isVip = entity.getData().getIsVip() == 1 ? true : false;
                     if (entity.getData().isTheDeviceBound()) {
                         if (TextUtils.isEmpty(vehicleId)) {
                             //选择已绑定的车辆
@@ -463,7 +469,7 @@ public class HomeFragment extends BaseFragment {
         isConnected = true;
         TipDialog.show(context, getString(R.string.title_connected_to) + mConnectedDeviceName, TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
         dialogUtils.dismiss();
-       // getOBDData(MainApplication.getBluetoothSocket());
+        // getOBDData(MainApplication.getBluetoothSocket());
     }
 
     /**

@@ -1,21 +1,28 @@
 package com.example.obdandroid.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
+import com.alipay.sdk.app.PayTask;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.adapter.RechargeSetMealAdapter;
+import com.example.obdandroid.ui.entity.AlipayOrderEntity;
+import com.example.obdandroid.ui.entity.AlipayResultEntity;
 import com.example.obdandroid.ui.entity.ChargeMealEntity;
-import com.example.obdandroid.ui.entity.PlaceAnOrderEntity;
+import com.example.obdandroid.ui.entity.PayResult;
+import com.example.obdandroid.ui.entity.WxOrderEntity;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.ui.view.PayChannelDialog;
@@ -34,6 +41,7 @@ import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -68,6 +76,63 @@ public class RechargeSetMealActivity extends BaseActivity {
     private IWXAPI wxApi;
     private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
     private SPUtil spUtil;
+    private static final int SDK_PAY_FLAG = 1;
+    @SuppressLint("HandlerLeak")
+    private final Handler mHandlers = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == SDK_PAY_FLAG) {
+                PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+                /**
+                 * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+                 */
+                String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                String resultStatus = payResult.getResultStatus();
+                // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+                switch (resultStatus) {
+                    case "9000":
+                        AlipayResultEntity entity = JSON.parseObject(resultInfo, AlipayResultEntity.class);
+                        new CustomeDialog(context, "", new CustomeDialog.DialogClick() {
+                            @Override
+                            public void Confirm(boolean confirm) {
+                                if (confirm) {
+                                    btnBuy.setProgress(100);
+                                    updateRechargeRecord(entity.getAlipay_trade_app_pay_response().getOut_trade_no(), "1", getToken());
+                                }
+                            }
+                        }).setTitle("支付结果").setPositiveButton("知道了").show();
+                        break;
+                    case "8000":
+                        btnBuy.setProgress(-1);
+                        showTipsDialog("正在处理中,支付结果未知(有可能已经支付成功),请查询商户订单列表中订单的支付状态", TipDialog.TYPE_WARNING);
+                        break;
+                    case "4000":
+                        btnBuy.setProgress(-1);
+                        showTipsDialog("订单支付失败", TipDialog.TYPE_WARNING);
+                        break;
+                    case "5000":
+                        btnBuy.setProgress(-1);
+                        showTipsDialog("重复请求", TipDialog.TYPE_WARNING);
+                        break;
+                    case "6001":
+                        btnBuy.setProgress(-1);
+                        showTipsDialog("用户中途取消", TipDialog.TYPE_WARNING);
+                        break;
+                    case "6002":
+                        btnBuy.setProgress(-1);
+                        showTipsDialog("网络连接出错", TipDialog.TYPE_WARNING);
+                        break;
+                    case "6004":
+                        btnBuy.setProgress(-1);
+                        showTipsDialog("支付结果未知（有可能已经支付成功），请查询商户订单列表中订单的支付状态", TipDialog.TYPE_WARNING);
+                        break;
+                    default:
+                        btnBuy.setProgress(-1);
+                        showTipsDialog("支付失败", TipDialog.TYPE_WARNING);
+                        break;
+                }
+            }
+        }
+    };
 
     @Override
     protected int getContentViewId() {
@@ -138,14 +203,15 @@ public class RechargeSetMealActivity extends BaseActivity {
             new PayChannelDialog(context, new PayChannelDialog.DialogClick() {
                 @Override
                 public void aliPay(AlertDialog exitDialog, String channel, boolean confirm) {
-                    if (confirm) {
+                    if (confirm) {//2
+                        addRechargeRecordCheck(getToken(), getUserId(), rechargetAmount, rechargeSetMealSettingsId, channel);
                         exitDialog.dismiss();
                     }
                 }
 
                 @Override
                 public void weChat(AlertDialog exitDialog, String channel, boolean confirm) {
-                    if (confirm) {
+                    if (confirm) {//1
                         addRechargeRecordCheck(getToken(), getUserId(), rechargetAmount, rechargeSetMealSettingsId, channel);
                         exitDialog.dismiss();
                     }
@@ -194,9 +260,6 @@ public class RechargeSetMealActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String payResult = intent.getStringExtra("payResult");
-           /* String channel = intent.getStringExtra("channel");
-            String amount = intent.getStringExtra("amount");
-            String mealId = intent.getStringExtra("mealId");*/
             String orderNo = intent.getStringExtra("orderNo");
             if (payResult.equals("1")) {
                 btnBuy.setProgress(100);
@@ -231,27 +294,67 @@ public class RechargeSetMealActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                PlaceAnOrderEntity entity = JSON.parseObject(response, PlaceAnOrderEntity.class);
-                if (entity.isSuccess()) {
-                    PayReq req = new PayReq();
-                    req.appId = WeiXinConstants.APP_ID;
-                    req.partnerId = entity.getData().getMch_id();
-                    req.prepayId = entity.getData().getPrepay_id();
-                    req.packageValue = PACKAGE_VALUE;
-                    req.nonceStr = entity.getData().getNonce_str();
-                    req.timeStamp = String.valueOf(entity.getData().getTimestamp());
-                    req.sign = entity.getData().getSign();
-                    boolean result = wxApi.sendReq(req);
-                    if (result) {
-                        spUtil.put(PAY_MONEY, amount);
-                        spUtil.put(MEAL_ID, rechargeSetMealSettingsId);
-                        spUtil.put(ORDER_NO, entity.getData().getOrder_no());
-                    }
-                } else {
-                    showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
+                LogE("APP用户购买套餐下单接口:" + response);
+                switch (paymentChannels) {
+                    case Constant.WX_TYPE:
+                        WxOrderEntity entity = JSON.parseObject(response, WxOrderEntity.class);
+                        if (entity.isSuccess()) {
+                            payToWx(entity, amount);
+                        } else {
+                            showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
+                        }
+                        break;
+                    case Constant.ALIPAY_TYPE:
+                        AlipayOrderEntity orderEntity = JSON.parseObject(response, AlipayOrderEntity.class);
+                        if (orderEntity.isSuccess()) {
+                            payToaliPay(orderEntity.getData().getOrderStr());
+                        } else {
+                            showTipsDialog(orderEntity.getMessage(), TipDialog.TYPE_ERROR);
+                        }
+                        break;
                 }
             }
         });
+    }
+
+    /**
+     * @param entity 支付参数
+     * @param amount 支付金额
+     *               微信支付
+     */
+    private void payToWx(WxOrderEntity entity, String amount) {
+        PayReq req = new PayReq();
+        req.appId = WeiXinConstants.APP_ID;
+        req.partnerId = entity.getData().getMch_id();
+        req.prepayId = entity.getData().getPrepay_id();
+        req.packageValue = PACKAGE_VALUE;
+        req.nonceStr = entity.getData().getNonce_str();
+        req.timeStamp = String.valueOf(entity.getData().getTimestamp());
+        req.sign = entity.getData().getSign();
+        boolean result = wxApi.sendReq(req);
+        if (result) {
+            spUtil.put(PAY_MONEY, amount);
+            spUtil.put(MEAL_ID, rechargeSetMealSettingsId);
+            spUtil.put(ORDER_NO, entity.getData().getOrder_no());
+        }
+    }
+
+    /**
+     * 支付宝支付业务示例
+     */
+    public void payToaliPay(String orderInfo) {
+        final Runnable payRunnable = () -> {
+            PayTask alipay = new PayTask(this);
+            Map<String, String> result = alipay.payV2(orderInfo, true);
+
+            Message msg = new Message();
+            msg.what = SDK_PAY_FLAG;
+            msg.obj = result;
+            mHandlers.sendMessage(msg);
+        };
+        // 必须异步调用
+        Thread payThread = new Thread(payRunnable);
+        payThread.start();
     }
 
     /**

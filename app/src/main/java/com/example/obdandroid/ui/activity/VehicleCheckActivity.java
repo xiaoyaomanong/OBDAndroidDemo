@@ -302,7 +302,6 @@ public class VehicleCheckActivity extends BaseActivity {
      */
     private void clearCodes(BluetoothSocket socket) {
         try {
-            LogE("测试复位=====尝试重置");
             new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
             LogE("开始清除");
             ResetTroubleCodesCommand clear = new ResetTroubleCodesCommand();

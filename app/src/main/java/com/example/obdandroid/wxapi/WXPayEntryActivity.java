@@ -55,7 +55,7 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
         String orderNo = spUtil.getString(ORDER_NO, "");
         tvTitle.setText("支付提示");
         btnOK.setOnClickListener(v -> {
-            sendBroadCast(rechargeStatus, amount, mealId,orderNo);
+            sendBroadCast(rechargeStatus, orderNo);
             finish();
         });
     }
@@ -90,12 +90,9 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
         }
     }
 
-    private void sendBroadCast(String status, String amount, String mealId,String orderNo) {
+    private void sendBroadCast(String status, String orderNo) {
         Intent intent = new Intent("com.obd.pay");//创建发送广播的Action
         intent.putExtra("payResult", status);//支付结果
-       /* intent.putExtra("channel", "1");//支付渠道
-        intent.putExtra("amount", amount);//支付金额
-        intent.putExtra("mealId", mealId);//支付金额*/
         intent.putExtra("orderNo", orderNo);//支付金额
         mLocalBroadcastManager.sendBroadcast(intent); //发送本地广播
     }

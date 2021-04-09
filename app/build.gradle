@@ -23,10 +23,6 @@ android {
         renderscriptTargetApi 21
         renderscriptSupportModeEnabled true
         multiDexEnabled true
-        //X5兼容64位手机
-        ndk {
-            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
-        }
     }
     dexOptions {
         javaMaxHeapSize "4g"
@@ -91,13 +87,8 @@ allprojects {
     }
 }
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
-    implementation files('libs/libammsdk.jar')
-    implementation files('libs/wechat-sdk-android-with-mta-1.0.2.jar')
-    //implementation files('libs/obd2-1.1.0.jar')
-   // implementation files('libs/slf4j-api-1.7.12.jar')
-    //implementation files('libs/script-1.0.2.xdm.jar')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -119,6 +110,8 @@ dependencies {
     implementation 'com.lzy.net:okgo:3.0.4'
     implementation project(':notchtools')
     implementation 'com.github.bumptech.glide:glide:4.5.0'
+    implementation files('libs/libammsdk.jar')
+    implementation files('libs/wechat-sdk-android-with-mta-1.0.2.jar')
     //noinspection GradleDependency
     implementation 'io.reactivex:rxandroid:1.1.0'
     //noinspection GradleDependency
@@ -154,5 +147,7 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.github.navasmdc:MaterialDesign:1.+@aar'
     //implementation 'io.github.macfja:obd2:1.1.0'
+    api(name: 'alipaysdk-15.8.02.210308182128', ext: 'aar')
+    //api(name: 'alipaySdk-15.7.5-20200422171619', ext: 'aar')
 }
 

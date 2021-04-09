@@ -81,6 +81,11 @@
         android:resizeable="true"
         android:smallScreens="true" />
 
+    <queries>
+        <package android:name="com.eg.android.AlipayGphone" />
+        <package android:name="hk.alipay.wallet" />
+    </queries>
+
     <application
         android:name=".MainApplication"
         android:allowBackup="false"
@@ -117,6 +122,7 @@
             android:name="android.max_aspect"
             android:value="2.2"
             tools:replace="android:value" />
+
         <provider
             android:name=".utils.update.CustomerFileProvider"
             android:authorities="${applicationId}.provider"

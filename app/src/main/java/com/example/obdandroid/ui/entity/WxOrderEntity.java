@@ -5,7 +5,7 @@ package com.example.obdandroid.ui.entity;
  * 日期：2021/3/18 0018
  * 描述：
  */
-public class PlaceAnOrderEntity {
+public class WxOrderEntity {
 
     /**
      * success : true

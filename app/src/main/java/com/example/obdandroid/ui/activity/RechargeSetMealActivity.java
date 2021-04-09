@@ -294,7 +294,7 @@ public class RechargeSetMealActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("APP用户购买套餐下单接口:" + response);
+                LogE("APP用户购买套餐下单接口:"+response);
                 switch (paymentChannels) {
                     case Constant.WX_TYPE:
                         WxOrderEntity entity = JSON.parseObject(response, WxOrderEntity.class);
@@ -307,7 +307,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                     case Constant.ALIPAY_TYPE:
                         AlipayOrderEntity orderEntity = JSON.parseObject(response, AlipayOrderEntity.class);
                         if (orderEntity.isSuccess()) {
-                            payToaliPay(orderEntity.getData().getOrderStr());
+                            payToaliPay(orderEntity.getData().getOrderStr().getBody());
                         } else {
                             showTipsDialog(orderEntity.getMessage(), TipDialog.TYPE_ERROR);
                         }

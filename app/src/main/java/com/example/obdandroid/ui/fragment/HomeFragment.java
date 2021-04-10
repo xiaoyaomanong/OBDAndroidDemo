@@ -278,7 +278,7 @@ public class HomeFragment extends BaseFragment {
                 UserInfoEntity entity = JSON.parseObject(response, UserInfoEntity.class);
                 if (entity.isSuccess()) {
                     dialogUtils.dismiss();
-                    isVip = entity.getData().getIsVip() == 1 ? true : false;
+                    isVip = entity.getData().getIsVip() == 1;
                     if (entity.getData().isTheDeviceBound()) {
                         if (TextUtils.isEmpty(vehicleId)) {
                             //选择已绑定的车辆

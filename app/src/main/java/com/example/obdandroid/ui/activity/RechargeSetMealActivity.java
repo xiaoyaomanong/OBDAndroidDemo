@@ -77,11 +77,13 @@ public class RechargeSetMealActivity extends BaseActivity {
     private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
     private SPUtil spUtil;
     private static final int SDK_PAY_FLAG = 1;
+    private String vehicleId;
     @SuppressLint("HandlerLeak")
     private final Handler mHandlers = new Handler() {
         public void handleMessage(Message msg) {
             if (msg.what == SDK_PAY_FLAG) {
                 PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+                LogE("payResult:" + payResult);
                 /**
                  * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
                  */
@@ -91,13 +93,10 @@ public class RechargeSetMealActivity extends BaseActivity {
                 switch (resultStatus) {
                     case "9000":
                         AlipayResultEntity entity = JSON.parseObject(resultInfo, AlipayResultEntity.class);
-                        new CustomeDialog(context, "", new CustomeDialog.DialogClick() {
-                            @Override
-                            public void Confirm(boolean confirm) {
-                                if (confirm) {
-                                    btnBuy.setProgress(100);
-                                    updateRechargeRecord(entity.getAlipay_trade_app_pay_response().getOut_trade_no(), "1", getToken());
-                                }
+                        new CustomeDialog(context, "支付成功", confirm -> {
+                            if (confirm) {
+                                btnBuy.setProgress(100);
+                                updateRechargeRecord(entity.getAlipay_trade_app_pay_response().getOut_trade_no(), "1", getToken());
                             }
                         }).setTitle("支付结果").setPositiveButton("知道了").show();
                         break;
@@ -153,6 +152,7 @@ public class RechargeSetMealActivity extends BaseActivity {
         btnBuy = findViewById(R.id.btnBuy);
         wxApi = WXAPIFactory.createWXAPI(context, WeiXinConstants.APP_ID);
         spUtil = new SPUtil(context);
+        vehicleId = spUtil.getString("vehicleId", "");
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(context);//广播变量管理器获
         recycleMeal.setLinearLayout();
         //设置是否可以下拉刷新
@@ -255,21 +255,6 @@ public class RechargeSetMealActivity extends BaseActivity {
         mLocalBroadcastManager.registerReceiver(receiver, intentFilter);
     }
 
-    private class PayResultReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String payResult = intent.getStringExtra("payResult");
-            String orderNo = intent.getStringExtra("orderNo");
-            if (payResult.equals("1")) {
-                btnBuy.setProgress(100);
-            } else {
-                btnBuy.setProgress(-1);
-            }
-            updateRechargeRecord(orderNo, payResult, getToken());
-        }
-    }
-
     /**
      * @param paymentChannels           支付渠道
      * @param token                     用户Token
@@ -294,7 +279,7 @@ public class RechargeSetMealActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("APP用户购买套餐下单接口:"+response);
+                LogE("APP用户购买套餐下单接口:" + response);
                 switch (paymentChannels) {
                     case Constant.WX_TYPE:
                         WxOrderEntity entity = JSON.parseObject(response, WxOrderEntity.class);
@@ -340,7 +325,9 @@ public class RechargeSetMealActivity extends BaseActivity {
     }
 
     /**
-     * 支付宝支付业务示例
+     * 支付宝支付
+     *
+     * @param orderInfo 支付参数
      */
     public void payToaliPay(String orderInfo) {
         final Runnable payRunnable = () -> {
@@ -412,6 +399,9 @@ public class RechargeSetMealActivity extends BaseActivity {
                 if (entity.isSuccess()) {
                     setResult(102, new Intent());
                     finish();
+                    Intent intent = new Intent("com.android.ObdCar");
+                    intent.putExtra("vehicleId", vehicleId);
+                    mLocalBroadcastManager.sendBroadcast(intent);
                 } else {
                     showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
                 }
@@ -470,4 +460,20 @@ public class RechargeSetMealActivity extends BaseActivity {
     private void showTipsDialog(String msg, int type) {
         TipDialog.show(context, msg, TipDialog.SHOW_TIME_SHORT, type);
     }
+
+    private class PayResultReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String payResult = intent.getStringExtra("payResult");
+            String orderNo = intent.getStringExtra("orderNo");
+            if (payResult.equals("1")) {
+                btnBuy.setProgress(100);
+            } else {
+                btnBuy.setProgress(-1);
+            }
+            updateRechargeRecord(orderNo, payResult, getToken());
+        }
+    }
+
 }

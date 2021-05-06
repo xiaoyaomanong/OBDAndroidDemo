@@ -39,7 +39,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
 import static com.example.obdandroid.config.Constant.REQUEST_ENABLE_BT;
 import static com.kongzue.dialog.v2.DialogSettings.THEME_DARK;
 import static com.kongzue.dialog.v2.DialogSettings.blur_alpha;

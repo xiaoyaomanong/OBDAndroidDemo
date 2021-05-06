@@ -26,8 +26,6 @@ import com.hjq.bar.TitleBar;
  */
 public class AgreementActivity extends BaseActivity {
     private DialogUtils dialogUtils;
-    private TitleBar titleBarSet;
-    private WebView wvAgreement;
 
     @Override
     protected int getContentViewId() {
@@ -44,8 +42,8 @@ public class AgreementActivity extends BaseActivity {
         super.initView();
         Context context = this;
         Immersive.setStatusBarColor(this, Color.rgb(68, 158, 239));
-        titleBarSet = findViewById(R.id.titleBarSet);
-        wvAgreement = findViewById(R.id.wv_agreement);
+        TitleBar titleBarSet = findViewById(R.id.titleBarSet);
+        WebView wvAgreement = findViewById(R.id.wv_agreement);
         dialogUtils = new DialogUtils(context);
         WebSettings webSettings = wvAgreement.getSettings();
         webSettings.setSupportMultipleWindows(true);
@@ -54,7 +52,7 @@ public class AgreementActivity extends BaseActivity {
         wvAgreement.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         wvAgreement.setWebViewClient(new MyWebViewClient());
         dialogUtils.showProgressDialog();
-        String path = "http://8.136.125.33/serviceAgreement.html ";
+        String path = "http://8.136.125.33/serviceAgreement.html";
         wvAgreement.loadUrl(path);
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override

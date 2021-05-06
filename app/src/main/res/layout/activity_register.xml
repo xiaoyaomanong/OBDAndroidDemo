@@ -93,30 +93,15 @@
                 android:layout_marginEnd="5dp"
                 android:background="@drawable/btn_shape_white_bg"
                 android:text="@string/hint_code"
-                android:textSize="@dimen/sp_12"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12" />
         </LinearLayout>
 
-        <com.example.obdandroid.ui.view.progressButton.CircularProgressButton
-            android:id="@+id/btnSignUpAgree"
+        <LinearLayout
+            android:id="@+id/layoutAgree"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="@font/calibri"
-            android:textColor="@color/cpb_white"
-            android:textSize="18sp"
-            app:cpb_cornerRadius="10dp"
-            app:cpb_iconComplete="@drawable/ic_action_accept"
-            app:cpb_iconError="@drawable/ic_action_cancel"
-            app:cpb_selectorComplete="@drawable/complete_state_selector"
-            app:cpb_selectorError="@drawable/error_state_selector"
-            app:cpb_selectorIdle="@drawable/idle_state_selector"
-            app:cpb_textIdle="@string/hint_agree" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
@@ -139,6 +124,22 @@
 
         </LinearLayout>
 
+        <com.example.obdandroid.ui.view.progressButton.CircularProgressButton
+            android:id="@+id/btnSignUpAgree"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/calibri"
+            android:textColor="@color/cpb_white"
+            android:textSize="18sp"
+            app:cpb_cornerRadius="10dp"
+            app:cpb_iconComplete="@drawable/ic_action_accept"
+            app:cpb_iconError="@drawable/ic_action_cancel"
+            app:cpb_selectorComplete="@drawable/complete_state_selector"
+            app:cpb_selectorError="@drawable/error_state_selector"
+            app:cpb_selectorIdle="@drawable/idle_state_selector"
+            app:cpb_textIdle="@string/hint_agree" />
 
     </LinearLayout>
 
@@ -257,8 +258,8 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal|bottom"
         android:orientation="vertical"
-        android:visibility="gone"
-        android:paddingBottom="10dp">
+        android:paddingBottom="10dp"
+        android:visibility="gone">
 
         <com.example.obdandroid.ui.view.CircleImageView
             android:layout_width="60dp"

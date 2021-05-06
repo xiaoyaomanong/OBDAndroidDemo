@@ -152,6 +152,7 @@ public class RegisterActivity extends BaseLoginActivity {
         btnSignUpAgree = findViewById(R.id.btnSignUpAgree);
         layoutRegisterInfo = findViewById(R.id.layoutRegisterInfo);
         tvSex = findViewById(R.id.tvSex);
+        LinearLayout layoutAgree = findViewById(R.id.layoutAgree);
         dialogUtils = new DialogUtils(context);
         spUtil = new SPUtil(context);
         myHeaderImage.setOnClickListener(v ->
@@ -182,6 +183,7 @@ public class RegisterActivity extends BaseLoginActivity {
             }
             sendSMSVerificationCode(etUser.getText().toString());
         });
+        layoutAgree.setOnClickListener(v -> JumpUtil.startAct(context, AgreementActivity.class));
         btnSignUpAgree.setIndeterminateProgressMode(true);
         btnSignUpAgree.setOnClickListener(v -> {
             if (TextUtils.isEmpty(etUser.getText().toString())) {

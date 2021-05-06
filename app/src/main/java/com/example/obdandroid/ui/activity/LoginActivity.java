@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,7 +14,6 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
-import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.base.BaseLoginActivity;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.entity.ResultEntity;
@@ -35,8 +33,6 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_PHONE_STATE;
@@ -51,7 +47,6 @@ import static com.example.obdandroid.config.Constant.PASSWORD;
 import static com.example.obdandroid.config.Constant.TOKEN;
 import static com.example.obdandroid.config.Constant.USER_ID;
 import static com.example.obdandroid.config.Constant.USER_NAME;
-import static com.example.obdandroid.config.TAG.TAG_Activity;
 
 /**
  * 作者：Jealous
@@ -62,15 +57,12 @@ public class LoginActivity extends BaseLoginActivity {
     private Context context;
     private EditText etUser;
     private EditText etPwd;
-    private TextView btnSignUp;
     private CircularProgressButton btnSignIn;
-    private TextView tvForget;
     private AppCompatCheckBox cbMima;
     private SPUtil spUtil;
     private TextInputLayout textLayout;
     private TextView tvOtherLogin;
     private EditText etCode;
-    private Button btnCode;
     private LinearLayout layoutCode;
     private int loginType = 1;
     private String taskID="";
@@ -93,14 +85,14 @@ public class LoginActivity extends BaseLoginActivity {
         context = this;
         etUser = findViewById(R.id.etUser);
         etPwd = findViewById(R.id.etPwd);
-        btnSignUp = findViewById(R.id.btnSignUp);
+        TextView btnSignUp = findViewById(R.id.btnSignUp);
         btnSignIn = findViewById(R.id.btnSignIn);
-        tvForget = findViewById(R.id.tvForget);
+        TextView tvForget = findViewById(R.id.tvForget);
         cbMima = findViewById(R.id.cb_mima);
         textLayout = findViewById(R.id.textLayout);
         tvOtherLogin = findViewById(R.id.tvOtherLogin);
         etCode = findViewById(R.id.etCode);
-        btnCode = findViewById(R.id.btn_code);
+        Button btnCode = findViewById(R.id.btn_code);
         layoutCode = findViewById(R.id.layoutCode);
         tvTitle = findViewById(R.id.tv_title);
 
@@ -332,7 +324,6 @@ public class LoginActivity extends BaseLoginActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                Log.e(TAG_Activity, "校验短信验证码：" + response);
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
                     userLogin(mobile, "", "2", verificationCode, taskID);
@@ -346,8 +337,7 @@ public class LoginActivity extends BaseLoginActivity {
      */
     public void getPermission() {
         RxPermissions rxPermissions = new RxPermissions(this);
-        rxPermissions.request(CAMERA, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE,
-                READ_PHONE_STATE, ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION)
+        rxPermissions.request(CAMERA, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
                 .subscribe(aBoolean -> {
                     if (!aBoolean) {
                         Toast.makeText(context, "未授权", Toast.LENGTH_SHORT).show();

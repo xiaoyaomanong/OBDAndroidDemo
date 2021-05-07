@@ -31,6 +31,7 @@ import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
 import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
 import static com.example.obdandroid.config.Constant.TOKEN;
 import static com.example.obdandroid.config.Constant.USER_ID;
+import static com.example.obdandroid.config.Constant.USER_NAME;
 
 
 /**
@@ -46,6 +47,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private String token;
     private String userId = "";
     private String expireTime = "";
+    private String phone = "";
     private SPUtil spUtil;
     public AppCompatActivity mActivity;
 
@@ -87,6 +89,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         token = spUtil.getString(TOKEN, "");
         userId = spUtil.getString(USER_ID, "");
         expireTime = spUtil.getString(EXPIRE_TIME, "");
+        phone = spUtil.getString(USER_NAME, "");
         if (!StringUtil.isNull(token)) {
             setToken(token);
         }
@@ -95,6 +98,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         if (!StringUtil.isNull(expireTime)) {
             setExpireTime(expireTime);
+        }
+        if (!StringUtil.isNull(phone)) {
+            setPhone(phone);
         }
         if (!AppDateUtils.isDateTwoBigger(AppDateUtils.getTodayDateTimeHms(), expireTime)) {
             new CustomeDialog(mContext, "您的账号登录时间过长，请重新登录！", confirm -> {
@@ -134,6 +140,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void setExpireTime(String expireTime) {
         this.expireTime = expireTime;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     /**

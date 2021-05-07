@@ -65,7 +65,7 @@ public class LoginActivity extends BaseLoginActivity {
     private EditText etCode;
     private LinearLayout layoutCode;
     private int loginType = 1;
-    private String taskID="";
+    private String taskID = "";
     private CountDownTimerUtils mCountDownTimerUtils;
     private TextView tvTitle;
 
@@ -162,6 +162,7 @@ public class LoginActivity extends BaseLoginActivity {
         btnSignUp.setOnClickListener(v -> JumpUtil.startAct(context, RegisterActivity.class));
         //记住密码 监听记住密码多选框按钮事件
         cbMima.setOnCheckedChangeListener((buttonView, isChecked) -> spUtil.put(IS_CHECK, cbMima.isChecked()));
+        tvForget.setOnClickListener(v -> JumpUtil.startAct(context, ForgetPwdActivity.class));//找回密码
     }
 
     /**
@@ -262,9 +263,9 @@ public class LoginActivity extends BaseLoginActivity {
                     btnSignIn.setProgress(100);
                     if (cbMima.isChecked()) {
                         //记住用户名、密码、
-                        spUtil.put(USER_NAME, mobile);
                         spUtil.put(PASSWORD, password);
                     }
+                    spUtil.put(USER_NAME, mobile);
                     spUtil.put(Constant.IS_LOGIN, true);
                     spUtil.put(TOKEN, entity.getData().getToken());
                     spUtil.put(USER_ID, String.valueOf(entity.getData().getUserId()));
@@ -295,11 +296,14 @@ public class LoginActivity extends BaseLoginActivity {
 
             @Override
             public void onResponse(String response, int id) {
+                LogE("发送短信验证码:" + response);
                 SMSVerificationCodeEntity entity = JSON.parseObject(response, SMSVerificationCodeEntity.class);
                 if (entity.isSuccess()) {
                     showTipsDialog("验证码发送成功", TipDialog.TYPE_FINISH);
                     taskID = entity.getData().getTaskID();
                     mCountDownTimerUtils.onFinish();
+                } else {
+                    showTipsDialog(entity.getMessage(), TipDialog.TYPE_FINISH);
                 }
             }
         });

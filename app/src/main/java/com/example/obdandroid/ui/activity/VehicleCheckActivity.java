@@ -233,7 +233,7 @@ public class VehicleCheckActivity extends BaseActivity {
 
     private void executeCommand(BluetoothSocket socket) {
         tripRecord.getTripMap().clear();
-        ArrayList<ObdCommand> commands = ObdConfiguration.getObdCommands(ModeTrim.MODE_02);
+        ArrayList<ObdCommand> commands = ObdConfiguration.getObdCommands(ModeTrim.MODE_01);
         size = commands.size();
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);

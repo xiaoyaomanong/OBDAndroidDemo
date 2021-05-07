@@ -275,6 +275,7 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onResponse(String response, int id) {
+                LogE("用户信息:"+response);
                 UserInfoEntity entity = JSON.parseObject(response, UserInfoEntity.class);
                 if (entity.isSuccess()) {
                     dialogUtils.dismiss();

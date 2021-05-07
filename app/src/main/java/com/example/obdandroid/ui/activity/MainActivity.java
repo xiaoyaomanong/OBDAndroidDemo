@@ -89,7 +89,6 @@ public class MainActivity extends BaseActivity {
         viewPager.setPageTransformer(true, new DepthPageTransformer());
         viewPager.setOffscreenPageLimit(3);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
         checkBlueTooth();//检查蓝牙
     }
 

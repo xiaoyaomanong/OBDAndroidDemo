@@ -33,6 +33,7 @@ import com.example.obdandroid.ui.activity.MyVehicleActivity;
 import com.example.obdandroid.ui.activity.PersonSettingActivity;
 import com.example.obdandroid.ui.activity.RechargeRecordActivity;
 import com.example.obdandroid.ui.activity.RechargeSetMealActivity;
+import com.example.obdandroid.ui.activity.UpdatePwdActivity;
 import com.example.obdandroid.ui.activity.VehicleInfoActivity;
 import com.example.obdandroid.ui.entity.RechargeRecordEntity;
 import com.example.obdandroid.ui.entity.UserInfoEntity;
@@ -74,6 +75,7 @@ public class PersonalFragment extends BaseFragment {
     private TextView tvRechargeSetMeaName;
     private CircleImageView myHeaderImage;
     private LinearLayout layoutCar;
+    private LinearLayout layoutUpdatePwd;
     private LocalBroadcastManager lm;
     private TestReceiver testReceiver;
     private ImageView ivVip;
@@ -110,6 +112,7 @@ public class PersonalFragment extends BaseFragment {
         LinearLayout layoutUpdate = getView(R.id.layout_update);
         tvRechargeTime = getView(R.id.tvRechargeTime);
         tvRechargeSetMeaName = getView(R.id.tvRechargeSetMeaName);
+        layoutUpdatePwd = getView(R.id.layoutUpdatePwd);
         ivVip = getView(R.id.ivVip);
         spUtil = new SPUtil(context);
         String vehicleId = spUtil.getString("vehicleId", "");
@@ -131,6 +134,7 @@ public class PersonalFragment extends BaseFragment {
         layoutUpdate.setOnClickListener(v -> JumpUtil.startAct(context, PersonSettingActivity.class));//个人信息
         llAbout.setOnClickListener(v -> JumpUtil.startAct(context, AboutActivity.class));//关于我们
         llHistoryRecord.setOnClickListener(v -> JumpUtil.startAct(context, CheckRecordActivity.class));//历史记录
+        layoutUpdatePwd.setOnClickListener(v -> JumpUtil.startAct(context, UpdatePwdActivity.class));//修改密码
         //退出账户
         btnLogout.setOnClickListener(v ->
                 new IosDialog(context, new IosDialog.DialogClick() {
@@ -157,22 +161,6 @@ public class PersonalFragment extends BaseFragment {
                         }
                     }
                 }).setMessage("是否退出客户端").setTitle("退出提示").setSelectNegative("取消").setSelectPositive("确定").showDialog());
-                /* multipleItemQuickAdapter.setOnItemChildClickListener((adapter, view, position) -> {
-                            switch (view.getId()) {
-                                case R.id.ll_my_car:
-                                    break;
-                                case R.id.ll_my_pay:
-                                    break;
-                                case R.id.ll_my_obd:
-                                    JumpUtil.startAct(context, OBDSettingActivity.class);
-                                    break;
-                                case R.id.ll_my_trouble:
-                                    JumpUtil.startAct(context, TroubleCodeQueryActivity.class);
-                                    break;
-                                case R.id.my_header_settings:
-                                    JumpUtil.startAct(context, AppSettingActivity.class);
-                                    break;
-                            }*/
     }
 
     /**

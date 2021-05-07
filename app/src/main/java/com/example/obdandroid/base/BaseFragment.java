@@ -33,6 +33,7 @@ import java.util.Set;
 import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
 import static com.example.obdandroid.config.Constant.TOKEN;
 import static com.example.obdandroid.config.Constant.USER_ID;
+import static com.example.obdandroid.config.Constant.USER_NAME;
 
 
 /**
@@ -48,6 +49,7 @@ public abstract class BaseFragment extends Fragment {
     private String token;
     private String userId = "";
     private String expireTime = "";
+    private String phone = "";
     private List<BluetoothDeviceEntity> blueList = new ArrayList<>();
 
     //获取布局文件ID
@@ -88,6 +90,7 @@ public abstract class BaseFragment extends Fragment {
         token = spUtil.getString(TOKEN, "");
         userId = spUtil.getString(USER_ID, "");
         expireTime = spUtil.getString(EXPIRE_TIME, "");
+        phone = spUtil.getString(USER_NAME, "");
         if (!StringUtil.isNull(token)) {
             setToken(token);
         }
@@ -96,6 +99,9 @@ public abstract class BaseFragment extends Fragment {
         }
         if (!StringUtil.isNull(expireTime)) {
             setExpireTime(expireTime);
+        }
+        if (!StringUtil.isNull(phone)) {
+            setPhone(phone);
         }
         initView(frView, savedInstanceState);
         setFrView(frView);
@@ -138,6 +144,14 @@ public abstract class BaseFragment extends Fragment {
 
     public void setExpireTime(String expireTime) {
         this.expireTime = expireTime;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     /**

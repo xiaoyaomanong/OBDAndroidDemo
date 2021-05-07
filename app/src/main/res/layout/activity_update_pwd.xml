@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/good_morning_img"
+    android:background="@color/color_080707"
     android:orientation="vertical">
 
     <com.hjq.bar.TitleBar
@@ -17,7 +18,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:orientation="vertical"
         android:paddingLeft="32dp"
         android:paddingRight="32dp">
@@ -25,30 +25,36 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginTop="30dp"
             android:textColorHint="#ffffff"
-            android:theme="@style/EditScreenTextInputLayoutStyle">
+            android:theme="@style/EditScreenTextInputLayoutStyle"
+            app:hintEnabled="false"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/white">
 
             <EditText
                 android:id="@+id/etNewPwd"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:autofillHints=""
                 android:drawableStart="@drawable/ic_lock_white_24dp"
                 android:drawablePadding="16dp"
-                android:fontFamily="@font/calibri"
                 android:hint="@string/hint_new_pwd"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
+                android:inputType="textPassword"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
             android:textColorHint="#ffffff"
             android:theme="@style/EditScreenTextInputLayoutStyle"
-            app:passwordToggleEnabled="true">
+            app:hintEnabled="false"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/white">
 
             <EditText
                 android:id="@+id/etNewPwdOK"
@@ -57,38 +63,30 @@
                 android:autofillHints=""
                 android:drawableStart="@drawable/ic_lock_white_24dp"
                 android:drawablePadding="16dp"
-                android:fontFamily="@font/calibri"
                 android:hint="@string/hint_new_pwd_ok"
                 android:inputType="textPassword"
-                android:maxLines="1"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
         </android.support.design.widget.TextInputLayout>
 
-        <LinearLayout
+        <com.example.obdandroid.ui.view.progressButton.CircularProgressButton
+            android:id="@+id/btnUpdatePwd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnUpdatePwd"
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/btn_shape_white_bg"
-                android:fontFamily="@font/calibri"
-                android:text="@string/confirm"
-                android:textAllCaps="false"
-                android:textColor="#ffffff"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-
-        </LinearLayout>
+            android:fontFamily="@font/calibri"
+            android:textColor="@color/cpb_white"
+            android:textSize="18sp"
+            app:cpb_cornerRadius="10dp"
+            app:cpb_iconComplete="@drawable/ic_action_accept"
+            app:cpb_iconError="@drawable/ic_action_cancel"
+            app:cpb_selectorComplete="@drawable/complete_state_selector"
+            app:cpb_selectorError="@drawable/error_state_selector"
+            app:cpb_selectorIdle="@drawable/idle_state_selector"
+            app:cpb_textIdle="@string/sign_in" />
 
     </LinearLayout>
+
 
 </LinearLayout>

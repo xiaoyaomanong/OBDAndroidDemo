@@ -53,7 +53,6 @@ public class MyVehicleActivity extends BaseActivity {
     private SPUtil spUtil;
     private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
     private DialogUtils dialogUtils;
-    private String CarId;
 
     @Override
     protected int getContentViewId() {
@@ -207,12 +206,10 @@ public class MyVehicleActivity extends BaseActivity {
                     }).setTitle("删除车辆").setPositiveButton("确定").show();
                 } else {
                     dialogUtils.dismiss();
-                    showToast(entity.getMessage());
+                    showTipDialog(entity.getMessage());
                 }
-
             }
         });
-
     }
 
     /**

@@ -279,7 +279,6 @@ public class RechargeSetMealActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("APP用户购买套餐下单接口:" + response);
                 switch (paymentChannels) {
                     case Constant.WX_TYPE:
                         WxOrderEntity entity = JSON.parseObject(response, WxOrderEntity.class);
@@ -475,5 +474,4 @@ public class RechargeSetMealActivity extends BaseActivity {
             updateRechargeRecord(orderNo, payResult, getToken());
         }
     }
-
 }

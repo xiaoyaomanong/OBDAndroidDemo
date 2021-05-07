@@ -50,8 +50,6 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);//广播变量管理器获
         api = WXAPIFactory.createWXAPI(context, WeiXinConstants.APP_ID);
         api.handleIntent(getIntent(), this);
-        String amount = spUtil.getString(PAY_MONEY, "");
-        String mealId = spUtil.getString(MEAL_ID, "");
         String orderNo = spUtil.getString(ORDER_NO, "");
         tvTitle.setText("支付提示");
         btnOK.setOnClickListener(v -> {

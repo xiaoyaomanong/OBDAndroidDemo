@@ -59,8 +59,6 @@ public class MainActivity extends BaseActivity {
     private Context context;
     private int blur_front_color;
     private BlurView blur;
-    private SPUtil spUtil;
-    private final HomeFragment ownerFragment = new HomeFragment();
 
     @Override
     protected int getContentViewId() {
@@ -80,7 +78,6 @@ public class MainActivity extends BaseActivity {
                 .fitsSystemWindows(true).init();
         viewPager = findViewById(R.id.viewPager);
         navigation = findViewById(R.id.navigation);
-        spUtil = new SPUtil(context);
         fragments.add(HomeFragment.getInstance());
         fragments.add(MsgFragment.getInstance());
         fragments.add(PersonalFragment.getInstance());

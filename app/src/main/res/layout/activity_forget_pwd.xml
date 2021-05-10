@@ -39,6 +39,7 @@
                 android:drawablePadding="16dp"
                 android:fontFamily="@font/calibri"
                 android:hint="@string/hint_user"
+                android:maxLength="11"
                 android:inputType="phone"
                 android:maxLines="1"
                 android:textColor="@android:color/white"
@@ -115,7 +116,6 @@
         android:paddingRight="32dp"
         android:visibility="gone">
 
-
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -177,7 +177,7 @@
             app:cpb_selectorComplete="@drawable/complete_state_selector"
             app:cpb_selectorError="@drawable/error_state_selector"
             app:cpb_selectorIdle="@drawable/idle_state_selector"
-            app:cpb_textIdle="@string/sign_in" />
+            app:cpb_textIdle="确定" />
 
     </LinearLayout>
 

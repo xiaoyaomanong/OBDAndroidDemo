@@ -46,6 +46,7 @@
                 android:drawablePadding="16dp"
                 android:fontFamily="@font/calibri"
                 android:hint="@string/hint_user"
+                android:maxLength="11"
                 android:inputType="phone"
                 android:maxLines="1"
                 android:textColor="@android:color/white"
@@ -215,7 +216,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:visibility="invisible"
-            android:src="@drawable/logo" />
+            android:src="@drawable/logo_green" />
 
         <TextView
             android:layout_width="match_parent"

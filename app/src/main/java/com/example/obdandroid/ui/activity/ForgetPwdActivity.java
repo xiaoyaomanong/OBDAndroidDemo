@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.base.BaseLoginActivity;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.entity.SMSVerificationCodeEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
@@ -37,7 +38,7 @@ import static com.example.obdandroid.config.APIConfig.verifySMSVerificationCode_
  * 日期：2021/5/7 0007
  * 描述：
  */
-public class ForgetPwdActivity extends BaseActivity {
+public class ForgetPwdActivity extends BaseLoginActivity {
     private EditText etNewPwd;
     private EditText etNewPwdOK;
     private Context context;
@@ -116,7 +117,7 @@ public class ForgetPwdActivity extends BaseActivity {
             if (btnUpdatePwd.getProgress() == -1) {
                 btnUpdatePwd.setProgress(0);
             }
-            updatePwd(getPhone(), etNewPwdOK.getText().toString());
+            updatePwd(etUser.getText().toString(), etNewPwdOK.getText().toString());
         });
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -208,9 +209,8 @@ public class ForgetPwdActivity extends BaseActivity {
     private void updatePwd(String phoneNum, String newPwd) {
         btnUpdatePwd.setProgress(0);
         new Handler().postDelayed(() -> btnUpdatePwd.setProgress(50), 3000);
-        OkHttpUtils.post().
-                url(SERVER_URL + UPDATE_PASSWORD_URL).
-                addParam("userId", null).
+        OkHttpUtils.post().url(SERVER_URL + UPDATE_PASSWORD_URL).
+                addParam("userId", "").
                 addParam("phoneNum", phoneNum).
                 addParam("newPwd", newPwd).
                 build().execute(new StringCallback() {

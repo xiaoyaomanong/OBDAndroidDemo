@@ -398,8 +398,9 @@ public class RechargeSetMealActivity extends BaseActivity {
                 if (entity.isSuccess()) {
                     setResult(102, new Intent());
                     finish();
-                    Intent intent = new Intent("com.android.ObdCar");
+                    Intent intent = new Intent("com.android.ObdCarPay");
                     intent.putExtra("vehicleId", vehicleId);
+                    intent.putExtra("type", "1");
                     mLocalBroadcastManager.sendBroadcast(intent);
                 } else {
                     showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);

@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
@@ -36,6 +37,7 @@ import com.example.obdandroid.ui.activity.RechargeSetMealActivity;
 import com.example.obdandroid.ui.activity.UpdatePwdActivity;
 import com.example.obdandroid.ui.activity.VehicleInfoActivity;
 import com.example.obdandroid.ui.entity.RechargeRecordEntity;
+import com.example.obdandroid.ui.entity.UserCurrentRechargeEntity;
 import com.example.obdandroid.ui.entity.UserInfoEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleImageView;
@@ -54,6 +56,7 @@ import okhttp3.Response;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.USER_INFO_URL;
 import static com.example.obdandroid.config.APIConfig.getRechargeRecordPageList_URL;
+import static com.example.obdandroid.config.APIConfig.getTheUserCurrentRecharge_URL;
 import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
 import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
 
@@ -79,6 +82,7 @@ public class PersonalFragment extends BaseFragment {
     private LocalBroadcastManager lm;
     private TestReceiver testReceiver;
     private ImageView ivVip;
+    private SwipeRefreshLayout refresh;
 
     public static PersonalFragment getInstance() {
         return new PersonalFragment();
@@ -113,12 +117,13 @@ public class PersonalFragment extends BaseFragment {
         tvRechargeTime = getView(R.id.tvRechargeTime);
         tvRechargeSetMeaName = getView(R.id.tvRechargeSetMeaName);
         layoutUpdatePwd = getView(R.id.layoutUpdatePwd);
+        refresh = getView(R.id.refresh);
         ivVip = getView(R.id.ivVip);
         spUtil = new SPUtil(context);
         String vehicleId = spUtil.getString("vehicleId", "");
         initReceiver();
         getUserInfo(getUserId(), getToken());
-        getRechargeRecordPageList(getToken(), getUserId());
+        getTheUserCurrentRecharge(getUserId(), getToken());
         if (!TextUtils.isEmpty(vehicleId)) {
             getVehicleInfoById(getToken(), vehicleId);
         } else {
@@ -135,6 +140,10 @@ public class PersonalFragment extends BaseFragment {
         llAbout.setOnClickListener(v -> JumpUtil.startAct(context, AboutActivity.class));//关于我们
         llHistoryRecord.setOnClickListener(v -> JumpUtil.startAct(context, CheckRecordActivity.class));//历史记录
         layoutUpdatePwd.setOnClickListener(v -> JumpUtil.startAct(context, UpdatePwdActivity.class));//修改密码
+        refresh.setOnRefreshListener(() -> {
+            getUserInfo(getUserId(), getToken());
+            getTheUserCurrentRecharge(getUserId(), getToken());
+        });
         //退出账户
         btnLogout.setOnClickListener(v ->
                 new IosDialog(context, new IosDialog.DialogClick() {
@@ -164,29 +173,26 @@ public class PersonalFragment extends BaseFragment {
     }
 
     /**
-     * @param token     用户Token
-     * @param appUserId APP用户ID
-     *                  获取用户购买套餐记录列表
+     * @param appUserId 用户id
+     * @param token     token
+     *                  获取当前账号充值状态
      */
-    private void getRechargeRecordPageList(String token, String appUserId) {
-        OkHttpUtils.get().url(SERVER_URL + getRechargeRecordPageList_URL).
-                addParam("token", token).
-                addParam("pageNum", "1").
-                addParam("pageSize", "3").
+    private void getTheUserCurrentRecharge(String appUserId, String token) {
+        OkHttpUtils.get().url(SERVER_URL + getTheUserCurrentRecharge_URL).
                 addParam("appUserId", appUserId).
+                addParam("token", token).
                 build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Response response, Exception e, int id) {
 
             }
 
-            @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(String response, int id) {
-                RechargeRecordEntity entity = JSON.parseObject(response, RechargeRecordEntity.class);
+                UserCurrentRechargeEntity entity = JSON.parseObject(response, UserCurrentRechargeEntity.class);
                 if (entity.isSuccess()) {
-                    if (entity.getData().getList().size() != 0) {
-                        tvRechargeSetMeaName.setText(entity.getData().getList().get(0).getRechargeSetMeaName());
+                    if (entity.getData().size() == 1) {
+                        tvRechargeSetMeaName.setText(entity.getData().get(0).getRechargeSetMeaName());
                     } else {
                         tvRechargeSetMeaName.setText("未购买套餐");
                     }
@@ -194,6 +200,7 @@ public class PersonalFragment extends BaseFragment {
             }
         });
     }
+
 
     /**
      * @param userId 用户id
@@ -215,12 +222,15 @@ public class PersonalFragment extends BaseFragment {
             public void onResponse(String response, int id) {
                 UserInfoEntity entity = JSON.parseObject(response, UserInfoEntity.class);
                 if (entity.isSuccess()) {
+                    refresh.setRefreshing(false);
                     tvName.setText(entity.getData().getNickname());
                     tvIntegral.setText(entity.getData().getPhoneNum());
-                    if (!TextUtils.isEmpty(entity.getData().getEndValidity())) {
-                        tvRechargeTime.setText("即日起有效期至: " + entity.getData().getEndValidity().split(" ")[0]);
-                    } else {
-                        tvRechargeTime.setText("即日起有效期至: ");
+                    if (entity.getData().getIsVip() == 1) {
+                        if (!TextUtils.isEmpty(entity.getData().getEndValidity())) {
+                            tvRechargeTime.setText("即日起有效期至: " + entity.getData().getEndValidity().split(" ")[0]);
+                        } else {
+                            tvRechargeTime.setText("即日起有效期至: ");
+                        }
                     }
                     ivVip.setVisibility(entity.getData().getIsVip() == 1 ? View.VISIBLE : View.GONE);
                     if (entity.getData().getHeadPortrait().length() > 0) {
@@ -275,13 +285,10 @@ public class PersonalFragment extends BaseFragment {
     }
 
     private void initReceiver() {
-        //获取实例
         lm = LocalBroadcastManager.getInstance(context);
         IntentFilter intentFilter = new IntentFilter("com.android.ObdCar");
         testReceiver = new TestReceiver();
-        //绑定
         lm.registerReceiver(testReceiver, intentFilter);
-
     }
 
     private class TestReceiver extends BroadcastReceiver {
@@ -298,7 +305,7 @@ public class PersonalFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101) {
             if (resultCode == 102) {
-                getRechargeRecordPageList(getToken(), getUserId());
+                getTheUserCurrentRecharge(getUserId(), getToken());
                 getUserInfo(getUserId(), getToken());
             }
         }

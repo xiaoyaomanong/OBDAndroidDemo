@@ -57,7 +57,7 @@ public class AboutActivity extends BaseActivity {
 
             }
         });
-        Glide.with(context).load(R.drawable.logo).into(imageHeader);
+        Glide.with(context).load(R.drawable.logo_green).into(imageHeader);
         tvAppVersion.setText(packageName(context));
         layoutService.setOnClickListener(v -> JumpUtil.startAct(context, AgreementActivity.class));
     }

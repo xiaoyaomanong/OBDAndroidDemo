@@ -141,7 +141,6 @@ public class VehicleInfoActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("获取用户车辆详情:"+response);
                 VehicleInfoEntity entity = JSON.parseObject(response, VehicleInfoEntity.class);
                 if (entity.isSuccess()) {
                     dialogUtils.dismiss();
@@ -157,13 +156,13 @@ public class VehicleInfoActivity extends BaseActivity {
     @SuppressLint("SetTextI18n")
     private void setViewData(VehicleInfoEntity.DataEntity entity) {
         if (entity.getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
-            tvObd.setText("  OBD 未绑定");
-            tvHomeObdTip.setText("OBD 设备序列号");
+            tvObd.setText("  设备未绑定");
+            tvHomeObdTip.setText(" 设备序列号");
             Drawable drawable = context.getResources().getDrawable(R.drawable.icon_no);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             tvHomeObdTip.setCompoundDrawables(drawable, null, null, null);
         } else {
-            tvObd.setText("  OBD 已绑定");
+            tvObd.setText("  设备已绑定");
             tvHomeObdTip.setText(entity.getBluetoothDeviceNumber());
             Drawable drawable = context.getResources().getDrawable(R.drawable.icon_ok);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());

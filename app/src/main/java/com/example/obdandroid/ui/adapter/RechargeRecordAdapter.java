@@ -55,7 +55,7 @@ public class RechargeRecordAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             holder.mEmptyTextView.setText("暂无数据");
         } else if (NOT_EMPTY_VIEW == itemViewType) {
             final MyViewHolder holder = (MyViewHolder) viewHolder;
-            holder.tvRechargeTime.setText("购买时间: " + AppDateUtils.dealDateFormatYMD(list.get(position).getRechargeTime()));
+            holder.tvRechargeTime.setText("购买时间: " + list.get(position).getRechargeTime());
             if (TextUtils.isEmpty(list.get(position).getRechargeSetMeaName())) {
                 holder.tvRechargeSetMeaName.setText("");
             } else {

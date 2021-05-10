@@ -44,6 +44,7 @@ import com.example.obdandroid.ui.adapter.TestRecordAdapter;
 import com.example.obdandroid.ui.entity.AutomobileBrandEntity;
 import com.example.obdandroid.ui.entity.BluetoothDeviceEntity;
 import com.example.obdandroid.ui.entity.TestRecordEntity;
+import com.example.obdandroid.ui.entity.UserCurrentRechargeEntity;
 import com.example.obdandroid.ui.entity.UserInfoEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
@@ -68,6 +69,7 @@ import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.USER_INFO_URL;
 import static com.example.obdandroid.config.APIConfig.getCommonBrandList_URL;
 import static com.example.obdandroid.config.APIConfig.getTestRecordPageList_URL;
+import static com.example.obdandroid.config.APIConfig.getTheUserCurrentRecharge_URL;
 import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
 import static com.example.obdandroid.config.Constant.REQUEST_ENABLE_BT;
 
@@ -161,6 +163,7 @@ public class HomeFragment extends BaseFragment {
         initReceiver();//注册选择默认车辆广播
         initRecordReceiver();//注册车辆检测记录跟新广播
         getUserInfo(getUserId(), getToken(), spUtil.getString("vehicleId", ""));
+        getTheUserCurrentRecharge(getUserId(),getToken());
         layoutMoreDash.setOnClickListener(v -> {
             Intent intent = new Intent(context, MyVehicleDashActivity.class);
             startActivityForResult(intent, 102);
@@ -258,6 +261,31 @@ public class HomeFragment extends BaseFragment {
     }
 
     /**
+     * @param appUserId 用户id
+     * @param token     token
+     *                  获取当前账号充值状态
+     */
+    private void getTheUserCurrentRecharge(String appUserId, String token) {
+        OkHttpUtils.get().url(SERVER_URL + getTheUserCurrentRecharge_URL).
+                addParam("appUserId", appUserId).
+                addParam("token", token).
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                UserCurrentRechargeEntity entity = JSON.parseObject(response, UserCurrentRechargeEntity.class);
+                if (entity.isSuccess()) {
+                    isVip = entity.getData().size() == 1;
+                }
+            }
+        });
+    }
+
+    /**
      * @param userId 用户id
      * @param token  接口令牌
      *               用户信息
@@ -275,15 +303,13 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("用户信息:"+response);
                 UserInfoEntity entity = JSON.parseObject(response, UserInfoEntity.class);
                 if (entity.isSuccess()) {
                     dialogUtils.dismiss();
-                    isVip = entity.getData().getIsVip() == 1;
                     if (entity.getData().isTheDeviceBound()) {
                         if (TextUtils.isEmpty(vehicleId)) {
                             //选择已绑定的车辆
-                            new CustomeDialog(context, "您已经绑定车辆,请选择！", confirm -> {
+                            new CustomeDialog(context, "您已经绑定车辆,请选择检测车辆！", confirm -> {
                                 if (confirm) {
                                     JumpUtil.startAct(context, MyVehicleActivity.class);
                                 }
@@ -341,11 +367,11 @@ public class HomeFragment extends BaseFragment {
                         connectBtDevice(deviceAddress);
                     }
                     if (entity.getData().getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
-                        tvHomeObdTip.setText("将OBD插入车辆并连接");
+                        tvHomeObdTip.setText("将设备插入车辆并连接");
                         Drawable drawable = context.getResources().getDrawable(R.drawable.icon_no);
                         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                         tvHomeObdTip.setCompoundDrawables(drawable, null, null, null);
-                        tvObd.setText("OBD 未绑定");
+                        tvObd.setText("设备未绑定");
                         layoutOBD.setOnClickListener(v -> {
                             Intent intent = new Intent(context, BindBluetoothDeviceActivity.class);
                             intent.putExtra("vehicleId", vehicleId);
@@ -356,7 +382,7 @@ public class HomeFragment extends BaseFragment {
                         Drawable drawable = context.getResources().getDrawable(R.drawable.icon_ok);
                         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                         tvHomeObdTip.setCompoundDrawables(drawable, null, null, null);
-                        tvObd.setText("OBD 已绑定");
+                        tvObd.setText("设备已绑定");
                     }
                 }
             }
@@ -429,10 +455,10 @@ public class HomeFragment extends BaseFragment {
                                 if (!MainApplication.getBluetoothSocket().isConnected()) {
                                     connectBtDevice(blueList.get(yourChoice).getBlue_address());
                                 } else {
-                                    showTipDialog("当前OBD设备已连接");
+                                    showTipDialog("当前设备已连接");
                                 }
                             } else {
-                                showTipDialog("当前车辆绑定OBD设备,与连接的OBD设备不一致");
+                                showTipDialog("当前车辆绑定设备,与连接的设备不一致");
                             }
                         } else {
                             showToast(getString(R.string.text_bluetooth_error_connecting));
@@ -447,11 +473,10 @@ public class HomeFragment extends BaseFragment {
      *                启动与所选蓝牙设备的连接
      */
     private void connectBtDevice(String address) {
-        dialogUtils.showProgressDialog("正在连接OBD");
+        dialogUtils.showProgressDialog("正在连接");
         BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
         new Thread(() ->
                 BltManagerUtils.getInstance().createBond(device, (code, msg) -> {
-                    LogE("连接状态：" + msg);
                     if (code == 0) {
                         sendMessage(COMPLETES);
                     } else {
@@ -503,7 +528,6 @@ public class HomeFragment extends BaseFragment {
     private void initReceiver() {
         IntentFilter intentFilter = new IntentFilter("com.android.ObdCar");
         testReceiver = new TestReceiver();
-        //绑定
         mLocalBroadcastManager.registerReceiver(testReceiver, intentFilter);
     }
 
@@ -512,7 +536,15 @@ public class HomeFragment extends BaseFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String vehicleId = intent.getStringExtra("vehicleId");
-            getUserInfo(getUserId(), getToken(), vehicleId);
+            String type = intent.getStringExtra("type");
+            switch (type){
+                case "1":
+                    getTheUserCurrentRecharge(getUserId(),getToken());
+                    break;
+                case "2":
+                    getUserInfo(getUserId(), getToken(), vehicleId);
+                    break;
+            }
         }
     }
 

@@ -123,6 +123,7 @@ public class MyVehicleActivity extends BaseActivity {
                         spUtil.put("vehicleId", String.valueOf(entity.getVehicleId()));
                         Intent intent = new Intent("com.android.ObdCar");//创建发送广播的Action
                         intent.putExtra("vehicleId", String.valueOf(entity.getVehicleId()));//发送携带的数据
+                        intent.putExtra("type", "2");
                         mLocalBroadcastManager.sendBroadcast(intent);                               //发送本地广播
                         finish();
                     }

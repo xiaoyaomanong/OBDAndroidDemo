@@ -50,7 +50,6 @@ public class VehicleCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        //获取传入adapter的条目数，没有则返回 1
         return list.size();
     }
 

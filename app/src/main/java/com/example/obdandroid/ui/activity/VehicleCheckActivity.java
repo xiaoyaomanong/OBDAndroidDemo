@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -26,7 +29,6 @@ import com.bumptech.glide.Glide;
 import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
-import com.example.obdandroid.config.CheckRecord;
 import com.example.obdandroid.ui.adapter.VehicleCheckAdapter;
 import com.example.obdandroid.ui.entity.AddTestRecordEntity;
 import com.example.obdandroid.ui.entity.MessageCheckEntity;
@@ -35,16 +37,19 @@ import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleWelComeView;
 import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.DialogUtils;
+import com.example.obdandroid.utils.ExceptionHandler;
 import com.example.obdandroid.utils.SPUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
 import com.sohrab.obd.reader.application.ObdPreferences;
+import com.sohrab.obd.reader.enums.AvailableCommandNames;
 import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.ResetTroubleCodesCommand;
+import com.example.obdandroid.config.CheckRecord;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 import com.sohrab.obd.reader.trip.OBDTripEntity;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -54,7 +59,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.Call;
@@ -96,6 +103,7 @@ public class VehicleCheckActivity extends BaseActivity {
     private int size;
     private DialogUtils dialogUtils;
 
+    private File saveSpacePath;
     private File localErrorSave;
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
@@ -180,9 +188,9 @@ public class VehicleCheckActivity extends BaseActivity {
         getVehicleInfoById(getToken(), spUtil.getString("vehicleId", ""));
         boolean isConn = MainApplication.getBluetoothSocket().isConnected();
         if (isConn) {
-            tvOBDState.setText("OBD已连接,请进行检测");
+            tvOBDState.setText("设备已连接,请进行检测");
         } else {
-            tvOBDState.setText("OBD连接失败");
+            tvOBDState.setText("设备连接失败");
         }
         btStart.setOnClickListener(v -> {
             if (isConn) {
@@ -195,7 +203,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 layoutLook.setVisibility(View.GONE);
                 new Thread(() -> executeCommand(MainApplication.getBluetoothSocket())).start();
             } else {
-                showTipDialog("请连接OBD设备", TipDialog.TYPE_WARNING);
+                showTipDialog("请连接设备", TipDialog.TYPE_WARNING);
             }
         });
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
@@ -231,21 +239,6 @@ public class VehicleCheckActivity extends BaseActivity {
             ObdCommand command = commands.get(i);
             try {
                 command.run(socket.getInputStream(), socket.getOutputStream());
-               /* if (command.getName().equals(AvailableCommandNames.PIDS_01_20.getValue())) {
-                    writeErrorToLocal("结果是: " + command.getFormattedResult());
-                }
-                if (command.getName().equals(AvailableCommandNames.DESCRIBE_PROTOCOL.getValue())) {
-                    writeErrorToLocal("协议名称: " + command.getFormattedResult());
-                }
-                if (command.getName().equals(AvailableCommandNames.DESCRIBE_PROTOCOL_NUMBER.getValue())) {
-                    writeErrorToLocal("协议编号: " + command.getFormattedResult());
-                }
-                if (command.getName().equals(AvailableCommandNames.PIDS_21_40.getValue())) {
-                    writeErrorToLocal("结果是: " + command.getFormattedResult());
-                }
-                if (command.getName().equals(AvailableCommandNames.PIDS_41_60.getValue())) {
-                    writeErrorToLocal("结果是: " + command.getFormattedResult());
-                }*/
                 Message msg = new Message();
                 msg.what = COMPLETEO;
                 msg.obj = (double) (i + 1);
@@ -263,7 +256,7 @@ public class VehicleCheckActivity extends BaseActivity {
 
 
     public void initConfig() {
-        File saveSpacePath = new File(Environment.getExternalStoragePublicDirectory(
+        saveSpacePath = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/ODBCar/OBDLog/");
         localErrorSave = new File(saveSpacePath, "OBDPID.txt");
         if (!saveSpacePath.exists()) {

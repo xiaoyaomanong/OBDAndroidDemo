@@ -31,7 +31,7 @@
     <string name="title_connecting">正在连接…</string>
     <string name="title_connected_to">已连接</string>
     <string name="title_connected_fail">连接失败</string>
-    <string name="obd_setting">OBD设置</string>
+    <string name="设备_setting">设置</string>
     <string name="user_setting">用户设置</string>
     <string name="exit_login">退出登录</string>
     <string name="faceback">意见反馈</string>
@@ -41,18 +41,18 @@
     <string name="pref_gps_update_period_summary">查询新位置之间的时间（秒）</string>
     <string name="pref_gps_distance_period_title">更新距离（米）</string>
     <string name="pref_gps_distance_period_summary">查询新位置之间的距离（米）</string>
-    <string name="obd_protocol">OBD协议</string>
+    <string name="obd_protocol">设备协议</string>
     <string name="pref_imperial_units_title">英制单位</string>
-    <string name="title_pref_commands">OBD 指令</string>
+    <string name="title_pref_commands">设备 指令</string>
     <string name="Bluetooth_Name">蓝牙</string>
     <string name="gps_name">GPS</string>
     <string name="text_bluetooth_error_connecting">不能连接到蓝牙设备!</string>
     <string name="update_distance">修改更新距离(米)</string>
     <string name="update_period">修改更新周期(秒)</string>
-    <string name="notification_action">点击打开 Android OBD-II</string>
-    <string name="service_starting">正在开启 OBD 连接..</string>
-    <string name="service_started">OBD 连接已经开启.</string>
-    <string name="service_stopped">OBD 连接已经关闭.</string>
+    <string name="notification_action">点击打开 Android 设备-II</string>
+    <string name="service_starting">正在开启 设备 连接..</string>
+    <string name="service_started">设备 连接已经开启.</string>
+    <string name="service_stopped">设备 连接已经关闭.</string>
     <string name="status_no_bluetooth_id">不可用的</string>
     <string name="status_bluetooth_disabled">未打开的</string>
     <string name="status_bluetooth_ok">准备中</string>
@@ -67,8 +67,8 @@
     <string name="status_gps_ready">GPS准备中</string>
     <string name="status_gps_fix">GPS已确定</string>
     <string name="status_gps_no_support">GPS不可用</string>
-    <string name="status_obd_no_support">OBD不可用</string>
-    <string name="status_obd_data">正在接收OBD数据&#8230;</string>
+    <string name="status_obd_no_support">设备不可用</string>
+    <string name="status_obd_data">正在接收设备数据&#8230;</string>
     <string name="select_type_pic">选择照片</string>
     <string name="select_type_content">请选取照片方式</string>
     <string name="select_album">相册</string>
@@ -161,7 +161,7 @@
     <string name="text_contact">联系方式</string>
     <string name="msg_center">消息中心</string>
     <string name="hint_home_obd">设备序列号</string>
-    <string name="text_connect_obd">请连接OBD设备,进行检测</string>
+    <string name="text_connect_obd">请连接设备设备,进行检测</string>
     <string name="mydash">我的仪表盘</string>
     <string name="mInsFuelConsumption">瞬时油耗 (L/100km)</string>
     <string name="mOdometer">行驶里程 (km/10)</string>
@@ -186,7 +186,7 @@
     <string name="validityDate">截止有效期</string>
     <string name="vip">是否VIP</string>
     <string name="isTheDeviceBound">是否绑定设备</string>
-    <string name="obd_search">OBD设备搜索</string>
+    <string name="obd_search">设备搜索</string>
     <string name="speed">车速</string>
     <string name="engineRpm">发动机转速</string>
     <string name="IdlingDuration">空闲时间</string>
@@ -291,4 +291,5 @@
     <string name="ThrottlePos">节气门位置</string>
     <string name="throttle">节气门位置(%)</string>
     <string name="next">下一步</string>
+    <string name="go">GO</string>
 </resources>

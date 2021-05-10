@@ -106,7 +106,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
         if (isConnected) {
             startThread();
         } else {
-            showToast("OBD连接已断开");
+            showToast("设备连接已断开");
         }
     }
 

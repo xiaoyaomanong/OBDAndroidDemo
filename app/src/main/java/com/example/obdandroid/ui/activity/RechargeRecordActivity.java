@@ -8,8 +8,6 @@ import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.adapter.RechargeRecordAdapter;
-import com.example.obdandroid.ui.adapter.RechargeSetMealAdapter;
-import com.example.obdandroid.ui.entity.ChargeMealEntity;
 import com.example.obdandroid.ui.entity.RechargeRecordEntity;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
@@ -17,7 +15,6 @@ import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,7 +126,7 @@ public class RechargeRecordActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("获取用户购买套餐记录列表:" + response);
+                LogE("获取用户购买套餐记录列表："+response);
                 RechargeRecordEntity entity = JSON.parseObject(response, RechargeRecordEntity.class);
                 if (entity.isSuccess()) {
                     isLoadMore = entity.getData().getPages() >= 10;

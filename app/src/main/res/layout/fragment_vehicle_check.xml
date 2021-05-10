@@ -167,7 +167,6 @@
                     android:layout_centerInParent="true"
                     android:drawableTop="@drawable/icon_no_money"
                     android:gravity="center"
-                    android:text="@string/mIgnitionMonitor"
                     android:textColor="@color/white"
                     android:textSize="15sp" />
 

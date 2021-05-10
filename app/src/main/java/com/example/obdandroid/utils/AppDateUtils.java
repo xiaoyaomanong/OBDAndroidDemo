@@ -1,6 +1,7 @@
 package com.example.obdandroid.utils;
 
 import android.annotation.SuppressLint;
+import android.text.TextUtils;
 
 import java.security.Timestamp;
 import java.text.DateFormat;
@@ -51,20 +52,24 @@ public class AppDateUtils {
     }
 
     public static String dealDateFormatYMD(String oldDate) {
-        Date date1 = null;
-        DateFormat df2 = null;
-        try {
-            DateFormat df = new SimpleDateFormat(FORMAT_T);
-            Date date = df.parse(oldDate);
-            SimpleDateFormat df1 = new SimpleDateFormat(FORMAT_Z, Locale.UK);
-            if (date != null) {
-                date1 = df1.parse(date.toString());
+        if (!TextUtils.isEmpty(oldDate)) {
+            Date date1 = null;
+            DateFormat df2 = null;
+            try {
+                DateFormat df = new SimpleDateFormat(FORMAT_T);
+                Date date = df.parse(oldDate);
+                SimpleDateFormat df1 = new SimpleDateFormat(FORMAT_Z, Locale.UK);
+                if (date != null) {
+                    date1 = df1.parse(date.toString());
+                }
+                df2 = new SimpleDateFormat(FORMAT_ONE);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            df2 = new SimpleDateFormat(FORMAT_ONE);
-        } catch (Exception e) {
-            e.printStackTrace();
+            return df2.format(date1);
+        }else {
+            return "格式错误";
         }
-        return df2.format(date1);
     }
 
     /* HH:mm:ss*/

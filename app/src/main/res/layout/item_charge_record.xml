@@ -18,9 +18,8 @@
 
         <TextView
             android:id="@+id/tvRechargeTime"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1.5"
             android:fontFamily="@font/calibri"
             android:gravity="center_vertical"
             android:paddingStart="10dp"

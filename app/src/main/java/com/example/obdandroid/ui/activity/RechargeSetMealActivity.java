@@ -22,8 +22,8 @@ import com.example.obdandroid.ui.entity.AlipayOrderEntity;
 import com.example.obdandroid.ui.entity.AlipayResultEntity;
 import com.example.obdandroid.ui.entity.ChargeMealEntity;
 import com.example.obdandroid.ui.entity.PayResult;
-import com.example.obdandroid.ui.entity.WxOrderEntity;
 import com.example.obdandroid.ui.entity.ResultEntity;
+import com.example.obdandroid.ui.entity.WxOrderEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.ui.view.PayChannelDialog;
 import com.example.obdandroid.ui.view.progressButton.CircularProgressButton;
@@ -73,6 +73,7 @@ public class RechargeSetMealActivity extends BaseActivity {
     private CircularProgressButton btnBuy;
     private String rechargeSetMealSettingsId = "";
     private String rechargetAmount = "0";
+    private String order_no = "";
     private IWXAPI wxApi;
     private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
     private SPUtil spUtil;
@@ -84,9 +85,7 @@ public class RechargeSetMealActivity extends BaseActivity {
             if (msg.what == SDK_PAY_FLAG) {
                 PayResult payResult = new PayResult((Map<String, String>) msg.obj);
                 LogE("payResult:" + payResult);
-                /**
-                 * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
-                 */
+                //对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
                 String resultInfo = payResult.getResult();// 同步返回需要验证的信息
                 String resultStatus = payResult.getResultStatus();
                 // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
@@ -104,17 +103,9 @@ public class RechargeSetMealActivity extends BaseActivity {
                         btnBuy.setProgress(-1);
                         showTipsDialog("正在处理中,支付结果未知(有可能已经支付成功),请查询商户订单列表中订单的支付状态", TipDialog.TYPE_WARNING);
                         break;
-                    case "4000":
-                        btnBuy.setProgress(-1);
-                        showTipsDialog("订单支付失败", TipDialog.TYPE_WARNING);
-                        break;
                     case "5000":
                         btnBuy.setProgress(-1);
                         showTipsDialog("重复请求", TipDialog.TYPE_WARNING);
-                        break;
-                    case "6001":
-                        btnBuy.setProgress(-1);
-                        showTipsDialog("用户中途取消", TipDialog.TYPE_WARNING);
                         break;
                     case "6002":
                         btnBuy.setProgress(-1);
@@ -124,9 +115,22 @@ public class RechargeSetMealActivity extends BaseActivity {
                         btnBuy.setProgress(-1);
                         showTipsDialog("支付结果未知（有可能已经支付成功），请查询商户订单列表中订单的支付状态", TipDialog.TYPE_WARNING);
                         break;
+                    case "6001":
+                        new CustomeDialog(context, "用户中途取消", confirm -> {
+                            if (confirm) {
+                                btnBuy.setProgress(-1);
+                                updateRechargeRecord(order_no, "3", getToken());
+                            }
+                        }).setTitle("支付结果").setPositiveButton("知道了").show();
+                        break;
+                    case "4000":
                     default:
-                        btnBuy.setProgress(-1);
-                        showTipsDialog("支付失败", TipDialog.TYPE_WARNING);
+                        new CustomeDialog(context, "订单支付失败", confirm -> {
+                            if (confirm) {
+                                btnBuy.setProgress(-1);
+                                updateRechargeRecord(order_no, "2", getToken());
+                            }
+                        }).setTitle("支付结果").setPositiveButton("知道了").show();
                         break;
                 }
             }
@@ -291,6 +295,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                     case Constant.ALIPAY_TYPE:
                         AlipayOrderEntity orderEntity = JSON.parseObject(response, AlipayOrderEntity.class);
                         if (orderEntity.isSuccess()) {
+                            order_no = orderEntity.getData().getOrder_no();
                             payToaliPay(orderEntity.getData().getOrderStr().getBody());
                         } else {
                             showTipsDialog(orderEntity.getMessage(), TipDialog.TYPE_ERROR);
@@ -413,6 +418,7 @@ public class RechargeSetMealActivity extends BaseActivity {
     /**
      * @param pageNum  页号
      * @param pageSize 条数
+     * @param token    用户token
      *                 充值套餐
      */
     private void getChargeMeal(String pageNum, String pageSize, String token, final boolean isRefresh) {

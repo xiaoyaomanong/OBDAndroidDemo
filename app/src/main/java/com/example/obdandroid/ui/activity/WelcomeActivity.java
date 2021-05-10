@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.widget.ImageView;
@@ -35,7 +36,6 @@ import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
 public class WelcomeActivity extends BaseFullScreenActivity implements OnNotchCallBack {
     private static final int ANIM_TIME = 2000;
     private static final float SCALE_END = 1.15F;
-    private static final int[] Imgs = {R.drawable.icon_welcome, };
     private ImageView ivEntry;
     private ImageView imgBack;
     private Context context;
@@ -60,22 +60,11 @@ public class WelcomeActivity extends BaseFullScreenActivity implements OnNotchCa
         boolean isFirstOpen = SharedPreferencesUtil.getBoolean(context, SharedPreferencesUtil.FIRST_OPEN, true);
         // 如果是第一次启动，则先进入功能引导页
         if (isFirstOpen) {
-            Intent intent = new Intent(context, WelcomeGuideActivity.class);
-            startActivity(intent);
+            JumpUtil.startAct(context,WelcomeGuideActivity.class);
             finish();
-        } else {
-            // 如果不是第一次启动app，则正常显示启动屏
-            //避免按home键后再次打开程序跳转登录界面，用在setContentView方法前
-            if (!isTaskRoot()) {
-                final Intent intent = getIntent();
-                final String intentAction = intent.getAction();
-                if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && intentAction != null && intentAction.equals(Intent.ACTION_MAIN)) {
-                    finish();
-                    return;
-                }
-            }
-            startMainActivity();
+            return;
         }
+        startMainActivity();
     }
 
     private void startMainActivity() {
@@ -85,7 +74,7 @@ public class WelcomeActivity extends BaseFullScreenActivity implements OnNotchCa
         SPUtil spUtil = new SPUtil(context);
         ISLOGIN = spUtil.getBoolean(Constant.IS_LOGIN, false);
         NotchTools.getFullScreenTools().fullScreenUseStatusForActivityOnCreate(this, this);
-        ivEntry.setImageResource(R.drawable.icon_welcome_one);
+        ivEntry.setImageResource(R.drawable.icon_welcome);
         Observable.timer(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> startAnim());
@@ -102,11 +91,11 @@ public class WelcomeActivity extends BaseFullScreenActivity implements OnNotchCa
             @Override
             public void onAnimationEnd(Animator animation) {
                 if (ISLOGIN) {
-                    startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
-                    finish();
+                    JumpUtil.startAct(context, MainActivity.class);
                 } else {
                     JumpUtil.startAct(context, LoginActivity.class);
                 }
+                finish();
             }
         });
     }

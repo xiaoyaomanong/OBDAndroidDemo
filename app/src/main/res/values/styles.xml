@@ -36,7 +36,7 @@
         <item name="android:windowIsTranslucent">true</item>
         <!-- 隐藏标题栏 -->
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@drawable/icon_welcome_one</item>
+        <item name="android:windowBackground">@drawable/icon_welcome</item>
     </style>
 
     <style name="MatchMatch">

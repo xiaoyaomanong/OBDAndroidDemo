@@ -1,11 +1,23 @@
 package com.example.obdandroid.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.text.SpannableStringBuilder;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -25,6 +37,7 @@ import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.CountDownTimerUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
+import com.example.obdandroid.utils.SharedPreferencesUtil;
 import com.kongzue.dialog.v2.TipDialog;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -95,7 +108,6 @@ public class LoginActivity extends BaseLoginActivity {
         Button btnCode = findViewById(R.id.btn_code);
         layoutCode = findViewById(R.id.layoutCode);
         tvTitle = findViewById(R.id.tv_title);
-
         spUtil = new SPUtil(context);
         String OtherLogin = spUtil.getString("OtherLogin", getString(R.string.text_pwd_msg));
         tvOtherLogin.setText(OtherLogin);
@@ -164,6 +176,7 @@ public class LoginActivity extends BaseLoginActivity {
         cbMima.setOnCheckedChangeListener((buttonView, isChecked) -> spUtil.put(IS_CHECK, cbMima.isChecked()));
         tvForget.setOnClickListener(v -> JumpUtil.startAct(context, ForgetPwdActivity.class));//找回密码
     }
+
 
     /**
      * 密码登录

@@ -102,7 +102,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (!StringUtil.isNull(phone)) {
             setPhone(phone);
         }
-        if (!AppDateUtils.isDateTwoBigger(AppDateUtils.getTodayDateTimeHms(), expireTime)) {
+        if (!StringUtil.isNull(expireTime) && !AppDateUtils.isDateTwoBigger(AppDateUtils.getTodayDateTimeHms(), expireTime)) {
             new CustomeDialog(mContext, "您的账号登录时间过长，请重新登录！", confirm -> {
                 if (confirm) {
                     spUtil.put(CONNECT_BT_KEY, "OFF");

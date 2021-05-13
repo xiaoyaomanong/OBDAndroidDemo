@@ -81,4 +81,79 @@
             app:srcCompat="@drawable/icon_next" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/color_2C2B30"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/dp_10"
+            android:text="人工客服"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/calibri"
+            android:gravity="center_vertical|right"
+            android:text="0931-4896234"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            tools:ignore="RtlHardcoded" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/validityDate"
+            app:srcCompat="@drawable/icon_next" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/color_2C2B30"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/dp_10"
+            android:text="联系邮箱"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/calibri"
+            android:gravity="center_vertical|right"
+            android:inputType="textEmailAddress"
+            android:text="liangyingn@163.com"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            tools:ignore="RtlHardcoded,TextViewEdits" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/validityDate"
+            app:srcCompat="@drawable/icon_next" />
+
+    </LinearLayout>
 </LinearLayout>

@@ -10,9 +10,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
+import android.text.SpannableStringBuilder;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFullScreenActivity;
@@ -66,7 +76,6 @@ public class WelcomeActivity extends BaseFullScreenActivity implements OnNotchCa
         }
         startMainActivity();
     }
-
     private void startMainActivity() {
         setContentView(getContentViewId());
         ivEntry = findViewById(R.id.iv_entry);

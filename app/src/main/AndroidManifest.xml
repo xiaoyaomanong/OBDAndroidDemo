@@ -109,9 +109,6 @@
         <activity android:name=".ui.activity.MainActivity" />
         <activity android:name=".ui.activity.AppSettingActivity" />
         <activity android:name=".ui.activity.RegisterActivity" />
-        <activity android:name=".ui.activity.OBDSettingActivity" />
-        <activity android:name=".ui.activity.ObdCommandActivity" />
-        <activity android:name=".ui.activity.OBDProtocolActivity" />
         <activity android:name=".ui.activity.UpdatePwdActivity" />
         <activity android:name=".ui.activity.RechargeSetMealActivity" />
         <activity android:name=".ui.activity.MyVehicleActivity" />

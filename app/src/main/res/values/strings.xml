@@ -4,7 +4,7 @@
     <string name="onMain">立即体验</string>
     <string name="forgot_password">忘记密码?</string>
     <string name="hint_sign_up">没有账号？ 立即注册</string>
-    <string name="hint_agree">同意协议并注册</string>
+    <string name="hint_agree">注册</string>
     <string name="sign_up">注册</string>
     <string name="sign_in">登录</string>
     <string name="hint_pwd">密码</string>
@@ -135,7 +135,7 @@
     <string name="hint_VehiclePurchaseDate">请选择车辆购置日期</string>
     <string name="hint_YearManufacture">请选择出厂年份</string>
     <string name="hint_EngineDisplacement">请输入引擎排气量/排量(升)</string>
-    <string name="agree_content">提交注册即表示您已阅读并同意</string>
+    <string name="agree_content">请点击阅读</string>
     <string name="register_protocol">《用户协议及隐私政策》</string>
     <string name="hint_sex">性别</string>
     <string name="home_more_dash">更多仪表盘</string>
@@ -248,7 +248,8 @@
     <string name="englishMeaning">英文含义</string>
     <string name="causeOfFailure">故障原因</string>
     <string name="reming">全车检测自动生成体检报告</string>
-    <string name="Service">服务协议与隐私政策</string>
+    <string name="userAgreement">用户协议</string>
+    <string name="serviceAgreement">隐私政策</string>
     <string name="aboutOfUs">关于我们</string>
     <string name="troubleNO">未解决故障码</string>
     <string name="trouble">故障码</string>
@@ -294,4 +295,7 @@
     <string name="go">GO</string>
     <string name="agreeOk">同意并继续</string>
     <string name="agreeNo">不同意</string>
+    <string name="servicePhone">人工客服</string>
+    <string name="_0931_4896234">0931-4896234</string>
+    <string name="dialog_agree_title">用户协议与隐私政策</string>
 </resources>

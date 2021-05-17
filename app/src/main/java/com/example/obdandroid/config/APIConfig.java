@@ -11,6 +11,8 @@ public class APIConfig {
      */
     //public static final String SERVER_URL = "http://192.168.0.188:1021";//本地测试
     public static final String SERVER_URL = "http://8.136.125.33:1021";//生产
+    public static final String UserAgreement_URL = "http://8.136.125.33/userAgreement.html ";//用户协议
+    public static final String ServiceAgreement_URL = "http://8.136.125.33/serviceAgreement.html";//隐私政策
     /**
      * 注册接口
      */

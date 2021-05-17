@@ -74,8 +74,6 @@ public class MainActivity extends BaseActivity {
     public void initView() {
         super.initView();
         context = this;
-        ImmersionBar.with(MainActivity.this).statusBarColor(R.color.black)
-                .fitsSystemWindows(true).init();
         viewPager = findViewById(R.id.viewPager);
         navigation = findViewById(R.id.navigation);
         fragments.add(HomeFragment.getInstance());

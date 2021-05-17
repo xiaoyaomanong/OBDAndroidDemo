@@ -132,7 +132,7 @@
         <activity android:name=".ui.activity.VehicleActivity" />
         <activity android:name=".ui.activity.TroubleCodeQueryDetailsActivity" />
         <activity android:name=".ui.activity.AboutActivity" />
-        <activity android:name=".ui.activity.AgreementActivity" />
+        <activity android:name=".ui.activity.UserAgreementActivity" />
         <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
@@ -145,6 +145,7 @@
         <activity android:name=".ui.activity.TroubleCodeActivity" />
         <activity android:name=".ui.activity.ReadMsgActivity" />
         <activity android:name=".ui.activity.ForgetPwdActivity" />
+        <activity android:name=".ui.activity.ServiceAgreementActivity" />
 
         <service android:name=".service.GpsServices" />
 

@@ -1,8 +1,10 @@
 package com.example.obdandroid.ui.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,6 +24,7 @@ import com.hjq.bar.TitleBar;
  */
 public class AboutActivity extends BaseActivity {
     private Context context;
+    private TextView tvPhone;
 
     @Override
     protected int getContentViewId() {
@@ -40,7 +43,10 @@ public class AboutActivity extends BaseActivity {
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         CircleImageView imageHeader = findViewById(R.id.imageHeader);
         TextView tvAppVersion = findViewById(R.id.tvAppVersion);
-        LinearLayout layoutService = findViewById(R.id.layoutService);
+        LinearLayout layoutUserAgreement = findViewById(R.id.layoutUserAgreement);
+        LinearLayout layoutServiceAgreement = findViewById(R.id.layoutServiceAgreement);
+        LinearLayout layoutPhone = findViewById(R.id.layout_phone);
+        tvPhone = findViewById(R.id.tv_phone);
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -59,7 +65,9 @@ public class AboutActivity extends BaseActivity {
         });
         Glide.with(context).load(R.drawable.logo_green).into(imageHeader);
         tvAppVersion.setText(packageName(context));
-        layoutService.setOnClickListener(v -> JumpUtil.startAct(context, AgreementActivity.class));
+        layoutUserAgreement.setOnClickListener(v -> JumpUtil.startAct(context, UserAgreementActivity.class));//用户协议
+        layoutServiceAgreement.setOnClickListener(v -> JumpUtil.startAct(context, ServiceAgreementActivity.class));//隐私政策
+        layoutPhone.setOnClickListener(v -> callPhone(tvPhone.getText().toString()));
     }
 
     /**
@@ -76,5 +84,17 @@ public class AboutActivity extends BaseActivity {
             e.printStackTrace();
         }
         return name;
+    }
+
+    /**
+     * 拨打电话（跳转到拨号界面，用户手动点击拨打）
+     *
+     * @param phoneNum 电话号码
+     */
+    public void callPhone(String phoneNum) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        Uri data = Uri.parse("tel:" + phoneNum);
+        intent.setData(data);
+        startActivity(intent);
     }
 }

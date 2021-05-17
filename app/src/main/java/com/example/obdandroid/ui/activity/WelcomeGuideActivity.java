@@ -13,7 +13,6 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFullScreenActivity;
@@ -88,7 +87,7 @@ public class WelcomeGuideActivity extends BaseFullScreenActivity implements OnNo
             ssb.setSpan(new ClickableSpan() {
                 @Override
                 public void onClick(@NonNull View widget) {
-                    JumpUtil.startAct(context, AgreementActivity.class);
+                    JumpUtil.startAct(context, ServiceAgreementActivity.class);
                 }
 
                 @Override
@@ -103,7 +102,7 @@ public class WelcomeGuideActivity extends BaseFullScreenActivity implements OnNo
             ssb.setSpan(new ClickableSpan() {
                 @Override
                 public void onClick(@NonNull View widget) {
-                    JumpUtil.startAct(context, AgreementActivity.class);
+                    JumpUtil.startAct(context, UserAgreementActivity.class);
                 }
 
                 @Override

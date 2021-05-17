@@ -9,11 +9,10 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.config.APIConfig;
 import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.StringUtil;
 import com.hacknife.immersive.Immersive;
@@ -22,9 +21,10 @@ import com.hjq.bar.TitleBar;
 
 /**
  * 作者：Jealous
- * 日期：2019/9/29 0029 09:04
+ * 日期：2021/5/17 0017
+ * 描述：
  */
-public class AgreementActivity extends BaseActivity {
+public class ServiceAgreementActivity extends BaseActivity {
     private DialogUtils dialogUtils;
 
     @Override
@@ -41,10 +41,10 @@ public class AgreementActivity extends BaseActivity {
     public void initView() {
         super.initView();
         Context context = this;
-        Immersive.setStatusBarColor(this, Color.rgb(68, 158, 239));
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         WebView wvAgreement = findViewById(R.id.wv_agreement);
         dialogUtils = new DialogUtils(context);
+        titleBarSet.setTitle("隐私政策");
         WebSettings webSettings = wvAgreement.getSettings();
         webSettings.setSupportMultipleWindows(true);
         webSettings.setSavePassword(false);
@@ -52,8 +52,7 @@ public class AgreementActivity extends BaseActivity {
         wvAgreement.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         wvAgreement.setWebViewClient(new MyWebViewClient());
         dialogUtils.showProgressDialog();
-        String path = "http://8.136.125.33/serviceAgreement.html";
-        wvAgreement.loadUrl(path);
+        wvAgreement.loadUrl(APIConfig.ServiceAgreement_URL);
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -91,7 +90,6 @@ public class AgreementActivity extends BaseActivity {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            LogE(url);
             if (!StringUtil.isNull(url)) {
                 dialogUtils.dismiss();
             }

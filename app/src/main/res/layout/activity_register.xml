@@ -50,8 +50,8 @@
                 android:drawablePadding="16dp"
                 android:fontFamily="@font/calibri"
                 android:hint="@string/hint_user"
-                android:maxLength="11"
                 android:inputType="phone"
+                android:maxLength="11"
                 android:maxLines="1"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
@@ -99,11 +99,16 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/layoutAgree"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/cbAgree"
+                style="@style/CustomCheckboxTheme"
+                android:layout_width="30dp"
+                android:layout_height="match_parent" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -115,6 +120,7 @@
                 android:textSize="@dimen/sp_12" />
 
             <TextView
+                android:id="@+id/tvAgree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/calibri"

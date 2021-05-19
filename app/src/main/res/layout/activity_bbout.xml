@@ -47,7 +47,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/layoutUserAgreement"
+        android:id="@+id/layoutServiceAgreement"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/color_2C2B30"
@@ -60,7 +60,7 @@
             android:fontFamily="@font/gotham"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/dp_10"
-            android:text="@string/userAgreement"
+            android:text="@string/serviceAgreement"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_14"
             tools:ignore="RtlSymmetry" />
@@ -83,7 +83,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/layoutServiceAgreement"
+        android:id="@+id/layoutUserAgreement"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/color_2C2B30"
@@ -96,7 +96,7 @@
             android:fontFamily="@font/gotham"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/dp_10"
-            android:text="@string/serviceAgreement"
+            android:text="@string/userAgreement"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_14"
             tools:ignore="RtlSymmetry" />

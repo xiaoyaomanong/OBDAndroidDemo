@@ -109,6 +109,7 @@ public class HomeFragment extends BaseFragment {
     private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
     private static final int COMPLETES = 1;
     private static final int COMPLETET = 2;
+    private SPUtil spUtil;
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
 
@@ -154,7 +155,7 @@ public class HomeFragment extends BaseFragment {
         layoutCheck = getView(R.id.layoutCheck);
         tvCheckTime = getView(R.id.tvCheckTime);
         titleBar.setTitle("汽车扫描");
-        SPUtil spUtil = new SPUtil(context);
+        spUtil = new SPUtil(context);
         dialogUtils = new DialogUtils(context);
         mConnectedDeviceName = ObdPreferences.get(context).getBlueToothDeviceName();
         mConnectedDeviceAddress = ObdPreferences.get(context).getBlueToothDeviceAddress();
@@ -163,18 +164,22 @@ public class HomeFragment extends BaseFragment {
         initReceiver();//注册选择默认车辆广播
         initRecordReceiver();//注册车辆检测记录跟新广播
         getUserInfo(getUserId(), getToken(), spUtil.getString("vehicleId", ""));
-        getTheUserCurrentRecharge(getUserId(),getToken());
+        getTheUserCurrentRecharge(getUserId(), getToken());
         layoutMoreDash.setOnClickListener(v -> {
             Intent intent = new Intent(context, MyVehicleDashActivity.class);
             startActivityForResult(intent, 102);
         });
         setCheckRecord();
         layoutCheck.setOnClickListener(v -> {
-            if (isVip) {
-                Intent intent = new Intent(context, VehicleCheckActivity.class);
-                startActivityForResult(intent, 102);
+            if (isConnected) {
+                if (isVip) {
+                    Intent intent = new Intent(context, VehicleCheckActivity.class);
+                    startActivityForResult(intent, 102);
+                } else {
+                    showTipDialog("请购买服务");
+                }
             } else {
-                showTipDialog("请购买服务");
+                showTipDialog("设备未连接,请连接设备");
             }
         });
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
@@ -537,9 +542,9 @@ public class HomeFragment extends BaseFragment {
         public void onReceive(Context context, Intent intent) {
             String vehicleId = intent.getStringExtra("vehicleId");
             String type = intent.getStringExtra("type");
-            switch (type){
+            switch (type) {
                 case "1":
-                    getTheUserCurrentRecharge(getUserId(),getToken());
+                    getTheUserCurrentRecharge(getUserId(), getToken());
                     break;
                 case "2":
                     getUserInfo(getUserId(), getToken(), vehicleId);
@@ -585,6 +590,11 @@ public class HomeFragment extends BaseFragment {
                     setDefaultMode();
                     showToast(getString(R.string.text_bluetooth_error_connecting));
                 }
+            }
+        }
+        if (requestCode == 100) {
+            if (resultCode == 101) {
+                getUserInfo(getUserId(), getToken(), spUtil.getString("vehicleId", ""));
             }
         }
     }

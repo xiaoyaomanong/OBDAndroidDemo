@@ -87,7 +87,7 @@ public class WelcomeGuideActivity extends BaseFullScreenActivity implements OnNo
             ssb.setSpan(new ClickableSpan() {
                 @Override
                 public void onClick(@NonNull View widget) {
-                    JumpUtil.startAct(context, ServiceAgreementActivity.class);
+                    JumpUtil.startAct(context, UserAgreementActivity.class);
                 }
 
                 @Override
@@ -102,7 +102,7 @@ public class WelcomeGuideActivity extends BaseFullScreenActivity implements OnNo
             ssb.setSpan(new ClickableSpan() {
                 @Override
                 public void onClick(@NonNull View widget) {
-                    JumpUtil.startAct(context, UserAgreementActivity.class);
+                    JumpUtil.startAct(context, ServiceAgreementActivity.class);
                 }
 
                 @Override

@@ -44,7 +44,7 @@ public class UserAgreementActivity extends BaseActivity {
         Context context = this;
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         WebView wvAgreement = findViewById(R.id.wv_agreement);
-        titleBarSet.setTitle("用户协议");
+        titleBarSet.setTitle("隐私政策");
         dialogUtils = new DialogUtils(context);
         WebSettings webSettings = wvAgreement.getSettings();
         webSettings.setSupportMultipleWindows(true);

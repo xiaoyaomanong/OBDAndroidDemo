@@ -248,8 +248,8 @@
     <string name="englishMeaning">英文含义</string>
     <string name="causeOfFailure">故障原因</string>
     <string name="reming">全车检测自动生成体检报告</string>
-    <string name="userAgreement">用户协议</string>
-    <string name="serviceAgreement">隐私政策</string>
+    <string name="userAgreement">隐私政策</string>
+    <string name="serviceAgreement">用户协议</string>
     <string name="aboutOfUs">关于我们</string>
     <string name="troubleNO">未解决故障码</string>
     <string name="trouble">故障码</string>

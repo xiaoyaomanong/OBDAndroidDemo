@@ -44,7 +44,7 @@ public class ServiceAgreementActivity extends BaseActivity {
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         WebView wvAgreement = findViewById(R.id.wv_agreement);
         dialogUtils = new DialogUtils(context);
-        titleBarSet.setTitle("隐私政策");
+        titleBarSet.setTitle("用户协议");
         WebSettings webSettings = wvAgreement.getSettings();
         webSettings.setSupportMultipleWindows(true);
         webSettings.setSavePassword(false);

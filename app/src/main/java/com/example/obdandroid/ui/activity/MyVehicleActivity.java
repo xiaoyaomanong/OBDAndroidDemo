@@ -13,6 +13,7 @@ import android.view.View;
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.adapter.MyVehicleAdapter;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.entity.VehicleEntity;
@@ -107,7 +108,9 @@ public class MyVehicleActivity extends BaseActivity {
         adapter.setClickCallBack(new MyVehicleAdapter.OnClickCallBack() {
             @Override
             public void click(VehicleEntity.DataEntity.ListEntity entity) {
-                JumpUtil.startActToData(context, VehicleInfoActivity.class, String.valueOf(entity.getVehicleId()), 0);
+                Intent intent = new Intent(context, VehicleInfoActivity.class);
+                intent.putExtra(Constant.ACT_FLAG, String.valueOf(entity.getVehicleId()));
+                startActivityForResult(intent, 11);
             }
 
             @Override
@@ -153,7 +156,7 @@ public class MyVehicleActivity extends BaseActivity {
                         }
                     }
                 }).
-                        setMessage("是否删除+" + entity.getAutomobileBrandName() + "该车辆").
+                        setMessage("是否删除" + entity.getAutomobileBrandName() + "该车辆").
                         setSelectNegative("取消").setSelectPositive("确定").
                         setTitle("删除车辆提示").showDialog();
             }
@@ -161,11 +164,12 @@ public class MyVehicleActivity extends BaseActivity {
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
-                if (TextUtils.isEmpty(spUtil.getString("vehicleId", ""))) {
+                finish();
+               /* if (TextUtils.isEmpty(spUtil.getString("vehicleId", ""))) {
                     showTipDialog("您还未选择检测车辆,请选择一辆车");
                 } else {
                     finish();
-                }
+                }*/
             }
 
             @Override
@@ -221,8 +225,7 @@ public class MyVehicleActivity extends BaseActivity {
      *                  获取用户车辆列表
      */
     private void getVehiclePageList(String pageNum, String pageSize, String token, String appUserId, final boolean isRefresh) {
-        OkHttpUtils.get().
-                url(SERVER_URL + Vehicle_URL).
+        OkHttpUtils.get().url(SERVER_URL + Vehicle_URL).
                 addParam("pageNum", pageNum).
                 addParam("pageSize", pageSize).
                 addParam("token", token).
@@ -260,23 +263,15 @@ public class MyVehicleActivity extends BaseActivity {
     }
 
     @Override
-    //安卓重写返回键事件
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (TextUtils.isEmpty(spUtil.getString("vehicleId", ""))) {
-                showTipDialog("您还未选择检测车辆,请选择一辆车");
-            } else {
-                finish();
-            }
-        }
-        return true;
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 11) {
             if (resultCode == 10) {
+                pageNum = 1;
+                pageSize = 10;
+                getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), true);
+            }
+            if (resultCode == 12) {
                 pageNum = 1;
                 pageSize = 10;
                 getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), true);

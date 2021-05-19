@@ -285,7 +285,7 @@ public class RegisterActivity extends BaseLoginActivity {
             ssb.setSpan(new ClickableSpan() {
                 @Override
                 public void onClick(@NonNull View widget) {
-                    JumpUtil.startAct(context, ServiceAgreementActivity.class);
+                    JumpUtil.startAct(context, UserAgreementActivity.class);
                 }
 
                 @Override
@@ -300,7 +300,7 @@ public class RegisterActivity extends BaseLoginActivity {
             ssb.setSpan(new ClickableSpan() {
                 @Override
                 public void onClick(@NonNull View widget) {
-                    JumpUtil.startAct(context, UserAgreementActivity.class);
+                    JumpUtil.startAct(context, ServiceAgreementActivity.class);
                 }
 
                 @Override

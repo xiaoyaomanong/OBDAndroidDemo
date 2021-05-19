@@ -62,6 +62,7 @@ public class VehicleInfoActivity extends BaseActivity {
     private TextView tvTankCapacity;
     private TextView tvYearManufacture;
     private LinearLayout layoutBind;
+    private boolean isRefresh = false;
 
     @Override
     protected int getContentViewId() {
@@ -106,6 +107,9 @@ public class VehicleInfoActivity extends BaseActivity {
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
+                if (isRefresh){
+                    setResult(12,new Intent());
+                }
                 finish();
             }
 
@@ -172,7 +176,7 @@ public class VehicleInfoActivity extends BaseActivity {
         if (TextUtils.isEmpty(entity.getLogo())) {
             ivLogo.setImageResource(R.drawable.icon_car_def);
         } else {
-            Glide.with(context).load(SERVER_URL +entity.getLogo()).into(ivLogo);
+            Glide.with(context).load(SERVER_URL + entity.getLogo()).into(ivLogo);
         }
         tvAutomobileBrandName.setText(checkNull(entity.getAutomobileBrandName()));
         tvModelName.setText(checkNull(entity.getModelName()));
@@ -211,6 +215,7 @@ public class VehicleInfoActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100) {
             if (resultCode == 101) {
+                isRefresh = true;
                 getVehicleInfoById(getToken(), vehicleId);
             }
         }

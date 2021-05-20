@@ -66,7 +66,6 @@ public class WelcomeGuideActivity extends BaseFullScreenActivity implements OnNo
         if (window != null) {
             window.setContentView(R.layout.dialog_intimate);
             window.setGravity(Gravity.CENTER);
-
             TextView tvContent = window.findViewById(R.id.tv_content);
             TextView tvCancel = window.findViewById(R.id.tv_cancel);
             TextView tvAgree = window.findViewById(R.id.tv_agree);

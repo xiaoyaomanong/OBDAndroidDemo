@@ -4,9 +4,6 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -23,12 +20,14 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.config.CheckRecord;
 import com.example.obdandroid.ui.adapter.VehicleCheckAdapter;
 import com.example.obdandroid.ui.entity.AddTestRecordEntity;
 import com.example.obdandroid.ui.entity.MessageCheckEntity;
@@ -37,21 +36,19 @@ import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleWelComeView;
 import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.DialogUtils;
-import com.example.obdandroid.utils.ExceptionHandler;
 import com.example.obdandroid.utils.SPUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
 import com.sohrab.obd.reader.application.ObdPreferences;
-import com.sohrab.obd.reader.enums.AvailableCommandNames;
 import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.ResetTroubleCodesCommand;
-import com.example.obdandroid.config.CheckRecord;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 import com.sohrab.obd.reader.trip.OBDTripEntity;
+import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -59,14 +56,14 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.addRemind_URL;
 import static com.example.obdandroid.config.APIConfig.addTestRecord_URL;
@@ -83,7 +80,6 @@ public class VehicleCheckActivity extends BaseActivity {
     private TitleBar titleBar;
     private CircleWelComeView circleView;
     private TextView btStart;
-    private VehicleCheckAdapter adapter;
     private RecyclerView recycleCheckContent;
     private SPUtil spUtil;
     private LinearLayout layoutCar;
@@ -103,7 +99,6 @@ public class VehicleCheckActivity extends BaseActivity {
     private int size;
     private DialogUtils dialogUtils;
 
-    private File saveSpacePath;
     private File localErrorSave;
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
@@ -194,6 +189,7 @@ public class VehicleCheckActivity extends BaseActivity {
         }
         btStart.setOnClickListener(v -> {
             if (isConn) {
+                getPermission();
                 circleView.start();
                 btStart.setText("开始检测");
                 tvOBDState.setVisibility(View.VISIBLE);
@@ -231,6 +227,19 @@ public class VehicleCheckActivity extends BaseActivity {
         initConfig();
     }
 
+    /**
+     * 获取权限
+     */
+    public void getPermission() {
+        RxPermissions rxPermissions = new RxPermissions(this);
+        rxPermissions.request(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
+                .subscribe(aBoolean -> {
+                    if (!aBoolean) {
+                        Toast.makeText(context, "未授权", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private void executeCommand(BluetoothSocket socket) {
         tripRecord.getTripMap().clear();
         ArrayList<ObdCommand> commands = ObdConfiguration.getObdCommands(ModeTrim.MODE_01);
@@ -245,7 +254,6 @@ public class VehicleCheckActivity extends BaseActivity {
                 handler.sendMessage(msg);
                 tripRecord.updateTrip(command.getName(), command);
             } catch (Exception e) {
-                LogE("执行命令异常  :: " + e.getMessage());
                 writeErrorToLocal(e.getMessage());
             }
         }
@@ -255,10 +263,11 @@ public class VehicleCheckActivity extends BaseActivity {
     }
 
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void initConfig() {
-        saveSpacePath = new File(Environment.getExternalStoragePublicDirectory(
+        File saveSpacePath = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/ODBCar/OBDLog/");
-        localErrorSave = new File(saveSpacePath, "OBDPID.txt");
+        localErrorSave = new File(saveSpacePath, "OBDError.txt");
         if (!saveSpacePath.exists()) {
             saveSpacePath.mkdirs();
         }
@@ -288,7 +297,6 @@ public class VehicleCheckActivity extends BaseActivity {
     private void clearCodes(BluetoothSocket socket) {
         try {
             new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
-            LogE("开始清除");
             ResetTroubleCodesCommand clear = new ResetTroubleCodesCommand();
             clear.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
             String result = clear.getFormattedResult();
@@ -366,7 +374,7 @@ public class VehicleCheckActivity extends BaseActivity {
      */
     public void showResult(List<OBDTripEntity> messages) {
         initAinm();
-        adapter = new VehicleCheckAdapter(context);
+        VehicleCheckAdapter adapter = new VehicleCheckAdapter(context);
         adapter.setList(messages);
         recycleCheckContent.setAdapter(adapter);
         adapter.notifyDataSetChanged();

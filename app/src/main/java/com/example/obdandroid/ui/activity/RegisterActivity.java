@@ -203,7 +203,11 @@ public class RegisterActivity extends BaseLoginActivity {
                 showToast("请输入验证码");
                 return;
             }
-            if (!cbAgree.isChecked()){
+            if (TextUtils.isEmpty(taskID)) {
+                showToast("请重新获取验证码，验证码已过期!");
+                return;
+            }
+            if (!cbAgree.isChecked()) {
                 showToast("请阅读用户协议及隐私政策");
                 return;
             }
@@ -264,7 +268,6 @@ public class RegisterActivity extends BaseLoginActivity {
         if (window != null) {
             window.setContentView(R.layout.dialog_intimate);
             window.setGravity(Gravity.CENTER);
-
             TextView tvContent = window.findViewById(R.id.tv_content);
             TextView tvCancel = window.findViewById(R.id.tv_cancel);
             TextView tvAgree = window.findViewById(R.id.tv_agree);
@@ -420,6 +423,7 @@ public class RegisterActivity extends BaseLoginActivity {
 
             @Override
             public void onResponse(String response, int id) {
+                LogE("response:" + response);
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
                     btnSignUpAgree.setProgress(100);

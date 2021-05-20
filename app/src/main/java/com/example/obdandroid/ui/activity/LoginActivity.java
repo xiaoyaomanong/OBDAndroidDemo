@@ -1,28 +1,15 @@
 package com.example.obdandroid.ui.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatCheckBox;
-import android.text.SpannableStringBuilder;
-import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
@@ -37,19 +24,13 @@ import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.CountDownTimerUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
-import com.example.obdandroid.utils.SharedPreferencesUtil;
 import com.kongzue.dialog.v2.TipDialog;
-import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static android.Manifest.permission.CAMERA;
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.READ_PHONE_STATE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.example.obdandroid.config.APIConfig.LOGIN_URL;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.sendSMSVerificationCode_URL;
@@ -111,7 +92,6 @@ public class LoginActivity extends BaseLoginActivity {
         spUtil = new SPUtil(context);
         String OtherLogin = spUtil.getString("OtherLogin", getString(R.string.text_pwd_msg));
         tvOtherLogin.setText(OtherLogin);
-        getPermission();
         if (OtherLogin.contains("账号")) {//验证码登录
             cbMima.setVisibility(View.INVISIBLE);
             textLayout.setVisibility(View.GONE);
@@ -221,7 +201,7 @@ public class LoginActivity extends BaseLoginActivity {
             return;
         }
         if (TextUtils.isEmpty(taskID)) {
-            showTipsDialog("请获取短信验证码", TipDialog.TYPE_ERROR);
+            showTipsDialog("请重新获取验证码，验证码已过期!", TipDialog.TYPE_ERROR);
             return;
         }
         //登录成功和记住密码框为选中状态才保存用户信息
@@ -347,19 +327,6 @@ public class LoginActivity extends BaseLoginActivity {
                 }
             }
         });
-    }
-
-    /**
-     * 获取权限
-     */
-    public void getPermission() {
-        RxPermissions rxPermissions = new RxPermissions(this);
-        rxPermissions.request(CAMERA, READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
-                .subscribe(aBoolean -> {
-                    if (!aBoolean) {
-                        Toast.makeText(context, "未授权", Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 
     /**

@@ -47,7 +47,7 @@ public class MainApplication extends Application {
                 return new AppCompatTextView(context);
             }
         });
-        ExceptionHandler.getInstance().initConfig(context, error -> Log.e(TAG, error));
+        //ExceptionHandler.getInstance().initConfig(context, error -> Log.e(TAG, error));
         DialogSettings.dialog_theme = THEME_LIGHT;
         DialogSettings.tip_theme = THEME_LIGHT;
         DialogSettings.style = STYLE_IOS;

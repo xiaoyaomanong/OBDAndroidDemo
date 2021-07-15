@@ -128,7 +128,6 @@ public class WelcomeGuideActivity extends BaseFullScreenActivity implements OnNo
                 alertDialog.cancel();
             });
         }
-
     }
 
     /**

@@ -289,7 +289,6 @@ public class LoginActivity extends BaseLoginActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("发送短信验证码:" + response);
                 SMSVerificationCodeEntity entity = JSON.parseObject(response, SMSVerificationCodeEntity.class);
                 if (entity.isSuccess()) {
                     showTipsDialog("验证码发送成功", TipDialog.TYPE_FINISH);

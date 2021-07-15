@@ -92,7 +92,6 @@ public class HomeFragment extends BaseFragment {
     private LinearLayout layoutOBD;
     private LinearLayout layoutAddCar;
     private LinearLayout layoutMoreTest;
-    private LinearLayout layoutCheck;
     private TextView tvCheckTime;
     private TextView tvObd;
     private TextView tvHomeObdTip;
@@ -152,7 +151,7 @@ public class HomeFragment extends BaseFragment {
         tvHomeObdTip = getView(R.id.tv_home_obd_tip);
         LinearLayout layoutMoreDash = getView(R.id.layoutMoreDash);
         layoutMoreTest = getView(R.id.layoutMoreTest);
-        layoutCheck = getView(R.id.layoutCheck);
+        LinearLayout layoutCheck = getView(R.id.layoutCheck);
         tvCheckTime = getView(R.id.tvCheckTime);
         titleBar.setTitle("汽车扫描");
         spUtil = new SPUtil(context);

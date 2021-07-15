@@ -171,7 +171,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
     /**
      * 读取进气歧管压力
      */
-    private synchronized void executeObdCommand(BluetoothSocket socket, List<ObdCommand> commands) {
+    private  void executeObdCommand(BluetoothSocket socket, List<ObdCommand> commands) {
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {
@@ -189,7 +189,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
     /**
      * 读取进气歧管压力
      */
-    private synchronized void executeCommand(BluetoothSocket socket, List<ObdCommand> commands) {
+    private  void executeCommand(BluetoothSocket socket, List<ObdCommand> commands) {
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {

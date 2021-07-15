@@ -12,6 +12,7 @@ import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.CheckRecord;
 import com.example.obdandroid.ui.view.PhilText;
 import com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight;
+import com.example.obdandroid.utils.AppExecutors;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.application.ObdPreferences;
@@ -32,6 +33,7 @@ import com.sohrab.obd.reader.obdCommand.temperature.EngineCoolantTemperatureComm
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 作者：Jealous
@@ -118,7 +120,14 @@ public class VehicleDashOneActivity extends BaseActivity {
      * 开启线程
      */
     private void startThread() {
-        mSpeedCommand.start();
+        // mSpeedCommand.start();
+        executeCommand(MainApplication.getBluetoothSocket(), getElpCommands());
+        AppExecutors.getInstance().scheduledExecutor().scheduleWithFixedDelay(() -> {
+            // do something
+            if (ObdPreferences.get(getApplicationContext()).getServiceRunning()) {
+                executeCommandData(MainApplication.getBluetoothSocket(), getCommands());
+            }
+        }, 1, 1, TimeUnit.MILLISECONDS);
     }
 
 
@@ -126,16 +135,17 @@ public class VehicleDashOneActivity extends BaseActivity {
      * 中止线程
      */
     private void stopThread() {
-        if (mSpeedCommand != null) {
+      /*  if (mSpeedCommand != null) {
             mSpeedCommand.interrupt();
             mSpeedCommand = null;
-        }
+        }*/
+        AppExecutors.getInstance().scheduledExecutor().shutdown();
     }
 
     /**
      * 读取速度
      */
-    private synchronized void executeCommandData(BluetoothSocket socket, List<ObdCommand> commands) {
+    private void executeCommandData(BluetoothSocket socket, List<ObdCommand> commands) {
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {
@@ -166,7 +176,7 @@ public class VehicleDashOneActivity extends BaseActivity {
     /**
      * 读取速度
      */
-    private synchronized void executeCommand(BluetoothSocket socket, List<ObdCommand> commands) {
+    private void executeCommand(BluetoothSocket socket, List<ObdCommand> commands) {
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {

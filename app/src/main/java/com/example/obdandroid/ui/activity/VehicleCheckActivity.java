@@ -35,6 +35,7 @@ import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleWelComeView;
 import com.example.obdandroid.utils.AppDateUtils;
+import com.example.obdandroid.utils.AppExecutors;
 import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.SPUtil;
 import com.hjq.bar.OnTitleBarListener;
@@ -197,7 +198,8 @@ public class VehicleCheckActivity extends BaseActivity {
                 btStart.setEnabled(false);
                 layoutCar.setVisibility(View.VISIBLE);
                 layoutLook.setVisibility(View.GONE);
-                new Thread(() -> executeCommand(MainApplication.getBluetoothSocket())).start();
+                //new Thread(() -> ).start();
+                AppExecutors.getInstance().networkIO().submit(() -> executeCommand(MainApplication.getBluetoothSocket()));
             } else {
                 showTipDialog("请连接设备", TipDialog.TYPE_WARNING);
             }
@@ -224,7 +226,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 }
             }
         });
-        initConfig();
+        //initConfig();
     }
 
     /**
@@ -254,7 +256,8 @@ public class VehicleCheckActivity extends BaseActivity {
                 handler.sendMessage(msg);
                 tripRecord.updateTrip(command.getName(), command);
             } catch (Exception e) {
-                writeErrorToLocal(e.getMessage());
+                LogE(e.getMessage());
+                // writeErrorToLocal(e.getMessage());
             }
         }
         Message msg = new Message();
@@ -331,7 +334,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 LogE("减少使用次数和累计使用次数:" + response);
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
-
+                    showTipDialog(entity.getData(), TipDialog.TYPE_WARNING);
                 }
             }
         });

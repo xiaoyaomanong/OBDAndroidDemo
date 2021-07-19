@@ -12,6 +12,7 @@ import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.CheckRecord;
 import com.example.obdandroid.ui.view.PhilText;
 import com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight;
+import com.example.obdandroid.utils.AppExecutors;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.application.ObdPreferences;
@@ -26,11 +27,10 @@ import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
-import com.sohrab.obd.reader.obdCommand.temperature.AirIntakeTemperatureCommand;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 作者：Jealous
@@ -114,17 +114,25 @@ public class VehicleDashTwoActivity extends BaseActivity {
      * 开启线程
      */
     private void startThread() {
-        CommandThread.start();
+        //CommandThread.start();
+        executeCommand(MainApplication.getBluetoothSocket(), getElpCommands());
+        AppExecutors.getInstance().scheduledExecutor().scheduleWithFixedDelay(() -> {
+            // do something
+            if (ObdPreferences.get(getApplicationContext()).getServiceRunningStatus()) {
+                executeObdCommand(MainApplication.getBluetoothSocket(), getCommands());
+            }
+        }, 1, 1, TimeUnit.MILLISECONDS);
     }
 
     /**
      * 中止线程
      */
     private void stopThread() {
-        if (CommandThread != null) {
+      /*  if (CommandThread != null) {
             CommandThread.interrupt();
             CommandThread = null;
-        }
+        }*/
+        AppExecutors.getInstance().scheduledExecutor().shutdown();
     }
 
     /**

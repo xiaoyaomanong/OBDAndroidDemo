@@ -57,7 +57,6 @@ public class BltManagerUtils {
             mSocket = device.createRfcommSocketToServiceRecord(Constant.SPP_UUID);
             if (mSocket != null)
                 MainApplication.setBluetoothSocket(mSocket);
-            Log.d("blueTooth", "开始连接...");
             if (!mSocket.isConnected()) {
                 mSocket.connect();
             }

@@ -144,12 +144,12 @@ public class CheckRecord implements DefineObdReader, Serializable {
     @SuppressLint("StaticFieldLeak")
     private static CheckRecord sInstance;
     private Integer engineRpmMax = 0;
-    private String engineRpm;
-    private String mEngineFrictionPercentTorque;
-    private String mDPFTemp;
-    private String mEngineReferenceTorque;
-    private String mActualEngineTorque;
-    private String mDriverEngineTorque;
+    private String engineRpm="";
+    private String mEngineFrictionPercentTorque="";
+    private String mDPFTemp="";
+    private String mEngineReferenceTorque="";
+    private String mActualEngineTorque="";
+    private String mDriverEngineTorque="";
     private String mHyBatteryPackLife;
     private String mRelAccPedalPos;
     private String mFuelRailAbsPressure;
@@ -239,8 +239,8 @@ public class CheckRecord implements DefineObdReader, Serializable {
     private String mDistanceTraveledAfterCodesCleared;
     private String mControlModuleVoltage;
     private String mEngineFuelRate;
-    private String mFuelRailPressure;
-    private String mFuelRailPressurevacuum;
+    private String mFuelRailPressure="";
+    private String mFuelRailPressurevacuum="";
     private String mVehicleIdentificationNumber;
     private String mDistanceTraveledMilOn;
     private String mDtcNumber;

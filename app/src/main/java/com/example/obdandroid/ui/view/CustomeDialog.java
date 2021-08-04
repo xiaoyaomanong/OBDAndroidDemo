@@ -60,10 +60,7 @@ public class CustomeDialog {
      * @return 判空操作
      */
     private boolean isNull(String s) {
-        if (s == null || s.trim().isEmpty() || s.equals("null")) {
-            return true;
-        }
-        return false;
+        return s == null || s.trim().isEmpty() || s.equals("null");
     }
 
     /**

@@ -78,7 +78,6 @@ public class PersonalFragment extends BaseFragment {
     private TextView tvRechargeSetMeaName;
     private CircleImageView myHeaderImage;
     private LinearLayout layoutCar;
-    private LinearLayout layoutUpdatePwd;
     private LocalBroadcastManager lm;
     private TestReceiver testReceiver;
     private ImageView ivVip;
@@ -116,7 +115,7 @@ public class PersonalFragment extends BaseFragment {
         LinearLayout layoutUpdate = getView(R.id.layout_update);
         tvRechargeTime = getView(R.id.tvRechargeTime);
         tvRechargeSetMeaName = getView(R.id.tvRechargeSetMeaName);
-        layoutUpdatePwd = getView(R.id.layoutUpdatePwd);
+        LinearLayout layoutUpdatePwd = getView(R.id.layoutUpdatePwd);
         refresh = getView(R.id.refresh);
         ivVip = getView(R.id.ivVip);
         spUtil = new SPUtil(context);
@@ -191,10 +190,10 @@ public class PersonalFragment extends BaseFragment {
             public void onResponse(String response, int id) {
                 UserCurrentRechargeEntity entity = JSON.parseObject(response, UserCurrentRechargeEntity.class);
                 if (entity.isSuccess()) {
-                    if (entity.getData().size() == 1) {
-                        tvRechargeSetMeaName.setText(entity.getData().get(0).getRechargeSetMeaName());
+                    if (entity.getCode().equals("SUCCESS")) {
+                        tvRechargeSetMeaName.setText(entity.getData().getRechargeSetMeaName());
                     } else {
-                        tvRechargeSetMeaName.setText("未购买套餐");
+                        tvRechargeSetMeaName.setText("未购买会员");
                     }
                 }
             }
@@ -227,9 +226,9 @@ public class PersonalFragment extends BaseFragment {
                     tvIntegral.setText(entity.getData().getPhoneNum());
                     if (entity.getData().getIsVip() == 1) {
                         if (!TextUtils.isEmpty(entity.getData().getEndValidity())) {
-                            tvRechargeTime.setText("即日起有效期至: " + entity.getData().getEndValidity().split(" ")[0]);
+                            tvRechargeTime.setText("有效期至: " + entity.getData().getEndValidity().split(" ")[0]);
                         } else {
-                            tvRechargeTime.setText("即日起有效期至: ");
+                            tvRechargeTime.setText("有效期至: ");
                         }
                     }
                     ivVip.setVisibility(entity.getData().getIsVip() == 1 ? View.VISIBLE : View.GONE);

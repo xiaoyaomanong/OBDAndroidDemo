@@ -198,8 +198,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 btStart.setEnabled(false);
                 layoutCar.setVisibility(View.VISIBLE);
                 layoutLook.setVisibility(View.GONE);
-                //new Thread(() -> ).start();
-                AppExecutors.getInstance().networkIO().submit(() -> executeCommand(MainApplication.getBluetoothSocket()));
+                new Thread(() -> executeCommand(MainApplication.getBluetoothSocket())).start();
             } else {
                 showTipDialog("请连接设备", TipDialog.TYPE_WARNING);
             }
@@ -331,10 +330,9 @@ public class VehicleCheckActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("减少使用次数和累计使用次数:" + response);
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
-                    showTipDialog(entity.getData(), TipDialog.TYPE_WARNING);
+                    showTipDialog("检测完成", TipDialog.TYPE_FINISH);
                 }
             }
         });

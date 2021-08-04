@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,6 +32,7 @@ import com.bumptech.glide.Glide;
 import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
+import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.activity.BindBluetoothDeviceActivity;
 import com.example.obdandroid.ui.activity.CheckRecordActivity;
 import com.example.obdandroid.ui.activity.CheckRecordDetailsActivity;
@@ -60,6 +63,7 @@ import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.io.IOException;
 import java.util.List;
 
 import okhttp3.Call;
@@ -163,7 +167,7 @@ public class HomeFragment extends BaseFragment {
         initReceiver();//注册选择默认车辆广播
         initRecordReceiver();//注册车辆检测记录跟新广播
         getUserInfo(getUserId(), getToken(), spUtil.getString("vehicleId", ""));
-        getTheUserCurrentRecharge(getUserId(), getToken());
+        //getTheUserCurrentRecharge(getUserId(), getToken());
         layoutMoreDash.setOnClickListener(v -> {
             Intent intent = new Intent(context, MyVehicleDashActivity.class);
             startActivityForResult(intent, 102);
@@ -283,7 +287,7 @@ public class HomeFragment extends BaseFragment {
             public void onResponse(String response, int id) {
                 UserCurrentRechargeEntity entity = JSON.parseObject(response, UserCurrentRechargeEntity.class);
                 if (entity.isSuccess()) {
-                    isVip = entity.getData().size() == 1;
+                    isVip = entity.getCode().equals("SUCCESS");
                 }
             }
         });
@@ -310,9 +314,9 @@ public class HomeFragment extends BaseFragment {
                 UserInfoEntity entity = JSON.parseObject(response, UserInfoEntity.class);
                 if (entity.isSuccess()) {
                     dialogUtils.dismiss();
+                    isVip = entity.getData().getIsVip() == 1;
                     if (entity.getData().isTheDeviceBound()) {
                         if (TextUtils.isEmpty(vehicleId)) {
-                            //选择已绑定的车辆
                             new CustomeDialog(context, "您已经绑定车辆,请选择检测车辆！", confirm -> {
                                 if (confirm) {
                                     JumpUtil.startAct(context, MyVehicleActivity.class);
@@ -367,8 +371,14 @@ public class HomeFragment extends BaseFragment {
                         Glide.with(context).load(SERVER_URL + entity.getData().getLogo()).into(ivCarLogo);
                     }
                     deviceAddress = entity.getData().getBluetoothDeviceNumber();
-                    if (!TextUtils.isEmpty(deviceAddress) && !isConnected) {
-                        connectBtDevice(deviceAddress);
+                    if (!TextUtils.isEmpty(deviceAddress)) {
+                        isConnected = isConnect(deviceAddress);
+                        if (!isConnected) {
+                            connectBtDevice(deviceAddress);
+                        } else {
+                            TipDialog.show(context, getString(R.string.title_connected_to) + mConnectedDeviceName, TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
+                            titleBar.setLeftTitle("已连接");
+                        }
                     }
                     if (entity.getData().getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
                         tvHomeObdTip.setText("将设备插入车辆并连接");
@@ -391,6 +401,28 @@ public class HomeFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    /**
+     * @param address 蓝牙地址
+     * @return 蓝夜是否连接
+     */
+    private boolean isConnect(String address) {
+        BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
+        BluetoothSocket mSocket;
+        try {
+            mSocket = device.createRfcommSocketToServiceRecord(Constant.SPP_UUID);
+            if (mSocket != null) {
+                MainApplication.setBluetoothSocket(mSocket);
+                if (!mSocket.isConnected()) {
+                    mSocket.connect();
+                }
+                return mSocket.isConnected();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /**

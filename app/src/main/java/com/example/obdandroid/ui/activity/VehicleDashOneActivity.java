@@ -1,7 +1,10 @@
 package com.example.obdandroid.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -12,12 +15,10 @@ import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.CheckRecord;
 import com.example.obdandroid.ui.view.PhilText;
 import com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight;
-import com.example.obdandroid.utils.AppExecutors;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.application.ObdPreferences;
 import com.sohrab.obd.reader.enums.ModeTrim;
-import com.sohrab.obd.reader.enums.ObdProtocols;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.SpeedCommand;
 import com.sohrab.obd.reader.obdCommand.engine.OilTempCommand;
@@ -25,7 +26,6 @@ import com.sohrab.obd.reader.obdCommand.engine.RPMCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.SelectProtocolCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.EngineCoolantTemperatureCommand;
@@ -33,7 +33,6 @@ import com.sohrab.obd.reader.obdCommand.temperature.EngineCoolantTemperatureComm
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 作者：Jealous
@@ -52,7 +51,20 @@ public class VehicleDashOneActivity extends BaseActivity {
     private CustomerDashboardViewLight dashEngineOilTemp;
     private CustomerDashboardViewLight dashEngineCoolantTemp;
     private CheckRecord tripRecord;
-    private Thread mSpeedCommand = new Thread(new MySpeedCommand());
+    private final Thread mSpeedCommand = new Thread(new MySpeedCommand());
+    public MyHandler mHandler;
+
+    @SuppressWarnings("deprecation")
+    @SuppressLint("HandlerLeak")
+    class MyHandler extends Handler {
+
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 100) {
+                setView((CheckRecord) msg.obj);
+            }
+        }
+    }
 
     @Override
     protected int getContentViewId() {
@@ -79,6 +91,7 @@ public class VehicleDashOneActivity extends BaseActivity {
         dashRPM = getView(R.id.dashRPM);
         dashEngineOilTemp = getView(R.id.dashEngineOilTemp);
         dashEngineCoolantTemp = getView(R.id.dashEngineCoolantTemp);
+        mHandler = new MyHandler();
         CheckRecord.getTriRecode(context, getToken()).clear();
         tripRecord = CheckRecord.getTriRecode(context, getToken());
         ObdPreferences.get(getApplicationContext()).setServiceRunning(true);
@@ -120,14 +133,7 @@ public class VehicleDashOneActivity extends BaseActivity {
      * 开启线程
      */
     private void startThread() {
-        // mSpeedCommand.start();
-        executeCommand(MainApplication.getBluetoothSocket(), getElpCommands());
-        AppExecutors.getInstance().scheduledExecutor().scheduleWithFixedDelay(() -> {
-            // do something
-            if (ObdPreferences.get(getApplicationContext()).getServiceRunning()) {
-                executeCommandData(MainApplication.getBluetoothSocket(), getCommands());
-            }
-        }, 1, 1, TimeUnit.MILLISECONDS);
+        mSpeedCommand.start();
     }
 
 
@@ -135,11 +141,11 @@ public class VehicleDashOneActivity extends BaseActivity {
      * 中止线程
      */
     private void stopThread() {
-      /*  if (mSpeedCommand != null) {
+     /*   if (mSpeedCommand != null) {
             mSpeedCommand.interrupt();
             mSpeedCommand = null;
         }*/
-        AppExecutors.getInstance().scheduledExecutor().shutdown();
+        //AppExecutors.getInstance().scheduledExecutor().shutdown();
     }
 
     /**
@@ -152,25 +158,32 @@ public class VehicleDashOneActivity extends BaseActivity {
                 command.run(socket.getInputStream(), socket.getOutputStream());
                 LogE("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
                 tripRecord.updateTrip(command.getName(), command);
-                tvmSpeed.setText(String.valueOf(tripRecord.getSpeed()));
-                dashSpeed.setVelocity(tripRecord.getSpeed());
-                tvAverageSpeed.setText(String.valueOf(tripRecord.getAverageSpeed()));
-                tvMaxSpeed.setText(String.valueOf(tripRecord.getSpeedMax()));
-                float DrivingDuration = BigDecimal.valueOf(tripRecord.getDrivingDuration())
-                        .setScale(2, BigDecimal.ROUND_HALF_DOWN)
-                        .floatValue();
-                tvDrivingDuration.setText(String.valueOf(DrivingDuration));
-                String rpm = TextUtils.isEmpty(tripRecord.getEngineRpm()) ? "0" : tripRecord.getEngineRpm();
-                double maxRpm = (double) tripRecord.getEngineRpmMax() / 1000;
-                dashRPM.setVelocity(Float.parseFloat(rpm) / 1000);
-                tvmRPM.setText(String.valueOf(Float.parseFloat(rpm) / 1000));
-                tvMaxRPM.setText(String.valueOf(maxRpm));
-                dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineOilTemp()) ? "0" : tripRecord.getmEngineOilTemp().replace("℃", "")));
-                dashEngineCoolantTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineCoolantTemp()) ? "0" : tripRecord.getmEngineCoolantTemp().replace("℃", "")));
+                Message msg = mHandler.obtainMessage();
+                msg.what = 100;
+                msg.obj = tripRecord;
+                mHandler.sendMessage(msg);
             } catch (Exception e) {
                 LogE("执行命令异常  :: " + e.getMessage());
             }
         }
+    }
+
+    private void setView(CheckRecord tripRecord) {
+        tvmSpeed.setText(String.valueOf(tripRecord.getSpeed()));
+        dashSpeed.setVelocity(tripRecord.getSpeed());
+        tvAverageSpeed.setText(String.valueOf(tripRecord.getAverageSpeed()));
+        tvMaxSpeed.setText(String.valueOf(tripRecord.getSpeedMax()));
+        float DrivingDuration = BigDecimal.valueOf(tripRecord.getDrivingDuration())
+                .setScale(2, BigDecimal.ROUND_HALF_DOWN)
+                .floatValue();
+        tvDrivingDuration.setText(String.valueOf(DrivingDuration));
+        String rpm = TextUtils.isEmpty(tripRecord.getEngineRpm()) ? "0" : tripRecord.getEngineRpm();
+        double maxRpm = (double) tripRecord.getEngineRpmMax() / 1000;
+        dashRPM.setVelocity((Float.parseFloat(rpm) / 1000));
+        tvmRPM.setText(String.valueOf(Float.parseFloat(rpm) / 1000));
+        tvMaxRPM.setText(String.valueOf(maxRpm));
+        dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineOilTemp()) ? "0" : tripRecord.getmEngineOilTemp().replace("℃", "")));
+        dashEngineCoolantTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineCoolantTemp()) ? "0" : tripRecord.getmEngineCoolantTemp().replace("℃", "")));
     }
 
     /**
@@ -191,11 +204,10 @@ public class VehicleDashOneActivity extends BaseActivity {
     private List<ObdCommand> getCommands() {
         List<ObdCommand> obdCommands = new ArrayList<>();
         obdCommands.clear();
-        obdCommands.add(new SelectProtocolCommand(ObdProtocols.AUTO));
-        obdCommands.add(new SpeedCommand(ModeTrim.MODE_01.buildObdCommand()));
         obdCommands.add(new RPMCommand(ModeTrim.MODE_01.buildObdCommand()));
         obdCommands.add(new OilTempCommand(ModeTrim.MODE_01.buildObdCommand()));
         obdCommands.add(new EngineCoolantTemperatureCommand(ModeTrim.MODE_01.buildObdCommand()));
+        obdCommands.add(new SpeedCommand(ModeTrim.MODE_01.buildObdCommand()));
         return obdCommands;
     }
 
@@ -206,7 +218,7 @@ public class VehicleDashOneActivity extends BaseActivity {
         obdCommands.add(new EchoOffCommand());
         obdCommands.add(new LineFeedOffCommand());
         obdCommands.add(new SpacesOffCommand());
-        obdCommands.add(new TimeoutCommand(62));
+        obdCommands.add(new TimeoutCommand(200));
         return obdCommands;
     }
 

@@ -1,7 +1,10 @@
 package com.example.obdandroid.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -12,7 +15,7 @@ import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.CheckRecord;
 import com.example.obdandroid.ui.view.PhilText;
 import com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight;
-import com.example.obdandroid.utils.AppExecutors;
+import com.example.obdandroid.utils.StringUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.application.ObdPreferences;
@@ -30,7 +33,6 @@ import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 作者：Jealous
@@ -43,11 +45,24 @@ public class VehicleDashTwoActivity extends BaseActivity {
     private PhilText tvFuelRailPressure;
     private CustomerDashboardViewLight dashThrottlePos;
     private CheckRecord tripRecord;
-    private Thread CommandThread = new Thread(new ObdsCommand());
+    private final Thread CommandThread = new Thread(new ObdsCommand());
     private PhilText tvFuelPressure;
     private CustomerDashboardViewLight dashFuelPressure;
     private CustomerDashboardViewLight dashFuelRate;
     private CustomerDashboardViewLight dashFuelRailPressure;
+    public MyHandler mHandler;
+
+    @SuppressWarnings("deprecation")
+    @SuppressLint("HandlerLeak")
+    class MyHandler extends Handler {
+
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 100) {
+                setView((CheckRecord) msg.obj);
+            }
+        }
+    }
 
 
     @Override
@@ -73,6 +88,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
         dashThrottlePos = getView(R.id.dashThrottlePos);
         dashFuelRate = findViewById(R.id.dashFuelRate);
         dashFuelRailPressure = findViewById(R.id.dashFuelRailPressure);
+        mHandler = new MyHandler();
         CheckRecord.getTriRecode(context, getToken()).clear();
         tripRecord = CheckRecord.getTriRecode(context, getToken());
         ObdPreferences.get(getApplicationContext()).setServiceRunningStatus(true);
@@ -114,14 +130,14 @@ public class VehicleDashTwoActivity extends BaseActivity {
      * 开启线程
      */
     private void startThread() {
-        //CommandThread.start();
-        executeCommand(MainApplication.getBluetoothSocket(), getElpCommands());
-        AppExecutors.getInstance().scheduledExecutor().scheduleWithFixedDelay(() -> {
-            // do something
+        CommandThread.start();
+        //runOnUiThread(new ObdsCommand());
+       /* AppExecutors.getInstance().scheduledExecutor().scheduleWithFixedDelay(() -> {
+            executeCommand(MainApplication.getBluetoothSocket(), getElpCommands());
             if (ObdPreferences.get(getApplicationContext()).getServiceRunningStatus()) {
                 executeObdCommand(MainApplication.getBluetoothSocket(), getCommands());
             }
-        }, 1, 1, TimeUnit.MILLISECONDS);
+        }, 1, 1, TimeUnit.MILLISECONDS);*/
     }
 
     /**
@@ -132,7 +148,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
             CommandThread.interrupt();
             CommandThread = null;
         }*/
-        AppExecutors.getInstance().scheduledExecutor().shutdown();
+        // AppExecutors.getInstance().scheduledExecutor().shutdown();
     }
 
     /**
@@ -179,14 +195,17 @@ public class VehicleDashTwoActivity extends BaseActivity {
     /**
      * 读取进气歧管压力
      */
-    private  void executeObdCommand(BluetoothSocket socket, List<ObdCommand> commands) {
+    private void executeObdCommand(BluetoothSocket socket, List<ObdCommand> commands) {
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {
                 command.run(socket.getInputStream(), socket.getOutputStream());
                 LogE("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
                 tripRecord.updateTrip(command.getName(), command);
-                setView(tripRecord);
+                Message msg = mHandler.obtainMessage();
+                msg.what = 100;
+                msg.obj = tripRecord;
+                mHandler.sendMessage(msg);
             } catch (Exception e) {
                 e.printStackTrace();
                 LogE("执行命令异常  :: " + e.getMessage());
@@ -197,7 +216,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
     /**
      * 读取进气歧管压力
      */
-    private  void executeCommand(BluetoothSocket socket, List<ObdCommand> commands) {
+    private void executeCommand(BluetoothSocket socket, List<ObdCommand> commands) {
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {
@@ -228,7 +247,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
         obdCommands.add(new EchoOffCommand());
         obdCommands.add(new LineFeedOffCommand());
         obdCommands.add(new SpacesOffCommand());
-        obdCommands.add(new TimeoutCommand(62));
+        obdCommands.add(new TimeoutCommand(200));
         return obdCommands;
     }
 
@@ -237,21 +256,28 @@ public class VehicleDashTwoActivity extends BaseActivity {
      */
     private void setView(CheckRecord tripRecord) {
         if (tripRecord != null) {
-            String FuelRailPressure = tripRecord.getmFuelRailPressure().replace("kPa", "");
-            dashFuelRailPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(FuelRailPressure) ? "0" : FuelRailPressure) / 1000);
-            tvFuelRailPressure.setText(String.valueOf(Float.parseFloat(TextUtils.isEmpty(FuelRailPressure) ? "0" : FuelRailPressure) / 1000));
+            if (!StringUtil.isNull(tripRecord.getmFuelRailPressure())) {
+                String FuelRailPressure = tripRecord.getmFuelRailPressure().replace("kPa", "");
+                dashFuelRailPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(FuelRailPressure) ? "0" : FuelRailPressure) / 1000);
+                tvFuelRailPressure.setText(String.valueOf(Float.parseFloat(TextUtils.isEmpty(FuelRailPressure) ? "0" : FuelRailPressure) / 1000));
+            }
 
-            String fuelRate = tripRecord.getmFuelConsumptionRate().replace("L/h", "");
-            dashFuelRate.setVelocity(Float.parseFloat(TextUtils.isEmpty(fuelRate) ? "0" : fuelRate));
-            tvFuelRate.setText(TextUtils.isEmpty(fuelRate) ? "0" : fuelRate);
+            if (!StringUtil.isNull(tripRecord.getmFuelConsumptionRate())) {
+                String fuelRate = tripRecord.getmFuelConsumptionRate().replace("L/h", "");
+                dashFuelRate.setVelocity(Float.parseFloat(TextUtils.isEmpty(fuelRate) ? "0" : fuelRate));
+                tvFuelRate.setText(TextUtils.isEmpty(fuelRate) ? "0" : fuelRate);
+            }
 
-            String pressure = tripRecord.getmFuelPressure().replace("kPa", "");
-            tvFuelPressure.setText(TextUtils.isEmpty(pressure) ? "0" : pressure);
-            dashFuelPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(pressure) ? "0" : pressure));
-
-            String ThrottlePos = tripRecord.getmThrottlePos().replace("%", "");
-            dashThrottlePos.setVelocity(Float.parseFloat(TextUtils.isEmpty(ThrottlePos) ? "0" : ThrottlePos));
-            tvIntakeAirTemp.setText(TextUtils.isEmpty(ThrottlePos) ? "0" : ThrottlePos);
+            if (!StringUtil.isNull(tripRecord.getmFuelPressure())) {
+                String pressure = tripRecord.getmFuelPressure().replace("kPa", "");
+                tvFuelPressure.setText(TextUtils.isEmpty(pressure) ? "0" : pressure);
+                dashFuelPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(pressure) ? "0" : pressure));
+            }
+            if (!StringUtil.isNull(tripRecord.getmThrottlePos())) {
+                String ThrottlePos = tripRecord.getmThrottlePos().replace("%", "");
+                dashThrottlePos.setVelocity(Float.parseFloat(TextUtils.isEmpty(ThrottlePos) ? "0" : ThrottlePos));
+                tvIntakeAirTemp.setText(TextUtils.isEmpty(ThrottlePos) ? "0" : ThrottlePos);
+            }
         }
     }
 

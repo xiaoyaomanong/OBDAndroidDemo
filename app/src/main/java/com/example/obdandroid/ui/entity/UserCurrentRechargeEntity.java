@@ -13,13 +13,13 @@ public class UserCurrentRechargeEntity {
      * success : true
      * code : SUCCESS
      * message : 操作成功
-     * data : [{"rechargeSetMeaName":null,"rechargeTime":"2021-05-08T02:09:14.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":null}]
+     * data : {"rechargeSetMeaName":null,"rechargeTime":"2021-05-08T02:09:14.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":null}
      */
 
     private boolean success;
     private String code;
     private String message;
-    private List<DataEntity> data;
+    private DataEntity data;
 
     public boolean isSuccess() {
         return success;
@@ -45,11 +45,11 @@ public class UserCurrentRechargeEntity {
         this.message = message;
     }
 
-    public List<DataEntity> getData() {
+    public DataEntity getData() {
         return data;
     }
 
-    public void setData(List<DataEntity> data) {
+    public void setData(DataEntity data) {
         this.data = data;
     }
 

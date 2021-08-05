@@ -51,6 +51,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
     private CustomerDashboardViewLight dashFuelRate;
     private CustomerDashboardViewLight dashFuelRailPressure;
     public MyHandler mHandler;
+    private boolean isConnected;
 
     @SuppressWarnings("deprecation")
     @SuppressLint("HandlerLeak")
@@ -118,7 +119,9 @@ public class VehicleDashTwoActivity extends BaseActivity {
     }
 
     private void startCommand() {
-        boolean isConnected = MainApplication.getBluetoothSocket().isConnected();
+        if (MainApplication.getBluetoothSocket() != null) {
+            isConnected = MainApplication.getBluetoothSocket().isConnected();
+        }
         if (isConnected) {
             startThread();
         } else {
@@ -131,13 +134,6 @@ public class VehicleDashTwoActivity extends BaseActivity {
      */
     private void startThread() {
         CommandThread.start();
-        //runOnUiThread(new ObdsCommand());
-       /* AppExecutors.getInstance().scheduledExecutor().scheduleWithFixedDelay(() -> {
-            executeCommand(MainApplication.getBluetoothSocket(), getElpCommands());
-            if (ObdPreferences.get(getApplicationContext()).getServiceRunningStatus()) {
-                executeObdCommand(MainApplication.getBluetoothSocket(), getCommands());
-            }
-        }, 1, 1, TimeUnit.MILLISECONDS);*/
     }
 
     /**
@@ -159,7 +155,6 @@ public class VehicleDashTwoActivity extends BaseActivity {
         dashFuelPressure.setmHeaderText("kPa");
         dashFuelPressure.setmMax(800);
         dashFuelPressure.setmMin(0);
-
     }
 
     /**

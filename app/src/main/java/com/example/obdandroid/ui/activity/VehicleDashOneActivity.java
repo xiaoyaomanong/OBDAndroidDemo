@@ -53,6 +53,7 @@ public class VehicleDashOneActivity extends BaseActivity {
     private CheckRecord tripRecord;
     private final Thread mSpeedCommand = new Thread(new MySpeedCommand());
     public MyHandler mHandler;
+    private boolean isConnected;
 
     @SuppressWarnings("deprecation")
     @SuppressLint("HandlerLeak")
@@ -121,7 +122,9 @@ public class VehicleDashOneActivity extends BaseActivity {
     }
 
     private void startCommand() {
-        boolean isConnected = MainApplication.getBluetoothSocket().isConnected();
+        if (MainApplication.getBluetoothSocket() != null) {
+            isConnected = MainApplication.getBluetoothSocket().isConnected();
+        }
         if (isConnected) {
             startThread();
         } else {

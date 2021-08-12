@@ -158,9 +158,9 @@ public class ObdConfiguration {
         mObdCommands.add(new WidebandAirFuelRatioSevenCommand(modeTrim.buildObdCommand()));//"01 3A" 氧气侦测器7 燃油-空气当量比 电流
         mObdCommands.add(new WidebandAirFuelRatioEightCommand(modeTrim.buildObdCommand()));//"01 3B" 氧气侦测器8 燃油-空气当量比 电流
         mObdCommands.add(new CatalystTemperatureCommand(modeTrim.buildObdCommand(), CatalystTrim.Catalyst_Temperature_Bank_1_Sensor_1));//"01 3C" 催化剂温度:Bank1,感测器1
-        mObdCommands.add(new CatalystTemperatureCommand(modeTrim.buildObdCommand(), CatalystTrim.Catalyst_Temperature_Bank_2_Sensor_1));//"01 3C" 催化剂温度:Bank2,感测器1
-        mObdCommands.add(new CatalystTemperatureCommand(modeTrim.buildObdCommand(), CatalystTrim.Catalyst_Temperature_Bank_1_Sensor_2));//"01 3C" 催化剂温度:Bank1,感测器2
-        mObdCommands.add(new CatalystTemperatureCommand(modeTrim.buildObdCommand(), CatalystTrim.Catalyst_Temperature_Bank_2_Sensor_2));//"01 3C" 催化剂温度:Bank2,感测器2
+        mObdCommands.add(new CatalystTemperatureCommand(modeTrim.buildObdCommand(), CatalystTrim.Catalyst_Temperature_Bank_2_Sensor_1));//"01 3D" 催化剂温度:Bank2,感测器1
+        mObdCommands.add(new CatalystTemperatureCommand(modeTrim.buildObdCommand(), CatalystTrim.Catalyst_Temperature_Bank_1_Sensor_2));//"01 3E" 催化剂温度:Bank1,感测器2
+        mObdCommands.add(new CatalystTemperatureCommand(modeTrim.buildObdCommand(), CatalystTrim.Catalyst_Temperature_Bank_2_Sensor_2));//"01 3F" 催化剂温度:Bank2,感测器2
 
         mObdCommands.add(new AvailablePidsCommand_41_60());//
         mObdCommands.add(new ModuleVoltageCommand(modeTrim.buildObdCommand()));//"01 42" 模块控制组电压

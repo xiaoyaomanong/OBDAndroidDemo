@@ -268,12 +268,12 @@ public class PersonalFragment extends BaseFragment {
                         Glide.with(context).load(SERVER_URL + entity.getData().getLogo()).into(ivCarLogo);
                     }
                     if (entity.getData().getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
-                        tvOBDState.setText("  OBD 未绑定");
+                        tvOBDState.setText(" 未绑定");
                         Drawable drawable = context.getResources().getDrawable(R.drawable.icon_no);
                         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                         tvOBDState.setCompoundDrawables(drawable, null, null, null);
                     } else {
-                        tvOBDState.setText("  OBD 已绑定");
+                        tvOBDState.setText(" 已绑定");
                         Drawable drawable = context.getResources().getDrawable(R.drawable.icon_ok);
                         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                         tvOBDState.setCompoundDrawables(drawable, null, null, null);

@@ -23,6 +23,7 @@ public class Constant {
     public static final String IS_CHECK = "isCheckPwd";
     public static final String USER_NAME = "USER_NAME";
     public static final String PASSWORD = "PASSWORD";
+    public static final String VEHICLE_ID = "vehicleId";
     public static final String WX_TYPE = "1";
     public static final String ALIPAY_TYPE = "2";
     /**

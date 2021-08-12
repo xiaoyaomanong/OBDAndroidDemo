@@ -99,8 +99,7 @@ public class UpdatePwdActivity extends BaseActivity {
     private void updatePwd(String userId, String newPwd) {
         btnUpdatePwd.setProgress(0);
         new Handler().postDelayed(() -> btnUpdatePwd.setProgress(50), 3000);
-        OkHttpUtils.post().
-                url(SERVER_URL + UPDATE_PASSWORD_URL).
+        OkHttpUtils.post().url(SERVER_URL + UPDATE_PASSWORD_URL).
                 addParam("userId", userId).
                 addParam("phoneNum", "").
                 addParam("newPwd", newPwd).

@@ -1,6 +1,5 @@
 package com.example.obdandroid.base;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.example.obdandroid.R;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.activity.LoginActivity;
 import com.example.obdandroid.ui.entity.UserLoginEntity;
@@ -20,14 +18,10 @@ import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.StringUtil;
-import com.hacknife.immersive.Immersive;
 import com.kongzue.dialog.v2.TipDialog;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
-import org.greenrobot.eventbus.EventBus;
-
-import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.Set;
 
@@ -197,14 +191,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (msg.equals("token失效，请重新登录")) {
             new CustomeDialog(context, "你的账号已在其他设备登录或登录时间过长,请检查重新登录", confirm -> {
                 if (confirm) {
-                    if (spUtil.getBoolean(IS_CHECK, false)) {
-                        String UserName = spUtil.getString(USER_NAME, "");
-                        String Pwd = spUtil.getString(PASSWORD, "");
-                        userLogin(UserName, Pwd, "1", "", "");
-                    } else {
-                        JumpUtil.startAct(context, LoginActivity.class);
-                        ActivityManager.getInstance().finishActivitys();
-                    }
+                    JumpUtil.startAct(context, LoginActivity.class);
+                    ActivityManager.getInstance().finishActivitys();
                 }
             }).setPositiveButton("确定").setTitle("提示").show();
         } else if (msg.equals("未知异常，请联系管理员")) {
@@ -223,45 +211,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * @param mobile           手机号
-     * @param password         密码
-     * @param loginType        登录类型
-     * @param verificationCode 验证码
-     *                         用户登录
-     */
-    private void userLogin(String mobile, String password, String loginType, String verificationCode, String taskID) {
-        OkHttpUtils.post().url(SERVER_URL + LOGIN_URL).
-                addParam("mobile", mobile).
-                addParam("password", password).
-                addParam("loginType", loginType).
-                addParam("verificationCode", verificationCode).
-                addParam("taskID", taskID).
-                build().execute(new StringCallback() {
-            @Override
-            public void onError(Call call, Response response, Exception e, int id) {
-
-            }
-
-            @Override
-            public void onResponse(String response, int id) {
-                UserLoginEntity entity = JSON.parseObject(response, UserLoginEntity.class);
-                if (entity.isSuccess()) {
-                    spUtil.put(USER_NAME, mobile);
-                    spUtil.put(Constant.IS_LOGIN, true);
-                    spUtil.put(TOKEN, entity.getData().getToken());
-                    spUtil.put(USER_ID, String.valueOf(entity.getData().getUserId()));
-                    spUtil.put(EXPIRE_TIME, AppDateUtils.dealDateFormat(entity.getData().getExpireTime()));
-                    setToken(entity.getData().getToken());
-                    setExpireTime(AppDateUtils.dealDateFormat(entity.getData().getExpireTime()));
-                    setPhone(mobile);
-                    setUserId(String.valueOf(entity.getData().getUserId()));
-                } else {
-                    showToast(entity.getMessage());
-                }
-            }
-        });
-    }
 
     /**
      * @param list 数据集

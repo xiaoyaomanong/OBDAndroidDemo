@@ -139,7 +139,6 @@ public class VehicleDashOneActivity extends BaseActivity {
         mSpeedCommand.start();
     }
 
-
     /**
      * 中止线程
      */

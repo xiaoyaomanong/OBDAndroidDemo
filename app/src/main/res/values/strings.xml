@@ -298,4 +298,9 @@
     <string name="servicePhone">人工客服</string>
     <string name="_0931_4896234">0931-4896234</string>
     <string name="dialog_agree_title">用户协议与隐私政策</string>
+    <string name="connTip">当前设备已连接</string>
+    <string name="connNot">当前车辆绑定设备,与连接的设备不一致</string>
+    <string name="conOk">已连接</string>
+    <string name="conNo">未连接</string>
+    <string name="blueTitle">已配对蓝牙设备</string>
 </resources>

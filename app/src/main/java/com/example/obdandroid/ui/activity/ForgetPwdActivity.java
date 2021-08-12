@@ -203,6 +203,7 @@ public class ForgetPwdActivity extends BaseLoginActivity {
     }
 
     /**
+     * @param phoneNum 手机号码
      * @param newPwd 新密码
      *               修改密码
      */

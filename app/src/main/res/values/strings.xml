@@ -303,4 +303,16 @@
     <string name="conOk">已连接</string>
     <string name="conNo">未连接</string>
     <string name="blueTitle">已配对蓝牙设备</string>
+    <string name="device_onbind_no">设备未绑定</string>
+    <string name="device_onbind_ok">设备已绑定</string>
+    <string name="onbindTip">您已经绑定车辆,请选择检测车辆！</string>
+    <string name="device_no_conn">设备未连接,请连接设备</string>
+    <string name="pleaseBuy">请购买服务</string>
+    <string name="PAY_SUCCESS">支付成功</string>
+    <string name="ALI_RESULT_8000">正在处理中,支付结果未知(有可能已经支付成功),请查询商户订单列表中订单的支付状态</string>
+    <string name="ALI_RESULT_5000">重复请求</string>
+    <string name="ALI_RESULT_6002">网络连接出错</string>
+    <string name="ALI_RESULT_6004">支付结果未知（有可能已经支付成功），请查询商户订单列表中订单的支付状态</string>
+    <string name="ALI_RESULT_6001">用户中途取消</string>
+    <string name="ALI_RESULT_4000">订单支付失败</string>
 </resources>

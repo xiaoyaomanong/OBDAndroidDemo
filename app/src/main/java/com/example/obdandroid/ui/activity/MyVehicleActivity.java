@@ -37,6 +37,8 @@ import okhttp3.Response;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.Vehicle_URL;
 import static com.example.obdandroid.config.APIConfig.deleteVehicle_URL;
+import static com.example.obdandroid.config.Constant.OBD_ACTION;
+import static com.example.obdandroid.config.Constant.VEHICLE_ID;
 
 /**
  * 作者：Jealous
@@ -122,10 +124,10 @@ public class MyVehicleActivity extends BaseActivity {
                         adapter.notifyDataSetChanged();
                         //单选
                         adapter.singlesel(position);
-                        spUtil.remove("vehicleId");
-                        spUtil.put("vehicleId", String.valueOf(entity.getVehicleId()));
-                        Intent intent = new Intent("com.android.ObdCar");//创建发送广播的Action
-                        intent.putExtra("vehicleId", String.valueOf(entity.getVehicleId()));//发送携带的数据
+                        spUtil.remove(VEHICLE_ID);
+                        spUtil.put(VEHICLE_ID, String.valueOf(entity.getVehicleId()));
+                        Intent intent = new Intent(OBD_ACTION);//创建发送广播的Action
+                        intent.putExtra(VEHICLE_ID, String.valueOf(entity.getVehicleId()));//发送携带的数据
                         intent.putExtra("type", "2");
                         mLocalBroadcastManager.sendBroadcast(intent);                               //发送本地广播
                         finish();
@@ -140,7 +142,7 @@ public class MyVehicleActivity extends BaseActivity {
                     @Override
                     public void Confirm(AlertDialog exitDialog, boolean confirm) {
                         if (confirm) {
-                            if (String.valueOf(entity.getVehicleId()).equals(spUtil.getString("vehicleId", ""))) {
+                            if (String.valueOf(entity.getVehicleId()).equals(spUtil.getString(VEHICLE_ID, ""))) {
                                 showToast("该车辆已被选中为默认车辆,暂时无法删除");
                             } else {
                                 deleteVehicle(getToken(), getUserId(), String.valueOf(entity.getVehicleId()));
@@ -165,11 +167,6 @@ public class MyVehicleActivity extends BaseActivity {
             @Override
             public void onLeftClick(View v) {
                 finish();
-               /* if (TextUtils.isEmpty(spUtil.getString("vehicleId", ""))) {
-                    showTipDialog("您还未选择检测车辆,请选择一辆车");
-                } else {
-                    finish();
-                }*/
             }
 
             @Override

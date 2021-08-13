@@ -6,15 +6,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -36,7 +32,6 @@ import com.example.obdandroid.ui.activity.RechargeRecordActivity;
 import com.example.obdandroid.ui.activity.RechargeSetMealActivity;
 import com.example.obdandroid.ui.activity.UpdatePwdActivity;
 import com.example.obdandroid.ui.activity.VehicleInfoActivity;
-import com.example.obdandroid.ui.entity.RechargeRecordEntity;
 import com.example.obdandroid.ui.entity.UserCurrentRechargeEntity;
 import com.example.obdandroid.ui.entity.UserInfoEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
@@ -46,7 +41,6 @@ import com.example.obdandroid.utils.ActivityManager;
 import com.example.obdandroid.utils.BitMapUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
-import com.hjq.bar.TitleBar;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -55,10 +49,11 @@ import okhttp3.Response;
 
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.USER_INFO_URL;
-import static com.example.obdandroid.config.APIConfig.getRechargeRecordPageList_URL;
 import static com.example.obdandroid.config.APIConfig.getTheUserCurrentRecharge_URL;
 import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
 import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
+import static com.example.obdandroid.config.Constant.OBD_ACTION;
+import static com.example.obdandroid.config.Constant.VEHICLE_ID;
 
 /**
  * 作者：Jealous
@@ -102,8 +97,6 @@ public class PersonalFragment extends BaseFragment {
         LinearLayout llHistoryRecord = getView(R.id.ll_history_record);
         LinearLayout llBuyHistory = getView(R.id.ll_buy_history);
         LinearLayout llFaceBack = getView(R.id.ll_faceBack);
-        LinearLayout llVersion = getView(R.id.ll_Version);
-        LinearLayout llHelp = getView(R.id.ll_help);
         LinearLayout llAbout = getView(R.id.ll_about);
         Button btnLogout = getView(R.id.btnLogout);
         tvName = getView(R.id.tvName);
@@ -119,7 +112,7 @@ public class PersonalFragment extends BaseFragment {
         refresh = getView(R.id.refresh);
         ivVip = getView(R.id.ivVip);
         spUtil = new SPUtil(context);
-        String vehicleId = spUtil.getString("vehicleId", "");
+        String vehicleId = spUtil.getString(VEHICLE_ID, "");
         initReceiver();
         getUserInfo(getUserId(), getToken());
         getTheUserCurrentRecharge(getUserId(), getToken());
@@ -151,7 +144,7 @@ public class PersonalFragment extends BaseFragment {
                         if (confirm) {
                             spUtil.put(CONNECT_BT_KEY, "OFF");
                             spUtil.put(Constant.IS_LOGIN, false);
-                            spUtil.remove("vehicleId");
+                            spUtil.remove(VEHICLE_ID);
                             JumpUtil.startAct(context, LoginActivity.class);
                             try {
                                 ActivityManager.getInstance().finishActivitys();
@@ -285,16 +278,21 @@ public class PersonalFragment extends BaseFragment {
 
     private void initReceiver() {
         lm = LocalBroadcastManager.getInstance(context);
-        IntentFilter intentFilter = new IntentFilter("com.android.ObdCar");
+        IntentFilter intentFilter = new IntentFilter(OBD_ACTION);
         testReceiver = new TestReceiver();
         lm.registerReceiver(testReceiver, intentFilter);
+    }
+
+    @Override
+    public void refresh(boolean f) {
+
     }
 
     private class TestReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String vehicleId = intent.getStringExtra("vehicleId");
+            String vehicleId = intent.getStringExtra(VEHICLE_ID);
             getVehicleInfoById(getToken(), vehicleId);
         }
     }

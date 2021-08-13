@@ -117,6 +117,11 @@ public class MsgFragment extends BaseFragment {
         mLocalBroadcastManager.registerReceiver(receiver, intentFilter);
     }
 
+    @Override
+    public void refresh(boolean f) {
+
+    }
+
     private class RemindReceiver extends BroadcastReceiver {
 
         @Override
@@ -145,7 +150,6 @@ public class MsgFragment extends BaseFragment {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("获取用户消息列表:" + response);
                 RemindPageEntity entity = JSON.parseObject(response, RemindPageEntity.class);
                 if (entity.isSuccess()) {
                     isLoadMore = Integer.parseInt(pageNum) <= entity.getData().getPages();

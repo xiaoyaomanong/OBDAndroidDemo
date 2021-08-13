@@ -24,8 +24,18 @@ public class Constant {
     public static final String USER_NAME = "USER_NAME";
     public static final String PASSWORD = "PASSWORD";
     public static final String VEHICLE_ID = "vehicleId";
-    public static final String WX_TYPE = "1";
-    public static final String ALIPAY_TYPE = "2";
+    public static final String WX_PAY_TYPE = "1";
+    public static final String ALI_PAY_TYPE = "2";
+    public static final String OBD_ACTION = "com.android.ObdCar";
+    public static final String PAY_ACTION = "com.obd.pay";
+    public static final String RECORD_ACTION = "com.android.Record";
+    public static final String ALI_RESULT_9000 = "9000";
+    public static final String ALI_RESULT_8000 = "8000";
+    public static final String ALI_RESULT_5000 = "5000";
+    public static final String ALI_RESULT_6002 = "6002";
+    public static final String ALI_RESULT_6004 = "6004";
+    public static final String ALI_RESULT_6001 = "6001";
+    public static final String ALI_RESULT_4000 = "4000";
     /**
      * 蓝牙UUID
      */
@@ -38,42 +48,11 @@ public class Constant {
     public static final int BLUE_TOOTH_SEARTH = BLUE_TOOTH_CLOSE + 1;
     //被搜索蓝牙
     public static final int BLUE_TOOTH_MY_SEARTH = BLUE_TOOTH_SEARTH + 1;
-    //关闭蓝牙连接
-    public static final int BLUE_TOOTH_CLEAR = BLUE_TOOTH_MY_SEARTH + 1;
-
-    public static final String PROTOCOLS_LIST_KEY = "obd_protocols_preference";
-
 
     /**
      * 从蓝牙聊天服务处理程序发送的消息类型
      */
-    public static final int MESSAGE_STATE_CHANGE = 1;
-    public static final int MESSAGE_DEVICE_NAME = 4;
-    public static final int MESSAGE_TOAST = 5;
     public static final int REQUEST_ENABLE_BT = 3;
-    public static final int MESSAGE_UPDATE_VIEW = 7;
-    public static final int MESSAGE_UPDATE_OBD = 15;
-    public static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
-    /**
-     * 显示更新之间的间隔时间，以表示数据更改
-     */
-    public static final int DISPLAY_UPDATE_TIME = 250;
-    /**
-     * 首选项的键名
-     */
-    public static final String DEVICE_NAME = "device_name";
-    public static final String DEVICE_ADDRESS = "device_address";
-    public static final String DEVICE_SOCKET = "device_socket";
-    public static final String TOAST = "toast";
-    public static final String OBD_DATA = "obdData";
-
-    public static final String OBD_UPDATE_PERIOD_KEY = "obd_update_period_preference";
-    public static final String GPS_UPDATE_PERIOD_KEY = "gps_update_period_preference";
-    public static final String GPS_DISTANCE_PERIOD_KEY = "gps_distance_period_preference";
-    public static final String IMPERIAL_UNITS_KEY = "imperial_units_preference";
-    public static final String ENABLE_GPS_KEY = "enable_gps_preference";
     public static final String CONNECT_BT_KEY = "connect_bt_preference";
-    public static final String BT_NAME_KEY = "bt_name_preference";
-    public static final String BT_ADDRESS_KEY = "bt_address_preference";
 
 }

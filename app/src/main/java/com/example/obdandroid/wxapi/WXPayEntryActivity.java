@@ -16,6 +16,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import static com.example.obdandroid.config.Constant.PAY_ACTION;
 import static com.example.obdandroid.ui.wechatPay.WeiXinConstants.MEAL_ID;
 import static com.example.obdandroid.ui.wechatPay.WeiXinConstants.ORDER_NO;
 import static com.example.obdandroid.ui.wechatPay.WeiXinConstants.PAY_MONEY;
@@ -89,7 +90,7 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
     }
 
     private void sendBroadCast(String status, String orderNo) {
-        Intent intent = new Intent("com.obd.pay");//创建发送广播的Action
+        Intent intent = new Intent(PAY_ACTION);//创建发送广播的Action
         intent.putExtra("payResult", status);//支付结果
         intent.putExtra("orderNo", orderNo);//支付金额
         mLocalBroadcastManager.sendBroadcast(intent); //发送本地广播

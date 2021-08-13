@@ -30,6 +30,7 @@ import okhttp3.Response;
 
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
+import static com.example.obdandroid.config.Constant.VEHICLE_ID;
 
 /**
  * 作者：Jealous
@@ -121,7 +122,7 @@ public class VehicleInfoActivity extends BaseActivity {
             @Override
             public void onRightClick(View v) {
                 Intent intent = new Intent(context, ModifyVehicleActivity.class);
-                intent.putExtra("vehicleId", vehicleId);
+                intent.putExtra(VEHICLE_ID, vehicleId);
                 startActivity(intent);
             }
         });
@@ -197,7 +198,7 @@ public class VehicleInfoActivity extends BaseActivity {
         tvYearManufacture.setText(checkNull(entity.getYearManufacture()));
         layoutBind.setOnClickListener(v -> {
             Intent intent = new Intent(context, BindBluetoothDeviceActivity.class);
-            intent.putExtra("vehicleId", String.valueOf(entity.getVehicleId()));
+            intent.putExtra(VEHICLE_ID, String.valueOf(entity.getVehicleId()));
             startActivityForResult(intent, 100);
         });
     }

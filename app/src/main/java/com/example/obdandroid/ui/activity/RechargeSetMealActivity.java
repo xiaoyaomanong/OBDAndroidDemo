@@ -51,6 +51,16 @@ import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.addRechargeRecordCheck_URL;
 import static com.example.obdandroid.config.APIConfig.placeAnOrder_URL;
 import static com.example.obdandroid.config.APIConfig.updateRechargeRecord_URL;
+import static com.example.obdandroid.config.Constant.ALI_RESULT_4000;
+import static com.example.obdandroid.config.Constant.ALI_RESULT_5000;
+import static com.example.obdandroid.config.Constant.ALI_RESULT_6001;
+import static com.example.obdandroid.config.Constant.ALI_RESULT_6002;
+import static com.example.obdandroid.config.Constant.ALI_RESULT_6004;
+import static com.example.obdandroid.config.Constant.ALI_RESULT_8000;
+import static com.example.obdandroid.config.Constant.ALI_RESULT_9000;
+import static com.example.obdandroid.config.Constant.OBD_ACTION;
+import static com.example.obdandroid.config.Constant.PAY_ACTION;
+import static com.example.obdandroid.config.Constant.VEHICLE_ID;
 import static com.example.obdandroid.ui.wechatPay.WeiXinConstants.MEAL_ID;
 import static com.example.obdandroid.ui.wechatPay.WeiXinConstants.ORDER_NO;
 import static com.example.obdandroid.ui.wechatPay.WeiXinConstants.PACKAGE_VALUE;
@@ -72,7 +82,7 @@ public class RechargeSetMealActivity extends BaseActivity {
     private final List<ChargeMealEntity.DataEntity.ListEntity> datas = new ArrayList<>();
     private CircularProgressButton btnBuy;
     private String rechargeSetMealSettingsId = "";
-    private String rechargetAmount = "0";
+    private String rechargeAmount = "0";
     private String order_no = "";
     private IWXAPI wxApi;
     private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
@@ -84,48 +94,47 @@ public class RechargeSetMealActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             if (msg.what == SDK_PAY_FLAG) {
                 PayResult payResult = new PayResult((Map<String, String>) msg.obj);
-                LogE("payResult:" + payResult);
                 //对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
                 String resultInfo = payResult.getResult();// 同步返回需要验证的信息
                 String resultStatus = payResult.getResultStatus();
                 // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                 switch (resultStatus) {
-                    case "9000":
+                    case ALI_RESULT_9000:
                         AlipayResultEntity entity = JSON.parseObject(resultInfo, AlipayResultEntity.class);
-                        new CustomeDialog(context, "支付成功", confirm -> {
+                        new CustomeDialog(context, getString(R.string.PAY_SUCCESS), confirm -> {
                             if (confirm) {
                                 btnBuy.setProgress(100);
                                 updateRechargeRecord(entity.getAlipay_trade_app_pay_response().getOut_trade_no(), "1", getToken());
                             }
                         }).setTitle("支付结果").setPositiveButton("知道了").show();
                         break;
-                    case "8000":
+                    case ALI_RESULT_8000:
                         btnBuy.setProgress(-1);
-                        showTipsDialog("正在处理中,支付结果未知(有可能已经支付成功),请查询商户订单列表中订单的支付状态", TipDialog.TYPE_WARNING);
+                        showTipsDialog(getString(R.string.ALI_RESULT_8000), TipDialog.TYPE_WARNING);
                         break;
-                    case "5000":
+                    case ALI_RESULT_5000:
                         btnBuy.setProgress(-1);
-                        showTipsDialog("重复请求", TipDialog.TYPE_WARNING);
+                        showTipsDialog(getString(R.string.ALI_RESULT_5000), TipDialog.TYPE_WARNING);
                         break;
-                    case "6002":
+                    case ALI_RESULT_6002:
                         btnBuy.setProgress(-1);
-                        showTipsDialog("网络连接出错", TipDialog.TYPE_WARNING);
+                        showTipsDialog(getString(R.string.ALI_RESULT_6002), TipDialog.TYPE_WARNING);
                         break;
-                    case "6004":
+                    case ALI_RESULT_6004:
                         btnBuy.setProgress(-1);
-                        showTipsDialog("支付结果未知（有可能已经支付成功），请查询商户订单列表中订单的支付状态", TipDialog.TYPE_WARNING);
+                        showTipsDialog(getString(R.string.ALI_RESULT_6004), TipDialog.TYPE_WARNING);
                         break;
-                    case "6001":
-                        new CustomeDialog(context, "用户中途取消", confirm -> {
+                    case ALI_RESULT_6001:
+                        new CustomeDialog(context, getString(R.string.ALI_RESULT_6001), confirm -> {
                             if (confirm) {
                                 btnBuy.setProgress(-1);
                                 updateRechargeRecord(order_no, "3", getToken());
                             }
                         }).setTitle("支付结果").setPositiveButton("知道了").show();
                         break;
-                    case "4000":
+                    case ALI_RESULT_4000:
                     default:
-                        new CustomeDialog(context, "订单支付失败", confirm -> {
+                        new CustomeDialog(context, getString(R.string.ALI_RESULT_4000), confirm -> {
                             if (confirm) {
                                 btnBuy.setProgress(-1);
                                 updateRechargeRecord(order_no, "2", getToken());
@@ -156,7 +165,7 @@ public class RechargeSetMealActivity extends BaseActivity {
         btnBuy = findViewById(R.id.btnBuy);
         wxApi = WXAPIFactory.createWXAPI(context, WeiXinConstants.APP_ID);
         spUtil = new SPUtil(context);
-        vehicleId = spUtil.getString("vehicleId", "");
+        vehicleId = spUtil.getString(VEHICLE_ID, "");
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(context);//广播变量管理器获
         recycleMeal.setLinearLayout();
         //设置是否可以下拉刷新
@@ -192,7 +201,7 @@ public class RechargeSetMealActivity extends BaseActivity {
         });
         adapter.setClickCallBack(entity -> {
             rechargeSetMealSettingsId = String.valueOf(entity.getRechargeSetMealSettingsId());
-            rechargetAmount = String.valueOf(entity.getRechargeSetMeaAmount());
+            rechargeAmount = String.valueOf(entity.getRechargeSetMeaAmount());
         });
         btnBuy.setIndeterminateProgressMode(true);
         btnBuy.setOnClickListener(v -> {
@@ -200,7 +209,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                 showTipsDialog("请选择套餐类型", TipDialog.TYPE_ERROR);
                 return;
             }
-            if (TextUtils.isEmpty(rechargetAmount)) {
+            if (TextUtils.isEmpty(rechargeAmount)) {
                 showTipsDialog("请选择套餐类型", TipDialog.TYPE_ERROR);
                 return;
             }
@@ -208,7 +217,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                 @Override
                 public void aliPay(AlertDialog exitDialog, String channel, boolean confirm) {
                     if (confirm) {//2
-                        addRechargeRecordCheck(getToken(), getUserId(), rechargetAmount, rechargeSetMealSettingsId, channel);
+                        addRechargeRecordCheck(getToken(), getUserId(), rechargeAmount, rechargeSetMealSettingsId, channel);
                         exitDialog.dismiss();
                     }
                 }
@@ -216,7 +225,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                 @Override
                 public void weChat(AlertDialog exitDialog, String channel, boolean confirm) {
                     if (confirm) {//1
-                        addRechargeRecordCheck(getToken(), getUserId(), rechargetAmount, rechargeSetMealSettingsId, channel);
+                        addRechargeRecordCheck(getToken(), getUserId(), rechargeAmount, rechargeSetMealSettingsId, channel);
                         exitDialog.dismiss();
                     }
                 }
@@ -227,7 +236,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                         exitDialog.dismiss();
                     }
                 }
-            }).setMoney(rechargetAmount).showDialog();
+            }).setMoney(rechargeAmount).showDialog();
 
         });
         initReceiver();
@@ -253,7 +262,7 @@ public class RechargeSetMealActivity extends BaseActivity {
      * 注册本地广播
      */
     private void initReceiver() {
-        IntentFilter intentFilter = new IntentFilter("com.obd.pay");
+        IntentFilter intentFilter = new IntentFilter(PAY_ACTION);
         PayResultReceiver receiver = new PayResultReceiver();
         //绑定
         mLocalBroadcastManager.registerReceiver(receiver, intentFilter);
@@ -284,7 +293,7 @@ public class RechargeSetMealActivity extends BaseActivity {
             @Override
             public void onResponse(String response, int id) {
                 switch (paymentChannels) {
-                    case Constant.WX_TYPE:
+                    case Constant.WX_PAY_TYPE:
                         WxOrderEntity entity = JSON.parseObject(response, WxOrderEntity.class);
                         if (entity.isSuccess()) {
                             payToWx(entity, amount);
@@ -292,11 +301,11 @@ public class RechargeSetMealActivity extends BaseActivity {
                             showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
                         }
                         break;
-                    case Constant.ALIPAY_TYPE:
+                    case Constant.ALI_PAY_TYPE:
                         AlipayOrderEntity orderEntity = JSON.parseObject(response, AlipayOrderEntity.class);
                         if (orderEntity.isSuccess()) {
                             order_no = orderEntity.getData().getOrder_no();
-                            payToaliPay(orderEntity.getData().getOrderStr().getBody());
+                            payToAliPay(orderEntity.getData().getOrderStr().getBody());
                         } else {
                             showTipsDialog(orderEntity.getMessage(), TipDialog.TYPE_ERROR);
                         }
@@ -333,11 +342,10 @@ public class RechargeSetMealActivity extends BaseActivity {
      *
      * @param orderInfo 支付参数
      */
-    public void payToaliPay(String orderInfo) {
+    public void payToAliPay(String orderInfo) {
         final Runnable payRunnable = () -> {
-            PayTask alipay = new PayTask(this);
-            Map<String, String> result = alipay.payV2(orderInfo, true);
-
+            PayTask payTask = new PayTask(this);
+            Map<String, String> result = payTask.payV2(orderInfo, true);
             Message msg = new Message();
             msg.what = SDK_PAY_FLAG;
             msg.obj = result;
@@ -403,8 +411,8 @@ public class RechargeSetMealActivity extends BaseActivity {
                 if (entity.isSuccess()) {
                     setResult(102, new Intent());
                     finish();
-                    Intent intent = new Intent("com.android.ObdCarPay");
-                    intent.putExtra("vehicleId", vehicleId);
+                    Intent intent = new Intent(OBD_ACTION);
+                    intent.putExtra(VEHICLE_ID, vehicleId);
                     intent.putExtra("type", "1");
                     mLocalBroadcastManager.sendBroadcast(intent);
                 } else {

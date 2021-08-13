@@ -70,6 +70,8 @@ import static com.example.obdandroid.config.APIConfig.addRemind_URL;
 import static com.example.obdandroid.config.APIConfig.addTestRecord_URL;
 import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
 import static com.example.obdandroid.config.APIConfig.reduceAndCumulativeFrequency_URL;
+import static com.example.obdandroid.config.Constant.RECORD_ACTION;
+import static com.example.obdandroid.config.Constant.VEHICLE_ID;
 
 /**
  * 作者：Jealous
@@ -119,7 +121,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 ivNext.setVisibility(View.VISIBLE);
                 tvOBDState.setVisibility(View.GONE);
                 showResult(tripRecord.getTripMap());
-                addTestRecord(spUtil.getString("vehicleId", ""), JSON.toJSONString(tripRecord.getOBDJson()), getUserId(), getToken());
+                addTestRecord(spUtil.getString(VEHICLE_ID, ""), JSON.toJSONString(tripRecord.getOBDJson()), getUserId(), getToken());
                 reduceAndCumulativeFrequency(getToken(), getUserId());
                 layoutLook.setOnClickListener(v -> {
                     Intent intent = new Intent(context, CheckReportActivity.class);
@@ -131,7 +133,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 showTipDialog("故障码清除成功", TipDialog.TYPE_FINISH);
                 titleBar.setRightTitle("");
                 dialogUtils.dismiss();
-                Intent intent = new Intent("com.android.Record");//创建发送广播的Action
+                Intent intent = new Intent(RECORD_ACTION);//创建发送广播的Action
                 localBroadcastManager.sendBroadcast(intent);  //发送本地广播
             }
             if (msg.what == COMPLETEO) {
@@ -181,7 +183,7 @@ public class VehicleCheckActivity extends BaseActivity {
         // 设定每升汽油价格，以便计算汽油成本。默认值为7$/l
         float gasPrice = 7; // 每升，你应该根据你的要求初始化。
         ObdPreferences.get(context).setGasPrice(gasPrice);
-        getVehicleInfoById(getToken(), spUtil.getString("vehicleId", ""));
+        getVehicleInfoById(getToken(), spUtil.getString(VEHICLE_ID, ""));
         boolean isConn = MainApplication.getBluetoothSocket().isConnected();
         if (isConn) {
             tvOBDState.setText("设备已连接,请进行检测");
@@ -405,7 +407,7 @@ public class VehicleCheckActivity extends BaseActivity {
             public void onResponse(String response, int id) {
                 AddTestRecordEntity entity = JSON.parseObject(response, AddTestRecordEntity.class);
                 if (entity.isSuccess()) {
-                    Intent intent = new Intent("com.android.Record");//创建发送广播的Action
+                    Intent intent = new Intent(RECORD_ACTION);//创建发送广播的Action
                     localBroadcastManager.sendBroadcast(intent);  //发送本地广播
                     addRemind(getUserId(), addJsonContent(entity.getData(), tripRecord.getOBDJson()), getToken(), String.valueOf(entity.getData().getId()));
                 }

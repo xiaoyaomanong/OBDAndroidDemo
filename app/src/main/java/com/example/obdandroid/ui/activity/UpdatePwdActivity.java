@@ -118,11 +118,6 @@ public class UpdatePwdActivity extends BaseActivity {
                     new CustomeDialog(context, "密码修改成功,需要重新登录！", confirm -> {
                         if (confirm) {
                             JumpUtil.startAct(mContext, LoginActivity.class);
-                            try {
-                                ActivityManager.getInstance().finishActivitys();
-                            } catch (Exception e) {
-                                LogE("该服务未注册");
-                            }
                         }
                     }).setPositiveButton("确定").setTitle("提示").show();
                 } else {

@@ -31,6 +31,7 @@ import java.util.Set;
 
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.addTestRecord_URL;
+import static com.example.obdandroid.config.Constant.VEHICLE_ID;
 
 /**
  * 作者：Jealous
@@ -51,7 +52,7 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.context = context;
         inflater = LayoutInflater.from(context);
         SPUtil spUtil = new SPUtil(context);
-        vehicleId = spUtil.getString("vehicleId", "");
+        vehicleId = spUtil.getString(VEHICLE_ID, "");
     }
 
     public void setClickCallBack(OnClickCallBack clickCallBack) {
@@ -66,11 +67,7 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.list = list;
         map = new HashMap<>();
         for (int i = 0; i < list.size(); i++) {
-            if (vehicleId.equals(String.valueOf(list.get(i).getVehicleId()))) {
-                map.put(i, true);
-            } else {
-                map.put(i, false);
-            }
+            map.put(i, vehicleId.equals(String.valueOf(list.get(i).getVehicleId())));
         }
     }
 
@@ -202,5 +199,4 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         list.addAll(lists);
         notifyDataSetChanged();
     }
-
 }

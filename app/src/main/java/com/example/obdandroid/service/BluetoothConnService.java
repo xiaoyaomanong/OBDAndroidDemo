@@ -15,22 +15,18 @@ import com.example.obdandroid.utils.BltManagerUtils;
  */
 public class BluetoothConnService extends Service {
     private final Intent intent = new Intent("com.example.obd.RECEIVER");
-    public static final String ACTION = "com.example.obd.MSG_ACTION";
 
     /**
      * 连接蓝牙
      */
     public void startConn(String address) {
         BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
-      /*  new Thread(() ->
+        new Thread(() ->
                 BltManagerUtils.getInstance().createBond(device, (code, msg) -> {
                     intent.putExtra("code", code);
+                    intent.putExtra("address", address);
                     sendBroadcast(intent);
-                })).start();*/
-        BltManagerUtils.getInstance().createBond(device, (code, msg) -> {
-            intent.putExtra("code", code);
-            sendBroadcast(intent);
-        });
+                })).start();
     }
 
 

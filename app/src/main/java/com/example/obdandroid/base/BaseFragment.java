@@ -5,6 +5,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.config.Constant;
+import com.example.obdandroid.listener.RefreshCallBack;
 import com.example.obdandroid.ui.activity.LoginActivity;
 import com.example.obdandroid.ui.entity.BluetoothDeviceEntity;
 import com.example.obdandroid.ui.entity.UserLoginEntity;
@@ -53,7 +56,7 @@ import static com.example.obdandroid.config.Constant.USER_NAME;
  * 日期：2018/11/2 0002 15:44
  * Fragment封装基类
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements RefreshCallBack{
     private static final String TAG = BaseFragment.class.getSimpleName();
     protected BaseActivity mActivity; // 宿主Activity
     private final SparseArray<View> mViews = new SparseArray<View>();
@@ -258,12 +261,14 @@ public abstract class BaseFragment extends Fragment {
 
     public void dialogError(final Context context, final String msg) {
         if (msg.equals("token失效，请重新登录")) {
-            new CustomeDialog(context, "你的账号已在其他设备登录或登录时间过长,请检查重新登录", confirm -> {
-                if (confirm) {
-                    JumpUtil.startAct(context, LoginActivity.class);
-                    ActivityManager.getInstance().finishActivitys();
-                }
-            }).setPositiveButton("确定").setTitle("提示").show();
+            if (spUtil.getBoolean(IS_CHECK, false)) {
+                String userNameValue = spUtil.getString(USER_NAME, "");
+                String passwordValue = spUtil.getString(PASSWORD, "");
+                userLogin(userNameValue, passwordValue);
+            } else {
+                JumpUtil.startAct(context, LoginActivity.class);
+                ActivityManager.getInstance().finishActivitys();
+            }
         } else if (msg.equals("未知异常，请联系管理员")) {
             new CustomeDialog(context, msg, confirm -> {
                 if (confirm) {
@@ -276,6 +281,43 @@ public abstract class BaseFragment extends Fragment {
 
             }).setPositiveButton("确定").setTitle("提示").show();
         }
+    }
+
+    /**
+     * @param mobile   手机号
+     * @param password 密码
+     */
+    private void userLogin(String mobile, String password) {
+        OkHttpUtils.post().url(SERVER_URL + LOGIN_URL).
+                addParam("mobile", mobile).
+                addParam("password", password).
+                addParam("loginType", "1").
+                addParam("verificationCode", "").
+                addParam("taskID", "").
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                UserLoginEntity entity = JSON.parseObject(response, UserLoginEntity.class);
+                if (entity.isSuccess()) {
+                    //记住用户名、密码、
+                    spUtil.put(PASSWORD, password);
+                    spUtil.put(USER_NAME, mobile);
+                    spUtil.put(Constant.IS_LOGIN, true);
+                    spUtil.put(TOKEN, entity.getData().getToken());
+                    spUtil.put(USER_ID, String.valueOf(entity.getData().getUserId()));
+                    spUtil.put(EXPIRE_TIME, AppDateUtils.dealDateFormat(entity.getData().getExpireTime()));
+                    setUserId(String.valueOf(entity.getData().getUserId()));
+                    setPhone(mobile);
+                    setToken(entity.getData().getToken());
+                    refresh(true);
+                }
+            }
+        });
     }
 
     /**

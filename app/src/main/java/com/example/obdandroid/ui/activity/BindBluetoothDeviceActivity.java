@@ -37,6 +37,7 @@ import okhttp3.Response;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.bindingVehicle_URL;
 import static com.example.obdandroid.config.Constant.REQUEST_ENABLE_BT;
+import static com.example.obdandroid.config.Constant.VEHICLE_ID;
 
 /**
  * 作者：Jealous
@@ -63,7 +64,7 @@ public class BindBluetoothDeviceActivity extends BaseActivity {
     public void initView() {
         super.initView();
         context = this;
-        vehicleId = getIntent().getStringExtra("vehicleId");
+        vehicleId = getIntent().getStringExtra(VEHICLE_ID);
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         recycleBluetoothDevice = findViewById(R.id.recycle_BluetoothDevice);
         LinearLayoutManager manager = new LinearLayoutManager(context);

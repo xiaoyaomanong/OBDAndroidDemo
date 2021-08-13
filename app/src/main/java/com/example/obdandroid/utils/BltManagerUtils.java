@@ -18,6 +18,7 @@ import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
 import com.sohrab.obd.reader.utils.LogUtils;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 /**
  * 作者：Jealous

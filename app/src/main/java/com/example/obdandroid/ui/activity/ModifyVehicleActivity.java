@@ -35,6 +35,7 @@ import okhttp3.Response;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
 import static com.example.obdandroid.config.APIConfig.modifyVehicle_URL;
+import static com.example.obdandroid.config.Constant.VEHICLE_ID;
 
 /**
  * 作者：Jealous
@@ -85,7 +86,7 @@ public class ModifyVehicleActivity extends BaseActivity {
     public void initView() {
         super.initView();
         context = this;
-        vehicleId = getIntent().getStringExtra("vehicleId");
+        vehicleId = getIntent().getStringExtra(VEHICLE_ID);
         titleBarSet = findViewById(R.id.titleBarSet);
         tvAutomobileBrandName = findViewById(R.id.tvAutomobileBrandName);
         tvModelName = findViewById(R.id.tvModelName);
@@ -334,11 +335,6 @@ public class ModifyVehicleActivity extends BaseActivity {
         tvTankCapacity.setText(checkNull(entity.getTankCapacity()));
         tvVehiclePurchaseDate.setText(checkNull(entity.getVehiclePurchaseDate()));
         tvYearManufacture.setText(checkNull(entity.getYearManufacture()));
-        /*ivBind.setOnClickListener(v -> {
-            Intent intent = new Intent(context, BindBluetoothDeviceActivity.class);
-            intent.putExtra("vehicleId", String.valueOf(entity.getVehicleId()));
-            startActivityForResult(intent, 100);
-        });*/
     }
 
     /**

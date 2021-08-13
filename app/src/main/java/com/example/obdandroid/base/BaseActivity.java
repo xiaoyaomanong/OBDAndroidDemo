@@ -30,7 +30,6 @@ import okhttp3.Response;
 
 import static com.example.obdandroid.config.APIConfig.LOGIN_URL;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
-import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
 import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
 import static com.example.obdandroid.config.Constant.IS_CHECK;
 import static com.example.obdandroid.config.Constant.PASSWORD;
@@ -55,6 +54,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private String phone = "";
     private SPUtil spUtil;
     public AppCompatActivity mActivity;
+    private RefreshCallBack callBack;
 
     //布局文件ID
     protected abstract int getContentViewId();
@@ -106,20 +106,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         if (!StringUtil.isNull(phone)) {
             setPhone(phone);
-        }
-        if (!StringUtil.isNull(expireTime) && !AppDateUtils.isDateTwoBigger(AppDateUtils.getTodayDateTimeHms(), expireTime)) {
-            new CustomeDialog(mContext, "您的账号登录时间过长，请重新登录！", confirm -> {
-                if (confirm) {
-                    spUtil.put(CONNECT_BT_KEY, "OFF");
-                    spUtil.put(Constant.IS_LOGIN, false);
-                    JumpUtil.startAct(mContext, LoginActivity.class);
-                    try {
-                        ActivityManager.getInstance().finishActivitys();
-                    } catch (Exception e) {
-                        LogE("该服务未注册");
-                    }
-                }
-            }).setPositiveButton("知道了").setTitle("提示").show();
         }
     }
 
@@ -189,12 +175,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void dialogError(final Context context, final String msg) {
         if (msg.equals("token失效，请重新登录")) {
-            new CustomeDialog(context, "你的账号已在其他设备登录或登录时间过长,请检查重新登录", confirm -> {
-                if (confirm) {
-                    JumpUtil.startAct(context, LoginActivity.class);
-                    ActivityManager.getInstance().finishActivitys();
-                }
-            }).setPositiveButton("确定").setTitle("提示").show();
+            if (spUtil.getBoolean(IS_CHECK, false)) {
+                String userNameValue = spUtil.getString(USER_NAME, "");
+                String passwordValue = spUtil.getString(PASSWORD, "");
+                userLogin(userNameValue, passwordValue);
+            } else {
+                JumpUtil.startAct(context, LoginActivity.class);
+                ActivityManager.getInstance().finishActivitys();
+            }
         } else if (msg.equals("未知异常，请联系管理员")) {
             new CustomeDialog(context, msg, confirm -> {
                 if (confirm) {
@@ -211,6 +199,42 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * @param mobile   手机号
+     * @param password 密码
+     */
+    private void userLogin(String mobile, String password) {
+        OkHttpUtils.post().url(SERVER_URL + LOGIN_URL).
+                addParam("mobile", mobile).
+                addParam("password", password).
+                addParam("loginType", "1").
+                addParam("verificationCode", "").
+                addParam("taskID", "").
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                UserLoginEntity entity = JSON.parseObject(response, UserLoginEntity.class);
+                if (entity.isSuccess()) {
+                    //记住用户名、密码、
+                    spUtil.put(PASSWORD, password);
+                    spUtil.put(USER_NAME, mobile);
+                    spUtil.put(Constant.IS_LOGIN, true);
+                    spUtil.put(TOKEN, entity.getData().getToken());
+                    spUtil.put(USER_ID, String.valueOf(entity.getData().getUserId()));
+                    spUtil.put(EXPIRE_TIME, AppDateUtils.dealDateFormat(entity.getData().getExpireTime()));
+                    setUserId(String.valueOf(entity.getData().getUserId()));
+                    setPhone(mobile);
+                    setToken(entity.getData().getToken());
+                    callBack.refresh(true);
+                }
+            }
+        });
+    }
 
     /**
      * @param list 数据集
@@ -235,5 +259,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             result.append(value);
         }
         return result.toString();
+    }
+
+    public interface RefreshCallBack {
+        void refresh(boolean re);
     }
 }

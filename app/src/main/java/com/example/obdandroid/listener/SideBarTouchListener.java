@@ -1,4 +1,4 @@
-package com.example.obdandroid.ui.view;
+package com.example.obdandroid.listener;
 
 
 public interface SideBarTouchListener {

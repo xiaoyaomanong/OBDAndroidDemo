@@ -46,8 +46,6 @@ public class Constant {
     public static final int BLUE_TOOTH_CLOSE = BLUE_TOOTH_OPEN + 1;
     //搜索蓝牙
     public static final int BLUE_TOOTH_SEARTH = BLUE_TOOTH_CLOSE + 1;
-    //被搜索蓝牙
-    public static final int BLUE_TOOTH_MY_SEARTH = BLUE_TOOTH_SEARTH + 1;
 
     /**
      * 从蓝牙聊天服务处理程序发送的消息类型

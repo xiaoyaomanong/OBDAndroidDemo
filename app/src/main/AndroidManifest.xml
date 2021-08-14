@@ -152,7 +152,6 @@
         <activity android:name=".ui.activity.ForgetPwdActivity" />
         <activity android:name=".ui.activity.ServiceAgreementActivity" />
 
-        <service android:name=".service.GpsServices" />
         <service
             android:name=".service.BluetoothConnService"
             android:enabled="true"

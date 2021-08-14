@@ -102,4 +102,5 @@ public class FuelTypeActivity extends BaseActivity {
             }
         });
     }
+
 }

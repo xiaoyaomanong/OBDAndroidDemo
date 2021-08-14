@@ -21,7 +21,6 @@ import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.entity.VocationalDictDataListEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.ui.view.progressButton.CircularProgressButton;
-import com.example.obdandroid.utils.JumpUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
@@ -32,7 +31,6 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 import static com.example.obdandroid.config.APIConfig.ADD_VEHICLE_URL;
-import static com.example.obdandroid.config.APIConfig.FAULT_CODE_URL;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 
 /**
@@ -291,4 +289,5 @@ public class AddVehicleActivity extends BaseActivity {
             }
         }
     }
+
 }

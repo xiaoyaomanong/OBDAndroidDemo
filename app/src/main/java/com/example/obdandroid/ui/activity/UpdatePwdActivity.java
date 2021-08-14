@@ -136,4 +136,5 @@ public class UpdatePwdActivity extends BaseActivity {
     private void showTipsDialog(String msg, int type) {
         TipDialog.show(context, msg, TipDialog.SHOW_TIME_SHORT, type);
     }
+
 }

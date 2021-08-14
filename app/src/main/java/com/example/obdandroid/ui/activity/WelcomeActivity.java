@@ -4,35 +4,18 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.text.SpannableStringBuilder;
-import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFullScreenActivity;
 import com.example.obdandroid.config.Constant;
-import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.SharedPreferencesUtil;
 
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import notchtools.geek.com.notchtools.NotchTools;
@@ -40,8 +23,6 @@ import notchtools.geek.com.notchtools.core.NotchProperty;
 import notchtools.geek.com.notchtools.core.OnNotchCallBack;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-
-import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
 
 public class WelcomeActivity extends BaseFullScreenActivity implements OnNotchCallBack {
     private static final int ANIM_TIME = 2000;

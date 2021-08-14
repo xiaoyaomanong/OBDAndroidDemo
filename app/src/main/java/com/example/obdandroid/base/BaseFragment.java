@@ -56,7 +56,7 @@ import static com.example.obdandroid.config.Constant.USER_NAME;
  * 日期：2018/11/2 0002 15:44
  * Fragment封装基类
  */
-public abstract class BaseFragment extends Fragment implements RefreshCallBack{
+public abstract class BaseFragment extends Fragment {
     private static final String TAG = BaseFragment.class.getSimpleName();
     protected BaseActivity mActivity; // 宿主Activity
     private final SparseArray<View> mViews = new SparseArray<View>();
@@ -260,7 +260,7 @@ public abstract class BaseFragment extends Fragment implements RefreshCallBack{
     }
 
     public void dialogError(final Context context, final String msg) {
-        if (msg.equals("token失效，请重新登录")) {
+       /* if (msg.equals("token失效，请重新登录")) {
             if (spUtil.getBoolean(IS_CHECK, false)) {
                 String userNameValue = spUtil.getString(USER_NAME, "");
                 String passwordValue = spUtil.getString(PASSWORD, "");
@@ -269,7 +269,7 @@ public abstract class BaseFragment extends Fragment implements RefreshCallBack{
                 JumpUtil.startAct(context, LoginActivity.class);
                 ActivityManager.getInstance().finishActivitys();
             }
-        } else if (msg.equals("未知异常，请联系管理员")) {
+        } else */if (msg.equals("未知异常，请联系管理员")) {
             new CustomeDialog(context, msg, confirm -> {
                 if (confirm) {
                     JumpUtil.startAct(context, LoginActivity.class);
@@ -314,7 +314,7 @@ public abstract class BaseFragment extends Fragment implements RefreshCallBack{
                     setUserId(String.valueOf(entity.getData().getUserId()));
                     setPhone(mobile);
                     setToken(entity.getData().getToken());
-                    refresh(true);
+                   // refresh(true);
                 }
             }
         });

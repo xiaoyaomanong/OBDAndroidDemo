@@ -32,7 +32,6 @@ import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
 import com.example.obdandroid.config.Constant;
-import com.example.obdandroid.listener.RefreshCallBack;
 import com.example.obdandroid.service.BluetoothConnService;
 import com.example.obdandroid.ui.activity.BindBluetoothDeviceActivity;
 import com.example.obdandroid.ui.activity.CheckRecordActivity;
@@ -84,7 +83,7 @@ import static com.example.obdandroid.config.Constant.VEHICLE_ID;
  * 日期：2020/12/23 0023  y
  * 描述：
  */
-public class HomeFragment extends BaseFragment implements RefreshCallBack {
+public class HomeFragment extends BaseFragment {
     private Context context;
     private TitleBar titleBar;
     private List<BluetoothDeviceEntity> blueList;
@@ -606,15 +605,6 @@ public class HomeFragment extends BaseFragment implements RefreshCallBack {
         IntentFilter intentFilter = new IntentFilter(OBD_ACTION);
         testReceiver = new TestReceiver();
         broadcastManager.registerReceiver(testReceiver, intentFilter);
-    }
-
-    @Override
-    public void refresh(boolean f) {
-        if (f) {
-            LogE("666666666");
-            getUserInfo(getUserId(), getToken(), spUtil.getString(VEHICLE_ID, ""));
-            setCheckRecord();
-        }
     }
 
     private class TestReceiver extends BroadcastReceiver {

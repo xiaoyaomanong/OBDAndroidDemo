@@ -283,10 +283,6 @@ public class PersonalFragment extends BaseFragment {
         lm.registerReceiver(testReceiver, intentFilter);
     }
 
-    @Override
-    public void refresh(boolean f) {
-
-    }
 
     private class TestReceiver extends BroadcastReceiver {
 

@@ -91,6 +91,7 @@ public class ReadMsgActivity extends BaseActivity {
     private final ArrayList<String> netWorkNOList = new ArrayList<>();
     private DialogUtils dialogUtils;
     private int isRead;
+    private MessageCheckEntity tripRecord;
 
     @Override
     protected int getContentViewId() {
@@ -106,7 +107,7 @@ public class ReadMsgActivity extends BaseActivity {
     public void initView() {
         super.initView();
         context = this;
-        MessageCheckEntity tripRecord = (MessageCheckEntity) getIntent().getSerializableExtra("data");
+        tripRecord = (MessageCheckEntity) getIntent().getSerializableExtra("data");
         isRead = getIntent().getIntExtra("isRead", 0);
         String remindId = getIntent().getStringExtra("remindId");
         TitleBar titleBar = findViewById(R.id.titleBar);
@@ -443,4 +444,5 @@ public class ReadMsgActivity extends BaseActivity {
         }
         return true;
     }
+
 }

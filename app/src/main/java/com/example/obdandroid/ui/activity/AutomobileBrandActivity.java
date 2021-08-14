@@ -194,6 +194,7 @@ public class AutomobileBrandActivity extends BaseActivity {
         }).start();
     }
 
+
     private class AutomobileBrandAdapter extends CommonRecycleAdapter<BrandPinYinEntity> {
         public AutomobileBrandAdapter(Context context, List<BrandPinYinEntity> mData, int layoutId) {
             super(context, mData, layoutId);

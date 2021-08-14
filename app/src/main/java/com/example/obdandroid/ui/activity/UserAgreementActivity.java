@@ -72,6 +72,7 @@ public class UserAgreementActivity extends BaseActivity {
         });
     }
 
+
     // 监听 所有点击的链接，如果拦截到我们需要的，就跳转到相对应的页面。
     private class MyWebViewClient extends WebViewClient {
         @Override

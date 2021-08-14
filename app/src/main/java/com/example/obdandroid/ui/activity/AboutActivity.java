@@ -97,4 +97,5 @@ public class AboutActivity extends BaseActivity {
         intent.setData(data);
         startActivity(intent);
     }
+
 }

@@ -476,4 +476,5 @@ public class VehicleCheckActivity extends BaseActivity {
     private void showTipDialog(String msg, int type) {
         TipDialog.show(context, msg, TipDialog.TYPE_ERROR, type);
     }
+
 }

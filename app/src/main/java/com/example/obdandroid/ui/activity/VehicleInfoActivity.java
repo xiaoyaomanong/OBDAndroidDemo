@@ -221,4 +221,5 @@ public class VehicleInfoActivity extends BaseActivity {
             }
         }
     }
+
 }

@@ -117,10 +117,6 @@ public class MsgFragment extends BaseFragment {
         mLocalBroadcastManager.registerReceiver(receiver, intentFilter);
     }
 
-    @Override
-    public void refresh(boolean f) {
-
-    }
 
     private class RemindReceiver extends BroadcastReceiver {
 

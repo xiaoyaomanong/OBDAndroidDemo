@@ -236,4 +236,5 @@ public class BindBluetoothDeviceActivity extends BaseActivity {
             }
         }
     }
+
 }

@@ -95,4 +95,5 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
         intent.putExtra("orderNo", orderNo);//支付金额
         mLocalBroadcastManager.sendBroadcast(intent); //发送本地广播
     }
+
 }

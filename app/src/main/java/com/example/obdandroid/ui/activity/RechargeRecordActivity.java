@@ -151,4 +151,5 @@ public class RechargeRecordActivity extends BaseActivity {
             }
         });
     }
+
 }

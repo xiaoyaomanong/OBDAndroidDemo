@@ -21,11 +21,8 @@ import com.hjq.bar.TitleBar;
  * 描述：个人中心设置
  */
 public class AppSettingActivity extends BaseActivity {
-    private TitleBar titleBarSet;
-    private android.widget.LinearLayout layoutExit;
     private Context context;
     private SPUtil spUtil;
-    private LinearLayout layoutUpdatePwd;
 
     @Override
     protected int getContentViewId() {
@@ -41,9 +38,9 @@ public class AppSettingActivity extends BaseActivity {
     public void initView() {
         super.initView();
         context = this;
-        titleBarSet = findViewById(R.id.titleBarSet);
-        layoutExit = findViewById(R.id.layout_exit);
-        layoutUpdatePwd = findViewById(R.id.layoutUpdatePwd);
+        TitleBar titleBarSet = findViewById(R.id.titleBarSet);
+        LinearLayout layoutExit = findViewById(R.id.layout_exit);
+        LinearLayout layoutUpdatePwd = findViewById(R.id.layoutUpdatePwd);
         spUtil = new SPUtil(context);
         layoutUpdatePwd.setOnClickListener(v -> JumpUtil.startAct(context, UpdatePwdActivity.class));
         //退出账户
@@ -87,4 +84,5 @@ public class AppSettingActivity extends BaseActivity {
             }
         });
     }
+
 }

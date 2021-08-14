@@ -239,4 +239,5 @@ public class CheckRecordDetailsActivity extends BaseActivity {
     private void showTipDialog() {
         TipDialog.show(context, "没有故障码可查询", TipDialog.TYPE_ERROR, TipDialog.TYPE_WARNING);
     }
+
 }

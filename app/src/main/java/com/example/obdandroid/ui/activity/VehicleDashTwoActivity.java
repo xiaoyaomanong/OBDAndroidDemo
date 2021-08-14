@@ -53,6 +53,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
     public MyHandler mHandler;
     private boolean isConnected;
 
+
     @SuppressWarnings("deprecation")
     @SuppressLint("HandlerLeak")
     class MyHandler extends Handler {

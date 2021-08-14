@@ -157,4 +157,5 @@ public class CheckRecordActivity extends BaseActivity {
             }
         });
     }
+
 }

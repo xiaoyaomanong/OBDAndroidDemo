@@ -31,7 +31,6 @@ import okhttp3.Response;
 import static com.example.obdandroid.config.APIConfig.LOGIN_URL;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
-import static com.example.obdandroid.config.Constant.IS_CHECK;
 import static com.example.obdandroid.config.Constant.PASSWORD;
 import static com.example.obdandroid.config.Constant.TOKEN;
 import static com.example.obdandroid.config.Constant.USER_ID;
@@ -44,7 +43,7 @@ import static com.example.obdandroid.config.Constant.USER_NAME;
  * Activity 封装基类
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity  {
     private static final String TAG = BaseActivity.class.getSimpleName();
     public Context mContext;
     private final SparseArray<View> mViews = new SparseArray<>();
@@ -54,7 +53,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     private String phone = "";
     private SPUtil spUtil;
     public AppCompatActivity mActivity;
-    private RefreshCallBack callBack;
 
     //布局文件ID
     protected abstract int getContentViewId();
@@ -174,7 +172,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void dialogError(final Context context, final String msg) {
-        if (msg.equals("token失效，请重新登录")) {
+        /*if (msg.equals("token失效，请重新登录")) {
             if (spUtil.getBoolean(IS_CHECK, false)) {
                 String userNameValue = spUtil.getString(USER_NAME, "");
                 String passwordValue = spUtil.getString(PASSWORD, "");
@@ -183,7 +181,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 JumpUtil.startAct(context, LoginActivity.class);
                 ActivityManager.getInstance().finishActivitys();
             }
-        } else if (msg.equals("未知异常，请联系管理员")) {
+        } else */if (msg.equals("未知异常，请联系管理员")) {
             new CustomeDialog(context, msg, confirm -> {
                 if (confirm) {
                     JumpUtil.startAct(context, LoginActivity.class);
@@ -230,7 +228,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                     setUserId(String.valueOf(entity.getData().getUserId()));
                     setPhone(mobile);
                     setToken(entity.getData().getToken());
-                    callBack.refresh(true);
                 }
             }
         });
@@ -259,9 +256,5 @@ public abstract class BaseActivity extends AppCompatActivity {
             result.append(value);
         }
         return result.toString();
-    }
-
-    public interface RefreshCallBack {
-        void refresh(boolean re);
     }
 }

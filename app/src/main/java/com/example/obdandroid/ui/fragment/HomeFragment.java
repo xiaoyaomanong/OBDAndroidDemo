@@ -429,7 +429,7 @@ public class HomeFragment extends BaseFragment {
      */
     private void setVehicleStatus(int status, String vehicleId, String BluetoothDeviceNumber) {
         if (status == 1) {//车辆状态 1 未绑定 2 已绑定 ,
-            tvHomeObdTip.setText("将设备插入车辆并连接");
+            tvHomeObdTip.setText(R.string.HomeObdTip);
             Drawable drawable = context.getResources().getDrawable(R.drawable.icon_no);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             tvHomeObdTip.setCompoundDrawables(drawable, null, null, null);
@@ -526,8 +526,8 @@ public class HomeFragment extends BaseFragment {
         // 第二个参数是默认选项，此处设置为0
         builder.setSingleChoiceItems(items, yourChoice,
                 (dialog, which) -> yourChoice = which);
-        builder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
-        builder.setPositiveButton("确定",
+        builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss());
+        builder.setPositiveButton(getString(R.string.confirm),
                 (dialog, which) -> {
                     if (yourChoice != -1) {
                         isConn = blueList.get(yourChoice).getBlue_address().equals(deviceAddress);
@@ -554,7 +554,7 @@ public class HomeFragment extends BaseFragment {
      *                启动与所选蓝牙设备的连接
      */
     private void connectBtDevice(String address) {
-        dialogUtils.showProgressDialog("正在连接");
+        dialogUtils.showProgressDialog(getString(R.string.connLoading));
         //启动服务
         mIntent = new Intent(context, BluetoothConnService.class);
         mIntent.putExtra("address", address);

@@ -126,7 +126,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
         if (isConnected) {
             startThread();
         } else {
-            showToast("设备连接已断开");
+            showToast(getString(R.string.device_not_conn));
         }
     }
 

@@ -147,7 +147,6 @@
     <string name="title_check">检测</string>
     <string name="title_msg">消息</string>
     <string name="check_title">全车检测</string>
-    <string name="start_check">开始检测</string>
     <string name="my">我的</string>
     <string name="help">使用帮助</string>
     <string name="history_record">历史记录</string>
@@ -315,4 +314,17 @@
     <string name="ALI_RESULT_6004">支付结果未知（有可能已经支付成功），请查询商户订单列表中订单的支付状态</string>
     <string name="ALI_RESULT_6001">用户中途取消</string>
     <string name="ALI_RESULT_4000">订单支付失败</string>
+    <string name="HomeObdTip">将设备插入车辆并连接</string>
+    <string name="connLoading">正在连接</string>
+    <string name="device_not_conn">设备连接已断开</string>
+    <string name="checkOk">检测完成</string>
+    <string name="clearCode">清除故障</string>
+    <string name="commandResult">生成检测报告已生成,请查看详细内容!</string>
+    <string name="clearOk">故障码清除成功</string>
+    <string name="OBDState_ok">设备已连接,请进行检测</string>
+    <string name="OBDState_no">设备连接失败</string>
+    <string name="start_check">开始检测</string>
+    <string name="checking">正在检测中....</string>
+    <string name="pleaseConn">请连接设备</string>
+    <string name="clearing">正在清除故障码</string>
 </resources>

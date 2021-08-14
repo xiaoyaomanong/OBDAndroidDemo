@@ -112,12 +112,12 @@ public class VehicleCheckActivity extends BaseActivity {
             if (msg.what == COMPLETED) {
                 if (circleView.isDiffuse()) {
                     circleView.stop();
-                    btStart.setText("检测完成");
+                    btStart.setText(R.string.checkOk);
                     btStart.setEnabled(true);
                 }
-                titleBar.setRightTitle("清除故障");
+                titleBar.setRightTitle(getString(R.string.clearCode));
                 layoutLook.setVisibility(View.VISIBLE);
-                tvCommandResult.setText("生成检测报告已生成,请查看详细内容!");
+                tvCommandResult.setText(R.string.commandResult);
                 ivNext.setVisibility(View.VISIBLE);
                 tvOBDState.setVisibility(View.GONE);
                 showResult(tripRecord.getTripMap());
@@ -130,7 +130,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 });
             }
             if (msg.what == COMPLETES) {
-                showTipDialog("故障码清除成功", TipDialog.TYPE_FINISH);
+                showTipDialog(getString(R.string.clearOk), TipDialog.TYPE_FINISH);
                 titleBar.setRightTitle("");
                 dialogUtils.dismiss();
                 Intent intent = new Intent(RECORD_ACTION);//创建发送广播的Action
@@ -186,23 +186,23 @@ public class VehicleCheckActivity extends BaseActivity {
         getVehicleInfoById(getToken(), spUtil.getString(VEHICLE_ID, ""));
         boolean isConn = MainApplication.getBluetoothSocket().isConnected();
         if (isConn) {
-            tvOBDState.setText("设备已连接,请进行检测");
+            tvOBDState.setText(R.string.OBDState_ok);
         } else {
-            tvOBDState.setText("设备连接失败");
+            tvOBDState.setText(R.string.OBDState_no);
         }
         btStart.setOnClickListener(v -> {
             if (isConn) {
                 getPermission();
                 circleView.start();
-                btStart.setText("开始检测");
+                btStart.setText(R.string.start_check);
                 tvOBDState.setVisibility(View.VISIBLE);
-                tvOBDState.setText("正在检测中....");
+                tvOBDState.setText(R.string.checking);
                 btStart.setEnabled(false);
                 layoutCar.setVisibility(View.VISIBLE);
                 layoutLook.setVisibility(View.GONE);
                 new Thread(() -> executeCommand(MainApplication.getBluetoothSocket())).start();
             } else {
-                showTipDialog("请连接设备", TipDialog.TYPE_WARNING);
+                showTipDialog(getString(R.string.pleaseConn), TipDialog.TYPE_WARNING);
             }
         });
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
@@ -221,7 +221,7 @@ public class VehicleCheckActivity extends BaseActivity {
             public void onRightClick(View v) {
                 if (titleBar.getRightTitle().toString().equals("清除故障")) {
                     if (MainApplication.getBluetoothSocket().isConnected()) {
-                        dialogUtils.showProgressDialog("正在清除故障码");
+                        dialogUtils.showProgressDialog(getString(R.string.clearing));
                         new Thread(() -> clearCodes(MainApplication.getBluetoothSocket())).start();
                     }
                 }
@@ -376,7 +376,7 @@ public class VehicleCheckActivity extends BaseActivity {
      *                 展示OBD检测数据
      */
     public void showResult(List<OBDTripEntity> messages) {
-        initAinm();
+        initAnim();
         VehicleCheckAdapter adapter = new VehicleCheckAdapter(context);
         adapter.setList(messages);
         recycleCheckContent.setAdapter(adapter);
@@ -460,7 +460,7 @@ public class VehicleCheckActivity extends BaseActivity {
         return JSON.toJSONString(entity);
     }
 
-    private void initAinm() {
+    private void initAnim() {
         //通过加载XML动画设置文件来创建一个Animation对象；
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.left);
         //得到一个LayoutAnimationController对象；

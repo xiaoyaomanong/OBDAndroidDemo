@@ -854,7 +854,6 @@ public class CheckRecord implements DefineObdReader, Serializable {
     }
 
     private void calculateIdlingAndDrivingTime(int currentSpeed) {
-
         long currentTime = System.currentTimeMillis();
         if ((speed == -1 || speed == 0) && currentSpeed == 0) {
             idlingDuration = currentTime - tripStartTime - drivingDuration;
@@ -870,7 +869,6 @@ public class CheckRecord implements DefineObdReader, Serializable {
         if (mIntakePressure > 0 && mIntakeAirTemp > 0) {
             float rpm = Float.parseFloat(engineRpm);
             float imap = ((rpm * mIntakePressure) / mIntakeAirTemp) / 2;
-            //   float engineDisp = ObdReaderApplication.getInstance().getLoggedInUser().getDisp();
             float engineDisp = 2;
             float maf = (imap / 60.0f) * (85.0f / 100.0f) * (engineDisp) * ((28.97f) / (8.314f));
             findInsFualConsumption(maf);

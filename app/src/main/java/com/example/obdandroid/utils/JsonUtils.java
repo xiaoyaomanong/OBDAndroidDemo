@@ -1,10 +1,6 @@
 package com.example.obdandroid.utils;
 
-import android.text.TextUtils;
-
 import com.alibaba.fastjson.JSON;
-
-import org.json.JSONObject;
 
 /**
  * 作者：Jealous

@@ -52,6 +52,7 @@ public class DefaultCodeEntity {
         private String englishMeaning;
         private String belongingSystem;
         private String causeOfFailure;
+        private boolean display;
 
         public void setFaultCodeId(String faultCodeId) {
             this.faultCodeId = faultCodeId;
@@ -109,5 +110,12 @@ public class DefaultCodeEntity {
             return causeOfFailure;
         }
 
+        public boolean isDisplay() {
+            return display;
+        }
+
+        public void setDisplay(boolean display) {
+            this.display = display;
+        }
     }
 }

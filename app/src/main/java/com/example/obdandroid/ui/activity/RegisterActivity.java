@@ -155,7 +155,6 @@ public class RegisterActivity extends BaseLoginActivity {
         etCode = findViewById(R.id.etCode);
         Button btnCode = findViewById(R.id.btn_code);
         textLayout = findViewById(R.id.textLayout);
-        TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         layoutRegisterCode = findViewById(R.id.layoutRegisterCode);
         btnSignUpAgree = findViewById(R.id.btnSignUpAgree);
         layoutRegisterInfo = findViewById(R.id.layoutRegisterInfo);
@@ -423,7 +422,6 @@ public class RegisterActivity extends BaseLoginActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("response:" + response);
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
                     btnSignUpAgree.setProgress(100);

@@ -475,7 +475,6 @@ public class RechargeSetMealActivity extends BaseActivity {
         TipDialog.show(context, msg, TipDialog.SHOW_TIME_SHORT, type);
     }
 
-
     private class PayResultReceiver extends BroadcastReceiver {
 
         @Override

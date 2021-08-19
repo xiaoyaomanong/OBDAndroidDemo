@@ -71,6 +71,7 @@ public class FaultCodeDetailsEntity {
         private String englishMeaning;
         private String belongingSystem;
         private String causeOfFailure;
+        private boolean display;
 
         public Object getFaultCodeId() {
             return faultCodeId;
@@ -126,6 +127,14 @@ public class FaultCodeDetailsEntity {
 
         public void setCauseOfFailure(String causeOfFailure) {
             this.causeOfFailure = causeOfFailure;
+        }
+
+        public boolean isDisplay() {
+            return display;
+        }
+
+        public void setDisplay(boolean display) {
+            this.display = display;
         }
     }
 }

@@ -124,7 +124,6 @@ public class WelcomeGuideActivity extends BaseFullScreenActivity implements OnNo
 
             tvAgree.setOnClickListener(v -> {
                 SharedPreferencesUtil.putBoolean(context, SharedPreferencesUtil.FIRST_OPEN, false);
-                // checkPermission();
                 alertDialog.cancel();
             });
         }

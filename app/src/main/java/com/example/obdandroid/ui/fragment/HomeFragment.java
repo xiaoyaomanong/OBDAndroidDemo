@@ -54,6 +54,7 @@ import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
+import com.example.obdandroid.utils.StringUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
@@ -387,8 +388,10 @@ public class HomeFragment extends BaseFragment {
                 if (entity.isSuccess()) {
                     dialogUtils.dismiss();
                     deviceAddress = entity.getData().getBluetoothDeviceNumber();
-                    repeatConn(deviceAddress);
-                    setVehicleStatus(entity.getData().getVehicleStatus(), vehicleId, entity.getData().getBluetoothDeviceNumber());
+                    if (!TextUtils.isEmpty(deviceAddress)) {
+                        connectBtDevice(deviceAddress);
+                    }
+                    setVehicleStatus(deviceAddress, vehicleId, entity.getData().getBluetoothDeviceNumber());
                     layoutAddCar.setVisibility(View.GONE);
                     layoutCar.setVisibility(View.VISIBLE);
                     layoutOBD.setVisibility(View.VISIBLE);
@@ -407,28 +410,11 @@ public class HomeFragment extends BaseFragment {
 
     /**
      * @param deviceAddress 蓝牙MAC地址
-     *                      重新连接
+     * @param vehicleId     车辆id
+     *                      设置车辆绑定状态
      */
-    private void repeatConn(String deviceAddress) {
-        if (!TextUtils.isEmpty(deviceAddress)) {
-            // isConnected = isConnect(deviceAddress);
-           /* if (!isConnected) {
-                connectBtDevice(deviceAddress);
-            } else {
-                TipDialog.show(context, getString(R.string.title_connected_to) + mConnectedDeviceName, TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
-                titleBar.setLeftTitle(getString(R.string.conOk));
-            }*/
-            connectBtDevice(deviceAddress);
-        }
-    }
-
-    /**
-     * @param status    车辆绑定状态
-     * @param vehicleId 车辆id
-     *                  设置车辆绑定状态
-     */
-    private void setVehicleStatus(int status, String vehicleId, String BluetoothDeviceNumber) {
-        if (status == 1) {//车辆状态 1 未绑定 2 已绑定 ,
+    private void setVehicleStatus(String deviceAddress, String vehicleId, String BluetoothDeviceNumber) {
+        if (StringUtil.isNull(deviceAddress)) {//车辆状态 1 未绑定 2 已绑定 ,
             tvHomeObdTip.setText(R.string.HomeObdTip);
             Drawable drawable = context.getResources().getDrawable(R.drawable.icon_no);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
@@ -446,28 +432,6 @@ public class HomeFragment extends BaseFragment {
             tvHomeObdTip.setCompoundDrawables(drawable, null, null, null);
             tvObd.setText(R.string.device_onbind_ok);
         }
-    }
-
-    /**
-     * @param address 蓝牙地址
-     * @return 蓝夜是否连接
-     */
-    private boolean isConnect(String address) {
-        BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
-        BluetoothSocket mSocket;
-        try {
-            mSocket = device.createRfcommSocketToServiceRecord(Constant.SPP_UUID);
-            if (mSocket != null) {
-                MainApplication.setBluetoothSocket(mSocket);
-                if (!mSocket.isConnected()) {
-                    mSocket.connect();
-                }
-                return mSocket.isConnected();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 
     /**
@@ -665,18 +629,15 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
-    public void onDestroy() {
-        //停止服务
-        context.stopService(mIntent);
-        //注销广播
-        context.unregisterReceiver(msgReceiver);
-        super.onDestroy();
-    }
-
-    @Override
     public void onDestroyView() {
         //解绑
         broadcastManager.unregisterReceiver(testReceiver);
+        if (mIntent != null) {
+            //停止服务
+            context.stopService(mIntent);
+        }
+        //注销广播
+        context.unregisterReceiver(msgReceiver);
         super.onDestroyView();
 
     }

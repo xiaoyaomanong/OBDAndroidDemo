@@ -65,8 +65,8 @@ public class AboutActivity extends BaseActivity {
         });
         Glide.with(context).load(R.drawable.logo_green).into(imageHeader);
         tvAppVersion.setText(packageName(context));
-        layoutUserAgreement.setOnClickListener(v -> JumpUtil.startAct(context, UserAgreementActivity.class));//用户协议
-        layoutServiceAgreement.setOnClickListener(v -> JumpUtil.startAct(context, ServiceAgreementActivity.class));//隐私政策
+        layoutUserAgreement.setOnClickListener(v -> JumpUtil.startAct(context, UserAgreementActivity.class));//隐私政策
+        layoutServiceAgreement.setOnClickListener(v -> JumpUtil.startAct(context, ServiceAgreementActivity.class));//用户协议
         layoutPhone.setOnClickListener(v -> callPhone(tvPhone.getText().toString()));
     }
 

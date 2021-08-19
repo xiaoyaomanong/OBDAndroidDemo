@@ -20,7 +20,6 @@ import com.example.obdandroid.utils.StringUtil;
 import java.util.Map;
 import java.util.Set;
 
-import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
 import static com.example.obdandroid.config.Constant.EXPIRE_TIME;
 import static com.example.obdandroid.config.Constant.TOKEN;
 import static com.example.obdandroid.config.Constant.USER_ID;

@@ -41,6 +41,7 @@ import com.example.obdandroid.utils.ActivityManager;
 import com.example.obdandroid.utils.BitMapUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
+import com.example.obdandroid.utils.StringUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -142,7 +143,6 @@ public class PersonalFragment extends BaseFragment {
                     @Override
                     public void Confirm(AlertDialog exitDialog, boolean confirm) {
                         if (confirm) {
-                            spUtil.put(CONNECT_BT_KEY, "OFF");
                             spUtil.put(Constant.IS_LOGIN, false);
                             spUtil.remove(VEHICLE_ID);
                             JumpUtil.startAct(context, LoginActivity.class);
@@ -186,7 +186,7 @@ public class PersonalFragment extends BaseFragment {
                     if (entity.getCode().equals("SUCCESS")) {
                         tvRechargeSetMeaName.setText(entity.getData().getRechargeSetMeaName());
                     } else {
-                        tvRechargeSetMeaName.setText("未购买会员");
+                        tvRechargeSetMeaName.setText(R.string.RechargeSetMeaName_no);
                     }
                 }
             }
@@ -219,9 +219,9 @@ public class PersonalFragment extends BaseFragment {
                     tvIntegral.setText(entity.getData().getPhoneNum());
                     if (entity.getData().getIsVip() == 1) {
                         if (!TextUtils.isEmpty(entity.getData().getEndValidity())) {
-                            tvRechargeTime.setText("有效期至: " + entity.getData().getEndValidity().split(" ")[0]);
+                            tvRechargeTime.setText(getString(R.string.RechargeTime) + entity.getData().getEndValidity().split(" ")[0]);
                         } else {
-                            tvRechargeTime.setText("有效期至: ");
+                            tvRechargeTime.setText(R.string.RechargeTime);
                         }
                     }
                     ivVip.setVisibility(entity.getData().getIsVip() == 1 ? View.VISIBLE : View.GONE);
@@ -260,13 +260,13 @@ public class PersonalFragment extends BaseFragment {
                     if (!TextUtils.isEmpty(entity.getData().getLogo())) {
                         Glide.with(context).load(SERVER_URL + entity.getData().getLogo()).into(ivCarLogo);
                     }
-                    if (entity.getData().getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
-                        tvOBDState.setText(" 未绑定");
+                    if (StringUtil.isNull(entity.getData().getBluetoothDeviceNumber())) {//车辆状态 1 未绑定 2 已绑定 ,
+                        tvOBDState.setText(R.string.device_onbind_no);
                         Drawable drawable = context.getResources().getDrawable(R.drawable.icon_no);
                         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                         tvOBDState.setCompoundDrawables(drawable, null, null, null);
                     } else {
-                        tvOBDState.setText(" 已绑定");
+                        tvOBDState.setText(R.string.device_onbind_ok);
                         Drawable drawable = context.getResources().getDrawable(R.drawable.icon_ok);
                         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                         tvOBDState.setCompoundDrawables(drawable, null, null, null);

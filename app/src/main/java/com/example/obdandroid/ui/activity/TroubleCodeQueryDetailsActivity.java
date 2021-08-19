@@ -38,7 +38,6 @@ public class TroubleCodeQueryDetailsActivity extends BaseActivity {
     private TextView tvEnglishMeaning;
     private TextView tvCauseOfFailure;
     private DialogUtils dialogUtils;
-    private String faultCode;
 
     @Override
     protected int getContentViewId() {
@@ -54,7 +53,7 @@ public class TroubleCodeQueryDetailsActivity extends BaseActivity {
     public void initView() {
         super.initView();
         Context context = this;
-        faultCode = getIntent().getStringExtra(Constant.ACT_FLAG);
+        String faultCode = getIntent().getStringExtra(Constant.ACT_FLAG);
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         tvFaultCode = findViewById(R.id.tvFaultCode);
         tvBelongingSystem = findViewById(R.id.tvBelongingSystem);
@@ -84,12 +83,16 @@ public class TroubleCodeQueryDetailsActivity extends BaseActivity {
 
     private void setView(List<FaultCodeDetailsEntity.DataEntity> list) {
         if (list.size() != 0) {
-            tvFaultCode.setText(TextUtils.isEmpty(list.get(0).getFaultCode()) ? "未知" : list.get(0).getFaultCode());
-            tvBelongingSystem.setText(TextUtils.isEmpty(list.get(0).getBelongingSystem()) ? "未知" : list.get(0).getBelongingSystem());
-            tvScopeOfApplication.setText(TextUtils.isEmpty(list.get(0).getScopeOfApplication()) ? "未知" : list.get(0).getScopeOfApplication());
-            tvChineseMeaning.setText(TextUtils.isEmpty(list.get(0).getChineseMeaning()) ? "未知" : list.get(0).getChineseMeaning());
-            tvEnglishMeaning.setText(TextUtils.isEmpty(list.get(0).getEnglishMeaning()) ? "未知" : list.get(0).getEnglishMeaning());
-            tvCauseOfFailure.setText(TextUtils.isEmpty(list.get(0).getCauseOfFailure()) ? "未知" : list.get(0).getCauseOfFailure());
+            if (list.get(0).isDisplay()) {
+                tvFaultCode.setText(TextUtils.isEmpty(list.get(0).getFaultCode()) ? "未知" : list.get(0).getFaultCode());
+                tvBelongingSystem.setText(TextUtils.isEmpty(list.get(0).getBelongingSystem()) ? "未知" : list.get(0).getBelongingSystem());
+                tvScopeOfApplication.setText(TextUtils.isEmpty(list.get(0).getScopeOfApplication()) ? "未知" : list.get(0).getScopeOfApplication());
+                tvChineseMeaning.setText(TextUtils.isEmpty(list.get(0).getChineseMeaning()) ? "未知" : list.get(0).getChineseMeaning());
+                tvEnglishMeaning.setText(TextUtils.isEmpty(list.get(0).getEnglishMeaning()) ? "未知" : list.get(0).getEnglishMeaning());
+                tvCauseOfFailure.setText(TextUtils.isEmpty(list.get(0).getCauseOfFailure()) ? "未知" : list.get(0).getCauseOfFailure());
+            }else {
+                showTipDialog("未查询到该故障");
+            }
         }
     }
 

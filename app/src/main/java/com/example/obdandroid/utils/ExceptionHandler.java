@@ -70,9 +70,9 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
             PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES);
             sb.append(new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis())) + "<---->" +
                     "包名::" + packageInfo.packageName + "<---->版本名::" + packageInfo.versionName + "<---->版本号::" + packageInfo.versionCode + "\n");
-            sb.append("手机制造商::" + Build.MANUFACTURER + "\n");
+         /*   sb.append("手机制造商::" + Build.MANUFACTURER + "\n");
             sb.append("手机型号::" + Build.MODEL + "\n");
-            sb.append("CPU架构::" + Build.CPU_ABI + "\n");
+            sb.append("CPU架构::" + Build.CPU_ABI + "\n");*/
             sb.append(e.toString() + "\n");
             StackTraceElement[] trace = e.getStackTrace();
             for (StackTraceElement traceElement : trace)

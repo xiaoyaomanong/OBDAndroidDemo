@@ -40,7 +40,6 @@ import static com.example.obdandroid.config.APIConfig.SERVER_URL;
  */
 public class AddVehicleActivity extends BaseActivity {
     private Context context;
-    private TitleBar titleBarSet;
     private TextView tvAutomobileBrandName;
     private TextView tvModelName;
     private TextView tvFuelType;
@@ -54,8 +53,6 @@ public class AddVehicleActivity extends BaseActivity {
     private String transmissionType;
     private String bluetoothDeviceNumber = "";
     private String bluetoothName = "";
-    private AutomobileBrandEntity.DataEntity dataEntity;
-    private BrandPinYinEntity yinEntity;
 
     @Override
     protected int getContentViewId() {
@@ -71,9 +68,9 @@ public class AddVehicleActivity extends BaseActivity {
     public void initView() {
         super.initView();
         context = this;
-        dataEntity = (AutomobileBrandEntity.DataEntity) getIntent().getSerializableExtra("data");
-        yinEntity = (BrandPinYinEntity) getIntent().getSerializableExtra("dataA");
-        titleBarSet = findViewById(R.id.titleBarSet);
+        AutomobileBrandEntity.DataEntity dataEntity = (AutomobileBrandEntity.DataEntity) getIntent().getSerializableExtra("data");
+        BrandPinYinEntity yinEntity = (BrandPinYinEntity) getIntent().getSerializableExtra("dataA");
+        TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         tvAutomobileBrandName = findViewById(R.id.tvAutomobileBrandName);
         tvModelName = findViewById(R.id.tvModelName);
         tvFuelType = findViewById(R.id.tvFuelType);

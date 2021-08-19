@@ -144,12 +144,12 @@ public class CheckRecord implements DefineObdReader, Serializable {
     @SuppressLint("StaticFieldLeak")
     private static CheckRecord sInstance;
     private Integer engineRpmMax = 0;
-    private String engineRpm="";
-    private String mEngineFrictionPercentTorque="";
-    private String mDPFTemp="";
-    private String mEngineReferenceTorque="";
-    private String mActualEngineTorque="";
-    private String mDriverEngineTorque="";
+    private String engineRpm = "";
+    private String mEngineFrictionPercentTorque = "";
+    private String mDPFTemp = "";
+    private String mEngineReferenceTorque = "";
+    private String mActualEngineTorque = "";
+    private String mDriverEngineTorque = "";
     private String mHyBatteryPackLife;
     private String mRelAccPedalPos;
     private String mFuelRailAbsPressure;
@@ -239,8 +239,8 @@ public class CheckRecord implements DefineObdReader, Serializable {
     private String mDistanceTraveledAfterCodesCleared;
     private String mControlModuleVoltage;
     private String mEngineFuelRate;
-    private String mFuelRailPressure="";
-    private String mFuelRailPressurevacuum="";
+    private String mFuelRailPressure = "";
+    private String mFuelRailPressurevacuum = "";
     private String mVehicleIdentificationNumber;
     private String mDistanceTraveledMilOn;
     private String mDtcNumber;
@@ -257,10 +257,10 @@ public class CheckRecord implements DefineObdReader, Serializable {
     private String mLongTermBank1;
     private String mLongTermBank2;
     private static String mToken;
-    private StringBuilder DefaultCode;
-    private StringBuilder permanentCode;
-    private StringBuilder pendingCode;
-    private List<OBDTripEntity> datas = new ArrayList<>();
+    private final StringBuilder DefaultCode;
+    private final StringBuilder permanentCode;
+    private final StringBuilder pendingCode;
+    private List<OBDTripEntity> entityList = new ArrayList<>();
     private final List<OBDTripEntity> data = new ArrayList<>();
     private OBDJsonTripEntity entity = new OBDJsonTripEntity();
 
@@ -712,8 +712,8 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 }
                 break;
         }
-        datas.addAll(data);
-        setTripMap(datas);
+        entityList.addAll(data);
+        setTripMap(entityList);
         setOBDJson(entity);
     }
 
@@ -738,9 +738,10 @@ public class CheckRecord implements DefineObdReader, Serializable {
             public void onResponse(String response, int id) {
                 DefaultCodeEntity codeEntity = JSON.parseObject(response, DefaultCodeEntity.class);
                 if (codeEntity.getSuccess()) {
-                    codes.append(codeEntity.getData().getFaultCode());
-                    codes.append('\n');
-                    Log.e(TAG.TAG_Activity, "故障代码:" + codes.toString() + "ggggg");
+                    if (codeEntity.getData().isDisplay()) {
+                        codes.append(codeEntity.getData().getFaultCode());
+                        codes.append('\n');
+                    }
                     data.add(new OBDTripEntity("故障代码", TextUtils.isEmpty(codes.toString()) ? "" : codes.toString()));
                     entity.setFaultCodes(TextUtils.isEmpty(codes.toString()) ? "" : codes.toString());
                 }
@@ -768,9 +769,10 @@ public class CheckRecord implements DefineObdReader, Serializable {
             public void onResponse(String response, int id) {
                 DefaultCodeEntity codeEntity = JSON.parseObject(response, DefaultCodeEntity.class);
                 if (codeEntity.getSuccess()) {
-                    codes.append(codeEntity.getData().getFaultCode());
-                    codes.append('\n');
-                    Log.e(TAG.TAG_Activity, "永久性故障代码:" + codes.toString());
+                    if (codeEntity.getData().isDisplay()) {
+                        codes.append(codeEntity.getData().getFaultCode());
+                        codes.append('\n');
+                    }
                     data.add(new OBDTripEntity("永久性故障代码", TextUtils.isEmpty(codes.toString()) ? "" : codes.toString()));
                     entity.setPermanentTroubleCode(TextUtils.isEmpty(codes.toString()) ? "" : codes.toString());
                 }
@@ -798,9 +800,10 @@ public class CheckRecord implements DefineObdReader, Serializable {
             public void onResponse(String response, int id) {
                 DefaultCodeEntity codeEntity = JSON.parseObject(response, DefaultCodeEntity.class);
                 if (codeEntity.getSuccess()) {
-                    codes.append(codeEntity.getData().getFaultCode());
-                    codes.append('\n');
-                    Log.e(TAG.TAG_Activity, "未决故障代码:" + codes.toString());
+                    if (codeEntity.getData().isDisplay()) {
+                        codes.append(codeEntity.getData().getFaultCode());
+                        codes.append('\n');
+                    }
                     data.add(new OBDTripEntity("未决故障代码", TextUtils.isEmpty(codes.toString()) ? "" : codes.toString()));
                     entity.setPendingTroubleCode(TextUtils.isEmpty(codes.toString()) ? "" : codes.toString());
                 }
@@ -814,7 +817,6 @@ public class CheckRecord implements DefineObdReader, Serializable {
         speed = currentSpeed;
         if (speedMax < currentSpeed)
             speedMax = currentSpeed;
-        // find travelled distance
         if (speed != 0) {
             mAddSpeed += speed;
             mSpeedCount++;
@@ -847,7 +849,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
             mSecondAgoSpeed = currentSpeed;
             mLastTimeStamp = System.currentTimeMillis();
         }
-        data.add(new OBDTripEntity("速降次数", mRapidDeclTimes + ""));
+        data.add(new OBDTripEntity("降速次数", mRapidDeclTimes + ""));
         entity.setRapidDeclTimes(mRapidDeclTimes + "");
         data.add(new OBDTripEntity("加速次数", mRapidAccTimes + ""));
         entity.setRapidAccTimes(mRapidAccTimes + "");
@@ -875,7 +877,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
         }
     }
 
-    public  float getmIntakeAirTemp() {
+    public float getmIntakeAirTemp() {
         return mIntakeAirTemp;
     }
 
@@ -1379,8 +1381,8 @@ public class CheckRecord implements DefineObdReader, Serializable {
         return returnList;
     }
 
-    public void setTripMap(List<OBDTripEntity> data) {
-        this.datas = data;
+    public void setTripMap(List<OBDTripEntity> entityList) {
+        this.entityList = entityList;
     }
 
     public OBDJsonTripEntity getOBDJson() {

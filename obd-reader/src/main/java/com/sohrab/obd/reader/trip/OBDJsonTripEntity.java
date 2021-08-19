@@ -8,97 +8,98 @@ import java.io.Serializable;
  * 描述：
  */
 public class OBDJsonTripEntity implements Serializable {
-    private String Speed;
-    private String EngineRpm;
-    private String IdlingDuration;
-    private String DrivingDuration;
-    private String SpeedMax;
-    private String EngineRpmMax;
-    private String RapidDeclTimes;
-    private String RapidAccTimes;
-    private String IdleMaf;
-    private String DrivingMaf;
-    private String InsFuelConsumption;
-    private String DrivingFuelConsumption;
-    private String IdlingFuelConsumption;
-    private String IgnitionMonitor;
-    private String DescribeProtocolNumber;
-    private String DescribeProtocol;
-    private String WideBandAirFuelRatio;
-    private String AirFuelRatio;
-    private String EngineOilTemp;
-    private String RmCommandedEGR;
-    private String EgrError;
-    private String AbsLoad;
-    private String DistanceTraveledMilOn;
-    private String VehicleIdentificationNumber;
-    private String FuelRailPressurevacuum;
-    private String FuelRailPressure;
-    private String ControlModuleVoltage;
-    private String DistanceTraveledAfterCodesCleared;
-    private String EquivRatio;
-    private String DtcNumber;
-    private String TimingAdvance;
-    private String FuelConsumptionRate;
-    private String FuelSystemStatus;
-    private String FuelTypeValue;
-    private String FuelLevel;
-    private String PermanentTroubleCode;
-    private String PendingTroubleCode;
-    private String FaultCodes;
-    private String RelThottlePos;
-    private String ThottlePos;
-    private String MassAirFlow;
-    private String EngineRuntime;
-    private String EngineLoad;
-    private String IntakePressure;
-    private String FuelPressure;
-    private String BarometricPressure;
-    private String EngineCoolantTemp;
-    private String EngineFuelRate;
-    private String AmbientAirTemp;
-    private String IntakeAirTemp;
-    private String ShortTermBank1;
-    private String ShortTermBank2;
-    private String LongTermBank1;
-    private String LongTermBank2;
-    private String EvaporaivePurge;
-    private String WarmUpSinceCodesCleared;
-    private String SystemVaporPressure;
-    private String WideBandAirFuelRatioOne;
-    private String WideBandAirFuelRatioTwo;
-    private String WideBandAirFuelRatioThree;
-    private String WideBandAirFuelRatioFour;
-    private String WideBandAirFuelRatioFive;
-    private String WideBandAirFuelRatioSix;
-    private String WideBandAirFuelRatioSeven;
-    private String WideBandAirFuelRatioEight;
-    private String CatalystTemperatureBank1Sensor1;
-    private String CatalystTemperatureBank2Sensor1;
-    private String CatalystTemperatureBank1Sensor2;
-    private String CatalystTemperatureBank2Sensor2;
-    private String AbsThrottlePosb;
-    private String AbsThrottlePosc;
-    private String AccPedalPosd;
-    private String AccPedalPose;
-    private String AccPedalPosf;
-    private String ThrottleActuator;
-    private String TimeRunWithMILOn;
-    private String TimeSinceTcClear;
-    private String MaxAirFlowMassRate;
-    private String EthanolFuelRate;
-    private String AbsEvapSystemVaporPressure;
-    private String EvapSystemVaporPressure;
-    private String ShortA_BANK1_B_BANK3;
-    private String Long_A_BANK1_B_BANK3;
-    private String Short_A_BANK2_B_BANK4;
-    private String Long_A_BANK2_B_BANK4;
-    private String FuelRailAbsPressure;
-    private String RelAccPedalPos;
-    private String HyBatteryPackLife;
-    private String ActualEngineTorque;
-    private String DPFTemp;
-    private String EngineFrictionPercentTorque;
+    private String Speed;//时速
+    private String EngineRpm;//发动机转速
+    private String IdlingDuration;//空闲时间
+    private String DrivingDuration;//行驶时间
+    private String SpeedMax;//最高时速
+    private String EngineRpmMax;//最大转速
+    private String RapidDeclTimes;//降速次数
+    private String RapidAccTimes;//加速次数
+    private String IdleMaf;//怠速空气流量
+    private String DrivingMaf;//驱动空气流量
+    private String InsFuelConsumption;//瞬时油耗
+    private String DrivingFuelConsumption;//行驶油耗
+    private String IdlingFuelConsumption;//怠速油耗
+    private String IgnitionMonitor;//点火监视器
+    private String DescribeProtocolNumber;//协议编号
+    private String DescribeProtocol;//协议
+    private String WideBandAirFuelRatio;//宽带空燃比
+    private String AirFuelRatio;//燃油-空气命令等效比
+    private String EngineOilTemp;//引擎油温
+    private String RmCommandedEGR;//废气循环
+    private String EgrError;//废气循环错误
+    private String AbsLoad;//绝对负荷
+    private String DistanceTraveledMilOn;//故障指示灯(MIL)亮时行驶的距离
+    private String VehicleIdentificationNumber;//车辆识别号(VIN)
+    private String FuelRailPressurevacuum;//油轨压力(相对进气歧管真空度)
+    private String FuelRailPressure;//油轨压力(柴油或汽油直喷)
+    private String ControlModuleVoltage;//控制模组电压
+    private String DistanceTraveledAfterCodesCleared;//故障码清除后行驶里程
+    private String EquivRatio;//指令当量比
+    private String DtcNumber;//自从DTC清除后的监控状态
+    private String TimingAdvance;//点火提前值
+    private String FuelConsumptionRate;//燃油消耗率
+    private String FuelSystemStatus;//燃油系统状态
+    private String FuelTypeValue;//燃料类型
+    private String FuelLevel;//燃油油位
+    private String PermanentTroubleCode;//永久性故障代码
+    private String PendingTroubleCode;//未决故障代码
+    private String FaultCodes;//故障代码
+    private String RelThottlePos;//相对油门位置
+    private String ThottlePos;//油门位置
+    private String MassAirFlow;//MAF空气流量速率
+    private String EngineRuntime;//引擎启动后的运行时间
+    private String EngineLoad;//引擎载荷
+    private String IntakePressure;//进气歧管压力
+    private String FuelPressure;//油压
+    private String BarometricPressure;//绝对大气压
+    private String EngineCoolantTemp;//引擎冷媒温度
+    private String EngineFuelRate;//引擎油量消耗速率
+    private String AmbientAirTemp;//环境空气温度
+    private String IntakeAirTemp;//油箱空气温度
+    private String ShortTermBank1;//短期燃油调节库1
+    private String ShortTermBank2;//短期燃油调节库2
+    private String LongTermBank1;//长期燃油调节库1
+    private String LongTermBank2;//长期燃油调节库2
+    private String EvaporaivePurge;//蒸发净化
+    private String WarmUpSinceCodesCleared;//代码清除后的预热
+    private String SystemVaporPressure;//系统蒸汽压力
+    private String WideBandAirFuelRatioOne;//氧气侦测器1 燃油-空气当量比 电流
+    private String WideBandAirFuelRatioTwo;//氧气侦测器2 燃油-空气当量比 电流
+    private String WideBandAirFuelRatioThree;//氧气侦测器3 燃油-空气当量比 电流
+    private String WideBandAirFuelRatioFour;//氧气侦测器4 燃油-空气当量比 电流
+    private String WideBandAirFuelRatioFive;//氧气侦测器5 燃油-空气当量比 电流
+    private String WideBandAirFuelRatioSix;//氧气侦测器6 燃油-空气当量比 电流
+    private String WideBandAirFuelRatioSeven;//氧气侦测器7 燃油-空气当量比 电流
+    private String WideBandAirFuelRatioEight;//氧气侦测器8 燃油-空气当量比 电流
+    private String CatalystTemperatureBank1Sensor1;//催化剂温度:Bank1,感测器1
+    private String CatalystTemperatureBank2Sensor1;//催化剂温度:Bank2,感测器1
+    private String CatalystTemperatureBank1Sensor2;//催化剂温度:Bank1,感测器2
+    private String CatalystTemperatureBank2Sensor2;//催化剂温度:Bank2,感测器2
+    private String AbsThrottlePosb;//绝对油门位置B
+    private String AbsThrottlePosc;//绝对油门位置C
+    private String AccPedalPosd;//加速踏板位置D
+    private String AccPedalPose;//加速踏板位置E
+    private String AccPedalPosf;//加速踏板位置F
+    private String ThrottleActuator;//油门执行器控制值
+    private String TimeRunWithMILOn;//MIL灯亮的行驶时间
+    private String TimeSinceTcClear;//故障代码清除后的时间
+    private String MaxAirFlowMassRate;//质量空气流量计的最大空气流率
+    private String EthanolFuelRate;//乙醇燃料百分比
+    private String AbsEvapSystemVaporPressure;//蒸发系统绝对蒸气压力
+    private String EvapSystemVaporPressure;//蒸发系统(相对)蒸气压力
+    private String ShortA_BANK1_B_BANK3;//第二侧氧气侦测器短期修正,A:bank 1,B:bank 3
+    private String Long_A_BANK1_B_BANK3;//第二侧氧气侦测器长期修正,A:bank 1,B:bank 3
+    private String Short_A_BANK2_B_BANK4;//第二侧氧气侦测器短期修正,A:bank 2,B:bank 4
+    private String Long_A_BANK2_B_BANK4;//第二侧氧气侦测器长期修正,A:bank 2,B:bank 4
+    private String FuelRailAbsPressure;//高压共轨绝对压力
+    private String RelAccPedalPos;//加速踏板相对位置
+    private String HyBatteryPackLife;//油电混合电池组剩下寿命
+    private String ActualEngineTorque;//实际引擎-扭矩百分比
+    private String DPFTemp;//柴油粒子过滤器(DPF)温度
+    private String EngineFrictionPercentTorque;//引擎摩擦力-扭矩百分比
+    private String EngineReferenceTorque;//引擎参考扭矩
 
     public String getEngineFrictionPercentTorque() {
         return EngineFrictionPercentTorque;
@@ -123,8 +124,6 @@ public class OBDJsonTripEntity implements Serializable {
     public void setEngineReferenceTorque(String engineReferenceTorque) {
         EngineReferenceTorque = engineReferenceTorque;
     }
-
-    private String EngineReferenceTorque;
 
     public String getActualEngineTorque() {
         return ActualEngineTorque;

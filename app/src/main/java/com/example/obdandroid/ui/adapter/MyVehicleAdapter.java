@@ -2,18 +2,14 @@ package com.example.obdandroid.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,8 +17,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.ui.entity.VehicleEntity;
-import com.example.obdandroid.utils.BitMapUtils;
 import com.example.obdandroid.utils.SPUtil;
+import com.example.obdandroid.utils.StringUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +26,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
-import static com.example.obdandroid.config.APIConfig.addTestRecord_URL;
 import static com.example.obdandroid.config.Constant.VEHICLE_ID;
 
 /**
@@ -74,7 +69,7 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     /**
      * 单选
      *
-     * @param postion
+     * @param postion 下标
      */
     public void singlesel(int postion) {
         Set<Map.Entry<Integer, Boolean>> entries = map.entrySet();
@@ -85,8 +80,9 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         notifyDataSetChanged();
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (EMPTY_VIEW == viewType) {
             return new EmptyViewHolder(inflater.inflate(R.layout.stub_empty, parent, false));
         }
@@ -95,37 +91,35 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder viewHolder, @SuppressLint("RecyclerView") int position) {
         int itemViewType = getItemViewType(position);
         if (EMPTY_VIEW == itemViewType) {
-            EmptyViewHolder viewHolder = (EmptyViewHolder) holder;
-            viewHolder.mEmptyTextView.setText("暂无数据");
+            EmptyViewHolder holder = (EmptyViewHolder) viewHolder;
+            holder.mEmptyTextView.setText("暂无数据");
         } else if (NOT_EMPTY_VIEW == itemViewType) {
-            final MyViewHolder holder1 = (MyViewHolder) holder;
-            holder1.tvAutomobileBrandName.setText(list.get(position).getVehicleName());
-            holder1.tvModelName.setText(list.get(position).getModelName());
-            if (list.get(position).getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
-                holder1.tvOBDState.setText(" 未绑定");
+            final MyViewHolder holder = (MyViewHolder) viewHolder;
+            holder.tvAutomobileBrandName.setText(list.get(position).getVehicleName());
+            holder.tvModelName.setText(list.get(position).getModelName());
+            if (StringUtil.isNull(list.get(position).getBluetoothDeviceNumber())) {//车辆状态 1 未绑定 2 已绑定 ,
+                holder.tvOBDState.setText(" 未绑定");
                 Drawable drawable = context.getResources().getDrawable(R.drawable.icon_no);
                 drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                holder1.tvOBDState.setCompoundDrawables(drawable, null, null, null);
+                holder.tvOBDState.setCompoundDrawables(drawable, null, null, null);
             } else {
-                holder1.tvOBDState.setText(" 已绑定");
+                holder.tvOBDState.setText(" 已绑定");
                 Drawable drawable = context.getResources().getDrawable(R.drawable.icon_ok);
                 drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                holder1.tvOBDState.setCompoundDrawables(drawable, null, null, null);
+                holder.tvOBDState.setCompoundDrawables(drawable, null, null, null);
             }
             if (TextUtils.isEmpty(list.get(position).getLogo())) {
-                holder1.ivCarLogo.setImageResource(R.drawable.icon_car_def);
+                holder.ivCarLogo.setImageResource(R.drawable.icon_car_def);
             } else {
-                Glide.with(context).load(SERVER_URL+list.get(position).getLogo()).into(holder1.ivCarLogo);
+                Glide.with(context).load(SERVER_URL+list.get(position).getLogo()).into(holder.ivCarLogo);
             }
-            holder1.id_cb_vehicleIndex.setChecked(map.get(position));
-            holder1.id_cb_vehicleIndex.setOnClickListener(v -> {
-                clickCallBack.select(list.get(position),position);
-            });
-            holder1.card_view.setOnClickListener(v -> clickCallBack.click(list.get(position)));
-            holder1.card_view.setOnLongClickListener(v -> {
+            holder.id_cb_vehicleIndex.setChecked(map.get(position));
+            holder.id_cb_vehicleIndex.setOnClickListener(v -> clickCallBack.select(list.get(position),position));
+            holder.card_view.setOnClickListener(v -> clickCallBack.click(list.get(position)));
+            holder.card_view.setOnLongClickListener(v -> {
                 clickCallBack.delete(list.get(position));
                 return true;
             });

@@ -20,6 +20,7 @@ import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleImageView;
 import com.example.obdandroid.utils.BitMapUtils;
 import com.example.obdandroid.utils.DialogUtils;
+import com.example.obdandroid.utils.StringUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -160,7 +161,7 @@ public class VehicleInfoActivity extends BaseActivity {
 
     @SuppressLint("SetTextI18n")
     private void setViewData(VehicleInfoEntity.DataEntity entity) {
-        if (entity.getVehicleStatus() == 1) {//车辆状态 1 未绑定 2 已绑定 ,
+        if (StringUtil.isNull(entity.getBluetoothDeviceNumber())) {//车辆状态 1 未绑定 2 已绑定 ,
             tvObd.setText("  设备未绑定");
             tvHomeObdTip.setText(" 设备序列号");
             Drawable drawable = context.getResources().getDrawable(R.drawable.icon_no);

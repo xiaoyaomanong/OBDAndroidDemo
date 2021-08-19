@@ -9,22 +9,12 @@ import android.view.View;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.Constant;
-import com.example.obdandroid.ui.adapter.CheckRecorderAdapter;
 import com.example.obdandroid.ui.adapter.TroubleCodeQueryAdapter;
 import com.example.obdandroid.utils.JumpUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
-import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.Arrays;
-
-import okhttp3.Call;
-import okhttp3.Response;
-
-import static com.example.obdandroid.config.APIConfig.FAULT_CODE_URL;
-import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 
 /**
  * 作者：Jealous
@@ -75,5 +65,4 @@ public class TroubleCodeQueryActivity extends BaseActivity {
             }
         });
     }
-
 }

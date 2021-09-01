@@ -3,6 +3,7 @@ package com.example.obdandroid.base;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +31,15 @@ import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.StringUtil;
 import com.example.obdandroid.utils.ToastUtil;
+import com.github.pires.obd.commands.protocol.HeadersOffCommand;
+import com.sohrab.obd.reader.enums.ObdProtocols;
+import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SelectProtocolCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
+import com.sohrab.obd.reader.utils.LogUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -269,7 +279,8 @@ public abstract class BaseFragment extends Fragment {
                 JumpUtil.startAct(context, LoginActivity.class);
                 ActivityManager.getInstance().finishActivitys();
             }
-        } else */if (msg.equals("未知异常，请联系管理员")) {
+        } else */
+        if (msg.equals("未知异常，请联系管理员")) {
             new CustomeDialog(context, msg, confirm -> {
                 if (confirm) {
                     JumpUtil.startAct(context, LoginActivity.class);
@@ -314,7 +325,7 @@ public abstract class BaseFragment extends Fragment {
                     setUserId(String.valueOf(entity.getData().getUserId()));
                     setPhone(mobile);
                     setToken(entity.getData().getToken());
-                   // refresh(true);
+                    // refresh(true);
                 }
             }
         });

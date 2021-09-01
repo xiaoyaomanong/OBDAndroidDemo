@@ -230,7 +230,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
         obdCommands.clear();
         obdCommands.add(new FuelPressureCommand(ModeTrim.MODE_01.buildObdCommand()));//油压
         // obdCommands.add(new AirIntakeTemperatureCommand(ModeTrim.MODE_01.buildObdCommand()));//邮箱空气温度
-        obdCommands.add(new ThrottlePositionCommand(ModeTrim.MODE_01.buildObdCommand()));//邮箱空气温度
+        obdCommands.add(new ThrottlePositionCommand(ModeTrim.MODE_01.buildObdCommand()));//节气门位置
         obdCommands.add(new ConsumptionRateCommand(ModeTrim.MODE_01.buildObdCommand()));//燃油效率
         obdCommands.add(new FuelRailPressureCommand(ModeTrim.MODE_01.buildObdCommand()));//油轨压力（柴油或汽油直喷）
         return obdCommands;

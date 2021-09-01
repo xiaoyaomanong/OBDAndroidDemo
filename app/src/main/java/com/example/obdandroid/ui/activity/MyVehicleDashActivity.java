@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.obd2.Command;
@@ -32,6 +33,7 @@ import java.util.Map;
  */
 public class MyVehicleDashActivity extends BaseActivity {
     private final Commander commander = new Commander();
+    private boolean isConnected;
 
     @Override
     protected int getContentViewId() {
@@ -69,6 +71,7 @@ public class MyVehicleDashActivity extends BaseActivity {
             }
         });
     }
+
 
     private void getOBDData(BluetoothSocket socket) {
         try {
@@ -111,7 +114,7 @@ public class MyVehicleDashActivity extends BaseActivity {
                 LogE("PID:" + entry.getKey());
                 LogE("结果:" + commander.sendCommand(entry.getValue()).getFormattedString());
             }
-        } catch (IOException  e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -123,7 +126,7 @@ public class MyVehicleDashActivity extends BaseActivity {
     private void clearDTC() {
         try {
             LogE("清除故障码：" + commander.sendCommand(new ClearDTCsCommand()).getFormattedString());
-        } catch (IOException  e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -135,7 +138,7 @@ public class MyVehicleDashActivity extends BaseActivity {
     private void getDTC() {
         try {
             LogE("故障码：" + commander.sendCommand(new DTCsCommand()).getFormattedString());
-        } catch (IOException  e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

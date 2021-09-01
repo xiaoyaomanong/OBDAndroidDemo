@@ -53,6 +53,7 @@ public class AddVehicleActivity extends BaseActivity {
     private String transmissionType;
     private String bluetoothDeviceNumber = "";
     private String bluetoothName = "";
+    private EditText tvLicensePlateNumber;
 
     @Override
     protected int getContentViewId() {
@@ -77,6 +78,7 @@ public class AddVehicleActivity extends BaseActivity {
         tvTransmissionType = findViewById(R.id.tvTransmissionType);
         tvCurrentMileage = findViewById(R.id.tvCurrentMileage);
         tvBluetoothDeviceNumber = findViewById(R.id.tvBluetoothDeviceNumber);
+        tvLicensePlateNumber = findViewById(R.id.tvLicensePlateNumber);
         btnAdd = findViewById(R.id.btnAdd);
         if (dataEntity != null) {
             automobileBrandId = String.valueOf(dataEntity.getAutomobileBrandId());
@@ -143,12 +145,16 @@ public class AddVehicleActivity extends BaseActivity {
                 showTipsDialog("请输入当前里程", TipDialog.TYPE_ERROR);
                 return;
             }
+            if (TextUtils.isEmpty(tvLicensePlateNumber.getText().toString())) {
+                showTipsDialog("请输入车牌号", TipDialog.TYPE_ERROR);
+                return;
+            }
             if (btnAdd.getProgress() == -1) {
                 btnAdd.setProgress(0);
             }
             addVehicle(getUserId(), automobileBrandId, tvAutomobileBrandName.getText().toString(),
                     modelId, tvModelName.getText().toString(), fuelType, transmissionType, tvCurrentMileage.getText().toString(),
-                    bluetoothDeviceNumber, bluetoothName, getToken());
+                    bluetoothDeviceNumber, bluetoothName, tvLicensePlateNumber.getText().toString(), getToken());
         });
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -187,12 +193,14 @@ public class AddVehicleActivity extends BaseActivity {
      * @param transmissionType      变速箱类型,字典值
      * @param currentMileage        当前里程(公里)
      * @param bluetoothDeviceNumber 蓝牙设备号
+     * @param bluetoothName         蓝牙名称
+     * @param licensePlateNumber    车牌号
      * @param token                 用户Token
      *                              添加车辆信息
      */
     private void addVehicle(String appUserId, String automobileBrandId, String automobileBrandName, String modelId,
                             String modelName, String fuelType, String transmissionType, String currentMileage,
-                            String bluetoothDeviceNumber, String bluetoothName, String token) {
+                            String bluetoothDeviceNumber, String bluetoothName, String licensePlateNumber, String token) {
         btnAdd.setProgress(0);
         new Handler().postDelayed(() -> btnAdd.setProgress(50), 3000);
         OkHttpUtils.post().
@@ -206,6 +214,7 @@ public class AddVehicleActivity extends BaseActivity {
                 addParam("fuelType", fuelType).
                 addParam("transmissionType", transmissionType).
                 addParam("currentMileage", currentMileage).
+                addParam("licensePlateNumber", licensePlateNumber).
                 addParam("bluetoothDeviceNumber", bluetoothDeviceNumber).
                 addParam("bluetoothName", bluetoothName).
                 build().execute(new StringCallback() {

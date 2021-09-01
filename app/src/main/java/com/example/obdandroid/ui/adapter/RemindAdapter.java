@@ -127,7 +127,7 @@ public class RemindAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
             tvRemindTitle.setText(listEntity.getTitle());
             //是否读取 1是 2 否 ,
-            if (listEntity.getIsRead() == 1) {
+            if (listEntity.getIsRead() >= 1) {
                 ivRead.setImageResource(R.drawable.icon_read_ok);
             } else {
                 ivRead.setImageResource(R.drawable.icon_read_no);

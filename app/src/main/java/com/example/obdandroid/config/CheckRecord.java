@@ -70,11 +70,9 @@ public class CheckRecord implements DefineObdReader, Serializable {
     private final static String TIMING_ADVANCE = "Timing Advance";
     private final static String PERMANENT_TROUBLE_CODES = "Permanent Trouble Codes";
     private final static String PENDING_TROUBLE_CODES = "Pending Trouble Codes";
-    private final static String EQUIV_RATIO = "Command Equivalence Ratio";
     private final static String DISTANCE_TRAVELED_AFTER_CODES_CLEARED = "Distance since codes cleared";
     private final static String SYSTEM_VAPOR_PRESSURE = "System Vapor Pressure";
     private final static String CONTROL_MODULE_VOLTAGE = "Control Module Power Supply ";
-    private final static String ENGINE_FUEL_RATE = "Engine Fuel Rate";
     private final static String FUEL_RAIL_PRESSURE = "Fuel Rail Pressure";
     private final static String FUEL_RAIL_PRESSURE_manifold = "Fuel Rail Pressure relative to manifold vacuum";
     private final static String VIN = "Vehicle Identification Number (VIN)";
@@ -85,7 +83,6 @@ public class CheckRecord implements DefineObdReader, Serializable {
     private final static String ABS_LOAD = "Absolute load";
     private final static String ENGINE_OIL_TEMP = "Engine oil temperature";
     private final static String AIR_FUEL_RATIO = "Air/Fuel Ratio";
-    private final static String WIDEBAND_AIR_FUEL_RATIO = "Wideband Air/Fuel Ratio";
     private final static String DESCRIBE_PROTOCOL = "Describe protocol";
     private final static String DESCRIBE_PROTOCOL_NUMBER = "Describe protocol number";
     private final static String IGNITION_MONITOR = "Ignition monitor";
@@ -238,7 +235,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
     private String mEquivRatio;
     private String mDistanceTraveledAfterCodesCleared;
     private String mControlModuleVoltage;
-    private String mEngineFuelRate;
+   // private String mEngineFuelRate;
     private String mFuelRailPressure = "";
     private String mFuelRailPressurevacuum = "";
     private String mVehicleIdentificationNumber;
@@ -287,14 +284,14 @@ public class CheckRecord implements DefineObdReader, Serializable {
     @SuppressLint("SetTextI18n")
     public void updateTrip(String name, ObdCommand command) {
         switch (name) {
-            case VEHICLE_SPEED:
+            case VEHICLE_SPEED://时速
                 setSpeed(((SpeedCommand) command).getMetricSpeed());
                 break;
-            case ENGINE_RPM:
+            case ENGINE_RPM://转速
                 setEngineRpm(command.getCalculatedResult());
                 setmIsEngineRuntimeSupported(true);
                 break;
-            case MAF:
+            case MAF://MAF空气流量速率
                 mMassAirFlow = Float.parseFloat(command.getFormattedResult());
                 findInsFualConsumption(mMassAirFlow);
                 setmIsMAFSupported(true);
@@ -332,7 +329,6 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 break;
             case ENGINE_COOLANT_TEMP:
                 mEngineCoolantTemp = command.getFormattedResult();
-                //textView.setText("引擎冷媒温度:" + (TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp));
                 data.add(new OBDTripEntity("引擎冷媒温度", TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp + " ℃"));
                 entity.setEngineCoolantTemp(TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp);
                 break;
@@ -573,11 +569,6 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 data.add(new OBDTripEntity("引擎摩擦力-扭矩百分比", TextUtils.isEmpty(mEngineFrictionPercentTorque) ? "" : mEngineFrictionPercentTorque));
                 entity.setEngineFrictionPercentTorque(TextUtils.isEmpty(mEngineFrictionPercentTorque) ? "" : mEngineFrictionPercentTorque);
                 break;
-            case EQUIV_RATIO:
-                mEquivRatio = command.getFormattedResult();
-                data.add(new OBDTripEntity("指令当量比", TextUtils.isEmpty(mEquivRatio) ? "" : mEquivRatio));
-                entity.setEquivRatio(TextUtils.isEmpty(mEquivRatio) ? "" : mEquivRatio);
-                break;
             case DISTANCE_TRAVELED_AFTER_CODES_CLEARED:
                 mDistanceTraveledAfterCodesCleared = command.getFormattedResult();
                 data.add(new OBDTripEntity("故障码清除后行驶里程", TextUtils.isEmpty(mDistanceTraveledAfterCodesCleared) ? "" : mDistanceTraveledAfterCodesCleared));
@@ -587,11 +578,6 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 mControlModuleVoltage = command.getFormattedResult();
                 data.add(new OBDTripEntity("控制模组电压", TextUtils.isEmpty(mControlModuleVoltage) ? "" : mControlModuleVoltage));
                 entity.setControlModuleVoltage(TextUtils.isEmpty(mControlModuleVoltage) ? "" : mControlModuleVoltage);
-                break;
-            case ENGINE_FUEL_RATE:
-                mEngineFuelRate = command.getFormattedResult();
-                data.add(new OBDTripEntity("引擎油量消耗速率", TextUtils.isEmpty(mEngineFuelRate) ? "" : mEngineFuelRate));
-                entity.setEngineFuelRate(TextUtils.isEmpty(mEngineFuelRate) ? "" : mEngineFuelRate);
                 break;
             case FUEL_RAIL_PRESSURE:
                 mFuelRailPressure = command.getFormattedResult();
@@ -645,13 +631,6 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 data.add(new OBDTripEntity("燃油-空气命令等效比", TextUtils.isEmpty(mAirFuelRatio) ? "" : mAirFuelRatio));
                 entity.setAirFuelRatio(TextUtils.isEmpty(mAirFuelRatio) ? "" : mAirFuelRatio);
                 break;
-
-            case WIDEBAND_AIR_FUEL_RATIO:
-                mWideBandAirFuelRatio = command.getFormattedResult();
-                data.add(new OBDTripEntity("宽带空燃比", TextUtils.isEmpty(mWideBandAirFuelRatio) ? "" : mWideBandAirFuelRatio));
-                entity.setWideBandAirFuelRatio(TextUtils.isEmpty(mWideBandAirFuelRatio) ? "" : mWideBandAirFuelRatio);
-                break;
-
             case DESCRIBE_PROTOCOL:
                 mDescribeProtocol = command.getFormattedResult();
                 data.add(new OBDTripEntity("协议", TextUtils.isEmpty(mDescribeProtocol) ? "" : mDescribeProtocol));
@@ -1168,10 +1147,10 @@ public class CheckRecord implements DefineObdReader, Serializable {
         return (mIsMAFSupported || mIsTempPressureSupported) ? mInsFuelConsumption : MINUS_ONE;
     }
 
-    public void setEngineRpm(String value) {
-        engineRpm = value;
-        if (value != null && this.engineRpmMax < Integer.parseInt(value)) {
-            this.engineRpmMax = Integer.parseInt(value);
+    public void setEngineRpm(String currentRPM) {
+        engineRpm = currentRPM;
+        if (currentRPM != null && this.engineRpmMax < Integer.parseInt(currentRPM)) {
+            this.engineRpmMax = Integer.parseInt(currentRPM);
         }
         data.add(new OBDTripEntity("引擎转速", TextUtils.isEmpty(engineRpm) ? "" : engineRpm));
         entity.setEngineRpm(TextUtils.isEmpty(engineRpm) ? "" : engineRpm);
@@ -1356,16 +1335,6 @@ public class CheckRecord implements DefineObdReader, Serializable {
     }
 
     private List<OBDTripEntity> removeDuplicate(List<OBDTripEntity> list) {
-       /* HashSet<OBDTripEntity> set = new HashSet<>(list.size());
-        List<OBDTripEntity> result = new ArrayList<>(list.size());
-        for (OBDTripEntity str : list) {
-            if (set.add(str)) {
-                result.add(str);
-            }
-        }
-        list.clear();
-        list.addAll(result);*/
-
         List<OBDTripEntity> returnList = new ArrayList<>();
         Map<String, OBDTripEntity> map = new HashMap<>();
         for (OBDTripEntity people : list) {

@@ -25,6 +25,7 @@ public class BluetoothConnService extends Service {
                 BltManagerUtils.getInstance().createBond(device, (code, msg) -> {
                     intent.putExtra("code", code);
                     intent.putExtra("address", address);
+                    intent.putExtra("msg", msg);
                     sendBroadcast(intent);
                 })).start();
     }

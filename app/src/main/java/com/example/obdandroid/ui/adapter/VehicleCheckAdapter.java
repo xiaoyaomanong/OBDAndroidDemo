@@ -2,18 +2,14 @@ package com.example.obdandroid.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.obdandroid.R;
-import com.example.obdandroid.ui.view.progressButton.CircularProgressButton;
 import com.sohrab.obd.reader.trip.OBDTripEntity;
 
 import java.util.List;
@@ -35,14 +31,15 @@ public class VehicleCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.list = list;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new MyViewHolder(inflater.inflate(R.layout.item_vehicle_check, parent, false));
     }
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         final MyViewHolder holder1 = (MyViewHolder) holder;
         holder1.tvIndex.setText(String.valueOf(position));
         holder1.tvCheckName.setText(list.get(position).getName() + ": " + list.get(position).getValue());

@@ -1,5 +1,6 @@
 package com.example.obdandroid.base;
 
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +19,16 @@ import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.StringUtil;
+import com.github.pires.obd.commands.protocol.HeadersOffCommand;
 import com.kongzue.dialog.v2.TipDialog;
+import com.sohrab.obd.reader.enums.ObdProtocols;
+import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SelectProtocolCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
+import com.sohrab.obd.reader.utils.LogUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -43,7 +53,7 @@ import static com.example.obdandroid.config.Constant.USER_NAME;
  * Activity 封装基类
  */
 
-public abstract class BaseActivity extends AppCompatActivity  {
+public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = BaseActivity.class.getSimpleName();
     public Context mContext;
     private final SparseArray<View> mViews = new SparseArray<>();
@@ -181,7 +191,8 @@ public abstract class BaseActivity extends AppCompatActivity  {
                 JumpUtil.startAct(context, LoginActivity.class);
                 ActivityManager.getInstance().finishActivitys();
             }
-        } else */if (msg.equals("未知异常，请联系管理员")) {
+        } else */
+        if (msg.equals("未知异常，请联系管理员")) {
             new CustomeDialog(context, msg, confirm -> {
                 if (confirm) {
                     JumpUtil.startAct(context, LoginActivity.class);

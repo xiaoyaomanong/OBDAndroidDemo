@@ -55,11 +55,20 @@ import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.StringUtil;
+import com.github.pires.obd.commands.protocol.HeadersOffCommand;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.kongzue.dialog.v2.TipDialog;
 import com.sohrab.obd.reader.application.ObdPreferences;
+import com.sohrab.obd.reader.enums.ObdProtocols;
+import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SelectProtocolCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
+import com.sohrab.obd.reader.utils.LogUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -112,6 +121,7 @@ public class HomeFragment extends BaseFragment {
     private HomeAdapter homeAdapter;
     private boolean isVip;
     private LocalBroadcastManager broadcastManager; //创建本地广播管理器类变量
+    private static final int HANDLE_MSG_ZERO = 0;
     private static final int HANDLE_MSG_ONE = 1;
     private static final int HANDLE_MSG_TWO = 2;
     private static final int HANDLE_MSG_THREE = 3;
@@ -126,11 +136,12 @@ public class HomeFragment extends BaseFragment {
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case HANDLE_MSG_ONE:
+                case HANDLE_MSG_ZERO:
                     onConnect((String) msg.obj);
                     break;
+                case HANDLE_MSG_ONE:
                 case HANDLE_MSG_TWO:
-                    onDisconnect();
+                    onDisconnect((String) msg.obj);
                     break;
                 case HANDLE_MSG_THREE:
                     String vehicleId = (String) msg.obj;
@@ -534,18 +545,46 @@ public class HomeFragment extends BaseFragment {
         titleBar.setRightIcon(R.drawable.action_connect);
         isConnected = true;
         TipDialog.show(context, getString(R.string.title_connected_to) + mConnectedDeviceName, TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
-        spUtil.put("deviceAddress", address);
+        //spUtil.put("deviceAddress", address);
         dialogUtils.dismiss();
+        if (MainApplication.getBluetoothSocket().isConnected()) {
+            new Thread(() -> initOBD(MainApplication.getBluetoothSocket())).start();
+        } else {
+            showToast(getString(R.string.device_not_conn));
+        }
+    }
+
+    /**
+     * @param mSocket 蓝牙
+     *                初始化OBD
+     */
+    public void initOBD(BluetoothSocket mSocket) {
+        try {
+            new ObdResetCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+            new LineFeedOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+            new SpacesOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+            new HeadersOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+            new TimeoutCommand(62).run(mSocket.getInputStream(), mSocket.getOutputStream());
+            new SelectProtocolCommand(ObdProtocols.AUTO).run(mSocket.getInputStream(), mSocket.getOutputStream());
+        } catch (Exception e) {
+            LogUtils.i("在新线程中重置命令异常:: " + e.getMessage());
+        }
     }
 
     /**
      * 处理蓝牙连接断开
      */
-    private void onDisconnect() {
-        titleBar.setLeftTitle(getString(R.string.conNo));
+    private void onDisconnect(String msg) {
+        titleBar.setLeftTitle(msg);
         titleBar.setRightIcon(R.drawable.action_disconnect);
         isConnected = false;
-        TipDialog.show(context, mConnectedDeviceName + getString(R.string.title_connected_fail), TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
+        showTipDialog(msg);
         dialogUtils.dismiss();
     }
 
@@ -559,7 +598,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void showTipDialog(String msg) {
-        TipDialog.show(context, msg, TipDialog.TYPE_ERROR, TipDialog.TYPE_WARNING);
+        TipDialog.show(context, msg, TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_WARNING);
     }
 
     /**
@@ -619,13 +658,19 @@ public class HomeFragment extends BaseFragment {
             //拿到进度，更新UI
             int code = intent.getIntExtra("code", -1);
             String address = intent.getStringExtra("address");
-            if (code == 0) {
-                sendMessage(HANDLE_MSG_ONE, address);
-            } else {
-                sendMessage(HANDLE_MSG_TWO, "");
+            String msg = intent.getStringExtra("msg");
+            switch (code) {
+                case 0:
+                    sendMessage(HANDLE_MSG_ZERO, address);
+                    break;
+                case 1:
+                    sendMessage(HANDLE_MSG_ONE, msg);
+                    break;
+                case 2:
+                    sendMessage(HANDLE_MSG_TWO, msg);
+                    break;
             }
         }
-
     }
 
     @Override

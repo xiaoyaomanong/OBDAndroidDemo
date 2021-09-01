@@ -116,18 +116,10 @@ public class VehicleCheckActivity extends BaseActivity {
                     btStart.setEnabled(true);
                 }
                 titleBar.setRightTitle(getString(R.string.clearCode));
-                layoutLook.setVisibility(View.VISIBLE);
-                tvCommandResult.setText(R.string.commandResult);
-                ivNext.setVisibility(View.VISIBLE);
                 tvOBDState.setVisibility(View.GONE);
                 showResult(tripRecord.getTripMap());
                 addTestRecord(spUtil.getString(VEHICLE_ID, ""), JSON.toJSONString(tripRecord.getOBDJson()), getUserId(), getToken());
                 reduceAndCumulativeFrequency(getToken(), getUserId());
-                layoutLook.setOnClickListener(v -> {
-                    Intent intent = new Intent(context, CheckReportActivity.class);
-                    intent.putExtra("data", tripRecord);
-                    startActivity(intent);
-                });
             }
             if (msg.what == COMPLETES) {
                 showTipDialog(getString(R.string.clearOk), TipDialog.TYPE_FINISH);
@@ -258,7 +250,6 @@ public class VehicleCheckActivity extends BaseActivity {
                 tripRecord.updateTrip(command.getName(), command);
             } catch (Exception e) {
                 LogE(e.getMessage());
-                // writeErrorToLocal(e.getMessage());
             }
         }
         Message msg = new Message();
@@ -409,6 +400,15 @@ public class VehicleCheckActivity extends BaseActivity {
                 if (entity.isSuccess()) {
                     Intent intent = new Intent(RECORD_ACTION);//创建发送广播的Action
                     localBroadcastManager.sendBroadcast(intent);  //发送本地广播
+                    layoutLook.setVisibility(View.VISIBLE);
+                    ivNext.setVisibility(View.VISIBLE);
+                    tvCommandResult.setText(R.string.commandResult);
+                    layoutLook.setOnClickListener(v -> {
+                        Intent intent1 = new Intent(context, CheckReportActivity.class);
+                        intent1.putExtra("data", tripRecord);
+                        intent1.putExtra("detectionTime", entity.getData().getDetectionTime());
+                        startActivity(intent1);
+                    });
                     addRemind(getUserId(), addJsonContent(entity.getData(), tripRecord.getOBDJson()), getToken(), String.valueOf(entity.getData().getId()));
                 }
             }
@@ -416,9 +416,11 @@ public class VehicleCheckActivity extends BaseActivity {
     }
 
     /**
-     * @param appUserId APP用户ID
-     * @param content   消息内容
-     * @param token     用户Token
+     * @param appUserId    APP用户ID
+     * @param content      消息内容
+     * @param token        用户Token
+     * @param testResultId 检测记录id
+     *                     添加消息
      */
     private void addRemind(String appUserId, String content, String token, String testResultId) {
         OkHttpUtils.post().url(SERVER_URL + addRemind_URL).

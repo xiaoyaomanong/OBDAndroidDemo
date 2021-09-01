@@ -328,5 +328,5 @@
     <string name="pleaseConn">请连接设备</string>
     <string name="clearing">正在清除故障码</string>
     <string name="RechargeSetMeaName_no">未购买会员</string>
-    <string name="RechargeTime">\"有效期至: \"</string>
+    <string name="RechargeTime">有效期至: </string>
 </resources>

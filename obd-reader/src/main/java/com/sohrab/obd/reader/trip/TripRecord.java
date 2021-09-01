@@ -61,10 +61,8 @@ public class TripRecord implements DefineObdReader, Serializable {
     private final static String TIMING_ADVANCE = "Timing Advance";
     private final static String PERMANENT_TROUBLE_CODES = "Permanent Trouble Codes";
     private final static String PENDING_TROUBLE_CODES = "Pending Trouble Codes";
-    private final static String EQUIV_RATIO = "Command Equivalence Ratio";
     private final static String DISTANCE_TRAVELED_AFTER_CODES_CLEARED = "Distance since codes cleared";
     private final static String CONTROL_MODULE_VOLTAGE = "Control Module Power Supply ";
-    private final static String ENGINE_FUEL_RATE = "Engine Fuel Rate";
     private final static String FUEL_RAIL_PRESSURE = "Fuel Rail Pressure";
     private final static String FUEL_RAIL_PRESSURE_manifold = "Fuel Rail Pressure relative to manifold vacuum";
     private final static String VIN = "Vehicle Identification Number (VIN)";
@@ -75,7 +73,6 @@ public class TripRecord implements DefineObdReader, Serializable {
     private final static String ABS_LOAD = "Absolute load";
     private final static String ENGINE_OIL_TEMP = "Engine oil temperature";
     private final static String AIR_FUEL_RATIO = "Air/Fuel Ratio";
-    private final static String WIDEBAND_AIR_FUEL_RATIO = "Wideband Air/Fuel Ratio";
     private final static String DESCRIBE_PROTOCOL = "Describe protocol";
     private final static String DESCRIBE_PROTOCOL_NUMBER = "Describe protocol number";
     private final static String IGNITION_MONITOR = "Ignition monitor";
@@ -493,13 +490,6 @@ public class TripRecord implements DefineObdReader, Serializable {
                 data.add(new OBDTripEntity("未决故障代码", TextUtils.isEmpty(mPendingTroubleCode) ? "" : mPendingTroubleCode));
                 entity.setPendingTroubleCode(TextUtils.isEmpty(mPendingTroubleCode) ? "" : mPendingTroubleCode);
                 break;
-
-            case EQUIV_RATIO:
-                mEquivRatio = command.getFormattedResult();
-                data.add(new OBDTripEntity("指令当量比", TextUtils.isEmpty(mEquivRatio) ? "" : mEquivRatio));
-                entity.setEquivRatio(TextUtils.isEmpty(mEquivRatio) ? "" : mEquivRatio);
-                break;
-
             case DISTANCE_TRAVELED_AFTER_CODES_CLEARED:
                 mDistanceTraveledAfterCodesCleared = command.getFormattedResult();
                 data.add(new OBDTripEntity("代码清除后的距离", TextUtils.isEmpty(mDistanceTraveledAfterCodesCleared) ? "" : mDistanceTraveledAfterCodesCleared));
@@ -559,13 +549,6 @@ public class TripRecord implements DefineObdReader, Serializable {
                 data.add(new OBDTripEntity("空燃比", TextUtils.isEmpty(mAirFuelRatio) ? "" : mAirFuelRatio));
                 entity.setAirFuelRatio(TextUtils.isEmpty(mAirFuelRatio) ? "" : mAirFuelRatio);
                 break;
-
-            case WIDEBAND_AIR_FUEL_RATIO:
-                mWideBandAirFuelRatio = command.getFormattedResult();
-                data.add(new OBDTripEntity("宽带空燃比", TextUtils.isEmpty(mWideBandAirFuelRatio) ? "" : mWideBandAirFuelRatio));
-                entity.setWideBandAirFuelRatio(TextUtils.isEmpty(mWideBandAirFuelRatio) ? "" : mWideBandAirFuelRatio);
-                break;
-
             case DESCRIBE_PROTOCOL:
                 mDescribeProtocol = command.getFormattedResult();
                 data.add(new OBDTripEntity("描述协议", TextUtils.isEmpty(mDescribeProtocol) ? "" : mDescribeProtocol));

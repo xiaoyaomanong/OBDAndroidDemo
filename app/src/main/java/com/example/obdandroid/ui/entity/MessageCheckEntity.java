@@ -8,11 +8,11 @@ import java.io.Serializable;
  * 描述：
  */
 public class MessageCheckEntity implements Serializable {
-    private String createTime;
-    private String content;
-    private String details;
-    private String VehicleName;
-    private int platformType;
+    private String createTime;//创建时间
+    private String content; //检测内容
+    private String details; //检测记录id
+    private String VehicleName;//车辆品牌名称
+    private int platformType;// 1:android   2:IOS
 
     public String getCreateTime() {
         return createTime;

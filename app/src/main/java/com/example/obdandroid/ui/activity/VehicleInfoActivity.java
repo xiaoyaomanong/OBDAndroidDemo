@@ -124,7 +124,7 @@ public class VehicleInfoActivity extends BaseActivity {
             public void onRightClick(View v) {
                 Intent intent = new Intent(context, ModifyVehicleActivity.class);
                 intent.putExtra(VEHICLE_ID, vehicleId);
-                startActivity(intent);
+                startActivityForResult(intent,100);
             }
         });
     }

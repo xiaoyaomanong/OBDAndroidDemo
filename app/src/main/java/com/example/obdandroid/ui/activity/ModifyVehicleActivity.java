@@ -44,7 +44,6 @@ import static com.example.obdandroid.config.Constant.VEHICLE_ID;
  */
 public class ModifyVehicleActivity extends BaseActivity {
     private Context context;
-    private TitleBar titleBarSet;
     private TextView tvAutomobileBrandName;
     private TextView tvModelName;
     private TextView tvFuelType;
@@ -65,12 +64,12 @@ public class ModifyVehicleActivity extends BaseActivity {
     private TextView tvVehiclePurchaseDate;
     private EditText tvYearManufacture;
     private DialogUtils dialogUtils;
-    private String vehicleId="";
-    private String automobileBrandId="";
-    private String modelId="";
-    private String fuelType="";
-    private String transmissionType="";
-    private String bluetoothDeviceNumber="";
+    private String vehicleId = "";
+    private String automobileBrandId = "";
+    private String modelId = "";
+    private String fuelType = "";
+    private String transmissionType = "";
+    private String bluetoothDeviceNumber = "";
 
     @Override
     protected int getContentViewId() {
@@ -87,7 +86,7 @@ public class ModifyVehicleActivity extends BaseActivity {
         super.initView();
         context = this;
         vehicleId = getIntent().getStringExtra(VEHICLE_ID);
-        titleBarSet = findViewById(R.id.titleBarSet);
+        TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         tvAutomobileBrandName = findViewById(R.id.tvAutomobileBrandName);
         tvModelName = findViewById(R.id.tvModelName);
         tvFuelType = findViewById(R.id.tvFuelType);
@@ -160,7 +159,30 @@ public class ModifyVehicleActivity extends BaseActivity {
 
             @Override
             public void onRightClick(View v) {
-
+                if (TextUtils.isEmpty(tvAutomobileBrandName.getText().toString())) {
+                    showTipsDialog("请选择汽车品牌", TipDialog.TYPE_ERROR);
+                    return;
+                }
+                if (TextUtils.isEmpty(tvModelName.getText().toString())) {
+                    showTipsDialog("请选择品牌型号", TipDialog.TYPE_ERROR);
+                    return;
+                }
+                if (TextUtils.isEmpty(tvFuelType.getText().toString())) {
+                    showTipsDialog("请选择燃油类型", TipDialog.TYPE_ERROR);
+                    return;
+                }
+                if (TextUtils.isEmpty(tvTransmissionType.getText().toString())) {
+                    showTipsDialog("请选择变速箱类型", TipDialog.TYPE_ERROR);
+                    return;
+                }
+                if (TextUtils.isEmpty(tvCurrentMileage.getText().toString())) {
+                    showTipsDialog("请输入当前里程", TipDialog.TYPE_ERROR);
+                    return;
+                }
+                if (TextUtils.isEmpty(tvLicensePlateNumber.getText().toString())) {
+                    showTipsDialog("请输入车牌号", TipDialog.TYPE_ERROR);
+                    return;
+                }
                 modifyVehicle(vehicleId, getUserId(), automobileBrandId, tvAutomobileBrandName.getText().toString(), modelId,
                         tvModelName.getText().toString(), fuelType, transmissionType, tvCurrentMileage.getText().toString(),
                         bluetoothDeviceNumber, tvVehiclePurchaseDate.getText().toString(),
@@ -270,7 +292,8 @@ public class ModifyVehicleActivity extends BaseActivity {
                 if (entity.isSuccess()) {
                     new CustomeDialog(context, "完善成功！", confirm -> {
                         if (confirm) {
-
+                            setResult(101, new Intent());
+                            finish();
                         }
                     }).setPositiveButton("确定").setTitle("提示").show();
                 } else {

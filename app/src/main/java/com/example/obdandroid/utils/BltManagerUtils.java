@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.config.Constant;
+import com.example.obdandroid.config.TAG;
 import com.github.pires.obd.commands.protocol.HeadersOffCommand;
 import com.github.pires.obd.commands.protocol.ObdWarmstartCommand;
 import com.sohrab.obd.reader.enums.ObdProtocols;
@@ -36,15 +37,11 @@ public class BltManagerUtils {
     }
 
     private static class BluetoothManagers {
-        private static BltManagerUtils bltManager = new BltManagerUtils();
+        private static final BltManagerUtils bltManager = new BltManagerUtils();
     }
 
     public static BltManagerUtils getInstance() {
         return BltManagerUtils.BluetoothManagers.bltManager;
-    }
-
-    public BluetoothSocket getmSocket() {
-        return mSocket;
     }
 
 
@@ -56,41 +53,20 @@ public class BltManagerUtils {
     private void connect(BluetoothDevice device, ConnBluetoothSocketListener listener) {
         try {
             mSocket = device.createRfcommSocketToServiceRecord(Constant.SPP_UUID);
-            if (mSocket != null)
-                MainApplication.setBluetoothSocket(mSocket);
-            if (!mSocket.isConnected()) {
+            if (mSocket != null && !mSocket.isConnected()) {
                 mSocket.connect();
             }
-        } catch (Exception e) {
-            Log.e("blueTooth", "...链接失败");
+            MainApplication.setBluetoothSocket(mSocket);
+        } catch (IOException connException) {
             try {
-                getmSocket().close();
-            } catch (IOException e1) {
-                e1.printStackTrace();
+                Log.e(TAG.TAG_Fragemnt, "恢复时：无法连接", connException);
+                mSocket.close();
+            } catch (IOException exception) {
+                Log.e(TAG.TAG_Fragemnt, "恢复时：连接失败时无法关闭套接字", exception);
             }
-            e.printStackTrace();
         }
-
         if (mSocket.isConnected()) {
             listener.connectMsg(0, "连接成功");
-            try {
-                new ObdResetCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-               // new ObdWarmstartCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());//热启动OBD连接。。。
-                new LineFeedOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-                new SpacesOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-                new HeadersOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-                new TimeoutCommand(62).run(mSocket.getInputStream(), mSocket.getOutputStream());
-                new SelectProtocolCommand(ObdProtocols.AUTO).run(mSocket.getInputStream(), mSocket.getOutputStream());
-                //listener.connectMsg(0, "连接成功");
-            } catch (Exception e) {
-                LogUtils.i("在新线程中重置命令异常:: " + e.getMessage());
-            }
         } else {
             listener.connectMsg(1, "连接失败");
         }
@@ -105,13 +81,16 @@ public class BltManagerUtils {
     public void createBond(BluetoothDevice btDev, ConnBluetoothSocketListener listener) {
         if (btDev.getBondState() == BluetoothDevice.BOND_NONE) {
             //如果这个设备取消了配对，则尝试配对
-            btDev.createBond();
+            if (btDev.createBond()) {
+                connect(btDev, listener);
+            } else {
+                listener.connectMsg(2, "配对失败");
+            }
         } else if (btDev.getBondState() == BluetoothDevice.BOND_BONDED) {
             //如果这个设备已经配对完成，则尝试连接
             connect(btDev, listener);
         }
     }
-
 
     public interface ConnBluetoothSocketListener {
         void connectMsg(int code, String msg);

@@ -75,6 +75,7 @@ public class CheckReportActivity extends BaseActivity {
     private final ArrayList<String> bodyNOList = new ArrayList<>();
     private final ArrayList<String> chassisNOList = new ArrayList<>();
     private final ArrayList<String> netWorkNOList = new ArrayList<>();
+    private String detectionTime;
 
 
     @Override
@@ -92,6 +93,7 @@ public class CheckReportActivity extends BaseActivity {
         super.initView();
         context = this;
         CheckRecord tripRecord = (CheckRecord) getIntent().getSerializableExtra("data");
+        detectionTime = getIntent().getStringExtra("detectionTime");
         TitleBar titleBar = findViewById(R.id.titleBar);
         tvCheckTime = findViewById(R.id.tvCheckTime);
         tvCheckNum = findViewById(R.id.tvCheckNum);
@@ -157,7 +159,7 @@ public class CheckReportActivity extends BaseActivity {
     @SuppressLint("SetTextI18n")
     private void setView(CheckRecord tripRecord) {
         OBDJsonTripEntity entity = tripRecord.getOBDJson();
-        tvCheckTime.setText(AppDateUtils.getTodayDateTimeHms());
+        tvCheckTime.setText(detectionTime);
         String msg;
         if (TextUtils.isEmpty(entity.getFaultCodes()) && TextUtils.isEmpty(entity.getPendingTroubleCode())) {
             msg = "全部通过";

@@ -52,7 +52,6 @@ import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.USER_INFO_URL;
 import static com.example.obdandroid.config.APIConfig.getTheUserCurrentRecharge_URL;
 import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
-import static com.example.obdandroid.config.Constant.CONNECT_BT_KEY;
 import static com.example.obdandroid.config.Constant.OBD_ACTION;
 import static com.example.obdandroid.config.Constant.VEHICLE_ID;
 

@@ -9,7 +9,7 @@ public class APIConfig {
     /**
      * APP服务器地址
      */
-    //public static final String SERVER_URL = "http://192.168.0.113:1021";//本地测试
+    //public static final String SERVER_URL = "http://192.168.0.113:8080";//本地测试
     //public static final String SERVER_URL = "http://y342r9.natappfree.cc";//本地测试
     public static final String SERVER_URL = "http://8.136.125.33:1021";//生产
     public static final String UserAgreement_URL = "http://8.136.125.33/userAgreement.html";//隐私政策

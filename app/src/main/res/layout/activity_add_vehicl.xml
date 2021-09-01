@@ -199,13 +199,49 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@null"
-                    android:drawableEnd="@drawable/icon_next"
+                    android:paddingEnd="@dimen/dp_10"
                     android:gravity="center_vertical|right"
                     android:hint="@string/hint_currentMileage"
                     android:textColor="@color/white"
                     android:textColorHint="@color/gray_check"
                     android:textSize="@dimen/text_13sp"
                     tools:ignore="RtlHardcoded,RtlSymmetry,TextFields" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gotham"
+                    android:gravity="center_vertical"
+                    android:paddingStart="@dimen/dp_10"
+                    android:text="@string/LicensePlateNumber"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlSymmetry" />
+
+                <EditText
+                    android:id="@+id/tvLicensePlateNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:paddingEnd="@dimen/dp_10"
+                    android:gravity="center_vertical|right"
+                    android:hint="@string/hint_LicensePlateNumber"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_check"
+                    android:textSize="@dimen/sp_12"
+                    tools:ignore="RtlHardcoded,RtlSymmetry" />
 
             </LinearLayout>
 

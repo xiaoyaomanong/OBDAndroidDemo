@@ -207,7 +207,7 @@ public class HomeFragment extends BaseFragment {
         context.registerReceiver(msgReceiver, intentFilter);
         mConnectedDeviceName = ObdPreferences.get(context).getBlueToothDeviceName();
         mConnectedDeviceAddress = ObdPreferences.get(context).getBlueToothDeviceAddress();
-        broadcastManager = LocalBroadcastManager.getInstance(context);                   //广播变量管理器获
+        broadcastManager = LocalBroadcastManager.getInstance(context);//广播变量管理器获
         blueList = getBlueTooth();//初始化蓝牙
         initReceiver();//注册选择默认车辆广播
         initRecordReceiver();//注册车辆检测记录跟新广播
@@ -242,11 +242,78 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onRightClick(View v) {
-                showSingleChoiceDialog();
+                if (blueList.size() == 1) {
+                    singleConn(blueList.get(0).getBlue_address());
+                } else {
+                    showSingleChoiceDialog();
+                }
             }
         });
     }
 
+    /**
+     * @param Blue_address 蓝牙MAC
+     *                     直连蓝牙
+     */
+    private void singleConn(String Blue_address) {
+        isConn = Blue_address.equals(deviceAddress);
+        if (!TextUtils.isEmpty(blueList.get(yourChoice).getBlue_address())) {
+            if (isConn) {
+                if (!MainApplication.getBluetoothSocket().isConnected()) {
+                    connectBtDevice(blueList.get(yourChoice).getBlue_address());
+                } else {
+                    showTipDialog(getString(R.string.connTip));
+                }
+            } else {
+                showTipDialog(getString(R.string.connNot));
+            }
+        } else {
+            showToast(getString(R.string.text_bluetooth_error_connecting));
+        }
+    }
+
+    /**
+     * 选择已配对蓝牙
+     */
+    private void showSingleChoiceDialog() {
+        yourChoice = 0;
+        final String[] items = new String[blueList.size()];
+        for (int i = 0; i < blueList.size(); i++) {
+            items[i] = blueList.get(i).getBlue_name();
+        }
+        for (int i = 0; i < items.length; i++) {
+            if (mConnectedDeviceName.equals(items[i])) {
+                yourChoice = i;
+            }
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.blueTitle);
+        builder.setIcon(R.drawable.icon_bluetooth);
+        // 第二个参数是默认选项，此处设置为0
+        builder.setSingleChoiceItems(items, yourChoice,
+                (dialog, which) -> yourChoice = which);
+        builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss());
+        builder.setPositiveButton(getString(R.string.confirm),
+                (dialog, which) -> {
+                    if (yourChoice != -1) {
+                        isConn = blueList.get(yourChoice).getBlue_address().equals(deviceAddress);
+                        if (!TextUtils.isEmpty(blueList.get(yourChoice).getBlue_address())) {
+                            if (isConn) {
+                                if (!MainApplication.getBluetoothSocket().isConnected()) {
+                                    connectBtDevice(blueList.get(yourChoice).getBlue_address());
+                                } else {
+                                    showTipDialog(getString(R.string.connTip));
+                                }
+                            } else {
+                                showTipDialog(getString(R.string.connNot));
+                            }
+                        } else {
+                            showToast(getString(R.string.text_bluetooth_error_connecting));
+                        }
+                    }
+                });
+        builder.show();
+    }
 
     /**
      * 展示默认车辆
@@ -482,49 +549,6 @@ public class HomeFragment extends BaseFragment {
     }
 
     /**
-     * 选择已配对蓝牙
-     */
-    private void showSingleChoiceDialog() {
-        yourChoice = 0;
-        final String[] items = new String[blueList.size()];
-        for (int i = 0; i < blueList.size(); i++) {
-            items[i] = blueList.get(i).getBlue_name();
-        }
-        for (int i = 0; i < items.length; i++) {
-            if (mConnectedDeviceName.equals(items[i])) {
-                yourChoice = i;
-            }
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.blueTitle);
-        builder.setIcon(R.drawable.icon_bluetooth);
-        // 第二个参数是默认选项，此处设置为0
-        builder.setSingleChoiceItems(items, yourChoice,
-                (dialog, which) -> yourChoice = which);
-        builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss());
-        builder.setPositiveButton(getString(R.string.confirm),
-                (dialog, which) -> {
-                    if (yourChoice != -1) {
-                        isConn = blueList.get(yourChoice).getBlue_address().equals(deviceAddress);
-                        if (!TextUtils.isEmpty(blueList.get(yourChoice).getBlue_address())) {
-                            if (isConn) {
-                                if (!MainApplication.getBluetoothSocket().isConnected()) {
-                                    connectBtDevice(blueList.get(yourChoice).getBlue_address());
-                                } else {
-                                    showTipDialog(getString(R.string.connTip));
-                                }
-                            } else {
-                                showTipDialog(getString(R.string.connNot));
-                            }
-                        } else {
-                            showToast(getString(R.string.text_bluetooth_error_connecting));
-                        }
-                    }
-                });
-        builder.show();
-    }
-
-    /**
      * @param address 蓝牙设备MAC地址
      *                启动与所选蓝牙设备的连接
      */
@@ -544,14 +568,13 @@ public class HomeFragment extends BaseFragment {
         titleBar.setLeftTitle(getString(R.string.conOk));
         titleBar.setRightIcon(R.drawable.action_connect);
         isConnected = true;
-        TipDialog.show(context, getString(R.string.title_connected_to) + mConnectedDeviceName, TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
-        //spUtil.put("deviceAddress", address);
+        TipDialog.show(context, getString(R.string.title_connected_to), TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
         dialogUtils.dismiss();
-        if (MainApplication.getBluetoothSocket().isConnected()) {
+       /* if (MainApplication.getBluetoothSocket().isConnected()) {
             new Thread(() -> initOBD(MainApplication.getBluetoothSocket())).start();
         } else {
             showToast(getString(R.string.device_not_conn));
-        }
+        }*/
     }
 
     /**

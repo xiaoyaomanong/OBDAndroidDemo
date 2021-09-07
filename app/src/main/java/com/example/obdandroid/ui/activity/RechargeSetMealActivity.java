@@ -259,6 +259,14 @@ public class RechargeSetMealActivity extends BaseActivity {
     }
 
     /**
+     * @param token 接口令牌
+     * @param appUserId
+     */
+    private void getDefault(String token, String appUserId) {
+
+    }
+
+    /**
      * 注册本地广播
      */
     private void initReceiver() {
@@ -269,21 +277,28 @@ public class RechargeSetMealActivity extends BaseActivity {
     }
 
     /**
-     * @param paymentChannels           支付渠道
-     * @param token                     用户Token
-     * @param appUserId                 用户id
-     * @param rechargeSetMealSettingsId 套餐ID
-     * @param amount                    支付金额
-     *                                  APP用户购买套餐下单接口
+     * @param paymentChannels 支付渠道
+     * @param token           用户Token
+     * @param appUserId       用户id
+     * @param rechargeId      套餐ID
+     * @param amount          支付金额
+     * @param contacts        联系人
+     * @param telephone       联系电话
+     * @param address         地址
+     *                        APP用户购买套餐下单接口
      */
-    private void placeAnOrder(String paymentChannels, String token, String appUserId, String rechargeSetMealSettingsId, String amount) {
+    private void placeAnOrder(String paymentChannels, String token, String appUserId, String rechargeId, String amount,
+                              String contacts, String telephone, String address) {
         btnBuy.setProgress(0);
         new Handler().postDelayed(() -> btnBuy.setProgress(50), 3000);
         OkHttpUtils.post().url(SERVER_URL + placeAnOrder_URL).
                 addParam("paymentChannels", paymentChannels).
                 addParam("token", token).
                 addParam("appUserId", appUserId).
-                addParam("rechargeSetMealSettingsId", rechargeSetMealSettingsId).
+                addParam("rechargeSetMealSettingsId", rechargeId).
+                /*addParam("contacts", contacts).
+                addParam("telephone", telephone).
+                addParam("address", address).*/
                 build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Response response, Exception e, int id) {
@@ -378,7 +393,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                     if (btnBuy.getProgress() == -1) {
                         btnBuy.setProgress(0);
                     }
-                    placeAnOrder(paymentChannel, getToken(), getUserId(), mealId, amount);
+                    placeAnOrder(paymentChannel, getToken(), getUserId(), mealId, amount, "", "", "");
                 } else {
                     showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
                 }

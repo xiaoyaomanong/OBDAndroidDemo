@@ -233,6 +233,7 @@ public abstract class ObdCommand {
 
     }
 
+    @SuppressWarnings("unchecked")
     void checkForErrors() {
         for (Class<? extends ResponseException> errorClass : ERROR_CLASSES) {
             ResponseException messageError;

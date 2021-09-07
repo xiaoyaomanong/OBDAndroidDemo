@@ -149,5 +149,26 @@ dependencies {
     //implementation 'io.github.macfja:obd2:1.1.0'
     api(name: 'alipaysdk-15.8.02.210308182128', ext: 'aar')
     //api(name: 'alipaySdk-15.7.5-20200422171619', ext: 'aar')
+    implementation 'com.github.iielse:ImageWatcher:1.1.5'
+    //原生API定位
+    implementation 'com.github.quentin7b:android-location-tracker:3.1'
+
+    implementation 'com.google.code.gson:gson:2.8.4'
+
+    //rxjava2
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.12'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+
+    implementation 'io.reactivex:rxandroid:1.1.0'
+    implementation 'io.reactivex:rxjava:1.1.0'
+
+    //retrofit2
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    //百度地图SDK
+    implementation files('libs\\BaiduLBS_Android.jar')
 }
 

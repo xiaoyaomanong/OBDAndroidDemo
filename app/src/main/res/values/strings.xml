@@ -295,7 +295,7 @@
     <string name="agreeOk">同意并继续</string>
     <string name="agreeNo">不同意</string>
     <string name="servicePhone">人工客服</string>
-    <string name="_0931_4896234">0931-4896234</string>
+    <string name="_0931_4896234">0931–4896234</string>
     <string name="dialog_agree_title">用户协议与隐私政策</string>
     <string name="connTip">当前设备已连接</string>
     <string name="connNot">当前车辆绑定设备,与连接的设备不一致</string>
@@ -329,4 +329,25 @@
     <string name="clearing">正在清除故障码</string>
     <string name="RechargeSetMeaName_no">未购买会员</string>
     <string name="RechargeTime">有效期至: </string>
+    <string name="ReceivingAddress">收货地址</string>
+    <string name="hint_ReceivingAddress">修改/添加</string>
+    <string name="add_address">新增收货地址</string>
+    <string name="my_receiving_address">我的收货地址</string>
+    <string name="new_address">新建收货地址</string>
+    <string name="receive_address">详细地址</string>
+    <string name="moblePhone">手机号码</string>
+    <string name="selectArea">选择地区</string>
+    <string name="save">保存</string>
+    <string name="default_address">设为默认地址</string>
+    <string name="hint_SelectArea">请选择省、市、区</string>
+    <string name="hint_name">名字</string>
+    <string name="hint_phone">手机号</string>
+    <string name="hint_DetailsAddress">请输入街道、小区楼栋/乡村名称</string>
+    <string name="contractRecoder">通讯录</string>
+    <string name="delete">删除</string>
+    <string name="update_address">修改</string>
+    <string name="guide">车主指南</string>
+    <string name="Location">所在地区</string>
+    <string name="please">请选择</string>
+    <string name="bonus_vip">附赠会员:</string>
 </resources>

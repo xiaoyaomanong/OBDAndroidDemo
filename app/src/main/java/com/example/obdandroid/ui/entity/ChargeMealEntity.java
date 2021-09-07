@@ -9,12 +9,6 @@ import java.util.List;
  */
 public class ChargeMealEntity {
 
-    /**
-     * success : true
-     * code : SUCCESS
-     * message : 操作成功
-     * data : {"total":6,"list":[{"rechargeSetMealSettingsId":1346338492057051138,"rechargeSetMeaName":"10次19.9","rechargeSetMeaType":1,"rechargeSetMeaNum":10,"rechargeSetMeaAmount":19.9,"rechargeSetMeaExplain":"测试","effectiveDays":10},{"rechargeSetMealSettingsId":1346422331801161730,"rechargeSetMeaName":"1次","rechargeSetMeaType":1,"rechargeSetMeaNum":1,"rechargeSetMeaAmount":7,"rechargeSetMeaExplain":"","effectiveDays":10},{"rechargeSetMealSettingsId":1348551694983557122,"rechargeSetMeaName":"包月","rechargeSetMeaType":2,"rechargeSetMeaNum":10,"rechargeSetMeaAmount":1,"rechargeSetMeaExplain":"包月","effectiveDays":30},{"rechargeSetMealSettingsId":1348551906632331266,"rechargeSetMeaName":"季度","rechargeSetMeaType":2,"rechargeSetMeaNum":0,"rechargeSetMeaAmount":90,"rechargeSetMeaExplain":"","effectiveDays":120},{"rechargeSetMealSettingsId":1348552074882641921,"rechargeSetMeaName":"半年","rechargeSetMeaType":2,"rechargeSetMeaNum":0,"rechargeSetMeaAmount":179,"rechargeSetMeaExplain":"","effectiveDays":180},{"rechargeSetMealSettingsId":1348552218990538753,"rechargeSetMeaName":"包年","rechargeSetMeaType":2,"rechargeSetMeaNum":0,"rechargeSetMeaAmount":360,"rechargeSetMeaExplain":"","effectiveDays":365}],"pageNum":1,"pageSize":6,"size":6,"startRow":0,"endRow":5,"pages":1,"prePage":0,"nextPage":0,"isFirstPage":true,"isLastPage":true,"hasPreviousPage":false,"hasNextPage":false,"navigatePages":8,"navigatepageNums":[1],"navigateFirstPage":1,"navigateLastPage":1}
-     */
 
     private boolean success;
     private String code;
@@ -54,28 +48,8 @@ public class ChargeMealEntity {
     }
 
     public static class DataEntity {
-        /**
-         * total : 6
-         * list : [{"rechargeSetMealSettingsId":1346338492057051138,"rechargeSetMeaName":"10次19.9","rechargeSetMeaType":1,"rechargeSetMeaNum":10,"rechargeSetMeaAmount":19.9,"rechargeSetMeaExplain":"测试","effectiveDays":10},{"rechargeSetMealSettingsId":1346422331801161730,"rechargeSetMeaName":"1次","rechargeSetMeaType":1,"rechargeSetMeaNum":1,"rechargeSetMeaAmount":7,"rechargeSetMeaExplain":"","effectiveDays":10},{"rechargeSetMealSettingsId":1348551694983557122,"rechargeSetMeaName":"包月","rechargeSetMeaType":2,"rechargeSetMeaNum":10,"rechargeSetMeaAmount":1,"rechargeSetMeaExplain":"包月","effectiveDays":30},{"rechargeSetMealSettingsId":1348551906632331266,"rechargeSetMeaName":"季度","rechargeSetMeaType":2,"rechargeSetMeaNum":0,"rechargeSetMeaAmount":90,"rechargeSetMeaExplain":"","effectiveDays":120},{"rechargeSetMealSettingsId":1348552074882641921,"rechargeSetMeaName":"半年","rechargeSetMeaType":2,"rechargeSetMeaNum":0,"rechargeSetMeaAmount":179,"rechargeSetMeaExplain":"","effectiveDays":180},{"rechargeSetMealSettingsId":1348552218990538753,"rechargeSetMeaName":"包年","rechargeSetMeaType":2,"rechargeSetMeaNum":0,"rechargeSetMeaAmount":360,"rechargeSetMeaExplain":"","effectiveDays":365}]
-         * pageNum : 1
-         * pageSize : 6
-         * size : 6
-         * startRow : 0
-         * endRow : 5
-         * pages : 1
-         * prePage : 0
-         * nextPage : 0
-         * isFirstPage : true
-         * isLastPage : true
-         * hasPreviousPage : false
-         * hasNextPage : false
-         * navigatePages : 8
-         * navigatepageNums : [1]
-         * navigateFirstPage : 1
-         * navigateLastPage : 1
-         */
-
         private int total;
+        private List<ListEntity> list;
         private int pageNum;
         private int pageSize;
         private int size;
@@ -89,10 +63,9 @@ public class ChargeMealEntity {
         private boolean hasPreviousPage;
         private boolean hasNextPage;
         private int navigatePages;
+        private List<Integer> navigatepageNums;
         private int navigateFirstPage;
         private int navigateLastPage;
-        private List<ListEntity> list;
-        private List<Integer> navigatepageNums;
 
         public int getTotal() {
             return total;
@@ -100,6 +73,14 @@ public class ChargeMealEntity {
 
         public void setTotal(int total) {
             this.total = total;
+        }
+
+        public List<ListEntity> getList() {
+            return list;
+        }
+
+        public void setList(List<ListEntity> list) {
+            this.list = list;
         }
 
         public int getPageNum() {
@@ -206,6 +187,14 @@ public class ChargeMealEntity {
             this.navigatePages = navigatePages;
         }
 
+        public List<Integer> getNavigatepageNums() {
+            return navigatepageNums;
+        }
+
+        public void setNavigatepageNums(List<Integer> navigatepageNums) {
+            this.navigatepageNums = navigatepageNums;
+        }
+
         public int getNavigateFirstPage() {
             return navigateFirstPage;
         }
@@ -222,33 +211,7 @@ public class ChargeMealEntity {
             this.navigateLastPage = navigateLastPage;
         }
 
-        public List<ListEntity> getList() {
-            return list;
-        }
-
-        public void setList(List<ListEntity> list) {
-            this.list = list;
-        }
-
-        public List<Integer> getNavigatepageNums() {
-            return navigatepageNums;
-        }
-
-        public void setNavigatepageNums(List<Integer> navigatepageNums) {
-            this.navigatepageNums = navigatepageNums;
-        }
-
         public static class ListEntity {
-            /**
-             * rechargeSetMealSettingsId : 1346338492057051138
-             * rechargeSetMeaName : 10次19.9
-             * rechargeSetMeaType : 1
-             * rechargeSetMeaNum : 10
-             * rechargeSetMeaAmount : 19.9
-             * rechargeSetMeaExplain : 测试
-             * effectiveDays : 10
-             */
-
             private String rechargeSetMealSettingsId;
             private String rechargeSetMeaName;
             private int rechargeSetMeaType;
@@ -256,6 +219,9 @@ public class ChargeMealEntity {
             private double rechargeSetMeaAmount;
             private String rechargeSetMeaExplain;
             private int effectiveDays;
+            private int commodityType;
+            private long pid;
+            private SubsidiaryEntity subsidiary;
             private boolean isChecked;
 
             public boolean isChecked() {
@@ -320,6 +286,114 @@ public class ChargeMealEntity {
 
             public void setEffectiveDays(int effectiveDays) {
                 this.effectiveDays = effectiveDays;
+            }
+
+            public int getCommodityType() {
+                return commodityType;
+            }
+
+            public void setCommodityType(int commodityType) {
+                this.commodityType = commodityType;
+            }
+
+            public long getPid() {
+                return pid;
+            }
+
+            public void setPid(long pid) {
+                this.pid = pid;
+            }
+
+            public SubsidiaryEntity getSubsidiary() {
+                return subsidiary;
+            }
+
+            public void setSubsidiary(SubsidiaryEntity subsidiary) {
+                this.subsidiary = subsidiary;
+            }
+
+            public static class SubsidiaryEntity {
+                private String rechargeSetMealSettingsId;
+                private String rechargeSetMeaName;
+                private int rechargeSetMeaType;
+                private int rechargeSetMeaNum;
+                private double rechargeSetMeaAmount;
+                private String rechargeSetMeaExplain;
+                private int effectiveDays;
+                private int commodityType;
+                private int pid;
+
+                public String getRechargeSetMealSettingsId() {
+                    return rechargeSetMealSettingsId;
+                }
+
+                public void setRechargeSetMealSettingsId(String rechargeSetMealSettingsId) {
+                    this.rechargeSetMealSettingsId = rechargeSetMealSettingsId;
+                }
+
+                public String getRechargeSetMeaName() {
+                    return rechargeSetMeaName;
+                }
+
+                public void setRechargeSetMeaName(String rechargeSetMeaName) {
+                    this.rechargeSetMeaName = rechargeSetMeaName;
+                }
+
+                public int getRechargeSetMeaType() {
+                    return rechargeSetMeaType;
+                }
+
+                public void setRechargeSetMeaType(int rechargeSetMeaType) {
+                    this.rechargeSetMeaType = rechargeSetMeaType;
+                }
+
+                public int getRechargeSetMeaNum() {
+                    return rechargeSetMeaNum;
+                }
+
+                public void setRechargeSetMeaNum(int rechargeSetMeaNum) {
+                    this.rechargeSetMeaNum = rechargeSetMeaNum;
+                }
+
+                public double getRechargeSetMeaAmount() {
+                    return rechargeSetMeaAmount;
+                }
+
+                public void setRechargeSetMeaAmount(double rechargeSetMeaAmount) {
+                    this.rechargeSetMeaAmount = rechargeSetMeaAmount;
+                }
+
+                public String getRechargeSetMeaExplain() {
+                    return rechargeSetMeaExplain;
+                }
+
+                public void setRechargeSetMeaExplain(String rechargeSetMeaExplain) {
+                    this.rechargeSetMeaExplain = rechargeSetMeaExplain;
+                }
+
+                public int getEffectiveDays() {
+                    return effectiveDays;
+                }
+
+                public void setEffectiveDays(int effectiveDays) {
+                    this.effectiveDays = effectiveDays;
+                }
+
+                public int getCommodityType() {
+                    return commodityType;
+                }
+
+                public void setCommodityType(int commodityType) {
+                    this.commodityType = commodityType;
+                }
+
+                public int getPid() {
+                    return pid;
+                }
+
+                public void setPid(int pid) {
+                    this.pid = pid;
+                }
             }
         }
     }

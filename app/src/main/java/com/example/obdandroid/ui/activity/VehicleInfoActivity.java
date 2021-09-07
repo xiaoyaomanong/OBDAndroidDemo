@@ -3,8 +3,17 @@ package com.example.obdandroid.ui.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LevelListDrawable;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,18 +23,20 @@ import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
-import com.example.obdandroid.config.APIConfig;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CircleImageView;
-import com.example.obdandroid.utils.BitMapUtils;
 import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.StringUtil;
+import com.github.ielse.imagewatcher.ImageWatcherHelper;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.net.URL;
+
+import io.reactivex.disposables.Disposable;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -42,7 +53,6 @@ public class VehicleInfoActivity extends BaseActivity {
     private Context context;
     private DialogUtils dialogUtils;
     private String vehicleId;
-    private TitleBar titleBarSet;
     private CircleImageView ivLogo;
     private TextView tvAutomobileBrandName;
     private TextView tvModelName;
@@ -63,8 +73,30 @@ public class VehicleInfoActivity extends BaseActivity {
     private TextView tvMaintenanceMileageInterval;
     private TextView tvTankCapacity;
     private TextView tvYearManufacture;
+    private TextView tvInterfaceDesc;
     private LinearLayout layoutBind;
     private boolean isRefresh = false;
+    private Disposable mDisposable;
+    private ImageWatcherHelper iwHelper;
+    private final LevelListDrawable mDrawable = new LevelListDrawable();
+    // 注意啦，这么写Handler是会造成内存泄漏的，实际项目中不要这么直接用。
+    @SuppressLint("HandlerLeak")
+    private final Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 1123) { // 使用1123仅仅是因为在11月23号写的
+                Bitmap bitmap = (Bitmap) msg.obj;
+                BitmapDrawable drawable = new BitmapDrawable(null, bitmap);
+                mDrawable.addLevel(1, 1, drawable);
+                mDrawable.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
+                mDrawable.setLevel(1);
+                CharSequence charSequence = tvInterfaceDesc.getText();
+                tvInterfaceDesc.setText(charSequence);
+                tvInterfaceDesc.invalidate();
+            }
+        }
+    };
+
 
     @Override
     protected int getContentViewId() {
@@ -81,7 +113,7 @@ public class VehicleInfoActivity extends BaseActivity {
         super.initView();
         context = this;
         vehicleId = getIntent().getStringExtra(Constant.ACT_FLAG);
-        titleBarSet = findViewById(R.id.titleBarSet);
+        TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         ivLogo = findViewById(R.id.ivLogo);
         tvAutomobileBrandName = findViewById(R.id.tvAutomobileBrandName);
         tvModelName = findViewById(R.id.tvModelName);
@@ -103,14 +135,16 @@ public class VehicleInfoActivity extends BaseActivity {
         tvTankCapacity = findViewById(R.id.tvTankCapacity);
         tvYearManufacture = findViewById(R.id.tvYearManufacture);
         layoutBind = findViewById(R.id.layoutBind);
+        tvInterfaceDesc = findViewById(R.id.tvInterfaceDesc);
         titleBarSet.setRightTitle("修改");
         dialogUtils = new DialogUtils(context);
+        //iwHelper = ImageWatcherHelper.with(this, new GlideSimpleLoader());
         getVehicleInfoById(getToken(), vehicleId);
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
-                if (isRefresh){
-                    setResult(12,new Intent());
+                if (isRefresh) {
+                    setResult(12, new Intent());
                 }
                 finish();
             }
@@ -124,7 +158,7 @@ public class VehicleInfoActivity extends BaseActivity {
             public void onRightClick(View v) {
                 Intent intent = new Intent(context, ModifyVehicleActivity.class);
                 intent.putExtra(VEHICLE_ID, vehicleId);
-                startActivityForResult(intent,100);
+                startActivityForResult(intent, 100);
             }
         });
     }
@@ -145,6 +179,7 @@ public class VehicleInfoActivity extends BaseActivity {
 
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(String response, int id) {
                 VehicleInfoEntity entity = JSON.parseObject(response, VehicleInfoEntity.class);
@@ -159,8 +194,32 @@ public class VehicleInfoActivity extends BaseActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @SuppressLint("SetTextI18n")
     private void setViewData(VehicleInfoEntity.DataEntity entity) {
+        if (!StringUtil.isNull(entity.getInterfaceDesc())) {
+            LogE("接口介绍：" + entity.getInterfaceDesc());
+            tvInterfaceDesc.setText(Html.fromHtml(entity.getInterfaceDesc(), Html.FROM_HTML_MODE_COMPACT, source -> {
+                new Thread(() -> {
+                    mDrawable.addLevel(0, 0, getResources().getDrawable(R.drawable.ic_launcher));
+                    mDrawable.setBounds(0, 0, 200, 200);
+
+                    Bitmap bitmap;
+                    try {
+                        bitmap = BitmapFactory.decodeStream(new URL(source).openStream());
+                        Message msg = handler.obtainMessage();
+                        msg.what = 1123;
+                        msg.obj = bitmap;
+                        handler.sendMessage(msg);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+                return mDrawable;
+            }, null));
+            //tvInterfaceDesc.post(() -> dealWithContent(entity.getInterfaceDesc()));
+        }
+
         if (StringUtil.isNull(entity.getBluetoothDeviceNumber())) {//车辆状态 1 未绑定 2 已绑定 ,
             tvObd.setText("  设备未绑定");
             tvHomeObdTip.setText(" 设备序列号");
@@ -204,6 +263,103 @@ public class VehicleInfoActivity extends BaseActivity {
         });
     }
 
+   /* private void dealWithContent(String myContent) {
+        tvInterfaceDesc.clearAllLayout();
+        showDataSync(myContent);
+        // 图片点击事件
+        tvInterfaceDesc.setOnRtImageClickListener((view, imagePath) -> {
+            try {
+                ArrayList<String> imageList = StringUtils.getTextFromHtml(myContent, true);
+                int currentPosition = imageList.indexOf(imagePath);
+                List<Uri> dataList = new ArrayList<>();
+                for (int i = 0; i < imageList.size(); i++) {
+                    dataList.add(ImageUtils.getUriFromPath(imageList.get(i)));
+                }
+                iwHelper.show(dataList, currentPosition);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }*/
+
+    /**
+     * 异步方式显示数据
+     */
+    /*private void showDataSync(final String html) {
+        Observable.create((ObservableOnSubscribe<String>) emitter -> showEditData(emitter, html))
+                .subscribeOn(Schedulers.io())//生产事件在io
+                .observeOn(AndroidSchedulers.mainThread())//消费事件在UI线程
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        showTipDialog("解析错误：图片不存在或已损坏");
+                    }
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mDisposable = d;
+                    }
+
+                    @Override
+                    public void onNext(String text) {
+                        try {
+                            if (tvInterfaceDesc != null) {
+                                if (text.contains("<img") && text.contains("src=")) {
+                                    //imagePath可能是本地路径，也可能是网络地址
+                                    String imagePath = StringUtils.getImgSrc(text);
+                                    tvInterfaceDesc.addImageViewAtIndex(tvInterfaceDesc.getLastIndex(), imagePath);
+                                } else {
+                                    LogE("text:"+text);
+                                    String str=StringUtils.
+                                    tvInterfaceDesc.addTextViewAtIndex(tvInterfaceDesc.getLastIndex(), text);
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+    }*/
+
+    /**
+     * 显示数据
+     */
+    /*private void showEditData(ObservableEmitter<String> emitter, String html) {
+        try {
+            List<String> textList = StringUtils.cutStringByImgTag(html);
+            for (int i = 0; i < textList.size(); i++) {
+                String text = textList.get(i);
+                emitter.onNext(text);
+            }
+            emitter.onComplete();
+        } catch (Exception e) {
+            e.printStackTrace();
+            emitter.onError(e);
+        }
+    }*/
+
+  /*  @Override
+    protected void onStop() {
+        super.onStop();
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            mDisposable.dispose();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!iwHelper.handleBackPressed()) {
+            super.onBackPressed();
+        }
+        finish();
+    }*/
+
     /**
      * @param content 内容
      * @return 检查数据
@@ -222,5 +378,4 @@ public class VehicleInfoActivity extends BaseActivity {
             }
         }
     }
-
 }

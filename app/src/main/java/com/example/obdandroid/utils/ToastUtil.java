@@ -22,4 +22,5 @@ public class ToastUtil {
     public static void shortShow(String message) {
         Toast.makeText(MainApplication.context, message, Toast.LENGTH_SHORT).show();
     }
+
 }

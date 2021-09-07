@@ -1,5 +1,6 @@
 package com.example.obdandroid.base;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -204,6 +205,8 @@ public abstract class BaseFragment extends Fragment {
     }
 
     //获取已连接的蓝牙设备
+    @SuppressWarnings("ConstantConditions")
+    @SuppressLint("PrivateApi")
     private List<BluetoothDeviceEntity> getConnectedBtDevice(BluetoothAdapter adapter) {
         Class<BluetoothAdapter> bluetoothAdapterClass = BluetoothAdapter.class;//得到BluetoothAdapter的Class对象
         try {
@@ -214,15 +217,17 @@ public abstract class BaseFragment extends Fragment {
             int state = (int) method.invoke(adapter, (Object[]) null);
             Set<BluetoothDevice> devices = adapter.getBondedDevices(); //集合里面包括已绑定的设备和已连接的设备
             for (BluetoothDevice device : devices) {
-                Method isConnectedMethod = BluetoothDevice.class.getDeclaredMethod("isConnected", (Class[]) null);
-                method.setAccessible(true);
-                boolean isConnected = (boolean) isConnectedMethod.invoke(device, (Object[]) null);
-                BluetoothDeviceEntity entity = new BluetoothDeviceEntity();
-                entity.setBlue_address(device.getAddress());
-                entity.setBlue_name(device.getName());
-                entity.setState(String.valueOf(state));
-                entity.setConnected(isConnected);//根据状态来区分是已连接的还是已绑定的，isConnected为true表示是已连接状态。
-                blueList.add(entity);
+                if (device.getName().contains("OBD") || device.getName().contains("obd")) {
+                    Method isConnectedMethod = BluetoothDevice.class.getDeclaredMethod("isConnected", (Class[]) null);
+                    method.setAccessible(true);
+                    boolean isConnected = (boolean) isConnectedMethod.invoke(device, (Object[]) null);
+                    BluetoothDeviceEntity entity = new BluetoothDeviceEntity();
+                    entity.setBlue_address(device.getAddress());
+                    entity.setBlue_name(device.getName());
+                    entity.setState(String.valueOf(state));
+                    entity.setConnected(isConnected);//根据状态来区分是已连接的还是已绑定的，isConnected为true表示是已连接状态。
+                    blueList.add(entity);
+                }
             }
             return blueList;
         } catch (Exception e) {

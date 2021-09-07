@@ -2,6 +2,7 @@ package com.example.obdandroid.base;
 
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -147,6 +148,16 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    /**
+     * 手机是否开启位置服务，如果没有开启那么所有app将不能使用定位功能
+     */
+    public static boolean isLocServiceEnable(Context context) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        return gps || network;
     }
 
     /**

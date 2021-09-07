@@ -242,7 +242,6 @@ public class Commander extends AbsCommander {
         if (isCurrent(BooleanCommand.SpaceOff)) {
             return data.replaceAll(" ", "");
         }
-
         return data;
     }
 

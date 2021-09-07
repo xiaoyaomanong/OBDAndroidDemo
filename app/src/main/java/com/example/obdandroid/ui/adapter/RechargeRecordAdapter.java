@@ -69,7 +69,7 @@ public class RechargeRecordAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     holder.tvRechargeStatusName.setTextColor(context.getResources().getColor(R.color.red));
                 }
             }
-            holder.tvPaymentChannelsName.setText("支付渠道: " + list.get(position).getPaymentChannelsName());
+            holder.tvPaymentChannelsName.setText(list.get(position).getPaymentChannelsName());
             holder.tvRechargetAmount.setText("￥" + list.get(position).getRechargetAmount());
         }
     }

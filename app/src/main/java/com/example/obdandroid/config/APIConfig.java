@@ -146,4 +146,32 @@ public class APIConfig {
      * 获取当前账号充值状态
      */
     public static final String getTheUserCurrentRecharge_URL = "/api/getTheUserCurrentRecharge";
+    /**
+     * 添加收货地址
+     */
+    public static final String addAppUserAddress_URL = "/api/appUserAddress/addAppUserAddress";
+    /**
+     * 获取收货地址
+     */
+    public static final String getAppUserAddressList_URL = "/api/appUserAddress/getAppUserAddressList";
+    /**
+     * 百度地图查询周边
+     */
+    public static final String reverse_geocoding_URL = "https://api.map.baidu.com/reverse_geocoding/v3/";
+    /**
+     * 删除收货地址
+     */
+    public static final String deleteAppUserAddress_URL = "/api/appUserAddress/deleteAppUserAddress";
+    /**
+     * 设置默认地址
+     */
+    public static final String setDefault_URL = "/api/appUserAddress/setDefault";
+    /**
+     * 修改收货地址
+     */
+    public static final String updateAppUserAddress_URL = "/api/appUserAddress/updateAppUserAddress";
+    /**
+     * 获取默认地址
+     */
+    public static final String getDefault_URL = "/api/appUserAddress/getDefault";
 }

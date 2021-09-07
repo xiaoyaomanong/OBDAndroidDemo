@@ -108,8 +108,17 @@ public class VehicleInfoEntity {
         private String engineNumber;
         private String lastMaintenanceDate;
         private String lastMaintenanceMileage;
+        private String interfaceDesc;
         private int maintenanceInterval;
         private double maintenanceMileageInterval;
+
+        public String getInterfaceDesc() {
+            return interfaceDesc;
+        }
+
+        public void setInterfaceDesc(String interfaceDesc) {
+            this.interfaceDesc = interfaceDesc;
+        }
 
         public String getBluetoothDeviceNumber() {
             return bluetoothDeviceNumber;

@@ -19,8 +19,17 @@ import com.example.obdandroid.ui.obd2.command.PendingDTCsCommand;
 import com.example.obdandroid.ui.obd2.command.VehicleInformationCommand;
 import com.example.obdandroid.ui.obd2.elm327.Commander;
 import com.example.obdandroid.utils.JumpUtil;
+import com.github.pires.obd.commands.protocol.HeadersOffCommand;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
+import com.sohrab.obd.reader.enums.ObdProtocols;
+import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SelectProtocolCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
+import com.sohrab.obd.reader.utils.LogUtils;
 
 import java.io.IOException;
 import java.util.Map;
@@ -52,8 +61,24 @@ public class MyVehicleDashActivity extends BaseActivity {
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         LinearLayout layoutDashOne = findViewById(R.id.layoutDashOne);
         LinearLayout layoutDashTwo = findViewById(R.id.layoutDashTwo);
-        layoutDashOne.setOnClickListener(v -> JumpUtil.startAct(context, VehicleDashOneActivity.class));
-        layoutDashTwo.setOnClickListener(v -> JumpUtil.startAct(context, VehicleDashTwoActivity.class));
+        isConnected = MainApplication.getBluetoothSocket().isConnected();
+        if (isConnected) {
+            new Thread(() -> initOBD(MainApplication.getBluetoothSocket())).start();
+        }
+        layoutDashOne.setOnClickListener(v -> {
+            if (isConnected) {
+                showTipDialog("蓝牙连接未连接");
+            } else {
+                JumpUtil.startAct(context, VehicleDashOneActivity.class);
+            }
+        });
+        layoutDashTwo.setOnClickListener(v -> {
+            if (isConnected) {
+                showTipDialog("蓝牙连接未连接");
+            } else {
+                JumpUtil.startAct(context, VehicleDashTwoActivity.class);
+            }
+        });
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -72,6 +97,28 @@ public class MyVehicleDashActivity extends BaseActivity {
         });
     }
 
+    /**
+     * @param mSocket 蓝牙
+     *                初始化OBD
+     */
+    public void initOBD(BluetoothSocket mSocket) {
+        try {
+            new ObdResetCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+            new LineFeedOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+            new SpacesOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+            new HeadersOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+            new TimeoutCommand(62).run(mSocket.getInputStream(), mSocket.getOutputStream());
+            new SelectProtocolCommand(ObdProtocols.AUTO).run(mSocket.getInputStream(), mSocket.getOutputStream());
+        } catch (Exception e) {
+            LogUtils.i("在新线程中重置命令异常:: " + e.getMessage());
+        }
+    }
 
     private void getOBDData(BluetoothSocket socket) {
         try {

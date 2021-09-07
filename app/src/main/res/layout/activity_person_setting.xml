@@ -52,14 +52,6 @@
                 app:border_color="@color/white"
                 app:border_width="2dp" />
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:contentDescription="@string/header"
-                app:srcCompat="@drawable/icon_next" />
-
         </RelativeLayout>
 
         <TextView
@@ -92,14 +84,10 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/calibri"
                 android:gravity="center_vertical|right"
+                android:paddingEnd="@dimen/dp_20"
                 android:textColor="@color/white"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded,RtlSymmetry" />
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/nick"
-                app:srcCompat="@drawable/icon_next" />
 
         </LinearLayout>
 
@@ -133,14 +121,10 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/calibri"
                 android:gravity="center_vertical|right"
+                android:paddingEnd="@dimen/dp_20"
                 android:textColor="@color/white"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded,RtlSymmetry" />
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/phone"
-                app:srcCompat="@drawable/icon_next" />
 
         </LinearLayout>
 
@@ -174,14 +158,10 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/calibri"
                 android:gravity="center_vertical|right"
+                android:paddingEnd="@dimen/dp_20"
                 android:textColor="@color/white"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded,RtlSymmetry" />
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/sex"
-                app:srcCompat="@drawable/icon_next" />
 
         </LinearLayout>
 
@@ -215,14 +195,10 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/calibri"
                 android:gravity="center_vertical|right"
+                android:paddingEnd="@dimen/dp_20"
                 android:textColor="@color/white"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded,RtlSymmetry" />
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/validityDate"
-                app:srcCompat="@drawable/icon_next" />
 
         </LinearLayout>
 
@@ -256,14 +232,10 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/calibri"
                 android:gravity="center_vertical|right"
+                android:paddingEnd="@dimen/dp_20"
                 android:textColor="@color/white"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded,RtlSymmetry" />
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/vip"
-                app:srcCompat="@drawable/icon_next" />
 
         </LinearLayout>
 
@@ -297,7 +269,45 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/calibri"
                 android:gravity="center_vertical|right"
+                android:paddingEnd="@dimen/dp_20"
                 android:textColor="@color/white"
+                tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/black_line" />
+
+        <LinearLayout
+            android:id="@+id/layoutReceivingAddress"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/gotham"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/dp_10"
+                android:text="@string/ReceivingAddress"
+                android:textColor="@color/white"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/calibri"
+                android:gravity="center_vertical|right"
+                android:text="@string/hint_ReceivingAddress"
+                android:textColor="@color/gray_four"
                 tools:ignore="RtlHardcoded" />
 
             <ImageView

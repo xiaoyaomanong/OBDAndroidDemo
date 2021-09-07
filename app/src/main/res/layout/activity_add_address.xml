@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_080707"
+    android:orientation="vertical">
+
+    <com.hjq.bar.TitleBar
+        android:id="@+id/titleBarSet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barStyle="night"
+        app:lineVisible="false"
+        app:title="@string/new_address" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/bg_black"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/receive_address"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12" />
+
+        <EditText
+            android:id="@+id/tvName"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:hint="@string/hint_name"
+            android:inputType="text"
+            android:paddingStart="@dimen/dp_10"
+            android:textColor="@color/white"
+            android:textColorHint="@color/gray_four"
+            android:textSize="@dimen/sp_12"
+            tools:ignore="RtlSymmetry" />
+
+        <LinearLayout
+            android:id="@+id/layoutSelectName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_add_name"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:fontFamily="@font/gotham"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/contractRecoder"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_12" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/bg_black"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/moblePhone"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12" />
+
+        <EditText
+            android:id="@+id/tvPhone"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:hint="@string/hint_phone"
+            android:inputType="phone"
+            android:paddingStart="@dimen/dp_10"
+            android:textColor="@color/white"
+            android:textColorHint="@color/gray_four"
+            android:textSize="@dimen/sp_12"
+            tools:ignore="RtlSymmetry" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutSelectArea"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/bg_black"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/selectArea"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12" />
+
+        <TextView
+            android:id="@+id/tvSelectArea"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:hint="@string/hint_SelectArea"
+            android:paddingStart="@dimen/dp_10"
+            android:textColor="@color/white"
+            android:textColorHint="@color/gray_four"
+            android:textSize="@dimen/sp_12"
+            tools:ignore="RtlSymmetry" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_next"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/bg_black"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/gotham"
+            android:gravity="center"
+            android:padding="@dimen/dp_5"
+            android:text="@string/receive_address"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12" />
+
+        <EditText
+            android:id="@+id/tvDetailsAddress"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="top"
+            android:hint="@string/hint_DetailsAddress"
+            android:inputType="text"
+            android:padding="@dimen/dp_5"
+            android:textColor="@color/white"
+            android:textColorHint="@color/gray_four"
+            android:textSize="@dimen/sp_12" />
+
+        <ImageView
+            android:id="@+id/ivLocation"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_location"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/bg_black"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:text="@string/default_address"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12" />
+
+
+        <CheckBox
+            android:id="@+id/id_cb_select_default"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:button="@drawable/select_check_bg"
+            android:focusable="false"
+            android:textColor="@color/color_000000"
+            android:textSize="@dimen/text_size" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_btn_shape"
+        android:text="@string/save"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold" />
+
+</LinearLayout>

@@ -21,6 +21,7 @@
 #-renamesourcefileattribute SourceFile
 
 #PictureSelector
+#noinspection ShrinkerUnresolvedReference
 -keep class com.luck.picture.lib.** { *; }
 
 #glide
@@ -30,9 +31,6 @@
   **[] $VALUES;
   public *;
 }
-
-# for DexGuard only
--keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
 #ucrop
 -dontwarn com.yalantis.ucrop**
@@ -99,6 +97,7 @@
     <fields>;
     <methods>;
 }
+#noinspection ShrinkerUnresolvedReference
 -keep class com.alipay.android.phone.mrpc.core.** { *; }
 -keep class com.alipay.apmobilesecuritysdk.** { *; }
 -keep class com.alipay.mobile.framework.service.annotation.** { *; }
@@ -117,3 +116,8 @@
 -keepclasseswithmembers class * {
     public <init>(android.content.Context, android.util.AttributeSet);
 }
+
+-keep class com.baidu.** {*;}
+-keep class vi.com.** {*;}
+-keep class com.baidu.vi.** {*;}
+-dontwarn com.baidu.**

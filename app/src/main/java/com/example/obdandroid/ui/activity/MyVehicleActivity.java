@@ -119,17 +119,7 @@ public class MyVehicleActivity extends BaseActivity {
             public void select(VehicleEntity.DataEntity.ListEntity entity, int position) {
                 new CustomeDialog(context, "是否选择" + entity.getAutomobileBrandName() + "该车辆", confirm -> {
                     if (confirm) {
-                        adapter.getMap().put(position, !adapter.getMap().get(position));
-                        //刷新适配器
-                        adapter.notifyDataSetChanged();
-                        //单选
-                        adapter.singlesel(position);
-                        spUtil.remove(VEHICLE_ID);
-                        spUtil.put(VEHICLE_ID, String.valueOf(entity.getVehicleId()));
-                        Intent intent = new Intent(OBD_ACTION);//创建发送广播的Action
-                        intent.putExtra(VEHICLE_ID, String.valueOf(entity.getVehicleId()));//发送携带的数据
-                        intent.putExtra("type", "2");
-                        mLocalBroadcastManager.sendBroadcast(intent);                               //发送本地广播
+                        singleSelect(entity, position);
                         finish();
                     }
                 }).setPositiveButton("确定").setTitle("选择默认车辆").show();
@@ -180,6 +170,25 @@ public class MyVehicleActivity extends BaseActivity {
                 startActivityForResult(intent, 11);
             }
         });
+    }
+
+    /**
+     * @param entity   数据源
+     * @param position 选择下标
+     *                 单选
+     */
+    private void singleSelect(VehicleEntity.DataEntity.ListEntity entity, int position) {
+        adapter.getMap().put(position, !adapter.getMap().get(position));
+        //刷新适配器
+        adapter.notifyDataSetChanged();
+        //单选
+        adapter.singlesel(position);
+        spUtil.remove(VEHICLE_ID);
+        spUtil.put(VEHICLE_ID, String.valueOf(entity.getVehicleId()));
+        Intent intent = new Intent(OBD_ACTION);//创建发送广播的Action
+        intent.putExtra(VEHICLE_ID, String.valueOf(entity.getVehicleId()));//发送携带的数据
+        intent.putExtra("type", "2");
+        mLocalBroadcastManager.sendBroadcast(intent);
     }
 
     private void deleteVehicle(String token, String userId, String vehicleId) {
@@ -243,6 +252,10 @@ public class MyVehicleActivity extends BaseActivity {
                         recycleCar.setAdapter(adapter);
                         // 刷新完成后调用，必须在UI线程中
                         recycleCar.setPullLoadMoreCompleted();
+                        if (entity.getData().getTotal() == 1) {
+                            singleSelect(entity.getData().getList().get(0), 0);
+                        }
+
                     } else {
                         new Handler().postDelayed(() -> getActivity().runOnUiThread(() -> {
                             datas.clear();

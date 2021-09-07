@@ -1,8 +1,10 @@
 package com.example.obdandroid.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -13,6 +15,7 @@ import com.example.obdandroid.ui.view.CircleImageView;
 import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.BitMapUtils;
 import com.example.obdandroid.utils.DialogUtils;
+import com.example.obdandroid.utils.JumpUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -37,7 +40,9 @@ public class PersonSettingActivity extends BaseActivity {
     private TextView tvValidityDate;
     private TextView tvVIP;
     private TextView tvIsTheDeviceBound;
+    private LinearLayout layoutReceivingAddress;
     private DialogUtils dialogUtils;
+    private Context context;
 
     @Override
     protected int getContentViewId() {
@@ -52,6 +57,7 @@ public class PersonSettingActivity extends BaseActivity {
     @Override
     public void initView() {
         super.initView();
+        context = this;
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         imageHeader = findViewById(R.id.imageHeader);
         tvNick = findViewById(R.id.tvNick);
@@ -60,8 +66,11 @@ public class PersonSettingActivity extends BaseActivity {
         tvValidityDate = findViewById(R.id.tvValidityDate);
         tvVIP = findViewById(R.id.tvVIP);
         tvIsTheDeviceBound = findViewById(R.id.tvIsTheDeviceBound);
-        dialogUtils = new DialogUtils(this);
+        layoutReceivingAddress = findViewById(R.id.layoutReceivingAddress);
+        dialogUtils = new DialogUtils(context);
         getUserInfo(getUserId(), getToken());
+        //layoutReceivingAddress.setVisibility(View.GONE);
+        layoutReceivingAddress.setOnClickListener(v -> JumpUtil.startAct(context, ReceivingAddressActivity.class));
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {

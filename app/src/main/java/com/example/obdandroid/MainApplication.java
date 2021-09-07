@@ -9,6 +9,8 @@ import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.baidu.mapapi.CoordType;
+import com.baidu.mapapi.SDKInitializer;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.ui.wechatPay.WeiXinConstants;
 import com.example.obdandroid.utils.ExceptionHandler;
@@ -47,6 +49,11 @@ public class MainApplication extends Application {
                 return new AppCompatTextView(context);
             }
         });
+        SDKInitializer.initialize(this);
+
+        //自4.3.0起，百度地图SDK所有接口均支持百度坐标和国测局坐标，用此方法设置您使用的坐标类型.
+        //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
+        SDKInitializer.setCoordType(CoordType.BD09LL);
        // ExceptionHandler.getInstance().initConfig(context, error -> Log.e(TAG, error));
         DialogSettings.dialog_theme = THEME_LIGHT;
         DialogSettings.tip_theme = THEME_LIGHT;

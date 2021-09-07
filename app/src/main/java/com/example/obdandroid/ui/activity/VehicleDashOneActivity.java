@@ -23,16 +23,13 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.SpeedCommand;
 import com.sohrab.obd.reader.obdCommand.engine.OilTempCommand;
 import com.sohrab.obd.reader.obdCommand.engine.RPMCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.EngineCoolantTemperatureCommand;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 作者：Jealous
@@ -54,7 +51,6 @@ public class VehicleDashOneActivity extends BaseActivity {
     private final Thread mSpeedCommand = new Thread(new MySpeedCommand());
     public MyHandler mHandler;
     private boolean isConnected;
-
 
     @SuppressWarnings("deprecation")
     @SuppressLint("HandlerLeak")
@@ -97,15 +93,18 @@ public class VehicleDashOneActivity extends BaseActivity {
         CheckRecord.getTriRecode(context, getToken()).clear();
         tripRecord = CheckRecord.getTriRecode(context, getToken());
         ObdPreferences.get(getApplicationContext()).setServiceRunning(true);
+        if (MainApplication.getBluetoothSocket() != null) {
+            isConnected = MainApplication.getBluetoothSocket().isConnected();
+        }
         setRPM();
         setSpeed();
         setEngineCoolantTemp();
         setEngineOilTemp();
-        startCommand();
+        //startCommand();
+        newCachedThreadPool();
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
-                stopThread();
                 ObdPreferences.get(getApplicationContext()).setServiceRunning(false);
                 finish();
             }
@@ -122,33 +121,71 @@ public class VehicleDashOneActivity extends BaseActivity {
         });
     }
 
+    private void newCachedThreadPool() {
+        //创建可缓存的线程池，如果线程池的容量超过了任务数，自动回收空闲线程，任务增加时可以自动添加新线程，线程池的容量不限制
+        ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+        //提交 4个任务
+        cachedThreadPool.submit(() -> {//读取车速
+            while (isConnected) {
+                SpeedCommand command = new SpeedCommand(ModeTrim.MODE_01.buildObdCommand());
+                executeCommandData(MainApplication.getBluetoothSocket(), command);
+            }
+        });
+        cachedThreadPool.submit(() -> {//读取转速
+            while (isConnected) {
+                RPMCommand command = new RPMCommand(ModeTrim.MODE_01.buildObdCommand());
+                executeCommandData(MainApplication.getBluetoothSocket(), command);
+            }
+        });
+        cachedThreadPool.submit(() -> {//发动机油温
+            while (isConnected) {
+                OilTempCommand command = new OilTempCommand(ModeTrim.MODE_01.buildObdCommand());
+                executeCommandData(MainApplication.getBluetoothSocket(), command);
+            }
+        });
+        cachedThreadPool.submit(() -> {//发动机冷媒温度
+            while (isConnected) {
+                EngineCoolantTemperatureCommand command = new EngineCoolantTemperatureCommand(ModeTrim.MODE_01.buildObdCommand());
+                executeCommandData(MainApplication.getBluetoothSocket(), command);
+            }
+        });
+    }
+
     private void startCommand() {
-        if (MainApplication.getBluetoothSocket() != null) {
-            isConnected = MainApplication.getBluetoothSocket().isConnected();
-        }
         if (isConnected) {
-            startThread();
+            mSpeedCommand.start();
         } else {
             showToast(getString(R.string.device_not_conn));
         }
     }
 
     /**
-     * 开启线程
+     * @return 命令集合
      */
-    private void startThread() {
-        mSpeedCommand.start();
+    private List<ObdCommand> getCommands() {
+        List<ObdCommand> obdCommands = new ArrayList<>();
+        obdCommands.clear();
+        obdCommands.add(new RPMCommand(ModeTrim.MODE_01.buildObdCommand()));
+        obdCommands.add(new OilTempCommand(ModeTrim.MODE_01.buildObdCommand()));
+        obdCommands.add(new EngineCoolantTemperatureCommand(ModeTrim.MODE_01.buildObdCommand()));
+        obdCommands.add(new SpeedCommand(ModeTrim.MODE_01.buildObdCommand()));
+        return obdCommands;
     }
 
     /**
-     * 中止线程
+     * 读取速度
      */
-    private void stopThread() {
-     /*   if (mSpeedCommand != null) {
-            mSpeedCommand.interrupt();
-            mSpeedCommand = null;
-        }*/
-        //AppExecutors.getInstance().scheduledExecutor().shutdown();
+    private void executeCommandData(BluetoothSocket socket, ObdCommand command) {
+        try {
+            command.run(socket.getInputStream(), socket.getOutputStream());
+            tripRecord.updateTrip(command.getName(), command);
+            Message msg = mHandler.obtainMessage();
+            msg.what = 100;
+            msg.obj = tripRecord;
+            mHandler.sendMessage(msg);
+        } catch (Exception e) {
+            LogE("执行命令异常  :: " + e.getMessage());
+        }
     }
 
     /**
@@ -159,7 +196,6 @@ public class VehicleDashOneActivity extends BaseActivity {
             ObdCommand command = commands.get(i);
             try {
                 command.run(socket.getInputStream(), socket.getOutputStream());
-                LogE("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
                 tripRecord.updateTrip(command.getName(), command);
                 Message msg = mHandler.obtainMessage();
                 msg.what = 100;
@@ -188,43 +224,6 @@ public class VehicleDashOneActivity extends BaseActivity {
         dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineOilTemp()) ? "0" : tripRecord.getmEngineOilTemp().replace("℃", "")));
         dashEngineCoolantTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineCoolantTemp()) ? "0" : tripRecord.getmEngineCoolantTemp().replace("℃", "")));
     }
-
-    /**
-     * 读取速度
-     */
-    private void executeCommand(BluetoothSocket socket, List<ObdCommand> commands) {
-        for (int i = 0; i < commands.size(); i++) {
-            ObdCommand command = commands.get(i);
-            try {
-                command.run(socket.getInputStream(), socket.getOutputStream());
-                LogE("结果是:: " + command.getFormattedResult() + " :: name is :: " + command.getName());
-            } catch (Exception e) {
-                LogE("执行命令异常  :: " + e.getMessage());
-            }
-        }
-    }
-
-    private List<ObdCommand> getCommands() {
-        List<ObdCommand> obdCommands = new ArrayList<>();
-        obdCommands.clear();
-        obdCommands.add(new RPMCommand(ModeTrim.MODE_01.buildObdCommand()));
-        obdCommands.add(new OilTempCommand(ModeTrim.MODE_01.buildObdCommand()));
-        obdCommands.add(new EngineCoolantTemperatureCommand(ModeTrim.MODE_01.buildObdCommand()));
-        obdCommands.add(new SpeedCommand(ModeTrim.MODE_01.buildObdCommand()));
-        return obdCommands;
-    }
-
-    private List<ObdCommand> getElpCommands() {
-        List<ObdCommand> obdCommands = new ArrayList<>();
-        obdCommands.clear();
-        obdCommands.add(new ObdResetCommand());
-        obdCommands.add(new EchoOffCommand());
-        obdCommands.add(new LineFeedOffCommand());
-        obdCommands.add(new SpacesOffCommand());
-        obdCommands.add(new TimeoutCommand(200));
-        return obdCommands;
-    }
-
 
     /**
      * 设置转速仪表
@@ -271,7 +270,6 @@ public class VehicleDashOneActivity extends BaseActivity {
 
         @Override
         public void run() {
-            executeCommand(MainApplication.getBluetoothSocket(), getElpCommands());
             while (ObdPreferences.get(getApplicationContext()).getServiceRunning()) {
                 executeCommandData(MainApplication.getBluetoothSocket(), getCommands());
             }
@@ -283,7 +281,6 @@ public class VehicleDashOneActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             ObdPreferences.get(getApplicationContext()).setServiceRunning(false);
-            stopThread();
             finish();
         }
         return true;

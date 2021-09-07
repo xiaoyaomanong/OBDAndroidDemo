@@ -126,7 +126,7 @@ public class RechargeRecordActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("获取用户购买套餐记录列表："+response);
+                LogE("获取用户购买套餐记录列表:"+response);
                 RechargeRecordEntity entity = JSON.parseObject(response, RechargeRecordEntity.class);
                 if (entity.isSuccess()) {
                     isLoadMore = entity.getData().getPages() >= 10;

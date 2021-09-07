@@ -107,13 +107,10 @@ public class ObdConfiguration {
         mObdCommands.add(new EchoOffCommand());//关闭回声
         mObdCommands.add(new LineFeedOffCommand());//关闭换行
         mObdCommands.add(new SpacesOffCommand());//关闭空格
-        mObdCommands.add(new TimeoutCommand(200));//这将设置OBD接口启动的时间值（毫秒）将等待ECU的响应。如果超过，则响应为“无数据”。
+        mObdCommands.add(new TimeoutCommand(100));//这将设置OBD接口启动的时间值（毫秒）将等待ECU的响应。如果超过，则响应为“无数据”。
         mObdCommands.add(new SelectProtocolCommand(ObdProtocols.AUTO));//选择要使用的协议
-        mObdCommands.add(new IgnitionMonitorCommand());//"AT IGN" 点火
-       // mObdCommands.add(new DescribeProtocolCommand());//"AT DP"
-        //mObdCommands.add(new DescribeProtocolNumberCommand());//"AT DPN"
-        //mObdCommands.add(new BaseDataCommand());//"AT BDAT"
 
+        mObdCommands.add(new IgnitionMonitorCommand());//"AT IGN" 点火
         mObdCommands.add(new AvailablePidsCommand_01_20());//
         mObdCommands.add(new DescribeProtocolCommand());//"AT DP"
         mObdCommands.add(new DescribeProtocolNumberCommand());//"AT DPN"
@@ -137,7 +134,6 @@ public class ObdConfiguration {
         mObdCommands.add(new ThrottlePositionCommand(modeTrim.buildObdCommand()));//"01 11"节气门位置
         mObdCommands.add(new RuntimeCommand(modeTrim.buildObdCommand()));//"01 1F" 发动机启动后的运行时间
 
-        mObdCommands.add(new AvailablePidsCommand_21_40());//
         mObdCommands.add(new DistanceMILOnCommand(modeTrim.buildObdCommand()));//"01 21" 故障指示灯（MIL）亮时行驶的距离
         mObdCommands.add(new FuelRailPressureManifoldVacuumCommand(modeTrim.buildObdCommand()));//"01 22" 油轨压力（相对进气歧管真空度）
         mObdCommands.add(new FuelRailPressureCommand(modeTrim.buildObdCommand()));//"01 23" 油轨压力（柴油或汽油直喷）
@@ -162,7 +158,6 @@ public class ObdConfiguration {
         mObdCommands.add(new CatalystTemperatureCommand(modeTrim.buildObdCommand(), CatalystTrim.Catalyst_Temperature_Bank_1_Sensor_2));//"01 3E" 催化剂温度:Bank1,感测器2
         mObdCommands.add(new CatalystTemperatureCommand(modeTrim.buildObdCommand(), CatalystTrim.Catalyst_Temperature_Bank_2_Sensor_2));//"01 3F" 催化剂温度:Bank2,感测器2
 
-        mObdCommands.add(new AvailablePidsCommand_41_60());//
         mObdCommands.add(new ModuleVoltageCommand(modeTrim.buildObdCommand()));//"01 42" 模块控制组电压
         mObdCommands.add(new AbsoluteLoadCommand(modeTrim.buildObdCommand()));//"01 43" 绝对载荷
         mObdCommands.add(new AirFuelRatioCommand(modeTrim.buildObdCommand()));//"01 44" 燃油-空气命令等效比

@@ -81,7 +81,8 @@ public class BltManagerUtils {
     public void createBond(BluetoothDevice btDev, ConnBluetoothSocketListener listener) {
         if (btDev.getBondState() == BluetoothDevice.BOND_NONE) {
             //如果这个设备取消了配对，则尝试配对
-            if (btDev.createBond()) {
+            boolean isBond = btDev.createBond();
+            if (isBond) {
                 connect(btDev, listener);
             } else {
                 listener.connectMsg(2, "配对失败");

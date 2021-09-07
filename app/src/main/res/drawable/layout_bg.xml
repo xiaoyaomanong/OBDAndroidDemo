@@ -6,5 +6,5 @@
 	<solid android:color="@color/color_080707" />
 	<stroke
 		android:width="0.5dp"
-		android:color="@color/graye4" />
+		android:color="@color/gray_four" />
 </shape>

@@ -10,6 +10,7 @@ public class SharedPreferencesUtil {
 
     private static final String spFileName = "welcomePage";
     public static final String FIRST_OPEN = "first_open";
+    public static final String FLAG_IS_OPEN_LONG_LIGHT = "is_first_open_light";
 
     public static Boolean getBoolean(Context context, String strKey, Boolean strDefault) {
         SharedPreferences setPreferences = context.getSharedPreferences(spFileName, Context.MODE_PRIVATE);

@@ -1,5 +1,6 @@
 package com.example.obdandroid.ui.view.popwindow;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -139,6 +140,7 @@ public class CustomPopWindow implements PopupWindow.OnDismissListener{
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private PopupWindow build(){
 
         if(mContentView == null){
@@ -190,36 +192,29 @@ public class CustomPopWindow implements PopupWindow.OnDismissListener{
             //注意下面这三个是contentView 不是PopupWindow
             mPopupWindow.getContentView().setFocusable(true);
             mPopupWindow.getContentView().setFocusableInTouchMode(true);
-            mPopupWindow.getContentView().setOnKeyListener(new View.OnKeyListener() {
-                @Override
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        mPopupWindow.dismiss();
+            mPopupWindow.getContentView().setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    mPopupWindow.dismiss();
 
-                        return true;
-                    }
-                    return false;
+                    return true;
                 }
+                return false;
             });
             //在Android 6.0以上 ，只能通过拦截事件来解决
-            mPopupWindow.setTouchInterceptor(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
+            mPopupWindow.setTouchInterceptor((v, event) -> {
+                final int x = (int) event.getX();
+                final int y = (int) event.getY();
 
-                    final int x = (int) event.getX();
-                    final int y = (int) event.getY();
-
-                    if ((event.getAction() == MotionEvent.ACTION_DOWN)
-                            && ((x < 0) || (x >= mWidth) || (y < 0) || (y >= mHeight))) {
-                        Log.e(TAG,"out side ");
-                        Log.e(TAG,"width:"+mPopupWindow.getWidth()+"height:"+mPopupWindow.getHeight()+" x:"+x+" y  :"+y);
-                        return true;
-                    } else if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-                        Log.e(TAG,"out side ...");
-                        return true;
-                    }
-                    return false;
+                if ((event.getAction() == MotionEvent.ACTION_DOWN)
+                        && ((x < 0) || (x >= mWidth) || (y < 0) || (y >= mHeight))) {
+                    Log.e(TAG,"out side ");
+                    Log.e(TAG,"width:"+mPopupWindow.getWidth()+"height:"+mPopupWindow.getHeight()+" x:"+x+" y  :"+y);
+                    return true;
+                } else if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                    Log.e(TAG,"out side ...");
+                    return true;
                 }
+                return false;
             });
         }else{
             mPopupWindow.setFocusable(mIsFocusable);

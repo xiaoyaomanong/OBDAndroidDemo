@@ -83,6 +83,7 @@ public class VehicleDashTwoActivity extends BaseActivity {
     public void initView() {
         super.initView();
         Context context = this;
+        keepScreenLongLight(this, true);
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         tvFuelPressure = findViewById(R.id.tvFuelPressure);
         dashFuelPressure = findViewById(R.id.dashFuelPressure);
@@ -294,6 +295,12 @@ public class VehicleDashTwoActivity extends BaseActivity {
                 executeObdCommand(MainApplication.getBluetoothSocket(), getCommands());
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        keepScreenLongLight(this, false);
     }
 
     @Override

@@ -13,7 +13,7 @@ import android.widget.PopupWindow;
  */
 public class CustomPop extends BasePop {
 
-    private PopupWindow alertDialog;
+    private CustomPopWindow alertDialog;
     private View rootView;
     private View anchor;
     private Context context;
@@ -64,7 +64,7 @@ public class CustomPop extends BasePop {
     @Override
     public void showDialog() {
         log("启动自定义对话框");
-        new CustomPopWindow.PopupWindowBuilder(context)
+        alertDialog = new CustomPopWindow.PopupWindowBuilder(context)
                 .setView(rootView)
                 .create()
                 .showAsDropDown(anchor, 0, 20, Gravity.CENTER);
@@ -73,12 +73,7 @@ public class CustomPop extends BasePop {
 
     @Override
     public void doDismiss() {
-        if (alertDialog != null) alertDialog.dismiss();
-    }
-
-    public CustomPop setCanCancel(boolean canCancel) {
-        if (alertDialog != null) alertDialog.setOutsideTouchable(canCancel);
-        return this;
+        if (alertDialog != null) alertDialog.onDismiss();
     }
 
     public interface BindView {

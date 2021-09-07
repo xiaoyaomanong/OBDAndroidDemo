@@ -5,9 +5,12 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
@@ -51,6 +54,8 @@ public class VehicleDashOneActivity extends BaseActivity {
     private final Thread mSpeedCommand = new Thread(new MySpeedCommand());
     public MyHandler mHandler;
     private boolean isConnected;
+    private PowerManager powerManager = null;
+    private PowerManager.WakeLock wakeLock = null;
 
     @SuppressWarnings("deprecation")
     @SuppressLint("HandlerLeak")
@@ -74,10 +79,12 @@ public class VehicleDashOneActivity extends BaseActivity {
         return 0;
     }
 
+    @SuppressLint("InvalidWakeLockTag")
     @Override
     public void initView() {
         super.initView();
         Context context = this;
+        keepScreenLongLight(this, true);
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         tvmSpeed = getView(R.id.tvmSpeed);
         tvmRPM = getView(R.id.tvmRPM);
@@ -276,6 +283,11 @@ public class VehicleDashOneActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        keepScreenLongLight(this, false);
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -13,10 +12,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -41,10 +40,8 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
-import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.http.HttpService;
 import com.example.obdandroid.ui.adapter.AddressAdapter;
-import com.example.obdandroid.ui.entity.NearbyAddressEntity;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.ui.view.finger.JDCityPicker;
@@ -52,19 +49,15 @@ import com.example.obdandroid.ui.view.popwindow.CustomPop;
 import com.example.obdandroid.utils.StringUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.Call;
-import okhttp3.Response;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Callback;
-
-import static com.example.obdandroid.config.APIConfig.reverse_geocoding_URL;
+import retrofit2.Response;
 
 /**
  * 作者：Jealous
@@ -78,7 +71,6 @@ public class AddAddressActivity extends BaseActivity {
     private TextView tvSelectArea;
     private TextView tvDetailsAddress;
     private CheckBox idCbSelectDefault;
-    private ImageView ivLocation;
     private JDCityPicker mJDCityPicker;
     private static final int REQUEST_CODE = 101;
     private static final int GPS_REQUEST_CODE = 1;
@@ -88,6 +80,7 @@ public class AddAddressActivity extends BaseActivity {
     private boolean isPermissionRequested;
     public LocationClient mLocationClient = null;
     private AddressAdapter adapter;
+    private CustomPop customPop;
 
     @Override
     protected int getContentViewId() {
@@ -110,14 +103,14 @@ public class AddAddressActivity extends BaseActivity {
         tvSelectArea = findViewById(R.id.tvSelectArea);
         tvDetailsAddress = findViewById(R.id.tvDetailsAddress);
         idCbSelectDefault = findViewById(R.id.id_cb_select_default);
-        ivLocation = findViewById(R.id.ivLocation);
+        ImageView ivLocation = findViewById(R.id.ivLocation);
         LinearLayout layoutSelectName = findViewById(R.id.layoutSelectName);
         LinearLayout layoutSelectArea = findViewById(R.id.layoutSelectArea);
         Button btnSave = findViewById(R.id.btnSave);
         mCoder = GeoCoder.newInstance();
         mLocationClient = new LocationClient(context);
         requestPermission();
-        if (isLocServiceEnable(context)) {
+        if (!isLocServiceEnable(context)) {
             openGPS();
         }
         getLocation();
@@ -155,7 +148,7 @@ public class AddAddressActivity extends BaseActivity {
             @Override
             public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
                 if (null != geoCodeResult && null != geoCodeResult.getLocation()) {
-                    if (geoCodeResult == null || geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
+                    if (geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
                         showTipDialog("没有找到检索结果");
                     } else {
                         double latitude = geoCodeResult.getLocation().latitude;
@@ -206,7 +199,7 @@ public class AddAddressActivity extends BaseActivity {
      *             展示附件地址
      */
     private void showPopMenu(View view, List<PoiInfo> list) {
-        CustomPop.show(context, R.layout.pop_company, view, (dialog, rootView) -> {
+        customPop = CustomPop.show(context, R.layout.pop_company, view, (dialog, rootView) -> {
             TextView tvTitle = rootView.findViewById(R.id.tvTitle);
             RecyclerView recycleAddress = rootView.findViewById(R.id.recycleAddress);
             tvTitle.setText("请选择详细地址");
@@ -216,7 +209,10 @@ public class AddAddressActivity extends BaseActivity {
             adapter = new AddressAdapter(context);
             adapter.setList(list);
             recycleAddress.setAdapter(adapter);
-            adapter.setClickCallBack(entity -> tvDetailsAddress.setText(entity.getAddress()));
+            adapter.setClickCallBack(entity -> {
+                customPop.doDismiss();
+                tvDetailsAddress.setText(entity.getAddress());
+            });
         });
     }
 
@@ -241,7 +237,6 @@ public class AddAddressActivity extends BaseActivity {
             for (String perm : permissions) {
                 if (PackageManager.PERMISSION_GRANTED != checkSelfPermission(perm)) {
                     permissionsList.add(perm);
-                    // 进入到这里代表没有权限.
                 }
             }
 
@@ -252,13 +247,15 @@ public class AddAddressActivity extends BaseActivity {
         }
     }
 
-    //背景变暗
-    private void bgAlpha(float f) {
+    /**
+     * @param alpha 透明度
+     *              背景变暗
+     */
+    private void bgAlpha(float alpha) {
         WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-        layoutParams.alpha = f;
+        layoutParams.alpha = alpha;
         getWindow().setAttributes(layoutParams);
     }
-
 
     /**
      * @param token     接口令牌
@@ -271,7 +268,7 @@ public class AddAddressActivity extends BaseActivity {
     private void addAppUserAddress(String token, String appUserId, String telephone, String contacts, String address, boolean isDefault) {
         HttpService.getInstance().addAppUserAddress(token, appUserId, telephone, contacts, address, isDefault).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 String msg = null;
                 try {
                     if (response.body() != null) {
@@ -293,7 +290,7 @@ public class AddAddressActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(retrofit2.Call<ResponseBody> call, Throwable throwable) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
 
             }
         });
@@ -353,6 +350,9 @@ public class AddAddressActivity extends BaseActivity {
         //更多LocationClientOption的配置，请参照类参考中LocationClientOption类的详细说明
     }
 
+    /**
+     * 获取定位
+     */
     private void getLocation() {
         setBDLocation();
         mLocationClient.start();
@@ -365,13 +365,9 @@ public class AddAddressActivity extends BaseActivity {
         });
     }
 
-    //获取附近位置
-    private void getAddresses(String latitude, String longitude) {
-        if (!TextUtils.isEmpty(latitude) && !TextUtils.isEmpty(longitude)) {
-            requestAddresses(Constant.MAP_SERVER_AK, latitude + "," + longitude);
-        }
-    }
-
+    /**
+     * 打开GPS定位设置
+     */
     private void openGPS() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("请打开GPS连接")
@@ -382,34 +378,6 @@ public class AddAddressActivity extends BaseActivity {
                     startActivityForResult(intent, GPS_REQUEST_CODE);
                 })
                 .setNeutralButton("取消", (dialogInterface, i) -> dialogInterface.dismiss()).show();
-    }
-
-    /**
-     * @param ak       地图ak
-     * @param location 坐标
-     *                 获取周边地址
-     */
-    public void requestAddresses(String ak, String location) {
-        OkHttpUtils.get().url(reverse_geocoding_URL).
-                addParam("ak", ak).
-                addParam("output", "json").
-                addParam("coordtype", "wgs84ll").
-                addParam("location", location).
-                addParam("extensions_poi", "1").
-                build().execute(new StringCallback() {
-            @Override
-            public void onError(Call call, Response response, Exception e, int id) {
-
-            }
-
-            @Override
-            public void onResponse(String response, int id) {
-                NearbyAddressEntity entity = JSON.parseObject(response, NearbyAddressEntity.class);
-                if (entity.getStatus() == 0) {
-
-                }
-            }
-        });
     }
 
 
@@ -423,31 +391,22 @@ public class AddAddressActivity extends BaseActivity {
     @SuppressWarnings("LoopStatementThatDoesntLoop")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             Uri uri = data.getData();
             ContentResolver cr = getContentResolver();
             try (Cursor cursor = cr.query(uri, null, null, null, null)) {
                 while (cursor.moveToNext()) {
                     // 取得联系人名字
-                    int nameFieldColumnIndex = cursor.getColumnIndex(
-                            ContactsContract.Contacts.DISPLAY_NAME);
-
+                    int nameFieldColumnIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
                     String contact = cursor.getString(nameFieldColumnIndex);
-
                     String ContactId = cursor.getString(cursor
                             .getColumnIndex(ContactsContract.Contacts._ID));
-
-                    Cursor phone = cr.query(
-                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                            null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID
-                                    + "=" + ContactId,
-                            null, null);
+                    Cursor phone = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+                                    + "=" + ContactId, null, null);
                     String num = "";
                     while (phone.moveToNext()) {
-                        num = phone.getString(phone.getColumnIndex(
-                                ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        num = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                         break;//只取第一个
                     }
                     tvName.setText(contact);

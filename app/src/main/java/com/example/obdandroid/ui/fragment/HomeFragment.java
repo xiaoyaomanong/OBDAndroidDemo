@@ -2,8 +2,6 @@ package com.example.obdandroid.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -31,7 +29,6 @@ import com.bumptech.glide.Glide;
 import com.example.obdandroid.MainApplication;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseFragment;
-import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.service.BluetoothConnService;
 import com.example.obdandroid.ui.activity.BindBluetoothDeviceActivity;
 import com.example.obdandroid.ui.activity.CheckRecordActivity;
@@ -90,7 +87,7 @@ import static com.example.obdandroid.config.Constant.VEHICLE_ID;
 
 /**
  * 作者：Jealous
- * 日期：2020/12/23 0023  y
+ * 日期：2020/12/23 0023
  * 描述：
  */
 public class HomeFragment extends BaseFragment {
@@ -561,7 +558,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     /**
-     * 处理建立的蓝牙连接...
+     * 处理建立的蓝牙连接
      */
     @SuppressLint("StringFormatInvalid")
     private void onConnect(String address) {

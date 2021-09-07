@@ -1,5 +1,6 @@
 package com.example.obdandroid.base;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.location.LocationManager;
@@ -8,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -19,6 +22,7 @@ import com.example.obdandroid.utils.ActivityManager;
 import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
+import com.example.obdandroid.utils.SharedPreferencesUtil;
 import com.example.obdandroid.utils.StringUtil;
 import com.github.pires.obd.commands.protocol.HeadersOffCommand;
 import com.kongzue.dialog.v2.TipDialog;
@@ -217,6 +221,21 @@ public abstract class BaseActivity extends AppCompatActivity {
                 }
             }).setPositiveButton("确定").setTitle("提示").show();
         }
+    }
+
+    /**
+     * 是否使屏幕常亮
+     *
+     * @param activity
+     */
+    public void keepScreenLongLight(Activity activity, boolean isOpenLight) {
+        Window window = activity.getWindow();
+        if (isOpenLight) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+
     }
 
     /**

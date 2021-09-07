@@ -61,12 +61,12 @@ public class MyVehicleDashActivity extends BaseActivity {
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         LinearLayout layoutDashOne = findViewById(R.id.layoutDashOne);
         LinearLayout layoutDashTwo = findViewById(R.id.layoutDashTwo);
-        if (MainApplication.getBluetoothSocket() != null) {
+    /*    if (MainApplication.getBluetoothSocket() != null) {
             isConnected = MainApplication.getBluetoothSocket().isConnected();
         }
         if (isConnected) {
             new Thread(() -> initOBD(MainApplication.getBluetoothSocket())).start();
-        }
+        }*/
         layoutDashOne.setOnClickListener(v -> JumpUtil.startAct(context, VehicleDashOneActivity.class));
         layoutDashTwo.setOnClickListener(v -> JumpUtil.startAct(context, VehicleDashTwoActivity.class));
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {

@@ -16,10 +16,12 @@ import com.example.obdandroid.config.CheckRecord;
 import com.example.obdandroid.ui.view.PhilText;
 import com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight;
 import com.example.obdandroid.utils.StringUtil;
+import com.github.pires.obd.commands.protocol.HeadersOffCommand;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.application.ObdPreferences;
 import com.sohrab.obd.reader.enums.ModeTrim;
+import com.sohrab.obd.reader.enums.ObdProtocols;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.engine.ThrottlePositionCommand;
 import com.sohrab.obd.reader.obdCommand.fuel.ConsumptionRateCommand;
@@ -28,8 +30,10 @@ import com.sohrab.obd.reader.obdCommand.pressure.FuelRailPressureCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SelectProtocolCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
 import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
+import com.sohrab.obd.reader.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +63,6 @@ public class VehicleDashTwoActivity extends BaseActivity {
     @SuppressWarnings("deprecation")
     @SuppressLint("HandlerLeak")
     class MyHandler extends Handler {
-
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 100) {
@@ -104,8 +107,8 @@ public class VehicleDashTwoActivity extends BaseActivity {
         setInsFuelConsumption();
         setDrivingFuelConsumption();
         setIdlingFuelConsumption();
-        //startCommand();
-        newCachedThreadPool();
+        startCommand();
+       // newCachedThreadPool();
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -132,31 +135,14 @@ public class VehicleDashTwoActivity extends BaseActivity {
         //创建可缓存的线程池，如果线程池的容量超过了任务数，自动回收空闲线程，任务增加时可以自动添加新线程，线程池的容量不限制
         ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
         //提交 4个任务
+
         cachedThreadPool.submit(() -> {
             while (isConnected) {
-                FuelPressureCommand command = new FuelPressureCommand(ModeTrim.MODE_01.buildObdCommand());//油压
-                executeObdCommand(MainApplication.getBluetoothSocket(), command);
-            }
-        });
-        cachedThreadPool.submit(() -> {
-            while (isConnected) {
-                ThrottlePositionCommand command = new ThrottlePositionCommand(ModeTrim.MODE_01.buildObdCommand());//节气门位置
-                executeObdCommand(MainApplication.getBluetoothSocket(), command);
-            }
-        });
-        cachedThreadPool.submit(() -> {
-            while (isConnected) {
-                ConsumptionRateCommand command = new ConsumptionRateCommand(ModeTrim.MODE_01.buildObdCommand());//燃油效率
-                executeObdCommand(MainApplication.getBluetoothSocket(), command);
-            }
-        });
-        cachedThreadPool.submit(() -> {
-            while (isConnected) {
-                FuelRailPressureCommand command = new FuelRailPressureCommand(ModeTrim.MODE_01.buildObdCommand());//油轨压力（柴油或汽油直喷）
-                executeObdCommand(MainApplication.getBluetoothSocket(), command);
+                executeObdCommand(MainApplication.getBluetoothSocket(), getCommands());
             }
         });
     }
+
 
     private void startCommand() {
         if (isConnected) {

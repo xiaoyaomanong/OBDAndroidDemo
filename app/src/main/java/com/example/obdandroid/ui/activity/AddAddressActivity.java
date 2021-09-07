@@ -398,6 +398,8 @@ public class AddAddressActivity extends BaseActivity {
             }
             latitude = location.getLatitude();    //获取纬度信息
             longitude = location.getLongitude();    //获取经度信息
+            LogE("latitude:"+latitude);
+            LogE("longitude:"+longitude);
         }
     }
 

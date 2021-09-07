@@ -127,9 +127,11 @@ public class HomeFragment extends BaseFragment {
     private static final int HANDLE_MSG_TWO = 2;
     private static final int HANDLE_MSG_THREE = 3;
     private static final int HANDLE_MSG_FOUR = 4;
+    private static final int HANDLE_MSG_TEN = 10;
     private SPUtil spUtil;
     private Intent mIntent;
     private MsgReceiver msgReceiver;
+    private boolean isInit = false;
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
 
@@ -159,6 +161,11 @@ public class HomeFragment extends BaseFragment {
                     showDefaultVehicle();
                     //添加车辆绑定
                     layoutAddCar.setOnClickListener(v -> JumpUtil.startAct(context, SelectAutomobileBrandActivity.class));
+                    break;
+
+                case HANDLE_MSG_TEN:
+                    dialogUtils.dismiss();
+                    showTipDialog((String) msg.obj);
                     break;
             }
         }
@@ -354,10 +361,10 @@ public class HomeFragment extends BaseFragment {
     }
 
     /**
-     * @param pageNum   页号
-     * @param pageSize  条数
-     * @param token     接口令牌
-     *                  获取用户车辆列表
+     * @param pageNum  页号
+     * @param pageSize 条数
+     * @param token    接口令牌
+     *                 获取用户车辆列表
      */
     private void getVehiclePageList(String pageNum, String pageSize, String token, String appUserId) {
         OkHttpUtils.get().url(SERVER_URL + Vehicle_URL).
@@ -376,11 +383,11 @@ public class HomeFragment extends BaseFragment {
                 VehicleEntity entity = JSON.parseObject(response, VehicleEntity.class);
                 if (entity.isSuccess()) {
                     if (entity.getData().getTotal() == 1) {
-                        LogE("id:"+entity.getData().getList().get(0).getVehicleId());
+                        LogE("id:" + entity.getData().getList().get(0).getVehicleId());
                         spUtil.remove(VEHICLE_ID);
                         spUtil.put(VEHICLE_ID, String.valueOf(entity.getData().getList().get(0).getVehicleId()));
                         connectBtDevice(entity.getData().getList().get(0).getBluetoothDeviceNumber());
-                    }else {
+                    } else {
                         new CustomeDialog(context, getString(R.string.onbindTip), confirm -> {
                             if (confirm) {
                                 JumpUtil.startAct(context, MyVehicleActivity.class);
@@ -602,17 +609,23 @@ public class HomeFragment extends BaseFragment {
      * 处理建立的蓝牙连接
      */
     @SuppressLint("StringFormatInvalid")
-    private void onConnect(String address) {
+    private void onConnect(String address)  {
         titleBar.setLeftTitle(getString(R.string.conOk));
         titleBar.setRightIcon(R.drawable.action_connect);
         isConnected = true;
         TipDialog.show(context, getString(R.string.title_connected_to), TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
         dialogUtils.dismiss();
-       /* if (MainApplication.getBluetoothSocket().isConnected()) {
+        try {
+            Thread.sleep(600);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (MainApplication.getBluetoothSocket().isConnected()) {
+            dialogUtils.showProgressDialog("设备正在初始化");
             new Thread(() -> initOBD(MainApplication.getBluetoothSocket())).start();
         } else {
             showToast(getString(R.string.device_not_conn));
-        }*/
+        }
     }
 
     /**
@@ -622,19 +635,28 @@ public class HomeFragment extends BaseFragment {
     public void initOBD(BluetoothSocket mSocket) {
         try {
             new ObdResetCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            Thread.sleep(1000);
             new EchoOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+            Thread.sleep(200);
             new LineFeedOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+            Thread.sleep(200);
             new SpacesOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-            new HeadersOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-            new TimeoutCommand(62).run(mSocket.getInputStream(), mSocket.getOutputStream());
+            Thread.sleep(200);
+            new SpacesOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
+            Thread.sleep(200);
+            new TimeoutCommand(125).run(mSocket.getInputStream(), mSocket.getOutputStream());
+            Thread.sleep(200);
             new SelectProtocolCommand(ObdProtocols.AUTO).run(mSocket.getInputStream(), mSocket.getOutputStream());
+            Thread.sleep(200);
+            isInit = true;
         } catch (Exception e) {
             LogUtils.i("在新线程中重置命令异常:: " + e.getMessage());
+            isInit = false;
+        }
+        if (isInit) {
+            sendMessage(HANDLE_MSG_TEN, "初始化完成");
+        } else {
+            sendMessage(HANDLE_MSG_TEN, "初始化失败");
         }
     }
 

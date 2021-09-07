@@ -18,21 +18,31 @@ import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.CheckRecord;
 import com.example.obdandroid.ui.view.PhilText;
 import com.example.obdandroid.ui.view.dashView.CustomerDashboardViewLight;
+import com.github.pires.obd.commands.protocol.HeadersOffCommand;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.sohrab.obd.reader.application.ObdPreferences;
 import com.sohrab.obd.reader.enums.ModeTrim;
+import com.sohrab.obd.reader.enums.ObdProtocols;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.SpeedCommand;
 import com.sohrab.obd.reader.obdCommand.engine.OilTempCommand;
 import com.sohrab.obd.reader.obdCommand.engine.RPMCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SelectProtocolCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
+import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
 import com.sohrab.obd.reader.obdCommand.temperature.EngineCoolantTemperatureCommand;
+import com.sohrab.obd.reader.utils.LogUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * 作者：Jealous
@@ -54,8 +64,6 @@ public class VehicleDashOneActivity extends BaseActivity {
     private final Thread mSpeedCommand = new Thread(new MySpeedCommand());
     public MyHandler mHandler;
     private boolean isConnected;
-    private PowerManager powerManager = null;
-    private PowerManager.WakeLock wakeLock = null;
 
     @SuppressWarnings("deprecation")
     @SuppressLint("HandlerLeak")
@@ -63,8 +71,27 @@ public class VehicleDashOneActivity extends BaseActivity {
 
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == 100) {
-                setView((CheckRecord) msg.obj);
+            switch (msg.what) {
+                case 100://速度
+                    //setView((CheckRecord) msg.obj);
+                    setSpeedView((CheckRecord) msg.obj);
+                    break;
+                case 101://转速
+                    CheckRecord record= (CheckRecord) msg.obj;
+                    String rpm = TextUtils.isEmpty(record.getEngineRpm()) ? "0" : record.getEngineRpm();
+                    double maxRpm = (double) record.getEngineRpmMax() / 1000;
+                    dashRPM.setVelocity((Float.parseFloat(rpm) / 1000));
+                    tvmRPM.setText(String.valueOf(Float.parseFloat(rpm) / 1000));
+                    tvMaxRPM.setText(String.valueOf(maxRpm));
+                    break;
+                case 102://发动机油温
+                    CheckRecord record1= (CheckRecord) msg.obj;
+                    dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(record1.getmEngineOilTemp()) ? "0" : record1.getmEngineOilTemp().replace("℃", "")));
+                    break;
+                case 103://冷却液温度
+                    CheckRecord record2= (CheckRecord) msg.obj;
+                    dashEngineCoolantTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(record2.getmEngineCoolantTemp()) ? "0" : record2.getmEngineCoolantTemp().replace("℃", "")));
+                    break;
             }
         }
     }
@@ -107,8 +134,8 @@ public class VehicleDashOneActivity extends BaseActivity {
         setSpeed();
         setEngineCoolantTemp();
         setEngineOilTemp();
-        //startCommand();
-        newCachedThreadPool();
+        startCommand();
+        //newCachedThreadPool();
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -128,32 +155,39 @@ public class VehicleDashOneActivity extends BaseActivity {
         });
     }
 
+
     private void newCachedThreadPool() {
         //创建可缓存的线程池，如果线程池的容量超过了任务数，自动回收空闲线程，任务增加时可以自动添加新线程，线程池的容量不限制
         ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
         //提交 4个任务
         cachedThreadPool.submit(() -> {//读取车速
             while (isConnected) {
+                //executeCommandData(MainApplication.getBluetoothSocket(), getCommands());
                 SpeedCommand command = new SpeedCommand(ModeTrim.MODE_01.buildObdCommand());
-                executeCommandData(MainApplication.getBluetoothSocket(), command);
+                executeCommandData(MainApplication.getBluetoothSocket(), command,100);
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
         cachedThreadPool.submit(() -> {//读取转速
             while (isConnected) {
                 RPMCommand command = new RPMCommand(ModeTrim.MODE_01.buildObdCommand());
-                executeCommandData(MainApplication.getBluetoothSocket(), command);
+                executeCommandData(MainApplication.getBluetoothSocket(), command,101);
             }
         });
         cachedThreadPool.submit(() -> {//发动机油温
             while (isConnected) {
                 OilTempCommand command = new OilTempCommand(ModeTrim.MODE_01.buildObdCommand());
-                executeCommandData(MainApplication.getBluetoothSocket(), command);
+                executeCommandData(MainApplication.getBluetoothSocket(), command,102);
             }
         });
         cachedThreadPool.submit(() -> {//发动机冷媒温度
             while (isConnected) {
                 EngineCoolantTemperatureCommand command = new EngineCoolantTemperatureCommand(ModeTrim.MODE_01.buildObdCommand());
-                executeCommandData(MainApplication.getBluetoothSocket(), command);
+                executeCommandData(MainApplication.getBluetoothSocket(), command,103);
             }
         });
     }
@@ -172,6 +206,7 @@ public class VehicleDashOneActivity extends BaseActivity {
     private List<ObdCommand> getCommands() {
         List<ObdCommand> obdCommands = new ArrayList<>();
         obdCommands.clear();
+        obdCommands.add(new ObdResetCommand());
         obdCommands.add(new RPMCommand(ModeTrim.MODE_01.buildObdCommand()));
         obdCommands.add(new OilTempCommand(ModeTrim.MODE_01.buildObdCommand()));
         obdCommands.add(new EngineCoolantTemperatureCommand(ModeTrim.MODE_01.buildObdCommand()));
@@ -182,12 +217,16 @@ public class VehicleDashOneActivity extends BaseActivity {
     /**
      * 读取速度
      */
-    private void executeCommandData(BluetoothSocket socket, ObdCommand command) {
+    private void executeCommandData(BluetoothSocket socket, ObdCommand command,int what) {
         try {
             command.run(socket.getInputStream(), socket.getOutputStream());
+          //  LogE("数据:"+command.getCalculatedResult());
             tripRecord.updateTrip(command.getName(), command);
+            if (command.getName().equals("Vehicle Speed")&&what==100){
+                LogE("速度:"+((SpeedCommand) command).getMetricSpeed());
+            }
             Message msg = mHandler.obtainMessage();
-            msg.what = 100;
+            msg.what = what;
             msg.obj = tripRecord;
             mHandler.sendMessage(msg);
         } catch (Exception e) {
@@ -213,6 +252,23 @@ public class VehicleDashOneActivity extends BaseActivity {
             }
         }
     }
+
+
+    /**
+     * @param tripRecord 速度
+     *                   显示速度
+     */
+    private void setSpeedView(CheckRecord tripRecord) {
+        tvmSpeed.setText(String.valueOf(tripRecord.getSpeed()));
+        dashSpeed.setVelocity(tripRecord.getSpeed());
+        tvAverageSpeed.setText(String.valueOf(tripRecord.getAverageSpeed()));
+        tvMaxSpeed.setText(String.valueOf(tripRecord.getSpeedMax()));
+        float DrivingDuration = BigDecimal.valueOf(tripRecord.getDrivingDuration())
+                .setScale(2, BigDecimal.ROUND_HALF_DOWN)
+                .floatValue();
+        tvDrivingDuration.setText(String.valueOf(DrivingDuration));
+    }
+
 
     private void setView(CheckRecord tripRecord) {
         tvmSpeed.setText(String.valueOf(tripRecord.getSpeed()));

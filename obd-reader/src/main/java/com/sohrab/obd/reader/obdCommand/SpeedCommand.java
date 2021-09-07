@@ -21,7 +21,7 @@ public class SpeedCommand extends ObdCommand implements SystemOfUnits {
      */
     public SpeedCommand(String mode) {
         super(mode+" 0D");
-    }
+    }//"01 0D"
 
     /**
      * Copy ctor.

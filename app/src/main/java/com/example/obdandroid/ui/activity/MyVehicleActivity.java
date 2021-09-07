@@ -43,7 +43,7 @@ import static com.example.obdandroid.config.Constant.VEHICLE_ID;
 /**
  * 作者：Jealous
  * 日期：2021/1/8 0008
- * 描述：
+ * 描述：车辆管理
  */
 public class MyVehicleActivity extends BaseActivity {
     private Context context;

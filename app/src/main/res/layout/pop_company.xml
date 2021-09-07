@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
@@ -16,6 +17,22 @@
         android:textSize="15sp"
         android:textStyle="bold"
         tools:ignore="RtlSymmetry" />
+
+    <com.wyt.searchedittext.SearchEditText
+        android:id="@+id/etSearch"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/search_edit_bg"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="5dp"
+        android:gravity="center_vertical"
+        android:hint="@string/hin_serach"
+        android:imeOptions="actionSearch"
+        android:padding="5dp"
+        android:singleLine="true"
+        android:textSize="13sp"
+        app:drawableDel="@drawable/edit_delete" />
 
 
     <android.support.v7.widget.RecyclerView

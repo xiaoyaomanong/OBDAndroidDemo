@@ -224,7 +224,6 @@ public class ReceivingAddressActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("获取收货地址:" + response);
                 AppUserAddressEntity entity = JSON.parseObject(response, AppUserAddressEntity.class);
                 if (entity.isSuccess()) {
                     adapter.setList(entity.getData().getList());

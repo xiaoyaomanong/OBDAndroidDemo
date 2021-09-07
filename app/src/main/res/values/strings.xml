@@ -351,4 +351,5 @@
     <string name="please">请选择</string>
     <string name="bonus_vip">附赠会员:</string>
     <string name="update_add">修改收货地址</string>
+    <string name="hin_serach">小区/街道/大厦/学校名称</string>
 </resources>

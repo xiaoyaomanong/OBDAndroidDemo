@@ -16,6 +16,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -39,6 +41,10 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
+import com.baidu.mapapi.search.sug.SuggestionResult;
+import com.baidu.mapapi.search.sug.SuggestionSearch;
+import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.http.HttpService;
@@ -50,6 +56,7 @@ import com.example.obdandroid.ui.view.popwindow.CustomPop;
 import com.example.obdandroid.utils.StringUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
+import com.wyt.searchedittext.SearchEditText;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -76,6 +83,7 @@ public class AddAddressActivity extends BaseActivity {
     private static final int REQUEST_CODE = 101;
     private static final int GPS_REQUEST_CODE = 1;
     private GeoCoder mCoder;
+    private SuggestionSearch mSuggestionSearch;
     private double latitude;
     private double longitude;
     private boolean isPermissionRequested;
@@ -110,6 +118,7 @@ public class AddAddressActivity extends BaseActivity {
         LinearLayout layoutSelectArea = findViewById(R.id.layoutSelectArea);
         Button btnSave = findViewById(R.id.btnSave);
         mCoder = GeoCoder.newInstance();
+        mSuggestionSearch = SuggestionSearch.newInstance();
         mLocationClient = new LocationClient(context);
         requestPermission();
         if (!isLocServiceEnable(context)) {
@@ -179,6 +188,12 @@ public class AddAddressActivity extends BaseActivity {
                 }
             }
         });
+        mSuggestionSearch.setOnGetSuggestionResultListener(new OnGetSuggestionResultListener() {
+            @Override
+            public void onGetSuggestionResult(SuggestionResult suggestionResult) {
+                LogE("地点："+JSON.toJSONString(suggestionResult.getAllSuggestions()));
+            }
+        });
 
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -208,6 +223,7 @@ public class AddAddressActivity extends BaseActivity {
         customPop = CustomPop.show(context, R.layout.pop_company, view, (dialog, rootView) -> {
             TextView tvTitle = rootView.findViewById(R.id.tvTitle);
             RecyclerView recycleAddress = rootView.findViewById(R.id.recycleAddress);
+            SearchEditText etSearch = rootView.findViewById(R.id.etSearch);
             tvTitle.setText("请选择详细地址(当前城市:" + city + ")");
             LinearLayoutManager manager = new LinearLayoutManager(context);
             manager.setOrientation(OrientationHelper.VERTICAL);
@@ -219,7 +235,32 @@ public class AddAddressActivity extends BaseActivity {
                 tvDetailsAddress.setText(entity.getAddress());
                 customPop.doDismiss();
             });
+            etSearch.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    searchCity(city, s.toString());
+                }
+            });
         });
+    }
+
+    /**
+     * @param city    城市
+     * @param keyword 关键字
+     *                keyword为随您的输入变化的值
+     */
+    private void searchCity(String city, String keyword) {
+        mSuggestionSearch.requestSuggestion(new SuggestionSearchOption().city(city).keyword(keyword));
     }
 
     /**
@@ -341,6 +382,7 @@ public class AddAddressActivity extends BaseActivity {
         super.onDestroy();
         mCoder.destroy();
         mLocationClient.stop();
+        mSuggestionSearch.destroy();
     }
 
     /**

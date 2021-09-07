@@ -46,6 +46,7 @@ import com.example.obdandroid.ui.entity.BluetoothDeviceEntity;
 import com.example.obdandroid.ui.entity.TestRecordEntity;
 import com.example.obdandroid.ui.entity.UserCurrentRechargeEntity;
 import com.example.obdandroid.ui.entity.UserInfoEntity;
+import com.example.obdandroid.ui.entity.VehicleEntity;
 import com.example.obdandroid.ui.entity.VehicleInfoEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.utils.DialogUtils;
@@ -76,6 +77,7 @@ import okhttp3.Response;
 
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.USER_INFO_URL;
+import static com.example.obdandroid.config.APIConfig.Vehicle_URL;
 import static com.example.obdandroid.config.APIConfig.getCommonBrandList_URL;
 import static com.example.obdandroid.config.APIConfig.getTestRecordPageList_URL;
 import static com.example.obdandroid.config.APIConfig.getTheUserCurrentRecharge_URL;
@@ -117,6 +119,8 @@ public class HomeFragment extends BaseFragment {
     private String deviceAddress;
     private HomeAdapter homeAdapter;
     private boolean isVip;
+    private int pageNum = 1;
+    private int pageSize = 10;
     private LocalBroadcastManager broadcastManager; //创建本地广播管理器类变量
     private static final int HANDLE_MSG_ZERO = 0;
     private static final int HANDLE_MSG_ONE = 1;
@@ -143,11 +147,7 @@ public class HomeFragment extends BaseFragment {
                 case HANDLE_MSG_THREE:
                     String vehicleId = (String) msg.obj;
                     if (TextUtils.isEmpty(vehicleId)) {
-                        new CustomeDialog(context, getString(R.string.onbindTip), confirm -> {
-                            if (confirm) {
-                                JumpUtil.startAct(context, MyVehicleActivity.class);
-                            }
-                        }).setPositiveButton("确定").setTitle("提示").show();
+                        getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId());
                     } else {
                         getVehicleInfoById(getToken(), vehicleId);
                     }
@@ -351,6 +351,47 @@ public class HomeFragment extends BaseFragment {
         msg.what = what;
         msg.obj = o;
         handler.sendMessage(msg);
+    }
+
+    /**
+     * @param pageNum   页号
+     * @param pageSize  条数
+     * @param token     接口令牌
+     *                  获取用户车辆列表
+     */
+    private void getVehiclePageList(String pageNum, String pageSize, String token, String appUserId) {
+        OkHttpUtils.get().url(SERVER_URL + Vehicle_URL).
+                addParam("pageNum", pageNum).
+                addParam("pageSize", pageSize).
+                addParam("token", token).
+                addParam("appUserId", appUserId).
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                VehicleEntity entity = JSON.parseObject(response, VehicleEntity.class);
+                if (entity.isSuccess()) {
+                    if (entity.getData().getTotal() == 1) {
+                        LogE("id:"+entity.getData().getList().get(0).getVehicleId());
+                        spUtil.remove(VEHICLE_ID);
+                        spUtil.put(VEHICLE_ID, String.valueOf(entity.getData().getList().get(0).getVehicleId()));
+                        connectBtDevice(entity.getData().getList().get(0).getBluetoothDeviceNumber());
+                    }else {
+                        new CustomeDialog(context, getString(R.string.onbindTip), confirm -> {
+                            if (confirm) {
+                                JumpUtil.startAct(context, MyVehicleActivity.class);
+                            }
+                        }).setPositiveButton("确定").setTitle("提示").show();
+                    }
+                } else {
+                    dialogError(context, entity.getMessage());
+                }
+            }
+        });
     }
 
     /**

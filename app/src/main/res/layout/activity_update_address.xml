@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         app:barStyle="night"
         app:lineVisible="false"
-        app:title="@string/new_address" />
+        app:title="@string/update_add" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -167,8 +167,9 @@
 
         <EditText
             android:id="@+id/tvDetailsAddress"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@null"
             android:gravity="top"
             android:hint="@string/hint_DetailsAddress"
@@ -177,6 +178,14 @@
             android:textColor="@color/white"
             android:textColorHint="@color/gray_four"
             android:textSize="@dimen/sp_12" />
+
+        <ImageView
+            android:id="@+id/ivLocation"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_location"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 
 

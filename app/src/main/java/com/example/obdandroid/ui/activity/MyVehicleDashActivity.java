@@ -61,24 +61,14 @@ public class MyVehicleDashActivity extends BaseActivity {
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         LinearLayout layoutDashOne = findViewById(R.id.layoutDashOne);
         LinearLayout layoutDashTwo = findViewById(R.id.layoutDashTwo);
-        isConnected = MainApplication.getBluetoothSocket().isConnected();
+        if (MainApplication.getBluetoothSocket() != null) {
+            isConnected = MainApplication.getBluetoothSocket().isConnected();
+        }
         if (isConnected) {
             new Thread(() -> initOBD(MainApplication.getBluetoothSocket())).start();
         }
-        layoutDashOne.setOnClickListener(v -> {
-            if (isConnected) {
-                showTipDialog("蓝牙连接未连接");
-            } else {
-                JumpUtil.startAct(context, VehicleDashOneActivity.class);
-            }
-        });
-        layoutDashTwo.setOnClickListener(v -> {
-            if (isConnected) {
-                showTipDialog("蓝牙连接未连接");
-            } else {
-                JumpUtil.startAct(context, VehicleDashTwoActivity.class);
-            }
-        });
+        layoutDashOne.setOnClickListener(v -> JumpUtil.startAct(context, VehicleDashOneActivity.class));
+        layoutDashTwo.setOnClickListener(v -> JumpUtil.startAct(context, VehicleDashTwoActivity.class));
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {

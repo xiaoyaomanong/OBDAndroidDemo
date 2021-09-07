@@ -350,4 +350,5 @@
     <string name="Location">所在地区</string>
     <string name="please">请选择</string>
     <string name="bonus_vip">附赠会员:</string>
+    <string name="update_add">修改收货地址</string>
 </resources>

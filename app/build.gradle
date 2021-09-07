@@ -169,6 +169,6 @@ dependencies {
 
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     //百度地图SDK
-    implementation files('libs\\BaiduLBS_Android.jar')
+    implementation files('libs/BaiduLBS_Android.jar')
 }
 

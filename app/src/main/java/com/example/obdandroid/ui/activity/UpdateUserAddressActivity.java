@@ -2,56 +2,63 @@ package com.example.obdandroid.ui.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.PoiInfo;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.http.HttpService;
-import com.example.obdandroid.ui.entity.NearbyAddressEntity;
+import com.example.obdandroid.ui.adapter.AddressAdapter;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.ui.view.finger.JDCityPicker;
-import com.example.obdandroid.utils.LocationUtils;
+import com.example.obdandroid.ui.view.popwindow.CustomPop;
 import com.example.obdandroid.utils.StringUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.Call;
-import okhttp3.Response;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Callback;
-
-import static com.example.obdandroid.config.APIConfig.reverse_geocoding_URL;
+import retrofit2.Response;
 
 /**
  * 作者：Jealous
@@ -68,6 +75,14 @@ public class UpdateUserAddressActivity extends BaseActivity {
     private JDCityPicker mJDCityPicker;
     private static final int REQUEST_CODE = 101;
     private static final int GPS_REQUEST_CODE = 1;
+    private GeoCoder mCoder;
+    private double latitude;
+    private double longitude;
+    private boolean isPermissionRequested;
+    public LocationClient mLocationClient = null;
+    private AddressAdapter adapter;
+    private CustomPop customPop;
+    private String city;
 
     @Override
     protected int getContentViewId() {
@@ -93,7 +108,19 @@ public class UpdateUserAddressActivity extends BaseActivity {
         tvSelectArea = findViewById(R.id.tvSelectArea);
         tvDetailsAddress = findViewById(R.id.tvDetailsAddress);
         Button btnUpdate = findViewById(R.id.btnUpdate);
-        layoutSelectName.setOnClickListener(v -> addPermissByPermissionList(this, new String[]{Manifest.permission.READ_CONTACTS}, 10));
+        ImageView ivLocation = findViewById(R.id.ivLocation);
+        mCoder = GeoCoder.newInstance();
+        mLocationClient = new LocationClient(context);
+        requestPermission();
+        if (!isLocServiceEnable(context)) {
+            openGPS();
+        }
+        initLocation();
+
+        layoutSelectName.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+            startActivityForResult(intent, REQUEST_CODE);
+        });
         layoutSelectArea.setOnClickListener(v -> {
             bgAlpha(0.7f);
             mJDCityPicker = new JDCityPicker(context, (province, city, area) -> tvSelectArea.setText(province + "   " + city + "   " + area));
@@ -118,9 +145,40 @@ public class UpdateUserAddressActivity extends BaseActivity {
                 return;
             }
             String detailsAddress = tvSelectArea.getText().toString() + " " + tvDetailsAddress.getText().toString();
-            updateAppUserAddress(id,getToken(), getUserId(), tvPhone.getText().toString(), tvName.getText().toString(), detailsAddress);
+            updateAppUserAddress(id, getToken(), getUserId(), tvPhone.getText().toString(), tvName.getText().toString(), detailsAddress);
         });
-        getLocation();
+        ivLocation.setOnClickListener(v ->
+                mCoder.reverseGeoCode(new ReverseGeoCodeOption()
+                        .location(new LatLng(latitude, longitude))
+                        // 设置是否返回新数据 默认值0不返回，1返回
+                        .newVersion(1)
+                        // POI召回半径，允许设置区间为0-1000米，超过1000米按1000米召回。默认值为1000
+                        .radius(1000)));
+        mCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
+            @Override
+            public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+                if (null != geoCodeResult && null != geoCodeResult.getLocation()) {
+                    if (geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
+                        showTipDialog("没有找到检索结果");
+                    } else {
+                        double latitude = geoCodeResult.getLocation().latitude;
+                        double longitude = geoCodeResult.getLocation().longitude;
+                        LogE("latitude:" + latitude + ";longitude:" + longitude);
+                    }
+                }
+            }
+
+            @Override
+            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+                if (reverseGeoCodeResult == null || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
+                    showTipDialog("没有找到检索结果");
+                } else {
+                    LogE("检索数据：" + JSON.toJSONString(reverseGeoCodeResult.getPoiList()));
+                    city = reverseGeoCodeResult.getAddressDetail().city;
+                    showPopMenu(tvDetailsAddress, reverseGeoCodeResult.getPoiList());
+                }
+            }
+        });
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -139,13 +197,70 @@ public class UpdateUserAddressActivity extends BaseActivity {
         });
     }
 
-    //背景变暗
-    private void bgAlpha(float f) {
-        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-        layoutParams.alpha = f;
-        getWindow().setAttributes(layoutParams);
+    /**
+     * @param view view
+     * @param list 附件地址
+     *             展示附件地址
+     */
+    @SuppressLint("SetTextI18n")
+    private void showPopMenu(View view, List<PoiInfo> list) {
+        customPop = CustomPop.show(context, R.layout.pop_company, view, (dialog, rootView) -> {
+            TextView tvTitle = rootView.findViewById(R.id.tvTitle);
+            RecyclerView recycleAddress = rootView.findViewById(R.id.recycleAddress);
+            tvTitle.setText("请选择详细地址(当前城市:" + city + ")");
+            LinearLayoutManager manager = new LinearLayoutManager(context);
+            manager.setOrientation(OrientationHelper.VERTICAL);
+            recycleAddress.setLayoutManager(manager);
+            adapter = new AddressAdapter(context);
+            adapter.setList(list);
+            recycleAddress.setAdapter(adapter);
+            adapter.setClickCallBack(entity -> {
+                tvDetailsAddress.setText(entity.getAddress());
+                customPop.doDismiss();
+            });
+        });
     }
 
+    /**
+     * Android6.0之后需要动态申请权限
+     */
+    private void requestPermission() {
+        if (Build.VERSION.SDK_INT >= 23 && !isPermissionRequested) {
+            isPermissionRequested = true;
+            ArrayList<String> permissionsList = new ArrayList<>();
+            String[] permissions = {
+                    Manifest.permission.ACCESS_NETWORK_STATE,
+                    Manifest.permission.INTERNET,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.READ_CONTACTS,
+                    Manifest.permission.ACCESS_WIFI_STATE,
+            };
+
+            for (String perm : permissions) {
+                if (PackageManager.PERMISSION_GRANTED != checkSelfPermission(perm)) {
+                    permissionsList.add(perm);
+                }
+            }
+
+            if (!permissionsList.isEmpty()) {
+                String[] strings = new String[permissionsList.size()];
+                requestPermissions(permissionsList.toArray(strings), 0);
+            }
+        }
+    }
+
+    /**
+     * @param alpha 透明度
+     *              背景变暗
+     */
+    private void bgAlpha(float alpha) {
+        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+        layoutParams.alpha = alpha;
+        getWindow().setAttributes(layoutParams);
+    }
 
     /**
      * @param token     接口令牌
@@ -157,7 +272,7 @@ public class UpdateUserAddressActivity extends BaseActivity {
     private void updateAppUserAddress(String id, String token, String appUserId, String telephone, String contacts, String address) {
         HttpService.getInstance().updateAppUserAddress(id, token, appUserId, telephone, contacts, address, false).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(@NonNull retrofit2.Call<ResponseBody> call, @NonNull retrofit2.Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 String msg = null;
                 try {
                     msg = response.body().string();
@@ -165,6 +280,7 @@ public class UpdateUserAddressActivity extends BaseActivity {
                     e.printStackTrace();
                 }
                 ResultEntity entity = JSON.parseObject(msg, ResultEntity.class);
+                assert entity != null;
                 if (entity.isSuccess()) {
                     new CustomeDialog(context, entity.getMessage(), confirm -> {
                         if (confirm) {
@@ -176,152 +292,88 @@ public class UpdateUserAddressActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(@NonNull retrofit2.Call<ResponseBody> call, @NonNull Throwable throwable) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
 
             }
         });
     }
 
-    private void getLocation() {
-        //先申请定位需要用到的权限
-        List<String> permissionList = new ArrayList<>();
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-        //没有权限则申请
-        if (!permissionList.isEmpty()) {
-            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
-            ActivityCompat.requestPermissions(this, permissions, 1);
-        } else {
-            LocationUtils.register(this, 60 * 10 * 1000, 1000, new LocationUtils.OnLocationChangeListener() {
-                @Override
-                public void getLastKnownLocation(Location location) {
-                    LogE("latitude:" + location.getLatitude() + "longitude" + location.getLongitude());
-                    getAddresses(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
-                }
-
-                @Override
-                public void onLocationChanged(Location location) {
-                    LogE("latitude:" + location.getLatitude() + "longitude" + location.getLongitude());
-                    getAddresses(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
-                }
-
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                }
-
-                @Override
-                public void openGps(boolean isOpen) {
-                    if (!isOpen) {
-                        openGPSSetting();
-                    }
-                }
-            });
-        }
+    /**
+     * 定位初始化
+     */
+    public void initLocation() {
+        // 定位初始化
+        mLocationClient = new LocationClient(this);
+        MyLocationListener myListener = new MyLocationListener();
+        mLocationClient.registerLocationListener(myListener);
+        LocationClientOption option = new LocationClientOption();
+        // 打开gps
+        option.setOpenGps(true);
+        // 设置坐标类型
+        option.setCoorType("bd09ll");
+        option.setScanSpan(1000);
+        mLocationClient.setLocOption(option);
+        mLocationClient.start();
     }
 
-    //获取附近位置
-    private void getAddresses(String latitude, String longitude) {
-        if (!TextUtils.isEmpty(latitude) && !TextUtils.isEmpty(longitude)) {
-            requestAddresses(Constant.MAP_SERVER_AK, latitude + "," + longitude);
-        }
+
+    /**
+     * 打开GPS定位设置
+     */
+    private void openGPS() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("请打开GPS连接")
+                .setIcon(R.drawable.ic_gps)
+                .setMessage("为了提高定位的准确度，更好的为您服务，请打开GPS")
+                .setPositiveButton("设置", (dialogInterface, i) -> {
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivityForResult(intent, GPS_REQUEST_CODE);
+                })
+                .setNeutralButton("取消", (dialogInterface, i) -> dialogInterface.dismiss()).show();
     }
 
-    private void openGPSSetting() {
-        new CustomeDialog(context, "打开GPS定位", confirm -> {
-            //跳转到手机原生设置页面
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivityForResult(intent, GPS_REQUEST_CODE);
-        }).setPositiveButton("确定").setTitle("定位").show();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mCoder.destroy();
+        mLocationClient.stop();
     }
 
     /**
-     * @param ak       地图ak
-     * @param location 坐标
-     *                 获取周边地址
+     * 定位SDK监听函数
      */
-    public void requestAddresses(String ak, String location) {
-        OkHttpUtils.get().url(reverse_geocoding_URL).
-                addParam("ak", ak).
-                addParam("output", "json").
-                addParam("coordtype", "wgs84ll").
-                addParam("location", location).
-                addParam("extensions_poi", "1").
-                build().execute(new StringCallback() {
-            @Override
-            public void onError(Call call, Response response, Exception e, int id) {
+    public class MyLocationListener implements BDLocationListener {
 
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            // MapView 销毁后不在处理新接收的位置
+            if (location == null) {
+                return;
             }
-
-            @Override
-            public void onResponse(String response, int id) {
-                LogE("获取周边地址:" + response);
-                NearbyAddressEntity entity = JSON.parseObject(response, NearbyAddressEntity.class);
-                if (entity.getStatus() == 0) {
-
-                }
-            }
-        });
-    }
-
-    /**
-     * 动态权限
-     */
-    public void addPermissByPermissionList(Activity activity, String[] permissions, int request) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {   //Android 6.0开始的动态权限，这里进行版本判断
-            ArrayList<String> mPermissionList = new ArrayList<>();
-            for (String permission : permissions) {
-                if (ContextCompat.checkSelfPermission(activity, permission)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    mPermissionList.add(permission);
-                }
-            }
-            if (mPermissionList.isEmpty()) {  //非初次进入App且已授权
-                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(intent, REQUEST_CODE);
-            } else {
-                //请求权限方法
-                String[] permissionsNew = mPermissionList.toArray(new String[mPermissionList.size()]);//将List转为数组
-                ActivityCompat.requestPermissions(activity, permissionsNew, request); //这个触发下面onRequestPermissionsResult这个回调
-            }
+            latitude = location.getLatitude();    //获取纬度信息
+            longitude = location.getLongitude();    //获取经度信息
         }
     }
-
 
     @SuppressWarnings("LoopStatementThatDoesntLoop")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             Uri uri = data.getData();
             ContentResolver cr = getContentResolver();
             try (Cursor cursor = cr.query(uri, null, null, null, null)) {
                 while (cursor.moveToNext()) {
                     // 取得联系人名字
-                    int nameFieldColumnIndex = cursor.getColumnIndex(
-                            ContactsContract.Contacts.DISPLAY_NAME);
-
+                    int nameFieldColumnIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
                     String contact = cursor.getString(nameFieldColumnIndex);
-
                     String ContactId = cursor.getString(cursor
                             .getColumnIndex(ContactsContract.Contacts._ID));
-
-                    Cursor phone = cr.query(
-                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                            null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID
-                                    + "=" + ContactId,
-                            null, null);
+                    Cursor phone = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+                                    + "=" + ContactId, null, null);
                     String num = "";
                     while (phone.moveToNext()) {
-                        num = phone.getString(phone.getColumnIndex(
-                                ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        num = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                         break;//只取第一个
                     }
                     tvName.setText(contact);

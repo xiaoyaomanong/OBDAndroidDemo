@@ -7,8 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.ContactsContract;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -48,6 +51,7 @@ import com.example.obdandroid.ui.entity.ReverseGeoAddressEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.ui.view.finger.JDCityPicker;
 import com.example.obdandroid.ui.view.popwindow.CustomPop;
+import com.example.obdandroid.utils.BluetoothService;
 import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.PermissionUtils;
 import com.example.obdandroid.utils.SharedPreferencesUtil;
@@ -158,7 +162,13 @@ public class AddAddressActivity extends BaseActivity {
             suggestionResult.getAllSuggestions().remove(0);
             showAddress(tvDetailsAddress, null, suggestionResult);
         });
-
+       /* BluetoothService bluetoothService = new BluetoothService(new Handler() {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+            }
+        });
+        bluetoothService.connect();*/
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {

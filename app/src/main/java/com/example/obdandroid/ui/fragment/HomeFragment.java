@@ -119,8 +119,6 @@ public class HomeFragment extends BaseFragment {
     private String deviceAddress;
     private HomeAdapter homeAdapter;
     private boolean isVip;
-    private int pageNum = 1;
-    private int pageSize = 10;
     private LocalBroadcastManager broadcastManager; //创建本地广播管理器类变量
     private static final int HANDLE_MSG_ZERO = 0;
     private static final int HANDLE_MSG_ONE = 1;
@@ -131,7 +129,6 @@ public class HomeFragment extends BaseFragment {
     private SPUtil spUtil;
     private Intent mIntent;
     private MsgReceiver msgReceiver;
-    private boolean isInit = false;
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
 
@@ -149,6 +146,8 @@ public class HomeFragment extends BaseFragment {
                 case HANDLE_MSG_THREE:
                     String vehicleId = (String) msg.obj;
                     if (TextUtils.isEmpty(vehicleId)) {
+                        int pageNum = 1;
+                        int pageSize = 10;
                         getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId());
                     } else {
                         getVehicleInfoById(getToken(), vehicleId);
@@ -633,6 +632,7 @@ public class HomeFragment extends BaseFragment {
      *                初始化OBD
      */
     public void initOBD(BluetoothSocket mSocket) {
+        boolean isInit;
         try {
             new ObdResetCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
             Thread.sleep(1000);

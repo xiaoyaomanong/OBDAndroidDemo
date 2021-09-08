@@ -11,6 +11,8 @@ public class SharedPreferencesUtil {
     private static final String spFileName = "welcomePage";
     public static final String FIRST_OPEN = "first_open";
     public static final String FLAG_IS_OPEN_LONG_LIGHT = "is_first_open_light";
+    public static final String LOCATION = "location";
+    public static final String CITY = "city";
 
     public static Boolean getBoolean(Context context, String strKey, Boolean strDefault) {
         SharedPreferences setPreferences = context.getSharedPreferences(spFileName, Context.MODE_PRIVATE);
@@ -24,5 +26,16 @@ public class SharedPreferencesUtil {
         editor.apply();
     }
 
+    public static String getString(Context context, String strKey, String strDefault) {
+        SharedPreferences setPreferences = context.getSharedPreferences(spFileName, Context.MODE_PRIVATE);
+        return setPreferences.getString(strKey, strDefault);
+    }
+
+    public static void putString(Context context, String strKey, String strData) {
+        SharedPreferences activityPreferences = context.getSharedPreferences(spFileName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = activityPreferences.edit();
+        editor.putString(strKey, strData);
+        editor.apply();
+    }
 
 }

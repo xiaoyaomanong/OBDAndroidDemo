@@ -12,10 +12,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -38,27 +39,26 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.mapapi.search.sug.SuggestionResult;
+import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.http.HttpService;
+import com.example.obdandroid.http.ResponseCallBack;
 import com.example.obdandroid.ui.adapter.AddressAdapter;
 import com.example.obdandroid.ui.entity.ResultEntity;
+import com.example.obdandroid.ui.entity.ReverseGeoAddressEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.ui.view.finger.JDCityPicker;
 import com.example.obdandroid.ui.view.popwindow.CustomPop;
 import com.example.obdandroid.utils.StringUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
+import com.wyt.searchedittext.SearchEditText;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * 作者：Jealous
@@ -75,14 +75,12 @@ public class UpdateUserAddressActivity extends BaseActivity {
     private JDCityPicker mJDCityPicker;
     private static final int REQUEST_CODE = 101;
     private static final int GPS_REQUEST_CODE = 1;
-    private GeoCoder mCoder;
     private double latitude;
     private double longitude;
     private boolean isPermissionRequested;
     public LocationClient mLocationClient = null;
     private AddressAdapter adapter;
     private CustomPop customPop;
-    private String city;
 
     @Override
     protected int getContentViewId() {
@@ -109,13 +107,11 @@ public class UpdateUserAddressActivity extends BaseActivity {
         tvDetailsAddress = findViewById(R.id.tvDetailsAddress);
         Button btnUpdate = findViewById(R.id.btnUpdate);
         ImageView ivLocation = findViewById(R.id.ivLocation);
-        mCoder = GeoCoder.newInstance();
         mLocationClient = new LocationClient(context);
         requestPermission();
-        if (!isLocServiceEnable(context)) {
+        if (isLocServiceEnable(context)) {
             openGPS();
         }
-        initLocation();
 
         layoutSelectName.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
@@ -147,38 +143,13 @@ public class UpdateUserAddressActivity extends BaseActivity {
             String detailsAddress = tvSelectArea.getText().toString() + " " + tvDetailsAddress.getText().toString();
             updateAppUserAddress(id, getToken(), getUserId(), tvPhone.getText().toString(), tvName.getText().toString(), detailsAddress);
         });
-        ivLocation.setOnClickListener(v ->
+       /* ivLocation.setOnClickListener(v ->
                 mCoder.reverseGeoCode(new ReverseGeoCodeOption()
                         .location(new LatLng(latitude, longitude))
                         // 设置是否返回新数据 默认值0不返回，1返回
                         .newVersion(1)
                         // POI召回半径，允许设置区间为0-1000米，超过1000米按1000米召回。默认值为1000
-                        .radius(1000)));
-        mCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
-            @Override
-            public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
-                if (null != geoCodeResult && null != geoCodeResult.getLocation()) {
-                    if (geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-                        showTipDialog("没有找到检索结果");
-                    } else {
-                        double latitude = geoCodeResult.getLocation().latitude;
-                        double longitude = geoCodeResult.getLocation().longitude;
-                        LogE("latitude:" + latitude + ";longitude:" + longitude);
-                    }
-                }
-            }
-
-            @Override
-            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
-                if (reverseGeoCodeResult == null || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-                    showTipDialog("没有找到检索结果");
-                } else {
-                    LogE("检索数据：" + JSON.toJSONString(reverseGeoCodeResult.getPoiList()));
-                    city = reverseGeoCodeResult.getAddressDetail().city;
-                    showPopMenu(tvDetailsAddress, reverseGeoCodeResult.getPoiList());
-                }
-            }
-        });
+                        .radius(1000)));*/
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -198,28 +169,54 @@ public class UpdateUserAddressActivity extends BaseActivity {
     }
 
     /**
-     * @param view view
-     * @param list 附件地址
-     *             展示附件地址
+     * @param view   view
+     * @param entity 附件地址
+     *               展示附件地址
      */
     @SuppressLint("SetTextI18n")
-    private void showPopMenu(View view, List<PoiInfo> list) {
+    private void showAddress(View view, ReverseGeoAddressEntity entity) {
         customPop = CustomPop.show(context, R.layout.pop_company, view, (dialog, rootView) -> {
             TextView tvTitle = rootView.findViewById(R.id.tvTitle);
             RecyclerView recycleAddress = rootView.findViewById(R.id.recycleAddress);
-            tvTitle.setText("请选择详细地址(当前城市:" + city + ")");
+            SearchEditText etSearch = rootView.findViewById(R.id.etSearch);
+            tvTitle.setText("请选择详细地址(当前城市:" + entity.getResult().getAddressComponent().getCity() + ")");
             LinearLayoutManager manager = new LinearLayoutManager(context);
             manager.setOrientation(OrientationHelper.VERTICAL);
             recycleAddress.setLayoutManager(manager);
             adapter = new AddressAdapter(context);
-            adapter.setList(list);
+            adapter.setList(entity.getResult().getPois());
             recycleAddress.setAdapter(adapter);
-            adapter.setClickCallBack(entity -> {
-                tvDetailsAddress.setText(entity.getAddress());
-                customPop.doDismiss();
+            adapter.setClickCallBack(new AddressAdapter.OnClickCallBack() {
+                @Override
+                public void clickGeo(ReverseGeoAddressEntity.ResultEntity.PoisEntity entity) {
+                    tvDetailsAddress.setText(entity.getAddr());
+                    customPop.doDismiss();
+                }
+
+                @Override
+                public void clickSuggestion(SuggestionResult.SuggestionInfo entity) {
+
+                }
+            });
+            etSearch.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                   // mSuggestionSearch.requestSuggestion(new SuggestionSearchOption().city(city).keyword(s.toString()));
+                }
             });
         });
     }
+
 
     /**
      * Android6.0之后需要动态申请权限
@@ -252,15 +249,6 @@ public class UpdateUserAddressActivity extends BaseActivity {
         }
     }
 
-    /**
-     * @param alpha 透明度
-     *              背景变暗
-     */
-    private void bgAlpha(float alpha) {
-        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-        layoutParams.alpha = alpha;
-        getWindow().setAttributes(layoutParams);
-    }
 
     /**
      * @param token     接口令牌
@@ -270,32 +258,28 @@ public class UpdateUserAddressActivity extends BaseActivity {
      * @param address   收货地址
      */
     private void updateAppUserAddress(String id, String token, String appUserId, String telephone, String contacts, String address) {
-        HttpService.getInstance().updateAppUserAddress(id, token, appUserId, telephone, contacts, address, false).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                String msg = null;
-                try {
-                    msg = response.body().string();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                ResultEntity entity = JSON.parseObject(msg, ResultEntity.class);
-                assert entity != null;
-                if (entity.isSuccess()) {
-                    new CustomeDialog(context, entity.getMessage(), confirm -> {
-                        if (confirm) {
-                            setResult(101, new Intent());
-                            finish();
+        HttpService.getInstance().
+                updateAppUserAddress(id, token, appUserId, telephone, contacts, address, false).
+                enqueue(new ResponseCallBack(new ResponseCallBack.CallBack() {
+                    @Override
+                    public void onSuccess(String response) {
+                        ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
+                        assert entity != null;
+                        if (entity.isSuccess()) {
+                            new CustomeDialog(context, entity.getMessage(), confirm -> {
+                                if (confirm) {
+                                    setResult(101, new Intent());
+                                    finish();
+                                }
+                            }).setPositiveButton("知道了").setTitle("删除提示").show();
                         }
-                    }).setPositiveButton("知道了").setTitle("删除提示").show();
-                }
-            }
+                    }
 
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
+                    @Override
+                    public void onFail(Throwable t) {
 
-            }
-        });
+                    }
+                }));
     }
 
     /**
@@ -335,7 +319,6 @@ public class UpdateUserAddressActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mCoder.destroy();
         mLocationClient.stop();
     }
 

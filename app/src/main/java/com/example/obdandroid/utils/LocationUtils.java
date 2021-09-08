@@ -1,8 +1,10 @@
 package com.example.obdandroid.utils;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -12,9 +14,11 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -24,255 +28,213 @@ import java.util.Locale;
  * 定位工具类
  */
 public class LocationUtils {
-    private static OnLocationChangeListener mListener;
-
-    private static MyLocationListener myLocationListener;
-
-    private static LocationManager mLocationManager;
-
-    private LocationUtils() {
-        throw new UnsupportedOperationException("u can't instantiate me...");
+    private volatile static LocationUtils uniqueInstance;
+    private LocationManager locationManager;
+    private Context mContext;
+    private static ArrayList<AddressCallback> addressCallbacks;
+    private AddressCallback addressCallback;
+    public AddressCallback getAddressCallback() {
+        return addressCallback;
     }
 
-    /**
-     * 判断Gps是否可用
-     *
-     * @return {@code true}: 是<br>{@code false}: 否
-     */
-    public static boolean isGpsEnabled(Context context) {
-        LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    }
-
-    /**
-     * 判断定位是否可用
-     *
-     * @return {@code true}: 是<br>{@code false}: 否
-     */
-    public static boolean isLocationEnabled(Context context) {
-        LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        return lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    }
-
-    /**
-     * 打开Gps设置界面
-     */
-    public static void openGpsSettings(Context context) {
-        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-    }
-
-    /**
-     * 注册
-     * <p>使用完记得调用{@link #unregister()}</p>
-     * <p>需添加权限 {@code <uses-permission android:name="android.permission.INTERNET"/>}</p>
-     * <p>需添加权限 {@code <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>}</p>
-     * <p>需添加权限 {@code <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>}</p>
-     * <p>如果{@code minDistance}为0，则通过{@code minTime}来定时更新；</p>
-     * <p>{@code minDistance}不为0，则以{@code minDistance}为准；</p>
-     * <p>两者都为0，则随时刷新。</p>
-     *
-     * @param minTime     位置信息更新周期（单位：毫秒）
-     * @param minDistance 位置变化最小距离：当位置距离变化超过此值时，将更新位置信息（单位：米）
-     * @param listener    位置刷新的回调接口
-     * @return {@code true}: 初始化成功<br>{@code false}: 初始化失败
-     */
-    @SuppressLint("MissingPermission")
-    public static boolean register(Context context, long minTime, long minDistance, OnLocationChangeListener listener) {
-        if (listener == null)
-            return false;
-        mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        mListener = listener;
-        if (!isLocationEnabled(context)) {
-            ToastUtil.shortShow("无法定位，请打开定位服务");
-            listener.openGps(false);
-            //Log.d(Tag.TAG_Activity,"无法定位，请打开定位服务");
-            return false;
+    public void setAddressCallback(AddressCallback addressCallback) {
+        this.addressCallback = addressCallback;
+        if(isInit){
+            showLocation();
+        }else {
+            isInit = true;
         }
-        String provider = mLocationManager.getBestProvider(getCriteria(), true);
-        Location location = mLocationManager.getLastKnownLocation(provider);
-        if (location != null)
-            listener.getLastKnownLocation(location);
-        if (myLocationListener == null)
-            myLocationListener = new MyLocationListener();
-        mLocationManager.requestLocationUpdates(provider, minTime, minDistance, myLocationListener);
-        return true;
     }
 
+    private static Location location;
+    private boolean isInit = false;//是否加载过
+    private LocationUtils(Context context) {
+        mContext = context;
+        getLocation();
+    }
 
-    /**
-     * 注销
-     */
-    public static void unregister() {
-        if (mLocationManager != null) {
-            if (myLocationListener != null) {
-                mLocationManager.removeUpdates(myLocationListener);
-                myLocationListener = null;
+    //采用Double CheckLock(DCL)实现单例
+    public static LocationUtils getInstance(Context context) {
+        if (uniqueInstance == null) {
+            synchronized (LocationUtils.class) {
+                if (uniqueInstance == null) {
+                    addressCallbacks = new ArrayList<>();
+                    uniqueInstance = new LocationUtils(context);
+                }
             }
-            mLocationManager = null;
+        }
+        return uniqueInstance;
+    }
+
+    /**
+     * 添加回调事件
+     * @param addressCallback
+     */
+    private void addAddressCallback(AddressCallback addressCallback){
+        addressCallbacks.add(addressCallback);
+        if(isInit){
+            showLocation();
         }
     }
 
     /**
-     * 设置定位参数
-     *
-     * @return {@link Criteria}
+     * 移除回调事件
+     * @param addressCallback
      */
-    private static Criteria getCriteria() {
-        Criteria criteria = new Criteria();
-        //设置定位精确度 Criteria.ACCURACY_COARSE比较粗略，Criteria.ACCURACY_FINE则比较精细
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        //设置是否要求速度
-        criteria.setSpeedRequired(false);
-        // 设置是否允许运营商收费
-        criteria.setCostAllowed(false);
-        //设置是否需要方位信息
-        criteria.setBearingRequired(false);
-        //设置是否需要海拔信息
-        criteria.setAltitudeRequired(false);
-        // 设置对电源的需求
-        criteria.setPowerRequirement(Criteria.POWER_LOW);
-        return criteria;
+    public void removeAddressCallback(AddressCallback addressCallback){
+        if(addressCallbacks.contains(addressCallback)){
+            addressCallbacks.remove(addressCallback);
+        }
     }
 
     /**
-     * 根据经纬度获取地理位置
-     *
-     * @param context   上下文
-     * @param latitude  纬度
-     * @param longitude 经度
-     * @return {@link Address}
+     * 清空回调事件
      */
-    public static Address getAddress(Context context, double latitude, double longitude) {
-        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+    public void cleareAddressCallback(){
+        removeLocationUpdatesListener();
+        addressCallbacks.clear();
+    }
+    private void getLocation() {
+        //1.获取位置管理器
+        locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        //添加用户权限申请判断
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        //2.获取位置提供器，GPS或是NetWork
+        // 获取所有可用的位置提供器
+        List<String> providerList = locationManager.getProviders(true);
+        String locationProvider;
+        if (providerList.contains(LocationManager.GPS_PROVIDER)) {
+            //GPS 定位的精准度比较高，但是非常耗电。
+            System.out.println("=====GPS_PROVIDER=====");
+            locationProvider = LocationManager.GPS_PROVIDER;
+        } else if (providerList.contains(LocationManager.NETWORK_PROVIDER)) {//Google服务被墙不可用
+            //网络定位的精准度稍差，但耗电量比较少。
+            System.out.println("=====NETWORK_PROVIDER=====");
+            locationProvider = LocationManager.NETWORK_PROVIDER;
+        } else {
+            System.out.println("=====NO_PROVIDER=====");
+            // 当没有可用的位置提供器时，弹出Toast提示用户
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            mContext.startActivity(intent);
+            return;
+        }
+
+        //3.获取上次的位置，一般第一次运行，此值为null
+        location = locationManager.getLastKnownLocation(locationProvider);
+        if (location != null) {
+            // 显示当前设备的位置信息
+            System.out.println("==显示当前设备的位置信息==");
+            showLocation();
+        } else {//当GPS信号弱没获取到位置的时候可从网络获取
+            System.out.println("==Google服务被墙的解决办法==");
+            getLngAndLatWithNetwork();//Google服务被墙的解决办法
+        }
+        // 监视地理位置变化，第二个和第三个参数分别为更新的最短时间minTime和最短距离minDistace
+        //LocationManager 每隔 5 秒钟会检测一下位置的变化情况，当移动距离超过 10 米的时候，
+        // 就会调用 LocationListener 的 onLocationChanged() 方法，并把新的位置信息作为参数传入。
+        locationManager.requestLocationUpdates(locationProvider, 5000, 10, locationListener);
+    }
+
+    //获取经纬度
+    private void showLocation() {
+        if(location == null){
+            getLocation();
+        }else {
+            double latitude = location.getLatitude();//纬度
+            double longitude = location.getLongitude();//经度
+//            for(AddressCallback addressCallback:addressCallbacks){
+//                addressCallback.onGetLocation(latitude,longitude);
+//            }
+            if(addressCallback != null){
+                addressCallback.onGetLocation(latitude,longitude);
+            }
+           // getAddress(latitude, longitude);
+        }
+    }
+
+    private void getAddress(double latitude, double longitude) {
+        //Geocoder通过经纬度获取具体信息
+        Geocoder gc = new Geocoder(mContext, Locale.getDefault());
         try {
-            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            if (addresses.size() > 0)
-                return addresses.get(0);
+            List<Address> locationList = gc.getFromLocation(latitude, longitude, 1);
+
+            if (locationList != null) {
+                Address address = locationList.get(0);
+                String countryName = address.getCountryName();//国家
+                String countryCode = address.getCountryCode();
+                String adminArea = address.getAdminArea();//省
+                String locality = address.getLocality();//市
+                String subLocality = address.getSubLocality();//区
+                String featureName = address.getFeatureName();//街道
+
+                for (int i = 0; address.getAddressLine(i) != null; i++) {
+                    String addressLine = address.getAddressLine(i);
+                    //街道名称:广东省深圳市罗湖区蔡屋围一街深圳瑞吉酒店
+                    System.out.println("addressLine=====" + addressLine);
+                }
+                if(addressCallback != null){
+                   // addressCallback.onGetAddress(address);
+                }
+//                for(AddressCallback addressCallback:addressCallbacks){
+//                    addressCallback.onGetAddress(address);
+//                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
-    /**
-     * 根据经纬度获取所在国家
-     *
-     * @param context   上下文
-     * @param latitude  纬度
-     * @param longitude 经度
-     * @return 所在国家
-     */
-    public static String getCountryName(Context context, double latitude, double longitude) {
-        Address address = getAddress(context, latitude, longitude);
-        return address == null ? "unknown" : address.getCountryName();
+    private void removeLocationUpdatesListener() {
+        if (locationManager != null) {
+            uniqueInstance = null;
+            locationManager.removeUpdates(locationListener);
+        }
     }
 
-    /**
-     * 根据经纬度获取所在地
-     *
-     * @param context   上下文
-     * @param latitude  纬度
-     * @param longitude 经度
-     * @return 所在地
-     */
-    public static String getLocality(Context context, double latitude, double longitude) {
-        Address address = getAddress(context, latitude, longitude);
-        return address == null ? "unknown" : address.getLocality();
-    }
 
-    /**
-     * 根据经纬度获取所在街道
-     *
-     * @param context   上下文
-     * @param latitude  纬度
-     * @param longitude 经度
-     * @return 所在街道
-     */
-    public static String getStreet(Context context, double latitude, double longitude) {
-        Address address = getAddress(context, latitude, longitude);
-        return address == null ? "unknown" : address.getAddressLine(0);
-    }
-
-    private static class MyLocationListener implements LocationListener {
-        /**
-         * 当坐标改变时触发此函数，如果Provider传进相同的坐标，它就不会被触发
-         *
-         * @param location 坐标
-         */
+    private LocationListener locationListener = new LocationListener() {
+        // Provider的状态在可用、暂时不可用和无服务三个状态直接切换时触发此函数
         @Override
-        public void onLocationChanged(Location location) {
-            if (mListener != null) {
-                mListener.onLocationChanged(location);
-            }
+        public void onStatusChanged(String provider, int status, Bundle arg2) {
         }
 
-        /**
-         * provider的在可用、暂时不可用和无服务三个状态直接切换时触发此函数
-         *
-         * @param provider 提供者
-         * @param status   状态
-         * @param extras   provider可选包
-         */
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            if (mListener != null) {
-                mListener.onStatusChanged(provider, status, extras);
-            }
-            switch (status) {
-                case LocationProvider.AVAILABLE:
-                    Log.e("onStatusChanged", "当前GPS状态为可见状态");
-                    break;
-                case LocationProvider.OUT_OF_SERVICE:
-                    Log.e("onStatusChanged", "当前GPS状态为服务区外状态");
-                    break;
-                case LocationProvider.TEMPORARILY_UNAVAILABLE:
-                    Log.e("onStatusChanged", "当前GPS状态为暂停服务状态");
-                    break;
-            }
-        }
-
-        /**
-         * provider被enable时触发此函数，比如GPS被打开
-         */
+        // Provider被enable时触发此函数，比如GPS被打开
         @Override
         public void onProviderEnabled(String provider) {
         }
 
-        /**
-         * provider被disable时触发此函数，比如GPS被关闭
-         */
+        // Provider被disable时触发此函数，比如GPS被关闭
         @Override
         public void onProviderDisabled(String provider) {
         }
+
+        //当坐标改变时触发此函数，如果Provider传进相同的坐标，它就不会被触发
+        @Override
+        public void onLocationChanged(Location loc) {
+            System.out.println("==onLocationChanged==");
+//            location = loc;
+//            showLocation();
+        }
+    };
+
+    //从网络获取经纬度
+    private void getLngAndLatWithNetwork() {
+        //添加用户权限申请判断
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 10, locationListener);
+        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        showLocation();
     }
-
-    public interface OnLocationChangeListener {
-
-        /**
-         * 获取最后一次保留的坐标
-         *
-         * @param location 坐标
-         */
-        void getLastKnownLocation(Location location);
-
-        /**
-         * 当坐标改变时触发此函数，如果Provider传进相同的坐标，它就不会被触发
-         *
-         * @param location 坐标
-         */
-        void onLocationChanged(Location location);
-
-        /**
-         * provider的在可用、暂时不可用和无服务三个状态直接切换时触发此函数
-         *
-         * @param provider 提供者
-         * @param status   状态
-         * @param extras   provider可选包
-         */
-        void onStatusChanged(String provider, int status, Bundle extras);//位置状态发生改变
-
-        void openGps(boolean isOpen);//位置状态发生改变
+    public interface AddressCallback{
+       // void onGetAddress(Address address);
+        void onGetLocation(double lat,double lng);
     }
 }

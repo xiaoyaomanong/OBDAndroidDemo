@@ -16,6 +16,7 @@ import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.config.Constant;
 import com.example.obdandroid.http.HttpService;
+import com.example.obdandroid.http.ResponseCallBack;
 import com.example.obdandroid.ui.adapter.ReceivingAddressAdapter;
 import com.example.obdandroid.ui.entity.AppUserAddressEntity;
 import com.example.obdandroid.ui.entity.ResultEntity;
@@ -151,30 +152,26 @@ public class ReceivingAddressActivity extends BaseActivity {
      *              设置默认地址
      */
     private void setDefaultAddress(String id, String token, String appUserId) {
-        HttpService.getInstance().setDefaultAddress(token, appUserId, id, true).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(@NonNull retrofit2.Call<ResponseBody> call, @NonNull retrofit2.Response<ResponseBody> response) {
-                String msg = null;
-                try {
-                    msg = response.body().string();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                ResultEntity entity = JSON.parseObject(msg, ResultEntity.class);
-                if (entity.isSuccess()) {
-                    new CustomeDialog(context, entity.getMessage(), confirm -> {
-                        if (confirm) {
-                            getAppUserAddressList(getToken(), getUserId());
+        HttpService.getInstance().
+                setDefaultAddress(token, appUserId, id, true).
+                enqueue(new ResponseCallBack(new ResponseCallBack.CallBack() {
+                    @Override
+                    public void onSuccess(String response) {
+                        ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
+                        if (entity.isSuccess()) {
+                            new CustomeDialog(context, entity.getMessage(), confirm -> {
+                                if (confirm) {
+                                    getAppUserAddressList(getToken(), getUserId());
+                                }
+                            }).setTitle("提示").setPositiveButton("知道了").show();
                         }
-                    }).setTitle("提示").setPositiveButton("知道了").show();
-                }
-            }
+                    }
 
-            @Override
-            public void onFailure(@NonNull retrofit2.Call<ResponseBody> call, @NonNull Throwable t) {
+                    @Override
+                    public void onFail(Throwable t) {
 
-            }
-        });
+                    }
+                }));
     }
 
     /**

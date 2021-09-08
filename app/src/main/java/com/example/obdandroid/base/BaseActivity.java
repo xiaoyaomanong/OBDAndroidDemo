@@ -1,7 +1,6 @@
 package com.example.obdandroid.base;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -22,18 +21,8 @@ import com.example.obdandroid.utils.ActivityManager;
 import com.example.obdandroid.utils.AppDateUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
-import com.example.obdandroid.utils.SharedPreferencesUtil;
 import com.example.obdandroid.utils.StringUtil;
-import com.github.pires.obd.commands.protocol.HeadersOffCommand;
 import com.kongzue.dialog.v2.TipDialog;
-import com.sohrab.obd.reader.enums.ObdProtocols;
-import com.sohrab.obd.reader.obdCommand.protocol.EchoOffCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.LineFeedOffCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.ObdResetCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.SelectProtocolCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.SpacesOffCommand;
-import com.sohrab.obd.reader.obdCommand.protocol.TimeoutCommand;
-import com.sohrab.obd.reader.utils.LogUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -155,13 +144,23 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
+     * @param alpha 透明度
+     *              背景变暗
+     */
+    public void bgAlpha(float alpha) {
+        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+        layoutParams.alpha = alpha;
+        getWindow().setAttributes(layoutParams);
+    }
+
+    /**
      * 手机是否开启位置服务，如果没有开启那么所有app将不能使用定位功能
      */
     public static boolean isLocServiceEnable(Context context) {
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        return gps || network;
+        return !gps && !network;
     }
 
     /**

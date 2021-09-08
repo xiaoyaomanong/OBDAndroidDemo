@@ -2,6 +2,7 @@ package com.example.obdandroid.http;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Field;
 
 /**
  * 作者：Jealous
@@ -48,9 +49,16 @@ public class HttpService {
     }
 
     /**
-     * 刷新客户端连接时间接口
+     * 设置默认收货地址
      */
     public Call<ResponseBody> setDefaultAddress(String token, String appUserId, String id, boolean isDefault) {
         return apiService.setDefaultAddress(token, appUserId, id, isDefault);
+    }
+
+    /**
+     * 设置默认收货地址
+     */
+    public Call<ResponseBody> reverseGeo(String ak, String output, String location, String extensions_poi) {
+        return apiService.reverseGeo(ak, output, location, extensions_poi);
     }
 }

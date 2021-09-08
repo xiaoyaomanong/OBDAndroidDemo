@@ -9,7 +9,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.baidu.mapapi.search.core.PoiInfo;
+import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.example.obdandroid.R;
+import com.example.obdandroid.ui.entity.ReverseGeoAddressEntity;
 
 import java.util.List;
 
@@ -20,7 +22,8 @@ import java.util.List;
  */
 public class AddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final LayoutInflater inflater;
-    private List<PoiInfo> list;
+    private List<ReverseGeoAddressEntity.ResultEntity.PoisEntity> list;
+    private List<SuggestionResult.SuggestionInfo> infos;
     private OnClickCallBack clickCallBack;
     private final int EMPTY_VIEW = 0;//空页面
     private final int NOT_EMPTY_VIEW = 1;//正常页面
@@ -33,8 +36,12 @@ public class AddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.clickCallBack = clickCallBack;
     }
 
-    public void setList(List<PoiInfo> list) {
+    public void setList(List<ReverseGeoAddressEntity.ResultEntity.PoisEntity> list) {
         this.list = list;
+    }
+
+    public void setInfos(List<SuggestionResult.SuggestionInfo> infos) {
+        this.infos = infos;
     }
 
     @Override
@@ -53,9 +60,15 @@ public class AddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             viewHolder.mEmptyTextView.setText("暂无数据");
         } else if (NOT_EMPTY_VIEW == itemViewType) {
             final MyViewHolder holder1 = (MyViewHolder) holder;
-            holder1.tvName.setText(list.get(position).getName());
-            holder1.tvAddress.setText(list.get(position).getAddress());
-            holder1.card_view.setOnClickListener(v -> clickCallBack.Click(list.get(position)));
+            if (list != null) {
+                holder1.tvName.setText(list.get(position).getName());
+                holder1.tvAddress.setText(list.get(position).getAddr());
+                holder1.card_view.setOnClickListener(v -> clickCallBack.clickGeo(list.get(position)));
+            } else {
+                holder1.tvName.setText(infos.get(position).getKey());
+                holder1.tvAddress.setText(infos.get(position).getAddress());
+                holder1.card_view.setOnClickListener(v -> clickCallBack.clickSuggestion(infos.get(position)));
+            }
         }
     }
 
@@ -65,6 +78,10 @@ public class AddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (list != null) {
             if (list.size() > 0) {
                 return list.size();
+            }
+        } else {
+            if (infos.size() > 0) {
+                return infos.size();
             }
         }
         //位空视图保留一个条目
@@ -80,8 +97,13 @@ public class AddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             } else {
                 return EMPTY_VIEW;
             }
+        } else {
+            if (infos.size() != 0) {
+                return NOT_EMPTY_VIEW;
+            } else {
+                return EMPTY_VIEW;
+            }
         }
-        return EMPTY_VIEW;
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -109,6 +131,8 @@ public class AddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public interface OnClickCallBack {
-        void Click(PoiInfo entity);
+        void clickGeo(ReverseGeoAddressEntity.ResultEntity.PoisEntity entity);
+
+        void clickSuggestion(SuggestionResult.SuggestionInfo entity);
     }
 }

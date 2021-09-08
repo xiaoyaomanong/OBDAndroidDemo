@@ -1,18 +1,14 @@
 package com.example.obdandroid.ui.activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.ContactsContract;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +16,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -33,13 +28,11 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
@@ -48,24 +41,25 @@ import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
 import com.example.obdandroid.http.HttpService;
+import com.example.obdandroid.http.ResponseCallBack;
 import com.example.obdandroid.ui.adapter.AddressAdapter;
 import com.example.obdandroid.ui.entity.ResultEntity;
+import com.example.obdandroid.ui.entity.ReverseGeoAddressEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.ui.view.finger.JDCityPicker;
 import com.example.obdandroid.ui.view.popwindow.CustomPop;
+import com.example.obdandroid.utils.DialogUtils;
+import com.example.obdandroid.utils.PermissionUtils;
+import com.example.obdandroid.utils.SharedPreferencesUtil;
 import com.example.obdandroid.utils.StringUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.wyt.searchedittext.SearchEditText;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import static com.example.obdandroid.config.Constant.MAP_SERVER_AK;
+import static com.example.obdandroid.config.Constant.OUT_PUT;
 
 /**
  * 作者：Jealous
@@ -82,15 +76,11 @@ public class AddAddressActivity extends BaseActivity {
     private JDCityPicker mJDCityPicker;
     private static final int REQUEST_CODE = 101;
     private static final int GPS_REQUEST_CODE = 1;
-    private GeoCoder mCoder;
     private SuggestionSearch mSuggestionSearch;
-    private double latitude;
-    private double longitude;
-    private boolean isPermissionRequested;
-    public LocationClient mLocationClient = null;
+    private String location;
     private AddressAdapter adapter;
     private CustomPop customPop;
-    private String city;
+    private DialogUtils dialogUtils;
 
     @Override
     protected int getContentViewId() {
@@ -117,14 +107,14 @@ public class AddAddressActivity extends BaseActivity {
         LinearLayout layoutSelectName = findViewById(R.id.layoutSelectName);
         LinearLayout layoutSelectArea = findViewById(R.id.layoutSelectArea);
         Button btnSave = findViewById(R.id.btnSave);
-        mCoder = GeoCoder.newInstance();
+        dialogUtils = new DialogUtils(context);
         mSuggestionSearch = SuggestionSearch.newInstance();
-        mLocationClient = new LocationClient(context);
-        requestPermission();
-        if (!isLocServiceEnable(context)) {
+        PermissionUtils.requestPermission(this);
+        if (isLocServiceEnable(context)) {
             openGPS();
         }
-        initLocation();
+        // initLocation();
+        initLocationOption();
         layoutSelectName.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
             startActivityForResult(intent, REQUEST_CODE);
@@ -156,43 +146,17 @@ public class AddAddressActivity extends BaseActivity {
             addAppUserAddress(getToken(), getUserId(), tvPhone.getText().toString(), tvName.getText().toString(), detailsAddress, idCbSelectDefault.isChecked());
         });
 
-        ivLocation.setOnClickListener(v ->
-                mCoder.reverseGeoCode(new ReverseGeoCodeOption()
-                        .location(new LatLng(latitude, longitude))
-                        // 设置是否返回新数据 默认值0不返回，1返回
-                        .newVersion(1)
-                        // POI召回半径，允许设置区间为0-1000米，超过1000米按1000米召回。默认值为1000
-                        .radius(1000)));
-        mCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
-            @Override
-            public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
-                if (null != geoCodeResult && null != geoCodeResult.getLocation()) {
-                    if (geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-                        showTipDialog("没有找到检索结果");
-                    } else {
-                        double latitude = geoCodeResult.getLocation().latitude;
-                        double longitude = geoCodeResult.getLocation().longitude;
-                        LogE("latitude:" + latitude + ";longitude:" + longitude);
-                    }
-                }
-            }
-
-            @Override
-            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
-                if (reverseGeoCodeResult == null || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-                    showTipDialog("没有找到检索结果");
-                } else {
-                    LogE("检索数据：" + JSON.toJSONString(reverseGeoCodeResult.getPoiList()));
-                    city = reverseGeoCodeResult.getAddressDetail().city;
-                    showPopMenu(tvDetailsAddress, reverseGeoCodeResult.getPoiList());
-                }
+        ivLocation.setOnClickListener(v -> {
+            if (!StringUtil.isNull(location)) {
+                reverseGeoAddress(location);
+            } else {
+                reverseGeoAddress(SharedPreferencesUtil.getString(context, SharedPreferencesUtil.LOCATION, ""));
             }
         });
-        mSuggestionSearch.setOnGetSuggestionResultListener(new OnGetSuggestionResultListener() {
-            @Override
-            public void onGetSuggestionResult(SuggestionResult suggestionResult) {
-                LogE("地点："+JSON.toJSONString(suggestionResult.getAllSuggestions()));
-            }
+        mSuggestionSearch.setOnGetSuggestionResultListener(suggestionResult -> {
+            LogE("地点：" + JSON.toJSONString(suggestionResult.getAllSuggestions()));
+            suggestionResult.getAllSuggestions().remove(0);
+            showAddress(tvDetailsAddress, null, suggestionResult);
         });
 
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
@@ -214,27 +178,96 @@ public class AddAddressActivity extends BaseActivity {
     }
 
     /**
-     * @param view view
-     * @param list 附件地址
-     *             展示附件地址
+     * 初始化定位参数配置
+     */
+    private void initLocationOption() {
+        //定位服务的客户端。宿主程序在客户端声明此类，并调用，目前只支持在主线程中启动
+        LocationClient locationClient = new LocationClient(getApplicationContext());
+        //声明LocationClient类实例并配置定位参数
+        LocationClientOption locationOption = new LocationClientOption();
+        MyLocationListener myLocationListener = new MyLocationListener();
+        //注册监听函数
+        locationClient.registerLocationListener(myLocationListener);
+        //可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        locationOption.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+        //可选，默认gcj02，设置返回的定位结果坐标系，如果配合百度地图使用，建议设置为bd09ll;
+        locationOption.setCoorType("bd09ll");
+        //可选，默认0，即仅定位一次，设置发起连续定位请求的间隔需要大于等于1000ms才是有效的
+        locationOption.setScanSpan(1000);
+        //可选，设置是否需要地址信息，默认不需要
+        locationOption.setIsNeedAddress(true);
+        //可选，设置是否需要地址描述
+        locationOption.setIsNeedLocationDescribe(true);
+        //可选，设置是否需要设备方向结果
+        locationOption.setNeedDeviceDirect(false);
+        //可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
+        locationOption.setLocationNotify(true);
+        //可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        locationOption.setIgnoreKillProcess(true);
+        //可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
+        locationOption.setIsNeedLocationDescribe(true);
+        //可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
+        locationOption.setIsNeedLocationPoiList(true);
+        //可选，默认false，设置是否收集CRASH信息，默认收集
+        locationOption.SetIgnoreCacheException(false);
+        //可选，默认false，设置是否开启Gps定位
+        locationOption.setOpenGps(true);
+        //可选，默认false，设置定位时是否需要海拔信息，默认不需要，除基础定位版本都可用
+        locationOption.setIsNeedAltitude(false);
+        //设置打开自动回调位置模式，该开关打开后，期间只要定位SDK检测到位置变化就会主动回调给开发者，该模式下开发者无需再关心定位间隔是多少，定位SDK本身发现位置变化就会及时回调给开发者
+        locationOption.setOpenAutoNotifyMode();
+        //设置打开自动回调位置模式，该开关打开后，期间只要定位SDK检测到位置变化就会主动回调给开发者
+        locationOption.setOpenAutoNotifyMode(3000, 1, LocationClientOption.LOC_SENSITIVITY_HIGHT);
+        //需将配置好的LocationClientOption对象，通过setLocOption方法传递给LocationClient对象使用
+        locationClient.setLocOption(locationOption);
+        //开始定位
+        locationClient.start();
+    }
+
+    /**
+     * @param view   view
+     * @param entity 附件地址
+     *               展示附件地址
      */
     @SuppressLint("SetTextI18n")
-    private void showPopMenu(View view, List<PoiInfo> list) {
+    private void showAddress(View view, ReverseGeoAddressEntity entity, SuggestionResult suggestionResult) {
         customPop = CustomPop.show(context, R.layout.pop_company, view, (dialog, rootView) -> {
             TextView tvTitle = rootView.findViewById(R.id.tvTitle);
             RecyclerView recycleAddress = rootView.findViewById(R.id.recycleAddress);
             SearchEditText etSearch = rootView.findViewById(R.id.etSearch);
+            String city = null;
+            if (entity != null) {
+                city = entity.getResult().getAddressComponent().getCity();
+            }
+            if (suggestionResult != null) {
+                city = suggestionResult.getAllSuggestions().get(0).getCity();
+            }
             tvTitle.setText("请选择详细地址(当前城市:" + city + ")");
             LinearLayoutManager manager = new LinearLayoutManager(context);
             manager.setOrientation(OrientationHelper.VERTICAL);
             recycleAddress.setLayoutManager(manager);
             adapter = new AddressAdapter(context);
-            adapter.setList(list);
+            if (entity != null) {
+                adapter.setList(entity.getResult().getPois());
+            }
+            if (suggestionResult != null) {
+                adapter.setInfos(suggestionResult.getAllSuggestions());
+            }
             recycleAddress.setAdapter(adapter);
-            adapter.setClickCallBack(entity -> {
-                tvDetailsAddress.setText(entity.getAddress());
-                customPop.doDismiss();
+            adapter.setClickCallBack(new AddressAdapter.OnClickCallBack() {
+                @Override
+                public void clickGeo(ReverseGeoAddressEntity.ResultEntity.PoisEntity entity) {
+                    tvDetailsAddress.setText(entity.getAddr());
+                    customPop.doDismiss();
+                }
+
+                @Override
+                public void clickSuggestion(SuggestionResult.SuggestionInfo entity) {
+                    tvDetailsAddress.setText(entity.getAddress());
+                    customPop.doDismiss();
+                }
             });
+            String finalCity = city;
             etSearch.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -248,60 +281,33 @@ public class AddAddressActivity extends BaseActivity {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    searchCity(city, s.toString());
+                    mSuggestionSearch.requestSuggestion(new SuggestionSearchOption().city(finalCity).keyword(s.toString()));
                 }
             });
         });
     }
 
-    /**
-     * @param city    城市
-     * @param keyword 关键字
-     *                keyword为随您的输入变化的值
-     */
-    private void searchCity(String city, String keyword) {
-        mSuggestionSearch.requestSuggestion(new SuggestionSearchOption().city(city).keyword(keyword));
-    }
+    private void reverseGeoAddress(String location) {
+        dialogUtils.showProgressDialog();
+        HttpService.getInstance().reverseGeo(MAP_SERVER_AK, OUT_PUT, location, "1").
+                enqueue(new ResponseCallBack(new ResponseCallBack.CallBack() {
+                    @Override
+                    public void onSuccess(String response) {
+                        ReverseGeoAddressEntity entity = JSON.parseObject(response, ReverseGeoAddressEntity.class);
+                        if (entity.getStatus() == 0) {
+                            dialogUtils.dismiss();
+                            showAddress(tvDetailsAddress, entity, null);
+                        } else {
+                            showTipDialog("未获取到定位");
+                            dialogUtils.dismiss();
+                        }
+                    }
 
-    /**
-     * Android6.0之后需要动态申请权限
-     */
-    private void requestPermission() {
-        if (Build.VERSION.SDK_INT >= 23 && !isPermissionRequested) {
-            isPermissionRequested = true;
-            ArrayList<String> permissionsList = new ArrayList<>();
-            String[] permissions = {
-                    Manifest.permission.ACCESS_NETWORK_STATE,
-                    Manifest.permission.INTERNET,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.READ_CONTACTS,
-                    Manifest.permission.ACCESS_WIFI_STATE,
-            };
-
-            for (String perm : permissions) {
-                if (PackageManager.PERMISSION_GRANTED != checkSelfPermission(perm)) {
-                    permissionsList.add(perm);
-                }
-            }
-
-            if (!permissionsList.isEmpty()) {
-                String[] strings = new String[permissionsList.size()];
-                requestPermissions(permissionsList.toArray(strings), 0);
-            }
-        }
-    }
-
-    /**
-     * @param alpha 透明度
-     *              背景变暗
-     */
-    private void bgAlpha(float alpha) {
-        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-        layoutParams.alpha = alpha;
-        getWindow().setAttributes(layoutParams);
+                    @Override
+                    public void onFail(Throwable t) {
+                        dialogUtils.dismiss();
+                    }
+                }));
     }
 
     /**
@@ -313,52 +319,27 @@ public class AddAddressActivity extends BaseActivity {
      *                  添加收货地址
      */
     private void addAppUserAddress(String token, String appUserId, String telephone, String contacts, String address, boolean isDefault) {
-        HttpService.getInstance().addAppUserAddress(token, appUserId, telephone, contacts, address, isDefault).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                String msg = null;
-                try {
-                    if (response.body() != null) {
-                        msg = response.body().string();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                ResultEntity entity = JSON.parseObject(msg, ResultEntity.class);
-                assert entity != null;
-                if (entity.isSuccess()) {
-                    new CustomeDialog(context, entity.getMessage(), confirm -> {
-                        if (confirm) {
-                            setResult(101, new Intent());
-                            finish();
+        HttpService.getInstance().
+                addAppUserAddress(token, appUserId, telephone, contacts, address, isDefault).
+                enqueue(new ResponseCallBack(new ResponseCallBack.CallBack() {
+                    @Override
+                    public void onSuccess(String response) {
+                        ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
+                        if (entity.isSuccess()) {
+                            new CustomeDialog(context, entity.getMessage(), confirm -> {
+                                if (confirm) {
+                                    setResult(101, new Intent());
+                                    finish();
+                                }
+                            }).setPositiveButton("知道了").setTitle("删除提示").show();
                         }
-                    }).setPositiveButton("知道了").setTitle("删除提示").show();
-                }
-            }
+                    }
 
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
+                    @Override
+                    public void onFail(Throwable t) {
 
-            }
-        });
-    }
-
-    /**
-     * 定位初始化
-     */
-    public void initLocation() {
-        // 定位初始化
-        mLocationClient = new LocationClient(this);
-        MyLocationListener myListener = new MyLocationListener();
-        mLocationClient.registerLocationListener(myListener);
-        LocationClientOption option = new LocationClientOption();
-        // 打开gps
-        option.setOpenGps(true);
-        // 设置坐标类型
-        option.setCoorType("bd09ll");
-        option.setScanSpan(1000);
-        mLocationClient.setLocOption(option);
-        mLocationClient.start();
+                    }
+                }));
     }
 
     /**
@@ -376,32 +357,38 @@ public class AddAddressActivity extends BaseActivity {
                 .setNeutralButton("取消", (dialogInterface, i) -> dialogInterface.dismiss()).show();
     }
 
+    /**
+     * 定位SDK监听函数
+     */
+    public class MyLocationListener extends BDAbstractLocationListener {
+        @Override
+        public void onReceiveLocation(BDLocation bdLocation) {
+            //获取纬度信息
+            double latitude = bdLocation.getLatitude();
+            //获取经度信息
+            double longitude = bdLocation.getLongitude();
+            //获取定位精度，默认值为0.0f
+            float radius = bdLocation.getRadius();
+            //获取经纬度坐标类型，以LocationClientOption中设置过的坐标类型为准
+            String coorType = bdLocation.getCoorType();
+            //获取定位类型、定位错误返回码，具体信息可参照类参考中BDLocation类中的说明
+            int errorCode = bdLocation.getLocType();
+            LogE("latitude:" + latitude);
+            LogE("longitude:" + longitude);
+            LogE("radius:" + radius);
+            LogE("coorType:" + coorType);
+            LogE("errorCode:" + errorCode);
+            location = latitude + "," + longitude;
+            SharedPreferencesUtil.putString(context, SharedPreferencesUtil.LOCATION, location);
+        }
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mCoder.destroy();
-        mLocationClient.stop();
         mSuggestionSearch.destroy();
     }
 
-    /**
-     * 定位SDK监听函数
-     */
-    public class MyLocationListener implements BDLocationListener {
-
-        @Override
-        public void onReceiveLocation(BDLocation location) {
-            // MapView 销毁后不在处理新接收的位置
-            if (location == null) {
-                return;
-            }
-            latitude = location.getLatitude();    //获取纬度信息
-            longitude = location.getLongitude();    //获取经度信息
-            LogE("latitude:"+latitude);
-            LogE("longitude:"+longitude);
-        }
-    }
 
     @SuppressWarnings("LoopStatementThatDoesntLoop")
     @Override

@@ -7,7 +7,9 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 /**
  * 作者：Jealous
@@ -16,6 +18,12 @@ import retrofit2.http.POST;
  */
 
 public interface ApiService {
+    /**
+     * @return 反查地理地点名称
+     */
+    @GET(APIConfig.reverse_geocoding_URL)
+    Call<ResponseBody> reverseGeo(@Query("ak") String ak, @Query("output") String output, @Query("location") String location, @Query("extensions_poi") String extensions_poi);
+
     /**
      * @return 添加收货地址
      */

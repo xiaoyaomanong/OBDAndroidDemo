@@ -235,7 +235,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
     private String mEquivRatio;
     private String mDistanceTraveledAfterCodesCleared;
     private String mControlModuleVoltage;
-   // private String mEngineFuelRate;
+    // private String mEngineFuelRate;
     private String mFuelRailPressure = "";
     private String mFuelRailPressurevacuum = "";
     private String mVehicleIdentificationNumber;
@@ -298,12 +298,12 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 break;
             case ENGINE_RUNTIME:
                 engineRuntime = command.getFormattedResult();
-                data.add(new OBDTripEntity("引擎启动后的运行时间", TextUtils.isEmpty(engineRuntime) ? "" : engineRuntime));
+                data.add(new OBDTripEntity("引擎启动后的运行时间", TextUtils.isEmpty(engineRuntime) ? "N/A" : engineRuntime));
                 entity.setEngineRuntime(TextUtils.isEmpty(engineRuntime) ? "" : engineRuntime);
                 break;
             case FUEL_LEVEL:
                 mFuelLevel = command.getFormattedResult();
-                data.add(new OBDTripEntity("燃油油位", TextUtils.isEmpty(mFuelLevel) ? "" : mFuelLevel));
+                data.add(new OBDTripEntity("燃油油位", TextUtils.isEmpty(mFuelLevel) ? "N/A" : mFuelLevel));
                 entity.setFuelLevel(TextUtils.isEmpty(mFuelLevel) ? "" : mFuelLevel);
                 break;
             case FUEL_TYPE:
@@ -324,24 +324,24 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 break;
             case AMBIENT_AIR_TEMP:
                 mAmbientAirTemp = command.getFormattedResult();
-                data.add(new OBDTripEntity("环境空气温度", TextUtils.isEmpty(mAmbientAirTemp) ? "" : mAmbientAirTemp + " ℃"));
+                data.add(new OBDTripEntity("环境空气温度", TextUtils.isEmpty(mAmbientAirTemp) ? "N/A" : mAmbientAirTemp + " ℃"));
                 entity.setAmbientAirTemp(TextUtils.isEmpty(mAmbientAirTemp) ? "" : mAmbientAirTemp);
                 break;
             case ENGINE_COOLANT_TEMP:
                 mEngineCoolantTemp = command.getFormattedResult();
-                data.add(new OBDTripEntity("引擎冷媒温度", TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp + " ℃"));
+                data.add(new OBDTripEntity("引擎冷媒温度", TextUtils.isEmpty(mEngineCoolantTemp) ? "N/A" : mEngineCoolantTemp + " ℃"));
                 entity.setEngineCoolantTemp(TextUtils.isEmpty(mEngineCoolantTemp) ? "" : mEngineCoolantTemp);
                 break;
 
             case ENGINE_OIL_TEMP:
                 mEngineOilTemp = command.getFormattedResult();
-                data.add(new OBDTripEntity("引擎油温", TextUtils.isEmpty(mEngineOilTemp) ? "" : mEngineOilTemp));
+                data.add(new OBDTripEntity("引擎油温", TextUtils.isEmpty(mEngineOilTemp) ? "N/A" : mEngineOilTemp));
                 entity.setEngineOilTemp(TextUtils.isEmpty(mEngineOilTemp) ? "" : mEngineOilTemp);
                 break;
 
             case FUEL_CONSUMPTION_RATE:
                 mFuelConsumptionRate = command.getFormattedResult();
-                data.add(new OBDTripEntity("燃油消耗率", TextUtils.isEmpty(mFuelConsumptionRate) ? "" : mFuelConsumptionRate));
+                data.add(new OBDTripEntity("燃油消耗率", TextUtils.isEmpty(mFuelConsumptionRate) ? "N/A" : mFuelConsumptionRate));
                 entity.setFuelConsumptionRate(TextUtils.isEmpty(mFuelConsumptionRate) ? "" : mFuelConsumptionRate);
                 break;
             case FUEL_SYSTEM_STATUS:
@@ -351,319 +351,318 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 break;
             case FUEL_PRESSURE:
                 mFuelPressure = command.getFormattedResult();
-                data.add(new OBDTripEntity("油压", TextUtils.isEmpty(mFuelPressure) ? "" : mFuelPressure));
+                data.add(new OBDTripEntity("油压", TextUtils.isEmpty(mFuelPressure) ? "N/A" : mFuelPressure));
                 entity.setFuelPressure(TextUtils.isEmpty(mFuelPressure) ? "" : mFuelPressure);
                 break;
             case ENGINE_LOAD:
                 mEngineLoad = command.getFormattedResult();
-                data.add(new OBDTripEntity("引擎载荷", TextUtils.isEmpty(mEngineLoad) ? "" : mEngineLoad));
+                data.add(new OBDTripEntity("引擎载荷", TextUtils.isEmpty(mEngineLoad) ? "N/A" : mEngineLoad));
                 entity.setEngineLoad(TextUtils.isEmpty(mEngineLoad) ? "" : mEngineLoad);
                 break;
             case EGR:
                 mEGR = command.getFormattedResult();
-                data.add(new OBDTripEntity("废气循环", TextUtils.isEmpty(mEGR) ? "" : mEGR));
+                data.add(new OBDTripEntity("废气循环", TextUtils.isEmpty(mEGR) ? "N/A" : mEGR));
                 entity.setRmCommandedEGR(TextUtils.isEmpty(mEGR) ? "" : mEGR);
                 break;
             case EGR_ERROR:
                 mEGRError = command.getFormattedResult();
-                data.add(new OBDTripEntity("废气循环错误", TextUtils.isEmpty(mEGRError) ? "" : mEGRError));
+                data.add(new OBDTripEntity("废气循环错误", TextUtils.isEmpty(mEGRError) ? "N/A" : mEGRError));
                 entity.setEgrError(TextUtils.isEmpty(mEGRError) ? "" : mEGRError);
                 break;
             case EVAPORAIVE_PURGE:
                 mEvaporaivePurge = command.getFormattedResult();
-                data.add(new OBDTripEntity("蒸发净化", TextUtils.isEmpty(mEvaporaivePurge) ? "" : mEvaporaivePurge));
+                data.add(new OBDTripEntity("蒸发净化", TextUtils.isEmpty(mEvaporaivePurge) ? "N/A" : mEvaporaivePurge));
                 entity.setEvaporaivePurge(TextUtils.isEmpty(mEvaporaivePurge) ? "" : mEvaporaivePurge);
                 break;
             case BAROMETRIC_PRESSURE:
                 mBarometricPressure = command.getFormattedResult();
-                data.add(new OBDTripEntity("绝对大气压", TextUtils.isEmpty(mBarometricPressure) ? "" : mBarometricPressure));
+                data.add(new OBDTripEntity("绝对大气压", TextUtils.isEmpty(mBarometricPressure) ? "N/A" : mBarometricPressure));
                 entity.setBarometricPressure(TextUtils.isEmpty(mBarometricPressure) ? "" : mBarometricPressure);
                 break;
             case THROTTLE_POS:
                 mThrottlePos = command.getFormattedResult();
-                data.add(new OBDTripEntity("油门位置", TextUtils.isEmpty(mThrottlePos) ? "" : mThrottlePos));
+                data.add(new OBDTripEntity("油门位置", TextUtils.isEmpty(mThrottlePos) ? "N/A" : mThrottlePos));
                 entity.setThottlePos(TextUtils.isEmpty(mThrottlePos) ? "" : mThrottlePos);
                 break;
             case TIMING_ADVANCE:
                 mTimingAdvance = command.getFormattedResult();
-                data.add(new OBDTripEntity("点火提前值", TextUtils.isEmpty(mTimingAdvance) ? "" : mTimingAdvance));
+                data.add(new OBDTripEntity("点火提前值", TextUtils.isEmpty(mTimingAdvance) ? "N/A" : mTimingAdvance));
                 entity.setTimingAdvance(TextUtils.isEmpty(mTimingAdvance) ? "" : mTimingAdvance);
                 break;
             case WarmUpSinceCodesCleared:
                 mWarmUpSinceCodesCleared = command.getFormattedResult();
-                data.add(new OBDTripEntity("代码清除后的预热", TextUtils.isEmpty(mWarmUpSinceCodesCleared) ? "" : mWarmUpSinceCodesCleared));
+                data.add(new OBDTripEntity("代码清除后的预热", TextUtils.isEmpty(mWarmUpSinceCodesCleared) ? "N/A" : mWarmUpSinceCodesCleared));
                 entity.setWarmUpSinceCodesCleared(TextUtils.isEmpty(mWarmUpSinceCodesCleared) ? "" : mWarmUpSinceCodesCleared);
                 break;
             case WIDE_BAND_AIR_FUEL_RATIO_1:
                 mWideBandAirFuelRatioOne = command.getFormattedResult();
-                data.add(new OBDTripEntity("氧气侦测器1 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioOne) ? "" : mWideBandAirFuelRatioOne));
+                data.add(new OBDTripEntity("氧气侦测器1 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioOne) ? "N/A" : mWideBandAirFuelRatioOne));
                 entity.setWideBandAirFuelRatioOne(TextUtils.isEmpty(mWideBandAirFuelRatioOne) ? "" : mWideBandAirFuelRatioOne);
                 break;
             case WIDE_BAND_AIR_FUEL_RATIO_2:
                 mWideBandAirFuelRatioTwo = command.getFormattedResult();
-                data.add(new OBDTripEntity("氧气侦测器2 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioTwo) ? "" : mWideBandAirFuelRatioTwo));
+                data.add(new OBDTripEntity("氧气侦测器2 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioTwo) ? "N/A" : mWideBandAirFuelRatioTwo));
                 entity.setWideBandAirFuelRatioTwo(TextUtils.isEmpty(mWideBandAirFuelRatioTwo) ? "" : mWideBandAirFuelRatioTwo);
                 break;
             case WIDE_BAND_AIR_FUEL_RATIO_3:
                 mWideBandAirFuelRatioThree = command.getFormattedResult();
-                data.add(new OBDTripEntity("氧气侦测器3 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioThree) ? "" : mWideBandAirFuelRatioThree));
+                data.add(new OBDTripEntity("氧气侦测器3 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioThree) ? "N/A" : mWideBandAirFuelRatioThree));
                 entity.setWideBandAirFuelRatioThree(TextUtils.isEmpty(mWideBandAirFuelRatioThree) ? "" : mWideBandAirFuelRatioThree);
                 break;
             case WIDE_BAND_AIR_FUEL_RATIO_4:
                 mWideBandAirFuelRatioFour = command.getFormattedResult();
-                data.add(new OBDTripEntity("氧气侦测器4 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioFour) ? "" : mWideBandAirFuelRatioFour));
+                data.add(new OBDTripEntity("氧气侦测器4 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioFour) ? "N/A" : mWideBandAirFuelRatioFour));
                 entity.setWideBandAirFuelRatioFour(TextUtils.isEmpty(mWideBandAirFuelRatioFour) ? "" : mWideBandAirFuelRatioFour);
                 break;
             case WIDE_BAND_AIR_FUEL_RATIO_5:
                 mWideBandAirFuelRatioFive = command.getFormattedResult();
-                data.add(new OBDTripEntity("氧气侦测器5 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioFive) ? "" : mWideBandAirFuelRatioFive));
+                data.add(new OBDTripEntity("氧气侦测器5 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioFive) ? "N/A" : mWideBandAirFuelRatioFive));
                 entity.setWideBandAirFuelRatioFive(TextUtils.isEmpty(mWideBandAirFuelRatioFive) ? "" : mWideBandAirFuelRatioFive);
                 break;
             case WIDE_BAND_AIR_FUEL_RATIO_6:
                 mWideBandAirFuelRatioSix = command.getFormattedResult();
-                data.add(new OBDTripEntity("氧气侦测器6 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioSix) ? "" : mWideBandAirFuelRatioSix));
+                data.add(new OBDTripEntity("氧气侦测器6 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioSix) ? "N/A" : mWideBandAirFuelRatioSix));
                 entity.setWideBandAirFuelRatioSix(TextUtils.isEmpty(mWideBandAirFuelRatioSix) ? "" : mWideBandAirFuelRatioSix);
                 break;
             case WIDE_BAND_AIR_FUEL_RATIO_7:
                 mWideBandAirFuelRatioSeven = command.getFormattedResult();
-                data.add(new OBDTripEntity("氧气侦测器7 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioSeven) ? "" : mWideBandAirFuelRatioSeven));
+                data.add(new OBDTripEntity("氧气侦测器7 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioSeven) ? "N/A" : mWideBandAirFuelRatioSeven));
                 entity.setWideBandAirFuelRatioSeven(TextUtils.isEmpty(mWideBandAirFuelRatioSeven) ? "" : mWideBandAirFuelRatioSeven);
                 break;
             case WIDE_BAND_AIR_FUEL_RATIO_8:
                 mWideBandAirFuelRatioEight = command.getFormattedResult();
-                data.add(new OBDTripEntity("氧气侦测器8 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioEight) ? "" : mWideBandAirFuelRatioEight));
+                data.add(new OBDTripEntity("氧气侦测器8 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioEight) ? "N/A" : mWideBandAirFuelRatioEight));
                 entity.setWideBandAirFuelRatioEight(TextUtils.isEmpty(mWideBandAirFuelRatioEight) ? "" : mWideBandAirFuelRatioEight);
                 break;
             case Catalyst_Temperature_Bank_1_Sensor_1:
                 mCatalystTemperatureBank1Sensor1 = command.getFormattedResult();
-                data.add(new OBDTripEntity("催化剂温度:Bank1,感测器1", TextUtils.isEmpty(mCatalystTemperatureBank1Sensor1) ? "" : mCatalystTemperatureBank1Sensor1));
+                data.add(new OBDTripEntity("催化剂温度:Bank1,感测器1", TextUtils.isEmpty(mCatalystTemperatureBank1Sensor1) ? "N/A" : mCatalystTemperatureBank1Sensor1));
                 entity.setCatalystTemperatureBank1Sensor1(TextUtils.isEmpty(mCatalystTemperatureBank1Sensor1) ? "" : mCatalystTemperatureBank1Sensor1);
                 break;
             case Catalyst_Temperature_Bank_2_Sensor_1:
                 mCatalystTemperatureBank2Sensor1 = command.getFormattedResult();
-                data.add(new OBDTripEntity("催化剂温度:Bank2,感测器1", TextUtils.isEmpty(mCatalystTemperatureBank2Sensor1) ? "" : mCatalystTemperatureBank2Sensor1));
+                data.add(new OBDTripEntity("催化剂温度:Bank2,感测器1", TextUtils.isEmpty(mCatalystTemperatureBank2Sensor1) ? "N/A" : mCatalystTemperatureBank2Sensor1));
                 entity.setCatalystTemperatureBank2Sensor1(TextUtils.isEmpty(mCatalystTemperatureBank2Sensor1) ? "" : mCatalystTemperatureBank2Sensor1);
                 break;
             case Catalyst_Temperature_Bank_1_Sensor_2:
                 mCatalystTemperatureBank1Sensor2 = command.getFormattedResult();
-                data.add(new OBDTripEntity("催化剂温度:Bank1,感测器2", TextUtils.isEmpty(mCatalystTemperatureBank1Sensor2) ? "" : mCatalystTemperatureBank1Sensor2));
+                data.add(new OBDTripEntity("催化剂温度:Bank1,感测器2", TextUtils.isEmpty(mCatalystTemperatureBank1Sensor2) ? "N/A" : mCatalystTemperatureBank1Sensor2));
                 entity.setCatalystTemperatureBank1Sensor2(TextUtils.isEmpty(mCatalystTemperatureBank1Sensor2) ? "" : mCatalystTemperatureBank1Sensor2);
                 break;
             case Catalyst_Temperature_Bank_2_Sensor_2:
                 mCatalystTemperatureBank2Sensor2 = command.getFormattedResult();
-                data.add(new OBDTripEntity("催化剂温度:Bank2,感测器2", TextUtils.isEmpty(mCatalystTemperatureBank2Sensor2) ? "" : mCatalystTemperatureBank2Sensor2));
+                data.add(new OBDTripEntity("催化剂温度:Bank2,感测器2", TextUtils.isEmpty(mCatalystTemperatureBank2Sensor2) ? "N/A" : mCatalystTemperatureBank2Sensor2));
                 entity.setCatalystTemperatureBank2Sensor2(TextUtils.isEmpty(mCatalystTemperatureBank2Sensor2) ? "" : mCatalystTemperatureBank2Sensor2);
                 break;
             case ABS_THROTTLE_POS_B:
                 mAbsThrottlePosb = command.getFormattedResult();
-                data.add(new OBDTripEntity("绝对油门位置B", TextUtils.isEmpty(mAbsThrottlePosb) ? "" : mAbsThrottlePosb));
+                data.add(new OBDTripEntity("绝对油门位置B", TextUtils.isEmpty(mAbsThrottlePosb) ? "N/A" : mAbsThrottlePosb));
                 entity.setAbsThrottlePosb(TextUtils.isEmpty(mAbsThrottlePosb) ? "" : mAbsThrottlePosb);
                 break;
             case ABS_THROTTLE_POS_C:
                 mAbsThrottlePosc = command.getFormattedResult();
-                data.add(new OBDTripEntity("绝对油门位置C", TextUtils.isEmpty(mAbsThrottlePosc) ? "" : mAbsThrottlePosc));
+                data.add(new OBDTripEntity("绝对油门位置C", TextUtils.isEmpty(mAbsThrottlePosc) ? "N/A" : mAbsThrottlePosc));
                 entity.setAbsThrottlePosc(TextUtils.isEmpty(mAbsThrottlePosc) ? "" : mAbsThrottlePosc);
                 break;
             case ACC_PEDAL_POS_D:
                 mAccPedalPosd = command.getFormattedResult();
-                data.add(new OBDTripEntity("加速踏板位置D", TextUtils.isEmpty(mAccPedalPosd) ? "" : mAccPedalPosd));
+                data.add(new OBDTripEntity("加速踏板位置D", TextUtils.isEmpty(mAccPedalPosd) ? "N/A" : mAccPedalPosd));
                 entity.setAccPedalPosd(TextUtils.isEmpty(mAccPedalPosd) ? "" : mAccPedalPosd);
                 break;
             case ACC_PEDAL_POS_E:
                 mAccPedalPose = command.getFormattedResult();
-                data.add(new OBDTripEntity("加速踏板位置E", TextUtils.isEmpty(mAccPedalPose) ? "" : mAccPedalPose));
+                data.add(new OBDTripEntity("加速踏板位置E", TextUtils.isEmpty(mAccPedalPose) ? "N/A" : mAccPedalPose));
                 entity.setAccPedalPose(TextUtils.isEmpty(mAccPedalPose) ? "" : mAccPedalPose);
                 break;
             case ACC_PEDAL_POS_F:
                 mAccPedalPosf = command.getFormattedResult();
-                data.add(new OBDTripEntity("加速踏板位置F", TextUtils.isEmpty(mAccPedalPosf) ? "" : mAccPedalPosf));
+                data.add(new OBDTripEntity("加速踏板位置F", TextUtils.isEmpty(mAccPedalPosf) ? "N/A" : mAccPedalPosf));
                 entity.setAccPedalPosf(TextUtils.isEmpty(mAccPedalPosf) ? "" : mAccPedalPosf);
                 break;
             case THROTTLE_ACTUATOR:
                 mThrottleActuator = command.getFormattedResult();
-                data.add(new OBDTripEntity("油门执行器控制值", TextUtils.isEmpty(mThrottleActuator) ? "" : mThrottleActuator));
+                data.add(new OBDTripEntity("油门执行器控制值", TextUtils.isEmpty(mThrottleActuator) ? "N/A" : mThrottleActuator));
                 entity.setThrottleActuator(TextUtils.isEmpty(mThrottleActuator) ? "" : mThrottleActuator);
                 break;
             case TIME_TRAVELED_MIL_ON:
                 mTimeRunwithMILOn = command.getFormattedResult();
-                data.add(new OBDTripEntity("MIL灯亮的行驶时间", TextUtils.isEmpty(mTimeRunwithMILOn) ? "" : mTimeRunwithMILOn));
+                data.add(new OBDTripEntity("MIL灯亮的行驶时间", TextUtils.isEmpty(mTimeRunwithMILOn) ? "N/A" : mTimeRunwithMILOn));
                 entity.setTimeRunWithMILOn(TextUtils.isEmpty(mTimeRunwithMILOn) ? "" : mTimeRunwithMILOn);
                 break;
             case MAX_AIR_FLOW_MASS_RATE:
                 mMaxAirFlowMassRate = command.getFormattedResult();
-                data.add(new OBDTripEntity("质量空气流量计的最大空气流率", TextUtils.isEmpty(mMaxAirFlowMassRate) ? "" : mMaxAirFlowMassRate));
+                data.add(new OBDTripEntity("质量空气流量计的最大空气流率", TextUtils.isEmpty(mMaxAirFlowMassRate) ? "N/A" : mMaxAirFlowMassRate));
                 entity.setMaxAirFlowMassRate(TextUtils.isEmpty(mMaxAirFlowMassRate) ? "" : mMaxAirFlowMassRate);
                 break;
             case ETHANOL_FUEL_RATE:
                 mEthanolFuelRate = command.getFormattedResult();
-                data.add(new OBDTripEntity("乙醇燃料百分比", TextUtils.isEmpty(mEthanolFuelRate) ? "" : mEthanolFuelRate));
+                data.add(new OBDTripEntity("乙醇燃料百分比", TextUtils.isEmpty(mEthanolFuelRate) ? "N/A" : mEthanolFuelRate));
                 entity.setEthanolFuelRate(TextUtils.isEmpty(mEthanolFuelRate) ? "" : mEthanolFuelRate);
                 break;
             case ABS_EVAP_SYSTEM_VAPOR_PRESSURE:
                 mAbsEvapSystemVaporPressure = command.getFormattedResult();
-                data.add(new OBDTripEntity("蒸发系统绝对蒸气压力", TextUtils.isEmpty(mAbsEvapSystemVaporPressure) ? "" : mAbsEvapSystemVaporPressure));
+                data.add(new OBDTripEntity("蒸发系统绝对蒸气压力", TextUtils.isEmpty(mAbsEvapSystemVaporPressure) ? "N/A" : mAbsEvapSystemVaporPressure));
                 entity.setAbsEvapSystemVaporPressure(TextUtils.isEmpty(mAbsEvapSystemVaporPressure) ? "" : mAbsEvapSystemVaporPressure);
                 break;
             case EVAP_SYSTEM_VAPOR_PRESSURE:
                 mEvapSystemVaporPressure = command.getFormattedResult();
-                data.add(new OBDTripEntity("蒸发系统(相对)蒸气压力", TextUtils.isEmpty(mEvapSystemVaporPressure) ? "" : mEvapSystemVaporPressure));
+                data.add(new OBDTripEntity("蒸发系统(相对)蒸气压力", TextUtils.isEmpty(mEvapSystemVaporPressure) ? "N/A" : mEvapSystemVaporPressure));
                 entity.setEvapSystemVaporPressure(TextUtils.isEmpty(mEvapSystemVaporPressure) ? "" : mEvapSystemVaporPressure);
                 break;
             case SHORT_A_BANK1_B_BANK3:
                 mShortA_BANK1_B_BANK3 = command.getFormattedResult();
-                data.add(new OBDTripEntity("第二侧氧气侦测器短期修正,A:bank 1,B:bank 3", TextUtils.isEmpty(mShortA_BANK1_B_BANK3) ? "" : mShortA_BANK1_B_BANK3));
+                data.add(new OBDTripEntity("第二侧氧气侦测器短期修正,A:bank 1,B:bank 3", TextUtils.isEmpty(mShortA_BANK1_B_BANK3) ? "N/A" : mShortA_BANK1_B_BANK3));
                 entity.setShortA_BANK1_B_BANK3(TextUtils.isEmpty(mShortA_BANK1_B_BANK3) ? "" : mShortA_BANK1_B_BANK3);
                 break;
             case LONG_A_BANK1_B_BANK3:
                 mLong_A_BANK1_B_BANK3 = command.getFormattedResult();
-                data.add(new OBDTripEntity("第二侧氧气侦测器长期修正,A:bank 1,B:bank 3", TextUtils.isEmpty(mLong_A_BANK1_B_BANK3) ? "" : mLong_A_BANK1_B_BANK3));
+                data.add(new OBDTripEntity("第二侧氧气侦测器长期修正,A:bank 1,B:bank 3", TextUtils.isEmpty(mLong_A_BANK1_B_BANK3) ? "N/A" : mLong_A_BANK1_B_BANK3));
                 entity.setLong_A_BANK1_B_BANK3(TextUtils.isEmpty(mLong_A_BANK1_B_BANK3) ? "" : mLong_A_BANK1_B_BANK3);
                 break;
             case SHORT_A_BANK2_B_BANK4:
                 mShort_A_BANK2_B_BANK4 = command.getFormattedResult();
-                data.add(new OBDTripEntity("第二侧氧气侦测器短期修正,A:bank 2,B:bank 4", TextUtils.isEmpty(mShort_A_BANK2_B_BANK4) ? "" : mShort_A_BANK2_B_BANK4));
+                data.add(new OBDTripEntity("第二侧氧气侦测器短期修正,A:bank 2,B:bank 4", TextUtils.isEmpty(mShort_A_BANK2_B_BANK4) ? "N/A" : mShort_A_BANK2_B_BANK4));
                 entity.setShort_A_BANK2_B_BANK4(TextUtils.isEmpty(mShort_A_BANK2_B_BANK4) ? "" : mShort_A_BANK2_B_BANK4);
                 break;
             case LONG_A_BANK2_B_BANK4:
                 mLong_A_BANK2_B_BANK4 = command.getFormattedResult();
-                data.add(new OBDTripEntity("第二侧氧气侦测器长期修正,A:bank 2,B:bank 4", TextUtils.isEmpty(mLong_A_BANK2_B_BANK4) ? "" : mLong_A_BANK2_B_BANK4));
+                data.add(new OBDTripEntity("第二侧氧气侦测器长期修正,A:bank 2,B:bank 4", TextUtils.isEmpty(mLong_A_BANK2_B_BANK4) ? "N/A" : mLong_A_BANK2_B_BANK4));
                 entity.setLong_A_BANK2_B_BANK4(TextUtils.isEmpty(mLong_A_BANK2_B_BANK4) ? "" : mLong_A_BANK2_B_BANK4);
                 break;
             case FUEL_RAIL_ABS_PRESSURE:
                 mFuelRailAbsPressure = command.getFormattedResult();
-                data.add(new OBDTripEntity("高压共轨绝对压力", TextUtils.isEmpty(mFuelRailAbsPressure) ? "" : mFuelRailAbsPressure));
+                data.add(new OBDTripEntity("高压共轨绝对压力", TextUtils.isEmpty(mFuelRailAbsPressure) ? "N/A" : mFuelRailAbsPressure));
                 entity.setFuelRailAbsPressure(TextUtils.isEmpty(mFuelRailAbsPressure) ? "" : mFuelRailAbsPressure);
                 break;
             case REL_ACCELERATOR_PEDAL_POS:
                 mRelAccPedalPos = command.getFormattedResult();
-                data.add(new OBDTripEntity("加速踏板相对位置", TextUtils.isEmpty(mRelAccPedalPos) ? "" : mRelAccPedalPos));
+                data.add(new OBDTripEntity("加速踏板相对位置", TextUtils.isEmpty(mRelAccPedalPos) ? "N/A" : mRelAccPedalPos));
                 entity.setRelAccPedalPos(TextUtils.isEmpty(mRelAccPedalPos) ? "" : mRelAccPedalPos);
                 break;
             case HY_BATTERY_PACK_LIFE:
                 mHyBatteryPackLife = command.getFormattedResult();
-                data.add(new OBDTripEntity("油电混合电池组剩下寿命", TextUtils.isEmpty(mHyBatteryPackLife) ? "" : mHyBatteryPackLife));
+                data.add(new OBDTripEntity("油电混合电池组剩下寿命", TextUtils.isEmpty(mHyBatteryPackLife) ? "N/A" : mHyBatteryPackLife));
                 entity.setHyBatteryPackLife(TextUtils.isEmpty(mHyBatteryPackLife) ? "" : mHyBatteryPackLife);
                 break;
             case DRIVER_ENGINE_TORQUE:
                 mDriverEngineTorque = command.getFormattedResult();
-                data.add(new OBDTripEntity("驾驶的引擎命令-扭矩百分比", TextUtils.isEmpty(mDriverEngineTorque) ? "" : mDriverEngineTorque));
+                data.add(new OBDTripEntity("驾驶的引擎命令-扭矩百分比", TextUtils.isEmpty(mDriverEngineTorque) ? "N/A" : mDriverEngineTorque));
                 entity.setHyBatteryPackLife(TextUtils.isEmpty(mDriverEngineTorque) ? "" : mDriverEngineTorque);
                 break;
             case ACTUAL_ENGINE_TORQUE:
                 mActualEngineTorque = command.getFormattedResult();
-                data.add(new OBDTripEntity("实际引擎-扭矩百分比", TextUtils.isEmpty(mActualEngineTorque) ? "" : mActualEngineTorque));
+                data.add(new OBDTripEntity("实际引擎-扭矩百分比", TextUtils.isEmpty(mActualEngineTorque) ? "N/A" : mActualEngineTorque));
                 entity.setActualEngineTorque(TextUtils.isEmpty(mActualEngineTorque) ? "" : mActualEngineTorque);
                 break;
             case ENGINE_REFERENCE_TORQUE:
                 mEngineReferenceTorque = command.getFormattedResult();
-                data.add(new OBDTripEntity("引擎参考扭矩", TextUtils.isEmpty(mEngineReferenceTorque) ? "" : mEngineReferenceTorque));
+                data.add(new OBDTripEntity("引擎参考扭矩", TextUtils.isEmpty(mEngineReferenceTorque) ? "N/A" : mEngineReferenceTorque));
                 entity.setEngineReferenceTorque(TextUtils.isEmpty(mEngineReferenceTorque) ? "" : mEngineReferenceTorque);
                 break;
             case DPF_TEMP:
                 mDPFTemp = command.getFormattedResult();
-                data.add(new OBDTripEntity("柴油粒子过滤器(DPF)温度", TextUtils.isEmpty(mDPFTemp) ? "" : mDPFTemp));
+                data.add(new OBDTripEntity("柴油粒子过滤器(DPF)温度", TextUtils.isEmpty(mDPFTemp) ? "N/A" : mDPFTemp));
                 entity.setDPFTemp(TextUtils.isEmpty(mDPFTemp) ? "" : mDPFTemp);
                 break;
             case ENGINE_FRICTION_PERCENT_TORQUE:
                 mEngineFrictionPercentTorque = command.getFormattedResult();
-                data.add(new OBDTripEntity("引擎摩擦力-扭矩百分比", TextUtils.isEmpty(mEngineFrictionPercentTorque) ? "" : mEngineFrictionPercentTorque));
+                data.add(new OBDTripEntity("引擎摩擦力-扭矩百分比", TextUtils.isEmpty(mEngineFrictionPercentTorque) ? "N/A" : mEngineFrictionPercentTorque));
                 entity.setEngineFrictionPercentTorque(TextUtils.isEmpty(mEngineFrictionPercentTorque) ? "" : mEngineFrictionPercentTorque);
                 break;
             case DISTANCE_TRAVELED_AFTER_CODES_CLEARED:
                 mDistanceTraveledAfterCodesCleared = command.getFormattedResult();
-                data.add(new OBDTripEntity("故障码清除后行驶里程", TextUtils.isEmpty(mDistanceTraveledAfterCodesCleared) ? "" : mDistanceTraveledAfterCodesCleared));
-                entity.setDistanceTraveledAfterCodesCleared(mDistanceTraveledAfterCodesCleared);
+                data.add(new OBDTripEntity("故障码清除后行驶里程", TextUtils.isEmpty(mDistanceTraveledAfterCodesCleared) ? "N/A" : mDistanceTraveledAfterCodesCleared));
+                entity.setDistanceTraveledAfterCodesCleared(TextUtils.isEmpty(mDistanceTraveledAfterCodesCleared) ? "" : mDistanceTraveledAfterCodesCleared);
                 break;
             case CONTROL_MODULE_VOLTAGE:
                 mControlModuleVoltage = command.getFormattedResult();
-                data.add(new OBDTripEntity("控制模组电压", TextUtils.isEmpty(mControlModuleVoltage) ? "" : mControlModuleVoltage));
+                data.add(new OBDTripEntity("控制模组电压", TextUtils.isEmpty(mControlModuleVoltage) ? "N/A" : mControlModuleVoltage));
                 entity.setControlModuleVoltage(TextUtils.isEmpty(mControlModuleVoltage) ? "" : mControlModuleVoltage);
                 break;
             case FUEL_RAIL_PRESSURE:
                 mFuelRailPressure = command.getFormattedResult();
-                data.add(new OBDTripEntity("油轨压力(柴油或汽油直喷)", TextUtils.isEmpty(mFuelRailPressure) ? "" : mFuelRailPressure));
+                data.add(new OBDTripEntity("油轨压力(柴油或汽油直喷)", TextUtils.isEmpty(mFuelRailPressure) ? "N/A" : mFuelRailPressure));
                 entity.setFuelRailPressure(TextUtils.isEmpty(mFuelRailPressure) ? "" : mFuelRailPressure);
                 break;
             case FUEL_RAIL_PRESSURE_manifold:
                 mFuelRailPressurevacuum = command.getFormattedResult();
-                data.add(new OBDTripEntity("油轨压力(相对进气歧管真空度)", TextUtils.isEmpty(mFuelRailPressurevacuum) ? "" : mFuelRailPressurevacuum));
+                data.add(new OBDTripEntity("油轨压力(相对进气歧管真空度)", TextUtils.isEmpty(mFuelRailPressurevacuum) ? "N/A" : mFuelRailPressurevacuum));
                 entity.setFuelRailPressurevacuum(TextUtils.isEmpty(mFuelRailPressurevacuum) ? "" : mFuelRailPressurevacuum);
                 break;
             case VIN:
                 mVehicleIdentificationNumber = command.getFormattedResult();
-                data.add(new OBDTripEntity("车辆识别号(VIN)", TextUtils.isEmpty(mVehicleIdentificationNumber) ? "" : mVehicleIdentificationNumber));
+                data.add(new OBDTripEntity("车辆识别号(VIN)", TextUtils.isEmpty(mVehicleIdentificationNumber) ? "N/A" : mVehicleIdentificationNumber));
                 entity.setVehicleIdentificationNumber(TextUtils.isEmpty(mVehicleIdentificationNumber) ? "" : mVehicleIdentificationNumber);
                 break;
 
             case DISTANCE_TRAVELED_MIL_ON:
                 mDistanceTraveledMilOn = command.getFormattedResult();
-                data.add(new OBDTripEntity("故障指示灯(MIL)亮时行驶的距离", TextUtils.isEmpty(mDistanceTraveledMilOn) ? "" : mDistanceTraveledMilOn));
-                entity.setDistanceTraveledMilOn(mDistanceTraveledMilOn);
+                data.add(new OBDTripEntity("故障指示灯(MIL)亮时行驶的距离", TextUtils.isEmpty(mDistanceTraveledMilOn) ? "N/A" : mDistanceTraveledMilOn));
+                entity.setDistanceTraveledMilOn(TextUtils.isEmpty(mDistanceTraveledMilOn) ? "" : mDistanceTraveledMilOn);
                 break;
             case DTC_NUMBER:
                 mDtcNumber = command.getFormattedResult();
-                data.add(new OBDTripEntity("自从DTC清除后的监控状态", TextUtils.isEmpty(mDtcNumber) ? "" : mDtcNumber));
+                data.add(new OBDTripEntity("自从DTC清除后的监控状态", TextUtils.isEmpty(mDtcNumber) ? "N/A" : mDtcNumber));
                 entity.setDtcNumber(TextUtils.isEmpty(mDtcNumber) ? "" : mDtcNumber);
                 break;
             case SYSTEM_VAPOR_PRESSURE:
                 mSystemVaporPressure = command.getFormattedResult();
-                data.add(new OBDTripEntity("系统蒸汽压力", TextUtils.isEmpty(mSystemVaporPressure) ? "" : mSystemVaporPressure));
+                data.add(new OBDTripEntity("系统蒸汽压力", TextUtils.isEmpty(mSystemVaporPressure) ? "N/A" : mSystemVaporPressure));
                 entity.setSystemVaporPressure(TextUtils.isEmpty(mSystemVaporPressure) ? "" : mSystemVaporPressure);
                 break;
             case TIME_SINCE_TC_CLEARED:
                 mTimeSinceTcClear = command.getFormattedResult();
-                data.add(new OBDTripEntity("故障代码清除后的时间", TextUtils.isEmpty(mTimeSinceTcClear) ? "" : mTimeSinceTcClear));
+                data.add(new OBDTripEntity("故障代码清除后的时间", TextUtils.isEmpty(mTimeSinceTcClear) ? "N/A" : mTimeSinceTcClear));
                 entity.setTimeSinceTcClear(TextUtils.isEmpty(mTimeSinceTcClear) ? "" : mTimeSinceTcClear);
                 break;
             case REL_THROTTLE_POS:
                 mRelThottlePos = command.getFormattedResult();
-                data.add(new OBDTripEntity("相对油门位置", TextUtils.isEmpty(mRelThottlePos) ? "" : mRelThottlePos));
+                data.add(new OBDTripEntity("相对油门位置", TextUtils.isEmpty(mRelThottlePos) ? "N/A" : mRelThottlePos));
                 entity.setRelThottlePos(TextUtils.isEmpty(mRelThottlePos) ? "" : mRelThottlePos);
                 break;
             case ABS_LOAD:
                 mAbsLoad = command.getFormattedResult();
-                data.add(new OBDTripEntity("绝对负荷", TextUtils.isEmpty(mAbsLoad) ? "" : mAbsLoad));
+                data.add(new OBDTripEntity("绝对负荷", TextUtils.isEmpty(mAbsLoad) ? "N/A" : mAbsLoad));
                 entity.setAbsLoad(TextUtils.isEmpty(mAbsLoad) ? "" : mAbsLoad);
                 break;
-
             case AIR_FUEL_RATIO:
                 mAirFuelRatio = command.getFormattedResult();
-                data.add(new OBDTripEntity("燃油-空气命令等效比", TextUtils.isEmpty(mAirFuelRatio) ? "" : mAirFuelRatio));
+                data.add(new OBDTripEntity("燃油-空气命令等效比", TextUtils.isEmpty(mAirFuelRatio) ? "N/A" : mAirFuelRatio));
                 entity.setAirFuelRatio(TextUtils.isEmpty(mAirFuelRatio) ? "" : mAirFuelRatio);
                 break;
             case DESCRIBE_PROTOCOL:
                 mDescribeProtocol = command.getFormattedResult();
-                data.add(new OBDTripEntity("协议", TextUtils.isEmpty(mDescribeProtocol) ? "" : mDescribeProtocol));
+                data.add(new OBDTripEntity("协议", TextUtils.isEmpty(mDescribeProtocol) ? "N/A" : mDescribeProtocol));
                 entity.setDescribeProtocol(TextUtils.isEmpty(mDescribeProtocol) ? "" : mDescribeProtocol);
                 break;
             case DESCRIBE_PROTOCOL_NUMBER:
                 mDescribeProtocolNumber = command.getFormattedResult();
-                data.add(new OBDTripEntity("协议编号", TextUtils.isEmpty(mDescribeProtocolNumber) ? "" : mDescribeProtocolNumber));
+                data.add(new OBDTripEntity("协议编号", TextUtils.isEmpty(mDescribeProtocolNumber) ? "N/A" : mDescribeProtocolNumber));
                 entity.setDescribeProtocolNumber(TextUtils.isEmpty(mDescribeProtocolNumber) ? "" : mDescribeProtocolNumber);
                 break;
             case IGNITION_MONITOR:
                 mIgnitionMonitor = command.getFormattedResult();
-                data.add(new OBDTripEntity("点火监视器", TextUtils.isEmpty(mIgnitionMonitor) ? "" : mIgnitionMonitor));
+                data.add(new OBDTripEntity("点火监视器", TextUtils.isEmpty(mIgnitionMonitor) ? "N/A" : mIgnitionMonitor));
                 entity.setIgnitionMonitor(TextUtils.isEmpty(mIgnitionMonitor) ? "" : mIgnitionMonitor);
                 break;
             case SHORT_TERM_BANK_1:
                 mShortTermBank1 = command.getFormattedResult();
-                data.add(new OBDTripEntity("短期燃油调节库1", TextUtils.isEmpty(mShortTermBank1) ? "" : mShortTermBank1));
+                data.add(new OBDTripEntity("短期燃油调节库1", TextUtils.isEmpty(mShortTermBank1) ? "N/A" : mShortTermBank1));
                 entity.setShortTermBank1(TextUtils.isEmpty(mShortTermBank1) ? "" : mShortTermBank1);
                 break;
             case SHORT_TERM_BANK_2:
                 mShortTermBank2 = command.getFormattedResult();
-                data.add(new OBDTripEntity("短期燃油调节库2", TextUtils.isEmpty(mShortTermBank2) ? "" : mShortTermBank2));
+                data.add(new OBDTripEntity("短期燃油调节库2", TextUtils.isEmpty(mShortTermBank2) ? "N/A" : mShortTermBank2));
                 entity.setShortTermBank2(TextUtils.isEmpty(mShortTermBank2) ? "" : mShortTermBank2);
                 break;
             case LONG_TERM_BANK_1:
                 mLongTermBank1 = command.getFormattedResult();
-                data.add(new OBDTripEntity("长期燃油调节库1", TextUtils.isEmpty(mLongTermBank1) ? "" : mLongTermBank1));
+                data.add(new OBDTripEntity("长期燃油调节库1", TextUtils.isEmpty(mLongTermBank1) ? "N/A" : mLongTermBank1));
                 entity.setLongTermBank1(TextUtils.isEmpty(mLongTermBank1) ? "" : mLongTermBank1);
                 break;
             case LONG_TERM_BANK_2:
                 mLongTermBank2 = command.getFormattedResult();
-                data.add(new OBDTripEntity("长期燃油调节库2", TextUtils.isEmpty(mLongTermBank2) ? "" : mLongTermBank2));
+                data.add(new OBDTripEntity("长期燃油调节库2", TextUtils.isEmpty(mLongTermBank2) ? "N/A" : mLongTermBank2));
                 entity.setLongTermBank2(TextUtils.isEmpty(mLongTermBank2) ? "" : mLongTermBank2);
                 break;
             case TROUBLE_CODES:
@@ -1152,7 +1151,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
         if (currentRPM != null && this.engineRpmMax < Integer.parseInt(currentRPM)) {
             this.engineRpmMax = Integer.parseInt(currentRPM);
         }
-        data.add(new OBDTripEntity("引擎转速", TextUtils.isEmpty(engineRpm) ? "" : engineRpm));
+        data.add(new OBDTripEntity("引擎转速", TextUtils.isEmpty(engineRpm) ? "N/A" : engineRpm));
         entity.setEngineRpm(TextUtils.isEmpty(engineRpm) ? "" : engineRpm);
         data.add(new OBDTripEntity("最大转速", engineRpmMax + " "));
         entity.setEngineRpmMax(String.valueOf(engineRpmMax));

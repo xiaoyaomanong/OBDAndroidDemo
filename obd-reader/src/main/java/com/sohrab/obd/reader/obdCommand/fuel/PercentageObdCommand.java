@@ -12,6 +12,8 @@
  */
 package com.sohrab.obd.reader.obdCommand.fuel;
 
+import android.annotation.SuppressLint;
+
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -47,6 +49,7 @@ public abstract class PercentageObdCommand extends ObdCommand {
     }
 
     /** {@inheritDoc} */
+    @SuppressLint("DefaultLocale")
     @Override
     public String getFormattedResult() {
         return String.format("%.1f%s", percentage, getResultUnit());

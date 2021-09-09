@@ -165,11 +165,8 @@ public abstract class ObdCommand {
     protected void fillBuffer() {
         rawData = rawData.replaceAll("\\s", ""); //removes all [ \t\n\x0B\f\r]
         rawData = rawData.replaceAll("(BUS INIT)|(BUSINIT)|(\\.)", "");
-
-        LogUtils.i("Cmd :: " + cmd + " rawData :: " + rawData);
         Log.e("BaseActivity","Cmd :: " + cmd + " rawData :: " + rawData);
         if (!rawData.matches("([0-9A-F])+")) {
-            LogUtils.i("NonNumericResponseException :: " + rawData);
             throw new NonNumericResponseException(rawData);
         }
         //每两个字符读取字符串
@@ -182,7 +179,6 @@ public abstract class ObdCommand {
             end += 2;
         }
         Log.e("BaseActivity","buffer:"+buffer);
-        LogUtils.i("buffer :: " + buffer);
     }
 
     /**
@@ -207,8 +203,6 @@ public abstract class ObdCommand {
             res.append(c);
         }
 
-        //    mHandler.removeCallbacksAndMessages(null);
-
         /*
          * Imagine the following response 41 0c 00 0d.
          *
@@ -220,7 +214,6 @@ public abstract class ObdCommand {
 
        // LogUtils.i("Cmd :: " + cmd + " data :: " + res);
         Log.e("BaseActivity","Cmd :: " + cmd + " res :: " + res.toString());
-        //Log.e("BaseActivity","rawData:"+rawData);
         rawData = res.toString().replaceAll("SEARCHING", "");
 
         /*

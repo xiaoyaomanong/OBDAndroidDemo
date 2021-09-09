@@ -11,7 +11,7 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
  * 描述：
  */
 public class FuelSystemStatusCommand extends ObdCommand {
-    private int fuelsystemstatus = 0;
+    private int fuelSystemStatus = 0;
 
     public FuelSystemStatusCommand(String mode) {
         super(mode+" 03");
@@ -27,13 +27,13 @@ public class FuelSystemStatusCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [hh hh] of the response
-        fuelsystemstatus = buffer.get(2);
+        fuelSystemStatus = buffer.get(2);
     }
 
     @Override
     public String getFormattedResult() {
         try {
-            return FuelSystemStatus.fromValue(fuelsystemstatus).getDescription();
+            return FuelSystemStatus.fromValue(fuelSystemStatus).getDescription();
         } catch (NullPointerException e) {
             return "Ok";
         }
@@ -41,7 +41,7 @@ public class FuelSystemStatusCommand extends ObdCommand {
 
     @Override
     public String getCalculatedResult() {
-        return String.valueOf(fuelsystemstatus);
+        return String.valueOf(fuelSystemStatus);
     }
 
     @Override

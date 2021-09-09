@@ -107,8 +107,8 @@ public class VehicleDashTwoActivity extends BaseActivity {
         setInsFuelConsumption();
         setDrivingFuelConsumption();
         setIdlingFuelConsumption();
-        startCommand();
-       // newCachedThreadPool();
+        // startCommand();
+        newCachedThreadPool();
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {

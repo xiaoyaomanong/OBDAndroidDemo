@@ -169,7 +169,7 @@ public class VehicleDashOneActivity extends BaseActivity {
                 executeCommandData(MainApplication.getBluetoothSocket(), command,100);*/
             }
         });
-        cachedThreadPool.submit(() -> {//读取转速
+     /*   cachedThreadPool.submit(() -> {//读取转速
             while (isConnected) {
                 RPMCommand command = new RPMCommand(ModeTrim.MODE_01.build());
                 executeCommandData(MainApplication.getBluetoothSocket(), command, 101);
@@ -186,7 +186,7 @@ public class VehicleDashOneActivity extends BaseActivity {
                 EngineCoolantTemperatureCommand command = new EngineCoolantTemperatureCommand(ModeTrim.MODE_01.build());
                 executeCommandData(MainApplication.getBluetoothSocket(), command, 103);
             }
-        });
+        });*/
     }
 
     private void newScheduledPool() {

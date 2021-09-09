@@ -43,6 +43,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 作者：Jealous
@@ -73,11 +75,11 @@ public class VehicleDashOneActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 100://速度
-                    //setView((CheckRecord) msg.obj);
-                    setSpeedView((CheckRecord) msg.obj);
+                    setView((CheckRecord) msg.obj);
+                    //setSpeedView((CheckRecord) msg.obj);
                     break;
                 case 101://转速
-                    CheckRecord record= (CheckRecord) msg.obj;
+                    CheckRecord record = (CheckRecord) msg.obj;
                     String rpm = TextUtils.isEmpty(record.getEngineRpm()) ? "0" : record.getEngineRpm();
                     double maxRpm = (double) record.getEngineRpmMax() / 1000;
                     dashRPM.setVelocity((Float.parseFloat(rpm) / 1000));
@@ -85,11 +87,11 @@ public class VehicleDashOneActivity extends BaseActivity {
                     tvMaxRPM.setText(String.valueOf(maxRpm));
                     break;
                 case 102://发动机油温
-                    CheckRecord record1= (CheckRecord) msg.obj;
+                    CheckRecord record1 = (CheckRecord) msg.obj;
                     dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(record1.getmEngineOilTemp()) ? "0" : record1.getmEngineOilTemp().replace("℃", "")));
                     break;
                 case 103://冷却液温度
-                    CheckRecord record2= (CheckRecord) msg.obj;
+                    CheckRecord record2 = (CheckRecord) msg.obj;
                     dashEngineCoolantTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(record2.getmEngineCoolantTemp()) ? "0" : record2.getmEngineCoolantTemp().replace("℃", "")));
                     break;
             }
@@ -134,8 +136,8 @@ public class VehicleDashOneActivity extends BaseActivity {
         setSpeed();
         setEngineCoolantTemp();
         setEngineOilTemp();
-        startCommand();
-        //newCachedThreadPool();
+        //startCommand();
+        newCachedThreadPool();
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -162,34 +164,38 @@ public class VehicleDashOneActivity extends BaseActivity {
         //提交 4个任务
         cachedThreadPool.submit(() -> {//读取车速
             while (isConnected) {
-                //executeCommandData(MainApplication.getBluetoothSocket(), getCommands());
-                SpeedCommand command = new SpeedCommand(ModeTrim.MODE_01.build());
-                executeCommandData(MainApplication.getBluetoothSocket(), command,100);
-                try {
-                    Thread.sleep(300);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                executeCommandData(MainApplication.getBluetoothSocket(), getCommands());
+               /* SpeedCommand command = new SpeedCommand(ModeTrim.MODE_01.build());
+                executeCommandData(MainApplication.getBluetoothSocket(), command,100);*/
             }
         });
         cachedThreadPool.submit(() -> {//读取转速
             while (isConnected) {
                 RPMCommand command = new RPMCommand(ModeTrim.MODE_01.build());
-                executeCommandData(MainApplication.getBluetoothSocket(), command,101);
+                executeCommandData(MainApplication.getBluetoothSocket(), command, 101);
             }
         });
         cachedThreadPool.submit(() -> {//发动机油温
             while (isConnected) {
                 OilTempCommand command = new OilTempCommand(ModeTrim.MODE_01.build());
-                executeCommandData(MainApplication.getBluetoothSocket(), command,102);
+                executeCommandData(MainApplication.getBluetoothSocket(), command, 102);
             }
         });
         cachedThreadPool.submit(() -> {//发动机冷媒温度
             while (isConnected) {
                 EngineCoolantTemperatureCommand command = new EngineCoolantTemperatureCommand(ModeTrim.MODE_01.build());
-                executeCommandData(MainApplication.getBluetoothSocket(), command,103);
+                executeCommandData(MainApplication.getBluetoothSocket(), command, 103);
             }
         });
+    }
+
+    private void newScheduledPool() {
+        ScheduledExecutorService scheduleTaskExecutor = new ScheduledThreadPoolExecutor(4);
+        scheduleTaskExecutor.scheduleAtFixedRate(() -> {
+            if (isConnected) {
+                executeCommandData(MainApplication.getBluetoothSocket(), getCommands());
+            }
+        }, 1, 40, TimeUnit.MILLISECONDS);
     }
 
     private void startCommand() {
@@ -206,7 +212,7 @@ public class VehicleDashOneActivity extends BaseActivity {
     private List<ObdCommand> getCommands() {
         List<ObdCommand> obdCommands = new ArrayList<>();
         obdCommands.clear();
-        obdCommands.add(new ObdResetCommand());
+        //obdCommands.add(new ObdResetCommand());
         obdCommands.add(new RPMCommand(ModeTrim.MODE_01.build()));
         obdCommands.add(new OilTempCommand(ModeTrim.MODE_01.build()));
         obdCommands.add(new EngineCoolantTemperatureCommand(ModeTrim.MODE_01.build()));
@@ -217,13 +223,13 @@ public class VehicleDashOneActivity extends BaseActivity {
     /**
      * 读取速度
      */
-    private void executeCommandData(BluetoothSocket socket, ObdCommand command,int what) {
+    private void executeCommandData(BluetoothSocket socket, ObdCommand command, int what) {
         try {
             command.run(socket.getInputStream(), socket.getOutputStream());
-          //  LogE("数据:"+command.getCalculatedResult());
+            //  LogE("数据:"+command.getCalculatedResult());
             tripRecord.updateTrip(command.getName(), command);
-            if (command.getName().equals("Vehicle Speed")&&what==100){
-                LogE("速度:"+((SpeedCommand) command).getMetricSpeed());
+            if (command.getName().equals("Vehicle Speed") && what == 100) {
+                LogE("速度:" + ((SpeedCommand) command).getMetricSpeed());
             }
             Message msg = mHandler.obtainMessage();
             msg.what = what;

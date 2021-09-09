@@ -15,7 +15,7 @@ public class VinCommand extends PersistentCommand {
      * Default ctor.
      */
     public VinCommand(ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand() + " 02");
+        super(modeTrim.build() + " 02");
     }
 
     /**

@@ -163,7 +163,7 @@ public class VehicleDashOneActivity extends BaseActivity {
         cachedThreadPool.submit(() -> {//读取车速
             while (isConnected) {
                 //executeCommandData(MainApplication.getBluetoothSocket(), getCommands());
-                SpeedCommand command = new SpeedCommand(ModeTrim.MODE_01.buildObdCommand());
+                SpeedCommand command = new SpeedCommand(ModeTrim.MODE_01.build());
                 executeCommandData(MainApplication.getBluetoothSocket(), command,100);
                 try {
                     Thread.sleep(300);
@@ -174,19 +174,19 @@ public class VehicleDashOneActivity extends BaseActivity {
         });
         cachedThreadPool.submit(() -> {//读取转速
             while (isConnected) {
-                RPMCommand command = new RPMCommand(ModeTrim.MODE_01.buildObdCommand());
+                RPMCommand command = new RPMCommand(ModeTrim.MODE_01.build());
                 executeCommandData(MainApplication.getBluetoothSocket(), command,101);
             }
         });
         cachedThreadPool.submit(() -> {//发动机油温
             while (isConnected) {
-                OilTempCommand command = new OilTempCommand(ModeTrim.MODE_01.buildObdCommand());
+                OilTempCommand command = new OilTempCommand(ModeTrim.MODE_01.build());
                 executeCommandData(MainApplication.getBluetoothSocket(), command,102);
             }
         });
         cachedThreadPool.submit(() -> {//发动机冷媒温度
             while (isConnected) {
-                EngineCoolantTemperatureCommand command = new EngineCoolantTemperatureCommand(ModeTrim.MODE_01.buildObdCommand());
+                EngineCoolantTemperatureCommand command = new EngineCoolantTemperatureCommand(ModeTrim.MODE_01.build());
                 executeCommandData(MainApplication.getBluetoothSocket(), command,103);
             }
         });
@@ -207,10 +207,10 @@ public class VehicleDashOneActivity extends BaseActivity {
         List<ObdCommand> obdCommands = new ArrayList<>();
         obdCommands.clear();
         obdCommands.add(new ObdResetCommand());
-        obdCommands.add(new RPMCommand(ModeTrim.MODE_01.buildObdCommand()));
-        obdCommands.add(new OilTempCommand(ModeTrim.MODE_01.buildObdCommand()));
-        obdCommands.add(new EngineCoolantTemperatureCommand(ModeTrim.MODE_01.buildObdCommand()));
-        obdCommands.add(new SpeedCommand(ModeTrim.MODE_01.buildObdCommand()));
+        obdCommands.add(new RPMCommand(ModeTrim.MODE_01.build()));
+        obdCommands.add(new OilTempCommand(ModeTrim.MODE_01.build()));
+        obdCommands.add(new EngineCoolantTemperatureCommand(ModeTrim.MODE_01.build()));
+        obdCommands.add(new SpeedCommand(ModeTrim.MODE_01.build()));
         return obdCommands;
     }
 

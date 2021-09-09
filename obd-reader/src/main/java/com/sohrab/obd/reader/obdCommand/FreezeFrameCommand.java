@@ -29,7 +29,7 @@ public class FreezeFrameCommand extends ObdCommand {
      * <p>Constructor for TroubleCodesCommand.</p>
      */
     public FreezeFrameCommand(ModeTrim modeTrim) {
-        super(modeTrim.buildObdCommand() + " 02");
+        super(modeTrim.build() + " 02");
         codes = new StringBuilder();
     }
 

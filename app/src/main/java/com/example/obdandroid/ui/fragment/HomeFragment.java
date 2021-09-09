@@ -642,8 +642,6 @@ public class HomeFragment extends BaseFragment {
             Thread.sleep(200);
             new SpacesOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
             Thread.sleep(200);
-            new SpacesOffCommand().run(mSocket.getInputStream(), mSocket.getOutputStream());
-            Thread.sleep(200);
             new TimeoutCommand(125).run(mSocket.getInputStream(), mSocket.getOutputStream());
             Thread.sleep(200);
             new SelectProtocolCommand(ObdProtocols.AUTO).run(mSocket.getInputStream(), mSocket.getOutputStream());

@@ -34,7 +34,7 @@ public enum ModeTrim {
     private final String value;
     private final String bank;
 
-    private ModeTrim(final String value, final String bank) {
+    ModeTrim(final String value, final String bank) {
         this.value = value;
         this.bank = bank;
     }
@@ -71,7 +71,7 @@ public enum ModeTrim {
      *
      * @return a {@link String} object.
      */
-    public final String buildObdCommand() {
+    public final String build() {
         return value;
     }
 }

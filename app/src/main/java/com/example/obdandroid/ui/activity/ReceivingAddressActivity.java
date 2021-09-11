@@ -22,6 +22,7 @@ import com.example.obdandroid.ui.entity.AppUserAddressEntity;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.ui.view.IosDialog;
+import com.example.obdandroid.utils.DialogUtils;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -47,6 +48,7 @@ public class ReceivingAddressActivity extends BaseActivity {
     private RecyclerView recycleAddress;
     private Context context;
     private ReceivingAddressAdapter adapter;
+    private DialogUtils dialogUtils;
 
     @Override
     protected int getContentViewId() {
@@ -65,6 +67,7 @@ public class ReceivingAddressActivity extends BaseActivity {
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         TextView tvAddAddress = findViewById(R.id.tvAddAddress);
         recycleAddress = findViewById(R.id.recycleAddress);
+        dialogUtils = new DialogUtils(context);
         LinearLayoutManager manager = new LinearLayoutManager(context);
         manager.setOrientation(OrientationHelper.VERTICAL);
         recycleAddress.setLayoutManager(manager);
@@ -74,7 +77,7 @@ public class ReceivingAddressActivity extends BaseActivity {
             @Override
             public void update(AppUserAddressEntity.DataEntity.ListEntity entity) {
                 Intent intent = new Intent(context, UpdateUserAddressActivity.class);
-                intent.putExtra(Constant.ACT_FLAG, entity.getId());
+                intent.putExtra(Constant.ACT_FLAG, entity);
                 startActivityForResult(intent, 100);
             }
 
@@ -210,6 +213,7 @@ public class ReceivingAddressActivity extends BaseActivity {
      *                  获取收货地址
      */
     private void getAppUserAddressList(String token, String appUserId) {
+        dialogUtils.showProgressDialog();
         OkHttpUtils.get().url(SERVER_URL + getAppUserAddressList_URL).
                 addParam("token", token).
                 addParam("appUserId", appUserId).
@@ -223,8 +227,11 @@ public class ReceivingAddressActivity extends BaseActivity {
             public void onResponse(String response, int id) {
                 AppUserAddressEntity entity = JSON.parseObject(response, AppUserAddressEntity.class);
                 if (entity.isSuccess()) {
+                    dialogUtils.dismiss();
                     adapter.setList(entity.getData().getList());
                     recycleAddress.setAdapter(adapter);
+                } else {
+                    dialogUtils.dismiss();
                 }
             }
         });

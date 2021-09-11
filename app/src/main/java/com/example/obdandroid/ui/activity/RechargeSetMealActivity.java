@@ -21,6 +21,7 @@ import com.example.obdandroid.ui.adapter.RechargeSetMealAdapter;
 import com.example.obdandroid.ui.entity.AlipayOrderEntity;
 import com.example.obdandroid.ui.entity.AlipayResultEntity;
 import com.example.obdandroid.ui.entity.ChargeMealEntity;
+import com.example.obdandroid.ui.entity.DefaultAddressEntity;
 import com.example.obdandroid.ui.entity.PayResult;
 import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.entity.WxOrderEntity;
@@ -49,6 +50,8 @@ import okhttp3.Response;
 import static com.example.obdandroid.config.APIConfig.CHARGE_URL;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.addRechargeRecordCheck_URL;
+import static com.example.obdandroid.config.APIConfig.deleteAppUserAddress_URL;
+import static com.example.obdandroid.config.APIConfig.getDefault_URL;
 import static com.example.obdandroid.config.APIConfig.placeAnOrder_URL;
 import static com.example.obdandroid.config.APIConfig.updateRechargeRecord_URL;
 import static com.example.obdandroid.config.Constant.ALI_RESULT_4000;
@@ -84,6 +87,7 @@ public class RechargeSetMealActivity extends BaseActivity {
     private String rechargeSetMealSettingsId = "";
     private String rechargeAmount = "0";
     private String order_no = "";
+    private int CommodityType;
     private IWXAPI wxApi;
     private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
     private SPUtil spUtil;
@@ -202,6 +206,7 @@ public class RechargeSetMealActivity extends BaseActivity {
         adapter.setClickCallBack(entity -> {
             rechargeSetMealSettingsId = String.valueOf(entity.getRechargeSetMealSettingsId());
             rechargeAmount = String.valueOf(entity.getRechargeSetMeaAmount());
+            CommodityType = entity.getCommodityType();
         });
         btnBuy.setIndeterminateProgressMode(true);
         btnBuy.setOnClickListener(v -> {
@@ -215,17 +220,17 @@ public class RechargeSetMealActivity extends BaseActivity {
             }
             new PayChannelDialog(context, new PayChannelDialog.DialogClick() {
                 @Override
-                public void aliPay(AlertDialog exitDialog, String channel, boolean confirm) {
+                public void aliPay(AlertDialog exitDialog, String channel, String contacts, String telephone, String address, boolean confirm) {
                     if (confirm) {//2
-                        addRechargeRecordCheck(getToken(), getUserId(), rechargeAmount, rechargeSetMealSettingsId, channel);
+                        addRechargeRecordCheck(getToken(), getUserId(), rechargeAmount, rechargeSetMealSettingsId, channel, contacts, telephone, address);
                         exitDialog.dismiss();
                     }
                 }
 
                 @Override
-                public void weChat(AlertDialog exitDialog, String channel, boolean confirm) {
+                public void weChat(AlertDialog exitDialog, String channel, String contacts, String telephone, String address, boolean confirm) {
                     if (confirm) {//1
-                        addRechargeRecordCheck(getToken(), getUserId(), rechargeAmount, rechargeSetMealSettingsId, channel);
+                        addRechargeRecordCheck(getToken(), getUserId(), rechargeAmount, rechargeSetMealSettingsId, channel, contacts, telephone, address);
                         exitDialog.dismiss();
                     }
                 }
@@ -236,7 +241,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                         exitDialog.dismiss();
                     }
                 }
-            }).setMoney(rechargeAmount).showDialog();
+            }).setMoney(rechargeAmount).setAppUserId(getUserId()).setToken(getToken()).setCommodityType(CommodityType).showDialog();
 
         });
         initReceiver();
@@ -258,13 +263,6 @@ public class RechargeSetMealActivity extends BaseActivity {
         });
     }
 
-    /**
-     * @param token 接口令牌
-     * @param appUserId
-     */
-    private void getDefault(String token, String appUserId) {
-
-    }
 
     /**
      * 注册本地广播
@@ -287,8 +285,7 @@ public class RechargeSetMealActivity extends BaseActivity {
      * @param address         地址
      *                        APP用户购买套餐下单接口
      */
-    private void placeAnOrder(String paymentChannels, String token, String appUserId, String rechargeId, String amount,
-                              String contacts, String telephone, String address) {
+    private void placeAnOrder(String paymentChannels, String token, String appUserId, String rechargeId, String amount, String contacts, String telephone, String address) {
         btnBuy.setProgress(0);
         new Handler().postDelayed(() -> btnBuy.setProgress(50), 3000);
         OkHttpUtils.post().url(SERVER_URL + placeAnOrder_URL).
@@ -296,9 +293,9 @@ public class RechargeSetMealActivity extends BaseActivity {
                 addParam("token", token).
                 addParam("appUserId", appUserId).
                 addParam("rechargeSetMealSettingsId", rechargeId).
-                /*addParam("contacts", contacts).
+                addParam("contacts", contacts).
                 addParam("telephone", telephone).
-                addParam("address", address).*/
+                addParam("address", address).
                 build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Response response, Exception e, int id) {
@@ -376,7 +373,8 @@ public class RechargeSetMealActivity extends BaseActivity {
      * @param appUserId APP用户ID
      *                  添加购买套餐校验
      */
-    private void addRechargeRecordCheck(String token, String appUserId, String amount, String mealId, String paymentChannel) {
+    private void addRechargeRecordCheck(String token, String appUserId, String amount, String mealId, String channel,
+                                        String contacts, String telephone, String address) {
         OkHttpUtils.post().url(SERVER_URL + addRechargeRecordCheck_URL).
                 addParam("token", token).
                 addParam("appUserId", appUserId).
@@ -393,7 +391,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                     if (btnBuy.getProgress() == -1) {
                         btnBuy.setProgress(0);
                     }
-                    placeAnOrder(paymentChannel, getToken(), getUserId(), mealId, amount, "", "", "");
+                    placeAnOrder(channel, getToken(), getUserId(), mealId, amount, contacts, telephone, address);
                 } else {
                     showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
                 }

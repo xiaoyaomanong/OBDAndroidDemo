@@ -180,6 +180,7 @@ public class PersonalFragment extends BaseFragment {
 
             @Override
             public void onResponse(String response, int id) {
+                LogE("获取当前账号充值状态:" + response);
                 UserCurrentRechargeEntity entity = JSON.parseObject(response, UserCurrentRechargeEntity.class);
                 if (entity.isSuccess()) {
                     if (entity.getCode().equals("SUCCESS")) {
@@ -187,6 +188,8 @@ public class PersonalFragment extends BaseFragment {
                     } else {
                         tvRechargeSetMeaName.setText(R.string.RechargeSetMeaName_no);
                     }
+                } else {
+                    tvRechargeSetMeaName.setText(entity.getMessage());
                 }
             }
         });

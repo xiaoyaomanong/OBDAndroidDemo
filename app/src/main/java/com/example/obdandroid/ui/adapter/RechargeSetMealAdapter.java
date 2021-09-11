@@ -43,6 +43,7 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.list = list;
     }
 
+    @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder;
@@ -50,12 +51,12 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             case EMPTY_VIEW:
                 viewHolder = new EmptyViewHolder(inflater.inflate(R.layout.stub_empty, parent, false));
                 break;
-             default:
+            case VIP_VIEW:
                 viewHolder = new VipViewHolder(inflater.inflate(R.layout.item_charge_meal_vip, parent, false));
                 break;
-           /* default:
+            default:
                 viewHolder = new AiCarViewHolder(inflater.inflate(R.layout.item_charge_meal_ai_car, parent, false));
-                break;*/
+                break;
         }
         return viewHolder;
     }
@@ -96,7 +97,7 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 setIsChecked(position);
                 clickCallBack.Click(list.get(position));
             });
-        } /*else if (AI_CAR_VIEW == itemViewType) {
+        } else if (AI_CAR_VIEW == itemViewType) {
             final AiCarViewHolder holder = (AiCarViewHolder) viewHolder;
             holder.tvRechargeSetMeaName.setText(list.get(position).getRechargeSetMeaName());
             holder.tvRechargeSetMeaAmount.setText(list.get(position).getRechargeSetMeaNum() + "件/￥" + list.get(position).getRechargeSetMeaAmount());
@@ -126,7 +127,7 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 setIsChecked(position);
                 clickCallBack.Click(list.get(position));
             });
-        }*/
+        }
     }
 
     private void setIsChecked(int position) {
@@ -151,7 +152,7 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public int getItemViewType(int position) {
         //根据传入adapter来判断是否有数据
-       /* if (list != null) {
+        if (list != null) {
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(position).getCommodityType() == 1) {
                     return AI_CAR_VIEW;
@@ -160,14 +161,14 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     return VIP_VIEW;
                 }
             }
-        }*/
-        if (list != null) {
+        }
+       /* if (list != null) {
             if (list.size() != 0) {
                 return VIP_VIEW;
             } else {
                 return EMPTY_VIEW;
             }
-        }
+        }*/
 
         return EMPTY_VIEW;
     }

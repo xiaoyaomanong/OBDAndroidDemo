@@ -8,13 +8,15 @@ import android.os.IBinder;
 
 import com.example.obdandroid.utils.BltManagerUtils;
 
+import static com.example.obdandroid.config.Constant.RECEIVER_ACTION;
+
 /**
  * 作者：Jealous
  * 日期：2021/8/12 0012
  * 描述：
  */
 public class BluetoothConnService extends Service {
-    private final Intent intent = new Intent("com.example.obd.RECEIVER");
+    private final Intent intent = new Intent(RECEIVER_ACTION);
 
     /**
      * 连接蓝牙

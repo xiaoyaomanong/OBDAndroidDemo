@@ -18,20 +18,10 @@ public class PermissionUtils {
     /**
      * Android6.0之后需要动态申请权限
      */
-    public static void requestPermission(Activity activity) {
+    public static void requestPermission(Activity activity, String[] permissions) {
         if (Build.VERSION.SDK_INT >= 23 && !isPermissionRequested) {
             isPermissionRequested = true;
             ArrayList<String> permissionsList = new ArrayList<>();
-            String[] permissions = {
-                    Manifest.permission.ACCESS_NETWORK_STATE,
-                    Manifest.permission.INTERNET,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.READ_CONTACTS,
-                    Manifest.permission.ACCESS_WIFI_STATE,
-            };
 
             for (String perm : permissions) {
                 if (PackageManager.PERMISSION_GRANTED != activity.checkSelfPermission(perm)) {

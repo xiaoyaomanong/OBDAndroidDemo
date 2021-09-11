@@ -29,6 +29,7 @@ public class Constant {
     public static final String OBD_ACTION = "com.android.ObdCar";
     public static final String PAY_ACTION = "com.obd.pay";
     public static final String RECORD_ACTION = "com.android.Record";
+    public static final String RECEIVER_ACTION = "com.example.obd.RECEIVER";
     public static final String ALI_RESULT_9000 = "9000";
     public static final String ALI_RESULT_8000 = "8000";
     public static final String ALI_RESULT_5000 = "5000";

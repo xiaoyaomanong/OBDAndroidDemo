@@ -67,6 +67,51 @@ public class UserCurrentRechargeEntity {
         private String rechargeStatusName;
         private double rechargetAmount;
         private String paymentChannelsName;
+        private String address ;// 地址
+        private String  contacts; // 联系人
+        private String courierNumber; // 快递单号
+        private String expressName; // 快递名称
+        private String telephone ;// 电话
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public String getContacts() {
+            return contacts;
+        }
+
+        public void setContacts(String contacts) {
+            this.contacts = contacts;
+        }
+
+        public String getCourierNumber() {
+            return courierNumber;
+        }
+
+        public void setCourierNumber(String courierNumber) {
+            this.courierNumber = courierNumber;
+        }
+
+        public String getExpressName() {
+            return expressName;
+        }
+
+        public void setExpressName(String expressName) {
+            this.expressName = expressName;
+        }
+
+        public String getTelephone() {
+            return telephone;
+        }
+
+        public void setTelephone(String telephone) {
+            this.telephone = telephone;
+        }
 
         public String getRechargeSetMeaName() {
             return rechargeSetMeaName;

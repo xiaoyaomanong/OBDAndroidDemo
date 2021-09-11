@@ -15,7 +15,7 @@
         android:bottom="4dp">
         <shape>
             <!--这个是背景颜色-->
-            <solid android:color="@color/gray" />
+            <solid android:color="#01000000" />
             <corners android:radius="8dp" />
             <!--这个是按钮中的字体与按钮内的四周边距-->
             <padding android:bottom="10dp"

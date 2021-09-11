@@ -219,7 +219,7 @@ public class ChargeMealEntity {
             private double rechargeSetMeaAmount;
             private String rechargeSetMeaExplain;
             private int effectiveDays;
-            private int commodityType;
+            private int commodityType;//商品类型1 实物 2 虚拟 ,
             private long pid;
             private SubsidiaryEntity subsidiary;
             private boolean isChecked;

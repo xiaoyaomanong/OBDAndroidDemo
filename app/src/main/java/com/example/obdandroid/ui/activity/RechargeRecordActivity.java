@@ -31,7 +31,6 @@ import static com.example.obdandroid.config.APIConfig.getRechargeRecordPageList_
  */
 public class RechargeRecordActivity extends BaseActivity {
     private Context context;
-    private TitleBar titleBarSet;
     private PullLoadMoreRecyclerView recycleRechargeRecord;
     private RechargeRecordAdapter adapter;
     private int pageNum = 1;
@@ -53,7 +52,7 @@ public class RechargeRecordActivity extends BaseActivity {
     public void initView() {
         super.initView();
         context = this;
-        titleBarSet = findViewById(R.id.titleBarSet);
+        TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         recycleRechargeRecord = findViewById(R.id.recycle_recharge_record);
         recycleRechargeRecord.setLinearLayout();
         //设置是否可以下拉刷新

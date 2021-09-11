@@ -185,6 +185,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_location"
+            android:visibility="gone"
             tools:ignore="ContentDescription" />
     </LinearLayout>
 

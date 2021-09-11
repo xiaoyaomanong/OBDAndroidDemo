@@ -83,6 +83,7 @@ import static com.example.obdandroid.config.APIConfig.getTestRecordPageList_URL;
 import static com.example.obdandroid.config.APIConfig.getTheUserCurrentRecharge_URL;
 import static com.example.obdandroid.config.APIConfig.getVehicleInfoById_URL;
 import static com.example.obdandroid.config.Constant.OBD_ACTION;
+import static com.example.obdandroid.config.Constant.RECEIVER_ACTION;
 import static com.example.obdandroid.config.Constant.RECORD_ACTION;
 import static com.example.obdandroid.config.Constant.REQUEST_ENABLE_BT;
 import static com.example.obdandroid.config.Constant.VEHICLE_ID;
@@ -180,7 +181,6 @@ public class HomeFragment extends BaseFragment {
         return R.layout.fragment_home;
     }
 
-
     @SuppressLint("SetTextI18n")
     @Override
     public void initView(View view, Bundle savedInstanceState) {
@@ -206,7 +206,7 @@ public class HomeFragment extends BaseFragment {
         //动态注册广播接收器
         msgReceiver = new MsgReceiver();
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.example.obd.RECEIVER");
+        intentFilter.addAction(RECEIVER_ACTION);
         context.registerReceiver(msgReceiver, intentFilter);
         mConnectedDeviceName = ObdPreferences.get(context).getBlueToothDeviceName();
         mConnectedDeviceAddress = ObdPreferences.get(context).getBlueToothDeviceAddress();
@@ -382,7 +382,6 @@ public class HomeFragment extends BaseFragment {
                 VehicleEntity entity = JSON.parseObject(response, VehicleEntity.class);
                 if (entity.isSuccess()) {
                     if (entity.getData().getTotal() == 1) {
-                        LogE("id:" + entity.getData().getList().get(0).getVehicleId());
                         spUtil.remove(VEHICLE_ID);
                         spUtil.put(VEHICLE_ID, String.valueOf(entity.getData().getList().get(0).getVehicleId()));
                         connectBtDevice(entity.getData().getList().get(0).getBluetoothDeviceNumber());

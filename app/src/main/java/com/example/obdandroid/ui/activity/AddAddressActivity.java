@@ -1,5 +1,6 @@
 package com.example.obdandroid.ui.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -85,6 +86,16 @@ public class AddAddressActivity extends BaseActivity {
     private AddressAdapter adapter;
     private CustomPop customPop;
     private DialogUtils dialogUtils;
+    private final String[] permissions = {
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.INTERNET,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.ACCESS_WIFI_STATE,
+    };
 
     @Override
     protected int getContentViewId() {
@@ -112,20 +123,20 @@ public class AddAddressActivity extends BaseActivity {
         LinearLayout layoutSelectArea = findViewById(R.id.layoutSelectArea);
         Button btnSave = findViewById(R.id.btnSave);
         dialogUtils = new DialogUtils(context);
-        mSuggestionSearch = SuggestionSearch.newInstance();
-        PermissionUtils.requestPermission(this);
-        if (isLocServiceEnable(context)) {
+        // mSuggestionSearch = SuggestionSearch.newInstance();
+        PermissionUtils.requestPermission(this,permissions);
+      /*  if (isLocServiceEnable(context)) {
             openGPS();
-        }
+        }*/
         // initLocation();
-        initLocationOption();
+        //initLocationOption();
         layoutSelectName.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
             startActivityForResult(intent, REQUEST_CODE);
         });
         layoutSelectArea.setOnClickListener(v -> {
             bgAlpha(0.7f);
-            mJDCityPicker = new JDCityPicker(context, (province, city, area) -> tvSelectArea.setText(province + "   " + city + "   " + area));
+            mJDCityPicker = new JDCityPicker(context, (province, city, area) -> tvSelectArea.setText(province + " " + city + " " + area+","));
             mJDCityPicker.showAtLocation(tvSelectArea, Gravity.BOTTOM, 0, 0);
             mJDCityPicker.setOnDismissListener(() -> bgAlpha(1.0f));
         });
@@ -157,18 +168,11 @@ public class AddAddressActivity extends BaseActivity {
                 reverseGeoAddress(SharedPreferencesUtil.getString(context, SharedPreferencesUtil.LOCATION, ""));
             }
         });
-        mSuggestionSearch.setOnGetSuggestionResultListener(suggestionResult -> {
+      /*  mSuggestionSearch.setOnGetSuggestionResultListener(suggestionResult -> {
             LogE("地点：" + JSON.toJSONString(suggestionResult.getAllSuggestions()));
             suggestionResult.getAllSuggestions().remove(0);
             showAddress(tvDetailsAddress, null, suggestionResult);
-        });
-       /* BluetoothService bluetoothService = new BluetoothService(new Handler() {
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-            }
-        });
-        bluetoothService.connect();*/
+        });*/
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
             public void onLeftClick(View v) {
@@ -326,6 +330,7 @@ public class AddAddressActivity extends BaseActivity {
      * @param telephone 手机号码
      * @param contacts  联系人
      * @param address   收货地址
+     * @param isDefault 是否默认地址
      *                  添加收货地址
      */
     private void addAppUserAddress(String token, String appUserId, String telephone, String contacts, String address, boolean isDefault) {
@@ -396,7 +401,7 @@ public class AddAddressActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mSuggestionSearch.destroy();
+       // mSuggestionSearch.destroy();
     }
 
 

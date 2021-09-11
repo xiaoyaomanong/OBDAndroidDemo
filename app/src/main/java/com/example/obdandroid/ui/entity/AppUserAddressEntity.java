@@ -1,5 +1,6 @@
 package com.example.obdandroid.ui.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * 日期：2021/9/3 0003
  * 描述：
  */
-public class AppUserAddressEntity {
+public class AppUserAddressEntity implements Serializable {
 
     private boolean success;
     private String code;
@@ -46,7 +47,7 @@ public class AppUserAddressEntity {
         this.data = data;
     }
 
-    public static class DataEntity {
+    public static class DataEntity implements Serializable {
         private int total;
         private List<ListEntity> list;
         private int pageNum;
@@ -210,7 +211,7 @@ public class AppUserAddressEntity {
             this.navigateLastPage = navigateLastPage;
         }
 
-        public static class ListEntity {
+        public static class ListEntity implements Serializable {
             private String id;
             private String appUserId;
             private String telephone;

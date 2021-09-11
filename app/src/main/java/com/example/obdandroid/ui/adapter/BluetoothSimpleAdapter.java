@@ -44,7 +44,7 @@ public class BluetoothSimpleAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder result;
         if (EMPTY_VIEW == viewType) {
-            result = new EmptyViewHolder(inflater.inflate(R.layout.stub_empty, parent, false));
+            result = new EmptyViewHolder(inflater.inflate(R.layout.item_empty, parent, false));
         } else {
             result = new MyViewHolder(inflater.inflate(R.layout.devices, parent, false));
         }

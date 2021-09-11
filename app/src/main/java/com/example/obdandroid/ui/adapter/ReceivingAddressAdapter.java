@@ -2,14 +2,12 @@ package com.example.obdandroid.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -72,7 +70,7 @@ public class ReceivingAddressAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (EMPTY_VIEW == viewType) {
-            return new EmptyViewHolder(inflater.inflate(R.layout.stub_empty, parent, false));
+            return new EmptyViewHolder(inflater.inflate(R.layout.item_empty, parent, false));
         }
         return new MyViewHolder(inflater.inflate(R.layout.item_address, parent, false));
     }

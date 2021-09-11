@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.ui.entity.RechargeRecordEntity;
-import com.example.obdandroid.utils.AppDateUtils;
 
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class RechargeRecordAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (EMPTY_VIEW == viewType) {
-            return new EmptyViewHolder(inflater.inflate(R.layout.stub_empty, parent, false));
+            return new EmptyViewHolder(inflater.inflate(R.layout.item_empty, parent, false));
         }
         return new MyViewHolder(inflater.inflate(R.layout.item_charge_record, parent, false));
     }

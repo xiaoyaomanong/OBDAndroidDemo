@@ -84,7 +84,7 @@ public class MyVehicleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (EMPTY_VIEW == viewType) {
-            return new EmptyViewHolder(inflater.inflate(R.layout.stub_empty, parent, false));
+            return new EmptyViewHolder(inflater.inflate(R.layout.item_empty, parent, false));
         }
         return new MyViewHolder(inflater.inflate(R.layout.item_vehicle, parent, false));
     }

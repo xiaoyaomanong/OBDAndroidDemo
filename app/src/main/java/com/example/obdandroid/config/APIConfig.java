@@ -174,4 +174,8 @@ public class APIConfig {
      * 获取默认地址
      */
     public static final String getDefault_URL = "/api/appUserAddress/getDefault";
+    /**
+     * 查询快递
+     */
+    public static final String query_express_URL = "https://m.kuaidi100.com/app/query/";
 }

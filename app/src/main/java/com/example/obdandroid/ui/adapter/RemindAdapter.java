@@ -47,7 +47,7 @@ public class RemindAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (EMPTY_VIEW == viewType) {
-            return new EmptyViewHolder(inflater.inflate(R.layout.stub_empty, parent, false));
+            return new EmptyViewHolder(inflater.inflate(R.layout.item_empty, parent, false));
         }
         return new MyViewHolder(inflater.inflate(R.layout.item_remind, parent, false));
     }

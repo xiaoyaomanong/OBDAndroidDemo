@@ -1,20 +1,16 @@
 package com.example.obdandroid.ui.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.obdandroid.R;
-import com.example.obdandroid.ui.activity.BindBluetoothDeviceActivity;
 import com.example.obdandroid.ui.entity.BluetoothDeviceEntity;
 
 import java.util.List;
@@ -50,7 +46,7 @@ public class BindBluetoothDeviceAdapter extends RecyclerView.Adapter<RecyclerVie
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder result;
         if (EMPTY_VIEW == viewType) {
-            result = new EmptyViewHolder(inflater.inflate(R.layout.stub_empty, parent, false));
+            result = new EmptyViewHolder(inflater.inflate(R.layout.item_empty, parent, false));
         } else {
             result = new MyViewHolder(inflater.inflate(R.layout.item_bind_device, parent, false));
         }

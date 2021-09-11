@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.obdandroid.R;
 import com.example.obdandroid.ui.entity.AutomobileBrandEntity;
-import com.example.obdandroid.ui.view.CircleImageView;
 
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (EMPTY_VIEW == viewType) {
-            return new EmptyViewHolder(inflater.inflate(R.layout.stub_empty, parent, false));
+            return new EmptyViewHolder(inflater.inflate(R.layout.item_empty, parent, false));
         }
         return new MyViewHolder(inflater.inflate(R.layout.item_home, parent, false));
     }

@@ -2,31 +2,21 @@ package com.example.obdandroid.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.nfc.Tag;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.JsonReader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.R;
-import com.example.obdandroid.config.TAG;
 import com.example.obdandroid.ui.entity.TestRecordEntity;
-import com.example.obdandroid.ui.view.progressButton.CircularProgressButton;
 import com.example.obdandroid.utils.DensityUtil;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
-import com.sohrab.obd.reader.trip.OBDTripEntity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -65,7 +55,7 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (EMPTY_VIEW == viewType) {
-            return new EmptyViewHolder(inflater.inflate(R.layout.stub_empty, parent, false));
+            return new EmptyViewHolder(inflater.inflate(R.layout.item_empty, parent, false));
         }
         return new MyViewHolder(inflater.inflate(R.layout.item_test_record, parent, false));
     }

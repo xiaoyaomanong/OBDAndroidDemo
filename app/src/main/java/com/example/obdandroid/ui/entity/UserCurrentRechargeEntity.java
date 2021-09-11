@@ -72,6 +72,15 @@ public class UserCurrentRechargeEntity {
         private String courierNumber; // 快递单号
         private String expressName; // 快递名称
         private String telephone ;// 电话
+        private int commodityType;//商品类型1 实物 2 虚拟
+
+        public int getCommodityType() {
+            return commodityType;
+        }
+
+        public void setCommodityType(int commodityType) {
+            this.commodityType = commodityType;
+        }
 
         public String getAddress() {
             return address;

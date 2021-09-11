@@ -49,7 +49,7 @@ public class RechargeSetMealAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         RecyclerView.ViewHolder viewHolder;
         switch (viewType) {
             case EMPTY_VIEW:
-                viewHolder = new EmptyViewHolder(inflater.inflate(R.layout.stub_empty, parent, false));
+                viewHolder = new EmptyViewHolder(inflater.inflate(R.layout.item_empty, parent, false));
                 break;
             case VIP_VIEW:
                 viewHolder = new VipViewHolder(inflater.inflate(R.layout.item_charge_meal_vip, parent, false));

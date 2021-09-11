@@ -7,5 +7,5 @@ package com.example.obdandroid.config;
 
 public class TAG {
     public static final String TAG_Activity = "BaseActivity";
-    public static final String TAG_Fragemnt = "BaseFragment";
+    public static final String TAG_Fragment = "BaseFragment";
 }

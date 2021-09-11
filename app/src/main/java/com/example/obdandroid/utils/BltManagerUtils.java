@@ -59,10 +59,10 @@ public class BltManagerUtils {
             MainApplication.setBluetoothSocket(mSocket);
         } catch (IOException connException) {
             try {
-                Log.e(TAG.TAG_Fragemnt, "恢复时：无法连接", connException);
+                Log.e(TAG.TAG_Fragment, "恢复时：无法连接", connException);
                 mSocket.close();
             } catch (IOException exception) {
-                Log.e(TAG.TAG_Fragemnt, "恢复时：连接失败时无法关闭套接字", exception);
+                Log.e(TAG.TAG_Fragment, "恢复时：连接失败时无法关闭套接字", exception);
             }
         }
         if (mSocket.isConnected()) {

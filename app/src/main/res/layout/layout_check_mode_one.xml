@@ -1,0 +1,944 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:background="@drawable/bg_black"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:text="@string/tip"
+            android:textColor="@color/green"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:text="@string/other"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            tools:ignore="RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/speed"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/engineRpm"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvEngineRpm"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mMassAirFlow"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvMassAirFlow"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/engineRuntime"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvEngineRuntime"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mFuelLevel"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvFuelLevel"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mIntakePressure"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvIntakePressure"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mIntakeAirTemp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvIntakeAirTemp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mAmbientAirTemp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvAmbientAirTemp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mEngineCoolantTemp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvEngineCoolantTemp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/EngineOilTemp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvEngineOilTemp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mFuelConsumptionRate"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvFuelConsumptionRate"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mFuelPressure"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvFuelPressure"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry,TooManyViews" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mEngineLoad"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvEngineLoad"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mBarometricPressure"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvBarometricPressure"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/RelThottlePos"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvRelThottlePos"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mTimingAdvance"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvTimingAdvance"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mEquivRatio"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvEquivRatio"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/DistanceTraveledAfter"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvDistanceTraveledAfterCodesCleared"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mControlModuleVoltage"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvControlModuleVoltage"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mFuelRailPressure"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvFuelRailPressure"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mVehicleIdentificationNumber"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvVehicleIdentificationNumber"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mDistanceTraveledMilOn"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvDistanceTraveledMilOn"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/dtc"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvDtcNumber"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/abs"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvAbsLoad"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mAirFuelRatio"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvAirFuelRatio"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mDescribeProtocol"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvDescribeProtocol"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/mIgnitionMonitor"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvIgnitionMonitor"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/ShortTermBank1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvShortTermBank1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/ShortTermBank2"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvShortTermBank2"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/LongTermBank1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvLongTermBank1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/LongTermBank2"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/tvLongTermBank2"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="@font/gotham"
+            android:gravity="center_vertical|right"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+    </LinearLayout>
+
+</LinearLayout>

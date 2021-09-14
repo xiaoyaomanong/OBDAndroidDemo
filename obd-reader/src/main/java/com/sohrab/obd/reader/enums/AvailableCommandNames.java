@@ -30,7 +30,7 @@ public enum AvailableCommandNames {
     TIMING_ADVANCE("Timing Advance"),
     DTC_NUMBER("Diagnostic Trouble Codes"),
     DISTANCE_TRAVELED_AFTER_CODES_CLEARED("Distance since codes cleared"),
-    CONTROL_MODULE_VOLTAGE("Control Module Power Supply "),
+    CONTROL_MODULE_VOLTAGE("Control Module Power Supply"),
     FUEL_RAIL_PRESSURE("Fuel Rail Pressure"),
     FUEL_RAIL_PRESSURE_manifold("Fuel Rail Pressure relative to manifold vacuum"),
     VIN("Vehicle Identification Number (VIN)"),

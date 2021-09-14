@@ -10,11 +10,8 @@ import java.util.Map;
  */
 public enum OxygenSensorTrim {
     SHORT_A_BANK1_B_BANK3("55", "Short term secondary oxygen sensor trim, A: bank 1, B: bank 3"),
-
     LONG_A_BANK1_B_BANK3("56", "Long term secondary oxygen sensor trim, A: bank 1, B: bank 3"),
-
     SHORT_A_BANK2_B_BANK4("57", "Short term secondary oxygen sensor trim, A: bank 2, B: bank 4"),
-
     LONG_A_BANK2_B_BANK4("58", "Long term secondary oxygen sensor trim, A: bank 2, B: bank 4");
 
     /**

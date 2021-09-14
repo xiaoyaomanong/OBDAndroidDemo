@@ -197,6 +197,69 @@ public class ObdConfiguration {
         mObdCommands.add(new ModifiedPendingTroubleCodesCommand());//"07" 未解决故障码
     }
 
+
+    public static ArrayList<ObdCommand> getObdCommandsModeTwo(ModeTrim modeTrim) {
+        if (mObdCommands == null)
+            getDefaultObdCommandModeTwo(modeTrim);
+        return mObdCommands;
+    }
+
+    private static void getDefaultObdCommandModeTwo(ModeTrim modeTrim) {
+        mObdCommands = new ArrayList<>();
+        mObdCommands.add(new DtcNumberCommand(modeTrim.build()));//"01 01" DTC情况指示
+        mObdCommands.add(new LoadCommand(modeTrim.build()));//"01 04" 发动机负荷
+        mObdCommands.add(new EngineCoolantTemperatureCommand(modeTrim.build()));//"01 05"//发动机冷媒温度
+        mObdCommands.add(new FuelTrimCommand(modeTrim.build(), FuelTrim.LONG_TERM_BANK_1));//燃油调节命令 长期燃油调节库1
+        mObdCommands.add(new FuelTrimCommand(modeTrim.build(), FuelTrim.LONG_TERM_BANK_2));//燃油调节命令  长期燃油调节库2
+        mObdCommands.add(new FuelTrimCommand(modeTrim.build(), FuelTrim.SHORT_TERM_BANK_1));//燃油调节命令 短期燃油调节库1
+        mObdCommands.add(new FuelTrimCommand(modeTrim.build(), FuelTrim.SHORT_TERM_BANK_2));//燃油调节命令  短期燃油调节库2
+        mObdCommands.add(new FuelPressureCommand(modeTrim.build()));//"01 0A" 油压
+        mObdCommands.add(new IntakeManifoldPressureCommand(modeTrim.build()));//"01 0B" 邮箱压力绝对值
+        mObdCommands.add(new RPMCommand(modeTrim.build()));//"01 0C" 发动机转速
+        mObdCommands.add(new SpeedCommand(modeTrim.build()));//"01 0D" 车辆速度
+        mObdCommands.add(new AirIntakeTemperatureCommand(modeTrim.build()));//"01 0F" 邮箱空气温度
+        mObdCommands.add(new MassAirFlowCommand(modeTrim.build()));//"01 10" MAF空气流量速率
+        mObdCommands.add(new ThrottlePositionCommand(modeTrim.build()));//"01 11"节气门位置
+
+        mObdCommands.add(new DistanceMILOnCommand(modeTrim.build()));//"01 21" 故障指示灯（MIL）亮时行驶的距离
+        mObdCommands.add(new FuelRailPressureManifoldVacuumCommand(modeTrim.build()));//"01 22" 油轨压力（相对进气歧管真空度）
+        mObdCommands.add(new FuelRailPressureCommand(modeTrim.build()));//"01 23" 油轨压力（柴油或汽油直喷）
+        mObdCommands.add(new FuelLevelCommand(modeTrim.build()));//"01 2F" 油量液位情况
+        mObdCommands.add(new SystemVaporPressureCommand(modeTrim.build()));//"01 32" 系统蒸汽压力
+        mObdCommands.add(new BarometricPressureCommand(modeTrim.build()));//"01 33" 绝对大气压
+        mObdCommands.add(new WidebandAirFuelRatioOneCommand(modeTrim.build()));//"01 34" 氧气侦测器1 燃油-空气当量比 电流
+        mObdCommands.add(new WidebandAirFuelRatioTwoCommand(modeTrim.build()));//"01 35" 氧气侦测器2 燃油-空气当量比 电流
+        mObdCommands.add(new WidebandAirFuelRatioThreeCommand(modeTrim.build()));//"01 36" 氧气侦测器3 燃油-空气当量比 电流
+        mObdCommands.add(new WidebandAirFuelRatioFourCommand(modeTrim.build()));//"01 37" 氧气侦测器4 燃油-空气当量比 电流
+        mObdCommands.add(new WidebandAirFuelRatioFiveCommand(modeTrim.build()));//"01 38" 氧气侦测器5 燃油-空气当量比 电流
+        mObdCommands.add(new WidebandAirFuelRatioSixCommand(modeTrim.build()));//"01 39" 氧气侦测器6 燃油-空气当量比 电流
+        mObdCommands.add(new WidebandAirFuelRatioSevenCommand(modeTrim.build()));//"01 3A" 氧气侦测器7 燃油-空气当量比 电流
+        mObdCommands.add(new WidebandAirFuelRatioEightCommand(modeTrim.build()));//"01 3B" 氧气侦测器8 燃油-空气当量比 电流
+        mObdCommands.add(new CatalystTemperatureCommand(modeTrim.build(), CatalystTrim.Catalyst_Temperature_Bank_1_Sensor_1));//"01 3C" 催化剂温度:Bank1,感测器1
+        mObdCommands.add(new CatalystTemperatureCommand(modeTrim.build(), CatalystTrim.Catalyst_Temperature_Bank_2_Sensor_1));//"01 3D" 催化剂温度:Bank2,感测器1
+        mObdCommands.add(new CatalystTemperatureCommand(modeTrim.build(), CatalystTrim.Catalyst_Temperature_Bank_1_Sensor_2));//"01 3E" 催化剂温度:Bank1,感测器2
+        mObdCommands.add(new CatalystTemperatureCommand(modeTrim.build(), CatalystTrim.Catalyst_Temperature_Bank_2_Sensor_2));//"01 3F" 催化剂温度:Bank2,感测器2
+
+        mObdCommands.add(new ModuleVoltageCommand(modeTrim.build()));//"01 42" 模块控制组电压
+        mObdCommands.add(new AbsoluteLoadCommand(modeTrim.build()));//"01 43" 绝对载荷
+        mObdCommands.add(new RelativeThrottlePositionCommand(modeTrim.build()));//"01 45" 相对节气门位置
+        mObdCommands.add(new AmbientAirTemperatureCommand(modeTrim.build()));//"01 46" 环境空气温度
+        mObdCommands.add(new AbsoluteThrottlePositionCommand(modeTrim.build(), AbsThrottlePosTrim.ABS_THROTTLE_POS_B));//"01 47" 绝对油门位置B
+        mObdCommands.add(new AbsoluteThrottlePositionCommand(modeTrim.build(), AbsThrottlePosTrim.ABS_THROTTLE_POS_C));//"01 48" 绝对油门位置C
+        mObdCommands.add(new AcceleratorPedalPositionCommand(modeTrim.build(), AbsThrottlePosTrim.ACC_PEDAL_POS_D));//"01 49" 加速踏板位置D
+        mObdCommands.add(new AcceleratorPedalPositionCommand(modeTrim.build(), AbsThrottlePosTrim.ACC_PEDAL_POS_E));//"01 4A" 加速踏板位置E
+        mObdCommands.add(new AcceleratorPedalPositionCommand(modeTrim.build(), AbsThrottlePosTrim.ACC_PEDAL_POS_F));//"01 4B" 加速踏板位置F
+        mObdCommands.add(new AcceleratorPedalPositionCommand(modeTrim.build(), AbsThrottlePosTrim.THROTTLE_ACTUATOR));//"01 4C" 油门执行器控制值
+        mObdCommands.add(new TimeRunMILONCommand(modeTrim.build()));//"01 4D"MIL灯亮的行驶时间
+        mObdCommands.add(new OxygenSensorTrimCommand(modeTrim.build(), OxygenSensorTrim.SHORT_A_BANK1_B_BANK3));//"01 55"第二侧氧气侦测器短期修正，A：bank 1, B：bank 3
+        mObdCommands.add(new OxygenSensorTrimCommand(modeTrim.build(), OxygenSensorTrim.LONG_A_BANK1_B_BANK3));//"01 56" 第二侧氧气侦测器长期修正，A：bank 1, B：bank 3
+        mObdCommands.add(new OxygenSensorTrimCommand(modeTrim.build(), OxygenSensorTrim.SHORT_A_BANK2_B_BANK4));//"01 57" 第二侧氧气侦测器短期修正，A：bank 2, B：bank 4
+        mObdCommands.add(new OxygenSensorTrimCommand(modeTrim.build(), OxygenSensorTrim.LONG_A_BANK2_B_BANK4));//"01 58" 第二侧氧气侦测器长期修正，A：bank 2, B：bank 4
+        mObdCommands.add(new OilTempCommand(modeTrim.build()));//"01 5C"发动机油温
+    }
+
+
+
     public static class ModifiedTroubleCodesObdCommand extends TroubleCodesCommand {
         @Override
         public String getResult() {

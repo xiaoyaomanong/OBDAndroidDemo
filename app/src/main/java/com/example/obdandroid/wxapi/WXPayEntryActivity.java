@@ -73,18 +73,19 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
 
     @Override
     public void onResp(BaseResp resp) {
+        //支付状态 1 已下单 2 待支付 3 已支付 4已发货 5 已完成 6 已取消
         switch (resp.errCode) {
             case 0:
                 tvContent.setText("支付成功");
-                rechargeStatus = "1";
+                rechargeStatus = "3";
                 break;
             case -1:
                 tvContent.setText("支付失败");
-                rechargeStatus = "2";
+                rechargeStatus = "-1";
                 break;
             case -2:
                 tvContent.setText("用户取消支付");
-                rechargeStatus = "3";
+                rechargeStatus = "6";
                 break;
         }
     }

@@ -91,10 +91,7 @@ public class AddAddressActivity extends BaseActivity {
             Manifest.permission.INTERNET,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.READ_CONTACTS,
-            Manifest.permission.ACCESS_WIFI_STATE,
     };
 
     @Override
@@ -158,7 +155,7 @@ public class AddAddressActivity extends BaseActivity {
                 return;
             }
             String detailsAddress = tvSelectArea.getText().toString() + " " + tvDetailsAddress.getText().toString();
-            addAppUserAddress(getToken(), getUserId(), tvPhone.getText().toString(), tvName.getText().toString(), detailsAddress, idCbSelectDefault.isChecked());
+            addAppUserAddress(getToken(), getUserId(), tvPhone.getText().toString(), tvName.getText().toString(), detailsAddress, false);
         });
 
         ivLocation.setOnClickListener(v -> {

@@ -263,7 +263,8 @@
     <string name="dash_one">车辆仪表</string>
     <string name="dash_two">燃油仪表</string>
     <string name="tip"><![CDATA[</>]]></string>
-    <string name="other">检测数据</string>
+    <string name="other">检测数据(动力系统当前数据)</string>
+    <string name="other_two">检测数据(动力总成的冻结帧数据)</string>
     <string name="RelThottlePos">节气门位置</string>
     <string name="dtc">DTC</string>
     <string name="abs">ABS</string>

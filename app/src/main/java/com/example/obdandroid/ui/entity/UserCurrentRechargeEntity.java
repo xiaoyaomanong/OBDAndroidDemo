@@ -1,7 +1,5 @@
 package com.example.obdandroid.ui.entity;
 
-import java.util.List;
-
 /**
  * 作者：Jealous
  * 日期：2021/5/8 0008
@@ -9,12 +7,6 @@ import java.util.List;
  */
 public class UserCurrentRechargeEntity {
 
-    /**
-     * success : true
-     * code : SUCCESS
-     * message : 操作成功
-     * data : {"rechargeSetMeaName":null,"rechargeTime":"2021-05-08T02:09:14.000+0000","rechargeStatusName":null,"rechargetAmount":0.01,"paymentChannelsName":null}
-     */
 
     private boolean success;
     private String code;
@@ -54,73 +46,19 @@ public class UserCurrentRechargeEntity {
     }
 
     public static class DataEntity {
-        /**
-         * rechargeSetMeaName : null
-         * rechargeTime : 2021-05-08T02:09:14.000+0000
-         * rechargeStatusName : null
-         * rechargetAmount : 0.01
-         * paymentChannelsName : null
-         */
-
         private String rechargeSetMeaName;
         private String rechargeTime;
         private String rechargeStatusName;
         private double rechargetAmount;
         private String paymentChannelsName;
-        private String address ;// 地址
-        private String  contacts; // 联系人
-        private String courierNumber; // 快递单号
-        private String expressName; // 快递名称
-        private String telephone ;// 电话
+        private String contacts;
+        private String telephone;
+        private String address;
+        private String expressName;
+        private String courierNumber;
         private int commodityType;//商品类型1 实物 2 虚拟
-
-        public int getCommodityType() {
-            return commodityType;
-        }
-
-        public void setCommodityType(int commodityType) {
-            this.commodityType = commodityType;
-        }
-
-        public String getAddress() {
-            return address;
-        }
-
-        public void setAddress(String address) {
-            this.address = address;
-        }
-
-        public String getContacts() {
-            return contacts;
-        }
-
-        public void setContacts(String contacts) {
-            this.contacts = contacts;
-        }
-
-        public String getCourierNumber() {
-            return courierNumber;
-        }
-
-        public void setCourierNumber(String courierNumber) {
-            this.courierNumber = courierNumber;
-        }
-
-        public String getExpressName() {
-            return expressName;
-        }
-
-        public void setExpressName(String expressName) {
-            this.expressName = expressName;
-        }
-
-        public String getTelephone() {
-            return telephone;
-        }
-
-        public void setTelephone(String telephone) {
-            this.telephone = telephone;
-        }
+        private long pid;
+        private String rechargeRecordVo;
 
         public String getRechargeSetMeaName() {
             return rechargeSetMeaName;
@@ -160,6 +98,70 @@ public class UserCurrentRechargeEntity {
 
         public void setPaymentChannelsName(String paymentChannelsName) {
             this.paymentChannelsName = paymentChannelsName;
+        }
+
+        public String getContacts() {
+            return contacts;
+        }
+
+        public void setContacts(String contacts) {
+            this.contacts = contacts;
+        }
+
+        public String getTelephone() {
+            return telephone;
+        }
+
+        public void setTelephone(String telephone) {
+            this.telephone = telephone;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public String getExpressName() {
+            return expressName;
+        }
+
+        public void setExpressName(String expressName) {
+            this.expressName = expressName;
+        }
+
+        public String getCourierNumber() {
+            return courierNumber;
+        }
+
+        public void setCourierNumber(String courierNumber) {
+            this.courierNumber = courierNumber;
+        }
+
+        public int getCommodityType() {
+            return commodityType;
+        }
+
+        public void setCommodityType(int commodityType) {
+            this.commodityType = commodityType;
+        }
+
+        public long getPid() {
+            return pid;
+        }
+
+        public void setPid(long pid) {
+            this.pid = pid;
+        }
+
+        public String getRechargeRecordVo() {
+            return rechargeRecordVo;
+        }
+
+        public void setRechargeRecordVo(String rechargeRecordVo) {
+            this.rechargeRecordVo = rechargeRecordVo;
         }
     }
 }

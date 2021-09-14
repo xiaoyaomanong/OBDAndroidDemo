@@ -472,9 +472,9 @@ public class HomeFragment extends BaseFragment {
             public void onResponse(String response, int id) {
                 UserInfoEntity entity = JSON.parseObject(response, UserInfoEntity.class);
                 if (entity.isSuccess()) {
+                    dialogUtils.dismiss();
                     isVip = entity.getData().getIsVip() == 1;
                     if (entity.getData().isTheDeviceBound()) {
-                        dialogUtils.dismiss();
                         sendMessage(HANDLE_MSG_THREE, vehicleId);
                     } else {
                         sendMessage(HANDLE_MSG_FOUR, "");

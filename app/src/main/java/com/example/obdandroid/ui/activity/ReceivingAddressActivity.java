@@ -49,6 +49,7 @@ public class ReceivingAddressActivity extends BaseActivity {
     private Context context;
     private ReceivingAddressAdapter adapter;
     private DialogUtils dialogUtils;
+    private boolean isSelect = false;
 
     @Override
     protected int getContentViewId() {
@@ -64,6 +65,7 @@ public class ReceivingAddressActivity extends BaseActivity {
     public void initView() {
         super.initView();
         context = this;
+        isSelect = getIntent().getBooleanExtra("isSelect", false);
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         TextView tvAddAddress = findViewById(R.id.tvAddAddress);
         recycleAddress = findViewById(R.id.recycleAddress);
@@ -165,6 +167,10 @@ public class ReceivingAddressActivity extends BaseActivity {
                             new CustomeDialog(context, entity.getMessage(), confirm -> {
                                 if (confirm) {
                                     getAppUserAddressList(getToken(), getUserId());
+                                    if (isSelect) {
+                                        setResult(100, new Intent());
+                                        finish();
+                                    }
                                 }
                             }).setTitle("提示").setPositiveButton("知道了").show();
                         }

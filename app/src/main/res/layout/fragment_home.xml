@@ -68,7 +68,7 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:src="@drawable/icon_next"
-                        android:tint="@color/gray"
+                        android:tint="@color/white"
                         tools:ignore="ContentDescription" />
                 </LinearLayout>
 
@@ -143,7 +143,7 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:src="@drawable/icon_next"
-                    android:tint="@color/gray"
+                    android:tint="@color/white"
                     tools:ignore="ContentDescription" />
 
             </LinearLayout>
@@ -188,7 +188,7 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:src="@drawable/icon_next"
-                    android:tint="@color/gray"
+                    android:tint="@color/white"
                     tools:ignore="ContentDescription" />
 
             </LinearLayout>
@@ -238,7 +238,7 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:src="@drawable/icon_next"
-                    android:tint="@color/gray"
+                    android:tint="@color/white"
                     tools:ignore="ContentDescription" />
 
             </LinearLayout>
@@ -276,15 +276,6 @@
                         android:textSize="16sp"
                         tools:ignore="RtlSymmetry" />
 
-                    <Chronometer
-                        android:id="@+id/time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/sp_12"
-                        android:visibility="gone" />
-
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="40dp"
@@ -301,7 +292,7 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:src="@drawable/icon_next"
-                        android:tint="@color/gray"
+                        android:tint="@color/white"
                         tools:ignore="ContentDescription" />
                 </LinearLayout>
 
@@ -343,10 +334,9 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:src="@drawable/icon_next"
-                        android:tint="@color/gray"
+                        android:tint="@color/white"
                         tools:ignore="ContentDescription" />
                 </LinearLayout>
-
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycleContent"

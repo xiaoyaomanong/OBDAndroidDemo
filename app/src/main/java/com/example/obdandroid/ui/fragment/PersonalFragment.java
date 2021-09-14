@@ -39,6 +39,7 @@ import com.example.obdandroid.ui.view.CircleImageView;
 import com.example.obdandroid.ui.view.IosDialog;
 import com.example.obdandroid.utils.ActivityManager;
 import com.example.obdandroid.utils.BitMapUtils;
+import com.example.obdandroid.utils.DialogUtils;
 import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.example.obdandroid.utils.StringUtil;
@@ -77,6 +78,7 @@ public class PersonalFragment extends BaseFragment {
     private TestReceiver testReceiver;
     private ImageView ivVip;
     private SwipeRefreshLayout refresh;
+    private DialogUtils dialogUtils;
 
     public static PersonalFragment getInstance() {
         return new PersonalFragment();
@@ -112,12 +114,13 @@ public class PersonalFragment extends BaseFragment {
         refresh = getView(R.id.refresh);
         ivVip = getView(R.id.ivVip);
         spUtil = new SPUtil(context);
+        dialogUtils=new DialogUtils(context);
         String vehicleId = spUtil.getString(VEHICLE_ID, "");
         initReceiver();
         getUserInfo(getUserId(), getToken());
         getTheUserCurrentRecharge(getUserId(), getToken());
         if (!TextUtils.isEmpty(vehicleId)) {
-            getVehicleInfoById(getToken(), vehicleId);
+            getVehicleInfoById(getToken(), vehicleId,String.valueOf(0));
         } else {
             layoutCar.setVisibility(View.GONE);
         }
@@ -184,12 +187,13 @@ public class PersonalFragment extends BaseFragment {
                 UserCurrentRechargeEntity entity = JSON.parseObject(response, UserCurrentRechargeEntity.class);
                 if (entity.isSuccess()) {
                     if (entity.getCode().equals("SUCCESS")) {
+                        ////商品类型1 实物 2 虚拟
                         tvRechargeSetMeaName.setText(entity.getData().getRechargeSetMeaName());
                     } else {
                         tvRechargeSetMeaName.setText(R.string.RechargeSetMeaName_no);
                     }
                 } else {
-                    tvRechargeSetMeaName.setText(entity.getMessage());
+                    tvRechargeSetMeaName.setText(R.string.RechargeSetMeaName_no);
                 }
             }
         });
@@ -240,7 +244,10 @@ public class PersonalFragment extends BaseFragment {
      * @param vehicleId 车辆ID
      *                  获取用户车辆详情
      */
-    private void getVehicleInfoById(String token, String vehicleId) {
+    private void getVehicleInfoById(String token, String vehicleId,String type) {
+        if (type.equals("1")){
+            dialogUtils.showProgressDialog();
+        }
         OkHttpUtils.get().url(SERVER_URL + getVehicleInfoById_URL).
                 addParam("token", token).
                 addParam("vehicleId", vehicleId).
@@ -255,6 +262,7 @@ public class PersonalFragment extends BaseFragment {
             public void onResponse(String response, int id) {
                 VehicleInfoEntity entity = JSON.parseObject(response, VehicleInfoEntity.class);
                 if (entity.isSuccess()) {
+                    dialogUtils.dismiss();
                     layoutCar.setVisibility(View.VISIBLE);
                     layoutCar.setOnClickListener(v -> JumpUtil.startActToData(context, VehicleInfoActivity.class, vehicleId, 0));
                     tvAutomobileBrandName.setText(entity.getData().getAutomobileBrandName());
@@ -273,6 +281,8 @@ public class PersonalFragment extends BaseFragment {
                         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                         tvOBDState.setCompoundDrawables(drawable, null, null, null);
                     }
+                }else {
+                    dialogUtils.dismiss();
                 }
             }
         });
@@ -291,7 +301,8 @@ public class PersonalFragment extends BaseFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String vehicleId = intent.getStringExtra(VEHICLE_ID);
-            getVehicleInfoById(getToken(), vehicleId);
+            String type = intent.getStringExtra("type");
+            getVehicleInfoById(getToken(), vehicleId,type);
         }
     }
 

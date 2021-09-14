@@ -192,7 +192,7 @@ public class VehicleCheckActivity extends BaseActivity {
                 btStart.setEnabled(false);
                 layoutCar.setVisibility(View.VISIBLE);
                 layoutLook.setVisibility(View.GONE);
-                new Thread(() -> executeCommand(MainApplication.getBluetoothSocket())).start();
+                new Thread(() -> executeCommand(MainApplication.getBluetoothSocket(),ModeTrim.MODE_01)).start();
             } else {
                 showTipDialog(getString(R.string.pleaseConn), TipDialog.TYPE_WARNING);
             }
@@ -235,19 +235,19 @@ public class VehicleCheckActivity extends BaseActivity {
                 });
     }
 
-    private void executeCommand(BluetoothSocket socket) {
+    private void executeCommand(BluetoothSocket socket,ModeTrim modeTrim) {
         tripRecord.getTripMap().clear();
-        ArrayList<ObdCommand> commands = ObdConfiguration.getObdCommands(ModeTrim.MODE_01);
+        ArrayList<ObdCommand> commands = ObdConfiguration.getObdCommands(modeTrim);
         size = commands.size();
         for (int i = 0; i < commands.size(); i++) {
             ObdCommand command = commands.get(i);
             try {
                 command.run(socket.getInputStream(), socket.getOutputStream());
+                tripRecord.updateTrip(command.getName(), command);
                 Message msg = new Message();
                 msg.what = COMPLETEO;
                 msg.obj = (double) (i + 1);
                 handler.sendMessage(msg);
-                tripRecord.updateTrip(command.getName(), command);
             } catch (Exception e) {
                 LogE(e.getMessage());
             }
@@ -257,35 +257,6 @@ public class VehicleCheckActivity extends BaseActivity {
         handler.sendMessage(msg);
     }
 
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void initConfig() {
-        File saveSpacePath = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/ODBCar/OBDLog/");
-        localErrorSave = new File(saveSpacePath, "OBDError.txt");
-        if (!saveSpacePath.exists()) {
-            saveSpacePath.mkdirs();
-        }
-        if (!localErrorSave.exists()) {
-            try {
-                localErrorSave.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void writeErrorToLocal(String msg) {
-        try {
-            BufferedWriter fos = new BufferedWriter(new FileWriter(localErrorSave, true));
-            fos.write("\n" + msg);
-            fos.close();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-    }
-
-
     /**
      * 清除故障码
      */
@@ -293,7 +264,7 @@ public class VehicleCheckActivity extends BaseActivity {
         try {
             new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
             ResetTroubleCodesCommand clear = new ResetTroubleCodesCommand();
-            clear.run(MainApplication.getBluetoothSocket().getInputStream(), MainApplication.getBluetoothSocket().getOutputStream());
+            clear.run(socket.getInputStream(), socket.getOutputStream());
             String result = clear.getFormattedResult();
             LogE("重置结果: " + result);
             if (!TextUtils.isEmpty(result)) {

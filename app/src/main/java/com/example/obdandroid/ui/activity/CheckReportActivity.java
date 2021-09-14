@@ -1,8 +1,10 @@
 package com.example.obdandroid.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -14,6 +16,9 @@ import com.example.obdandroid.utils.AppDateUtils;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.example.obdandroid.config.CheckRecord;
+import com.sohrab.obd.reader.enums.ModeTrim;
+import com.sohrab.obd.reader.obdCommand.ObdCommand;
+import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 
 import java.util.ArrayList;
@@ -66,6 +71,26 @@ public class CheckReportActivity extends BaseActivity {
     private TextView tvShortTermBank2;
     private TextView tvLongTermBank1;
     private TextView tvLongTermBank2;
+
+    private TextView tvSpeedTwo;
+    private TextView tvEngineRpmTwo;
+    private TextView tvMassAirFlowTwo;
+    private TextView tvEngineRuntimeTwo;
+    private TextView tvFuelLevelTwo;
+    private TextView tvIntakePressureTwo;
+    private TextView tvIntakeAirTempTwo;
+    private TextView tvAmbientAirTempTwo;
+    private TextView tvEngineCoolantTempTwo;
+    private TextView tvEngineOilTempTwo;
+    private TextView tvFuelConsumptionRateTwo;
+    private TextView tvFuelPressureTwo;
+    private TextView tvEngineLoadTwo;
+    private TextView tvBarometricPressureTwo;
+    private TextView tvRelThottlePosTwo;
+    private TextView tvDistanceTraveledAfterCodesClearedTwo;
+    private TextView tvControlModuleVoltageTwo;
+    private TextView tvFuelRailPressureTwo;
+
     private Context context;
     private final ArrayList<String> dynamicSystemList = new ArrayList<>();
     private final ArrayList<String> bodyList = new ArrayList<>();
@@ -76,11 +101,11 @@ public class CheckReportActivity extends BaseActivity {
     private final ArrayList<String> chassisNOList = new ArrayList<>();
     private final ArrayList<String> netWorkNOList = new ArrayList<>();
     private String detectionTime;
-
+    private CheckRecord record;
 
     @Override
     protected int getContentViewId() {
-        return R.layout.activity_check_report;
+        return R.layout.activity_check_report_mode;
     }
 
     @Override
@@ -137,6 +162,25 @@ public class CheckReportActivity extends BaseActivity {
         tvShortTermBank2 = findViewById(R.id.tvShortTermBank2);
         tvLongTermBank1 = findViewById(R.id.tvLongTermBank1);
         tvLongTermBank2 = findViewById(R.id.tvLongTermBank2);
+
+        tvSpeedTwo = findViewById(R.id.tvSpeedTwo);
+        tvEngineRpmTwo = findViewById(R.id.tvEngineRpmTwo);
+        tvMassAirFlowTwo = findViewById(R.id.tvMassAirFlowTwo);
+        tvEngineRuntimeTwo = findViewById(R.id.tvEngineRuntimeTwo);
+        tvFuelLevelTwo = findViewById(R.id.tvFuelLevelTwo);
+        tvIntakePressureTwo = findViewById(R.id.tvIntakePressureTwo);
+        tvIntakeAirTempTwo = findViewById(R.id.tvIntakeAirTempTwo);
+        tvAmbientAirTempTwo = findViewById(R.id.tvAmbientAirTempTwo);
+        tvEngineCoolantTempTwo = findViewById(R.id.tvEngineCoolantTempTwo);
+        tvEngineOilTempTwo = findViewById(R.id.tvEngineOilTempTwo);
+        tvFuelConsumptionRateTwo = findViewById(R.id.tvFuelConsumptionRateTwo);
+        tvFuelPressureTwo = findViewById(R.id.tvFuelPressureTwo);
+        tvEngineLoadTwo = findViewById(R.id.tvEngineLoadTwo);
+        tvBarometricPressureTwo = findViewById(R.id.tvBarometricPressureTwo);
+        tvRelThottlePosTwo = findViewById(R.id.tvRelThottlePosTwo);
+        tvDistanceTraveledAfterCodesClearedTwo = findViewById(R.id.tvDistanceTraveledAfterCodesClearedTwo);
+        tvControlModuleVoltageTwo = findViewById(R.id.tvControlModuleVoltageTwo);
+        tvFuelRailPressureTwo = findViewById(R.id.tvFuelRailPressureTwo);
         setView(tripRecord);
         titleBar.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -155,6 +199,28 @@ public class CheckReportActivity extends BaseActivity {
             }
         });
     }
+
+   /* private void executeCommand(BluetoothSocket socket, ModeTrim modeTrim) {
+        tripRecord.getTripMap().clear();
+        ArrayList<ObdCommand> commands = ObdConfiguration.getObdCommands(modeTrim);
+        size = commands.size();
+        for (int i = 0; i < commands.size(); i++) {
+            ObdCommand command = commands.get(i);
+            try {
+                command.run(socket.getInputStream(), socket.getOutputStream());
+                tripRecord.updateTrip(command.getName(), command);
+                Message msg = new Message();
+                msg.what = COMPLETEO;
+                msg.obj = (double) (i + 1);
+                handler.sendMessage(msg);
+            } catch (Exception e) {
+                LogE(e.getMessage());
+            }
+        }
+        Message msg = new Message();
+        msg.what = COMPLETED;
+        handler.sendMessage(msg);
+    }*/
 
     @SuppressLint("SetTextI18n")
     private void setView(CheckRecord tripRecord) {
@@ -352,5 +418,9 @@ public class CheckReportActivity extends BaseActivity {
         tvShortTermBank2.setText(entity.getShortTermBank2());
         tvLongTermBank1.setText(entity.getLongTermBank1());
         tvLongTermBank2.setText(entity.getLongTermBank2());
+    }
+
+    private void setModeTwo(){
+
     }
 }

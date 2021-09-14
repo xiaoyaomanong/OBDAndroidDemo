@@ -18,9 +18,9 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:fillViewport="true">
+        android:focusableInTouchMode="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -159,12 +159,13 @@
                     android:scrollbars="none">
 
                 </android.support.v7.widget.RecyclerView>
+
                 <TextView
                     android:id="@+id/tvOBDState"
                     android:layout_width="match_parent"
                     android:layout_height="130dp"
-                    android:layout_gravity="center"
                     android:layout_centerInParent="true"
+                    android:layout_gravity="center"
                     android:drawableTop="@drawable/icon_no_money"
                     android:gravity="center"
                     android:textColor="@color/white"

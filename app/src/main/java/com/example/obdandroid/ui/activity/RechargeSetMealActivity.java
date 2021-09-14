@@ -8,9 +8,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alipay.sdk.app.PayTask;
@@ -50,7 +53,6 @@ import okhttp3.Response;
 import static com.example.obdandroid.config.APIConfig.CHARGE_URL;
 import static com.example.obdandroid.config.APIConfig.SERVER_URL;
 import static com.example.obdandroid.config.APIConfig.addRechargeRecordCheck_URL;
-import static com.example.obdandroid.config.APIConfig.deleteAppUserAddress_URL;
 import static com.example.obdandroid.config.APIConfig.getDefault_URL;
 import static com.example.obdandroid.config.APIConfig.placeAnOrder_URL;
 import static com.example.obdandroid.config.APIConfig.updateRechargeRecord_URL;
@@ -77,6 +79,10 @@ import static com.example.obdandroid.ui.wechatPay.WeiXinConstants.PAY_MONEY;
  */
 public class RechargeSetMealActivity extends BaseActivity {
     private Context context;
+    private LinearLayout layoutAddress;
+    private TextView tvName;
+    private TextView tvPhone;
+    private TextView tvAddress;
     private PullLoadMoreRecyclerView recycleMeal;
     private int pageNum = 1;
     private final int pageSize = 10;
@@ -84,12 +90,12 @@ public class RechargeSetMealActivity extends BaseActivity {
     private RechargeSetMealAdapter adapter;
     private final List<ChargeMealEntity.DataEntity.ListEntity> datas = new ArrayList<>();
     private CircularProgressButton btnBuy;
-    private String rechargeSetMealSettingsId = "";
+    private String rechargeId = "";
     private String rechargeAmount = "0";
     private String order_no = "";
     private int CommodityType;
     private IWXAPI wxApi;
-    private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
+    private LocalBroadcastManager broadcastManager; //创建本地广播管理器类变量
     private SPUtil spUtil;
     private static final int SDK_PAY_FLAG = 1;
     private String vehicleId;
@@ -108,7 +114,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                         new CustomeDialog(context, getString(R.string.PAY_SUCCESS), confirm -> {
                             if (confirm) {
                                 btnBuy.setProgress(100);
-                                updateRechargeRecord(entity.getAlipay_trade_app_pay_response().getOut_trade_no(), "1", getToken());
+                                updateRechargeRecord(entity.getAlipay_trade_app_pay_response().getOut_trade_no(), "3", getToken());
                             }
                         }).setTitle("支付结果").setPositiveButton("知道了").show();
                         break;
@@ -132,18 +138,14 @@ public class RechargeSetMealActivity extends BaseActivity {
                         new CustomeDialog(context, getString(R.string.ALI_RESULT_6001), confirm -> {
                             if (confirm) {
                                 btnBuy.setProgress(-1);
-                                updateRechargeRecord(order_no, "3", getToken());
+                                updateRechargeRecord(order_no, "6", getToken());
                             }
                         }).setTitle("支付结果").setPositiveButton("知道了").show();
                         break;
                     case ALI_RESULT_4000:
                     default:
-                        new CustomeDialog(context, getString(R.string.ALI_RESULT_4000), confirm -> {
-                            if (confirm) {
-                                btnBuy.setProgress(-1);
-                                updateRechargeRecord(order_no, "2", getToken());
-                            }
-                        }).setTitle("支付结果").setPositiveButton("知道了").show();
+                        btnBuy.setProgress(-1);
+                        showTipsDialog(getString(R.string.ALI_RESULT_4000), TipDialog.TYPE_WARNING);
                         break;
                 }
             }
@@ -165,12 +167,16 @@ public class RechargeSetMealActivity extends BaseActivity {
         super.initView();
         context = this;
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
+        layoutAddress = findViewById(R.id.layoutAddress);
+        tvAddress = findViewById(R.id.tvAddress);
+        tvPhone = findViewById(R.id.tvPhone);
+        tvName = findViewById(R.id.tvName);
         recycleMeal = findViewById(R.id.recycle_meal);
         btnBuy = findViewById(R.id.btnBuy);
         wxApi = WXAPIFactory.createWXAPI(context, WeiXinConstants.APP_ID);
         spUtil = new SPUtil(context);
         vehicleId = spUtil.getString(VEHICLE_ID, "");
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(context);//广播变量管理器获
+        broadcastManager = LocalBroadcastManager.getInstance(context);//广播变量管理器获
         recycleMeal.setLinearLayout();
         //设置是否可以下拉刷新
         recycleMeal.setPullRefreshEnable(true);
@@ -204,13 +210,23 @@ public class RechargeSetMealActivity extends BaseActivity {
             }
         });
         adapter.setClickCallBack(entity -> {
-            rechargeSetMealSettingsId = String.valueOf(entity.getRechargeSetMealSettingsId());
+            rechargeId = String.valueOf(entity.getRechargeSetMealSettingsId());
             rechargeAmount = String.valueOf(entity.getRechargeSetMeaAmount());
             CommodityType = entity.getCommodityType();
+            if (CommodityType == 1) {
+                getDefault(getToken(), getUserId());
+            } else {
+                layoutAddress.setVisibility(View.GONE);
+            }
+        });
+        layoutAddress.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ReceivingAddressActivity.class);
+            intent.putExtra("isSelect", true);
+            startActivityForResult(intent, 101);
         });
         btnBuy.setIndeterminateProgressMode(true);
         btnBuy.setOnClickListener(v -> {
-            if (TextUtils.isEmpty(rechargeSetMealSettingsId)) {
+            if (TextUtils.isEmpty(rechargeId)) {
                 showTipsDialog("请选择套餐类型", TipDialog.TYPE_ERROR);
                 return;
             }
@@ -220,17 +236,19 @@ public class RechargeSetMealActivity extends BaseActivity {
             }
             new PayChannelDialog(context, new PayChannelDialog.DialogClick() {
                 @Override
-                public void aliPay(AlertDialog exitDialog, String channel, String contacts, String telephone, String address, boolean confirm) {
+                public void aliPay(AlertDialog exitDialog, String channel, boolean confirm) {
                     if (confirm) {//2
-                        addRechargeRecordCheck(getToken(), getUserId(), rechargeAmount, rechargeSetMealSettingsId, channel, contacts, telephone, address);
+                        addRechargeRecordCheck(getToken(), getUserId(), rechargeAmount, rechargeId, channel,
+                                tvName.getText().toString(), tvPhone.getText().toString(), tvAddress.getText().toString());
                         exitDialog.dismiss();
                     }
                 }
 
                 @Override
-                public void weChat(AlertDialog exitDialog, String channel, String contacts, String telephone, String address, boolean confirm) {
+                public void weChat(AlertDialog exitDialog, String channel, boolean confirm) {
                     if (confirm) {//1
-                        addRechargeRecordCheck(getToken(), getUserId(), rechargeAmount, rechargeSetMealSettingsId, channel, contacts, telephone, address);
+                        addRechargeRecordCheck(getToken(), getUserId(), rechargeAmount, rechargeId, channel,
+                                tvName.getText().toString(), tvPhone.getText().toString(), tvAddress.getText().toString());
                         exitDialog.dismiss();
                     }
                 }
@@ -241,7 +259,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                         exitDialog.dismiss();
                     }
                 }
-            }).setMoney(rechargeAmount).setAppUserId(getUserId()).setToken(getToken()).setCommodityType(CommodityType).showDialog();
+            }).setMoney(rechargeAmount).showDialog();
 
         });
         initReceiver();
@@ -263,15 +281,49 @@ public class RechargeSetMealActivity extends BaseActivity {
         });
     }
 
-
     /**
      * 注册本地广播
      */
     private void initReceiver() {
         IntentFilter intentFilter = new IntentFilter(PAY_ACTION);
         PayResultReceiver receiver = new PayResultReceiver();
-        //绑定
-        mLocalBroadcastManager.registerReceiver(receiver, intentFilter);
+        broadcastManager.registerReceiver(receiver, intentFilter);
+    }
+
+    /**
+     * @param token     接口令牌
+     * @param appUserId 用户id
+     *                  获取默认地址
+     */
+    private void getDefault(String token, String appUserId) {
+        OkHttpUtils.get().url(SERVER_URL + getDefault_URL).
+                addParam("token", token).
+                addParam("appUserId", appUserId).
+                build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Response response, Exception e, int id) {
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                DefaultAddressEntity entity = JSON.parseObject(response, DefaultAddressEntity.class);
+                if (entity.isSuccess()) {
+                    layoutAddress.setVisibility(View.VISIBLE);
+                    tvName.setText(entity.getData().getContacts());
+                    tvAddress.setText(entity.getData().getAddress());
+                    tvPhone.setText(entity.getData().getTelephone());
+                }else {
+                    new CustomeDialog(context, "未设置收货地址，请添加新地址或选择已有地址！", confirm -> {
+                        if (confirm){
+                            Intent intent = new Intent(context, ReceivingAddressActivity.class);
+                            intent.putExtra("isSelect", true);
+                            startActivityForResult(intent, 101);
+                        }
+                    }).setTitle("添加收货地址").setPositiveButton("知道了").show();
+                }
+            }
+        });
     }
 
     /**
@@ -304,6 +356,7 @@ public class RechargeSetMealActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
+                LogE("APP用户购买套餐下单接口:"+response);
                 switch (paymentChannels) {
                     case Constant.WX_PAY_TYPE:
                         WxOrderEntity entity = JSON.parseObject(response, WxOrderEntity.class);
@@ -344,7 +397,7 @@ public class RechargeSetMealActivity extends BaseActivity {
         boolean result = wxApi.sendReq(req);
         if (result) {
             spUtil.put(PAY_MONEY, amount);
-            spUtil.put(MEAL_ID, rechargeSetMealSettingsId);
+            spUtil.put(MEAL_ID, rechargeId);
             spUtil.put(ORDER_NO, entity.getData().getOrder_no());
         }
     }
@@ -393,6 +446,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                     }
                     placeAnOrder(channel, getToken(), getUserId(), mealId, amount, contacts, telephone, address);
                 } else {
+                    btnBuy.setProgress(-1);
                     showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
                 }
             }
@@ -403,7 +457,7 @@ public class RechargeSetMealActivity extends BaseActivity {
 
     /**
      * @param orderNum 订单号
-     * @param payState 支付状态(0 待支付1 成功 2 失败 3 已取消)
+     * @param payState 支付状态 1 已下单 2 待支付 3 已支付 4已发货 5 已完成 6 已取消
      * @param token    用户Token
      *                 添加购买套餐记录
      */
@@ -427,7 +481,7 @@ public class RechargeSetMealActivity extends BaseActivity {
                     Intent intent = new Intent(OBD_ACTION);
                     intent.putExtra(VEHICLE_ID, vehicleId);
                     intent.putExtra("type", "1");
-                    mLocalBroadcastManager.sendBroadcast(intent);
+                    broadcastManager.sendBroadcast(intent);
                 } else {
                     showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
                 }
@@ -494,12 +548,30 @@ public class RechargeSetMealActivity extends BaseActivity {
         public void onReceive(Context context, Intent intent) {
             String payResult = intent.getStringExtra("payResult");
             String orderNo = intent.getStringExtra("orderNo");
-            if (payResult.equals("1")) {
-                btnBuy.setProgress(100);
-            } else {
-                btnBuy.setProgress(-1);
+            switch (payResult){
+                case "3":
+                    btnBuy.setProgress(100);
+                    updateRechargeRecord(orderNo, payResult, getToken());
+                    break;
+                case "-1":
+                    btnBuy.setProgress(-1);
+                    showTipsDialog(getString(R.string.ALI_RESULT_4000), TipDialog.TYPE_WARNING);
+                    break;
+                case "6":
+                    btnBuy.setProgress(-1);
+                    updateRechargeRecord(orderNo, payResult, getToken());
+                    break;
             }
-            updateRechargeRecord(orderNo, payResult, getToken());
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==101){
+            if (resultCode==100){
+                getDefault(getToken(),getUserId());
+            }
         }
     }
 }

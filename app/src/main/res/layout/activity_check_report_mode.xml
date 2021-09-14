@@ -385,6 +385,11 @@
             </LinearLayout>
 
             <include layout="@layout/layout_check_mode_one" />
+
+            <include
+                layout="@layout/layout_check_mode_two"
+                android:visibility="gone" />
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

@@ -62,14 +62,14 @@ public class TestRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, @SuppressLint("RecyclerView") int position) {
         int itemViewType = getItemViewType(position);
         if (EMPTY_VIEW == itemViewType) {
-            EmptyViewHolder viewHolder = (EmptyViewHolder) holder;
-            viewHolder.mEmptyTextView.setText("绑定设备,开始检测");
+            EmptyViewHolder holder = (EmptyViewHolder) viewHolder;
+            holder.mEmptyTextView.setText("绑定设备,开始检测");
         } else if (NOT_EMPTY_VIEW == itemViewType) {
-            final MyViewHolder holder1 = (MyViewHolder) holder;
-            holder1.setPosition(position);
+            final MyViewHolder holder = (MyViewHolder) viewHolder;
+            holder.setPosition(position);
         }
     }
 

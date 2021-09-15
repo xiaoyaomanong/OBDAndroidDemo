@@ -32,7 +32,6 @@ public class CarModelActivity extends BaseActivity {
     private Context context;
     private RecyclerView recycleCarModel;
     private CarModelAdapter adapter;
-    private String automobileBrandId;
 
     @Override
     protected int getContentViewId() {
@@ -48,7 +47,7 @@ public class CarModelActivity extends BaseActivity {
     public void initView() {
         super.initView();
         context = this;
-        automobileBrandId = getIntent().getStringExtra("automobileBrandId");
+        String automobileBrandId = getIntent().getStringExtra("automobileBrandId");
         TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         recycleCarModel = findViewById(R.id.recycle_carModel);
         LinearLayoutManager manager = new LinearLayoutManager(context);

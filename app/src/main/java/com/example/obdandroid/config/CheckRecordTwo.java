@@ -105,7 +105,7 @@ public class CheckRecordTwo implements Serializable {
     private String mAccPedalPose;
     private String mAccPedalPosf;
     private String mThrottleActuator;
-    private String mTimeRunwithMILOn;
+    private String mTimeRunWithMILOn;
     private String mEngineCoolantTemp;
     private String mEngineOilTemp;
     private String mSystemVaporPressure;
@@ -114,10 +114,10 @@ public class CheckRecordTwo implements Serializable {
     private String mThrottlePos;
     private String mControlModuleVoltage;
     private String mFuelRailPressure = "";
-    private String mFuelRailPressurevacuum = "";
+    private String mFuelRailPressureVacuum = "";
     private String mDistanceTraveledMilOn;
     private String mDtcNumber;
-    private String mRelThottlePos;
+    private String mRelThoPosition;
     private String mAbsLoad;
     private String mShortTermBank1;
     private String mShortTermBank2;
@@ -258,8 +258,8 @@ public class CheckRecordTwo implements Serializable {
                 setThrottleActuator(TextUtils.isEmpty(mThrottleActuator) ? "N/A" : mThrottleActuator);
                 break;
             case TIME_TRAVELED_MIL_ON://"MIL灯亮的行驶时间", TextUtils.isEmpty(mTimeRunwithMILOn) ? "N/A" : mTimeRunwithMILOn
-                mTimeRunwithMILOn = command.getFormattedResult();
-                setTimeRunwithMILOn(TextUtils.isEmpty(mTimeRunwithMILOn) ? "N/A" : mTimeRunwithMILOn);
+                mTimeRunWithMILOn = command.getFormattedResult();
+                setTimeRunWithMILOn(TextUtils.isEmpty(mTimeRunWithMILOn) ? "N/A" : mTimeRunWithMILOn);
                 break;
             case SHORT_A_BANK1_B_BANK3://"第二侧氧气侦测器短期修正,A:bank 1,B:bank 3", TextUtils.isEmpty(mShortA_BANK1_B_BANK3) ? "N/A" : mShortA_BANK1_B_BANK3
                 mShortA_BANK1_B_BANK3 = command.getFormattedResult();
@@ -286,8 +286,8 @@ public class CheckRecordTwo implements Serializable {
                 setFuelRailPressure(TextUtils.isEmpty(mFuelRailPressure) ? "N/A" : mFuelRailPressure);
                 break;
             case FUEL_RAIL_PRESSURE_manifold://"油轨压力(相对进气歧管真空度)", TextUtils.isEmpty(mFuelRailPressurevacuum) ? "N/A" : mFuelRailPressurevacuum
-                mFuelRailPressurevacuum = command.getFormattedResult();
-                setFuelRailPressurevacuum(TextUtils.isEmpty(mFuelRailPressurevacuum) ? "N/A" : mFuelRailPressurevacuum);
+                mFuelRailPressureVacuum = command.getFormattedResult();
+                setFuelRailPressureVacuum(TextUtils.isEmpty(mFuelRailPressureVacuum) ? "N/A" : mFuelRailPressureVacuum);
                 break;
             case DISTANCE_TRAVELED_MIL_ON://"故障指示灯(MIL)亮时行驶的距离", TextUtils.isEmpty(mDistanceTraveledMilOn) ? "N/A" : mDistanceTraveledMilOn
                 mDistanceTraveledMilOn = command.getFormattedResult();
@@ -302,8 +302,8 @@ public class CheckRecordTwo implements Serializable {
                 setSystemVaporPressure(TextUtils.isEmpty(mSystemVaporPressure) ? "N/A" : mSystemVaporPressure);
                 break;
             case REL_THROTTLE_POS://"相对油门位置", TextUtils.isEmpty(mRelThottlePos) ? "N/A" : mRelThottlePos
-                mRelThottlePos = command.getFormattedResult();
-                setRelThottlePos(TextUtils.isEmpty(mRelThottlePos) ? "N/A" : mRelThottlePos);
+                mRelThoPosition = command.getFormattedResult();
+                setRelThoPos(TextUtils.isEmpty(mRelThoPosition) ? "N/A" : mRelThoPosition);
                 break;
             case ABS_LOAD://"绝对负荷", TextUtils.isEmpty(mAbsLoad) ? "N/A" : mAbsLoad
                 mAbsLoad = command.getFormattedResult();
@@ -576,12 +576,12 @@ public class CheckRecordTwo implements Serializable {
         this.mThrottleActuator = mThrottleActuator;
     }
 
-    public String getTimeRunwithMILOn() {
-        return mTimeRunwithMILOn;
+    public String getTimeRunWithMILOn() {
+        return mTimeRunWithMILOn;
     }
 
-    public void setTimeRunwithMILOn(String mTimeRunwithMILOn) {
-        this.mTimeRunwithMILOn = mTimeRunwithMILOn;
+    public void setTimeRunWithMILOn(String mTimeRunWithMILOn) {
+        this.mTimeRunWithMILOn = mTimeRunWithMILOn;
     }
 
     public String getEngineCoolantTemp() {
@@ -648,12 +648,12 @@ public class CheckRecordTwo implements Serializable {
         this.mFuelRailPressure = mFuelRailPressure;
     }
 
-    public String getFuelRailPressurevacuum() {
-        return mFuelRailPressurevacuum;
+    public String getFuelRailPressureVacuum() {
+        return mFuelRailPressureVacuum;
     }
 
-    public void setFuelRailPressurevacuum(String mFuelRailPressurevacuum) {
-        this.mFuelRailPressurevacuum = mFuelRailPressurevacuum;
+    public void setFuelRailPressureVacuum(String mFuelRailPressureVacuum) {
+        this.mFuelRailPressureVacuum = mFuelRailPressureVacuum;
     }
 
     public String getDistanceTraveledMilOn() {
@@ -672,12 +672,12 @@ public class CheckRecordTwo implements Serializable {
         this.mDtcNumber = mDtcNumber;
     }
 
-    public String getRelThottlePos() {
-        return mRelThottlePos;
+    public String getRelThoPos() {
+        return mRelThoPosition;
     }
 
-    public void setRelThottlePos(String mRelThottlePos) {
-        this.mRelThottlePos = mRelThottlePos;
+    public void setRelThoPos(String mRelThoPos) {
+        this.mRelThoPosition = mRelThoPos;
     }
 
     public String getAbsLoad() {

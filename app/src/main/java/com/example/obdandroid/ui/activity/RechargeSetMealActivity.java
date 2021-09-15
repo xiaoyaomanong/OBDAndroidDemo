@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,7 +31,6 @@ import com.example.obdandroid.ui.entity.ResultEntity;
 import com.example.obdandroid.ui.entity.WxOrderEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.ui.view.PayChannelDialog;
-import com.example.obdandroid.ui.view.progressButton.CircularProgressButton;
 import com.example.obdandroid.ui.wechatPay.WeiXinConstants;
 import com.example.obdandroid.utils.SPUtil;
 import com.hjq.bar.OnTitleBarListener;
@@ -88,8 +88,7 @@ public class RechargeSetMealActivity extends BaseActivity {
     private final int pageSize = 10;
     private boolean isLoadMore;
     private RechargeSetMealAdapter adapter;
-    private final List<ChargeMealEntity.DataEntity.ListEntity> datas = new ArrayList<>();
-    private CircularProgressButton btnBuy;
+    private final List<ChargeMealEntity.DataEntity.ListEntity> data = new ArrayList<>();
     private String rechargeId = "";
     private String rechargeAmount = "0";
     private String order_no = "";
@@ -101,6 +100,7 @@ public class RechargeSetMealActivity extends BaseActivity {
     private String vehicleId;
     @SuppressLint("HandlerLeak")
     private final Handler mHandlers = new Handler() {
+        @SuppressWarnings("unchecked")
         public void handleMessage(Message msg) {
             if (msg.what == SDK_PAY_FLAG) {
                 PayResult payResult = new PayResult((Map<String, String>) msg.obj);
@@ -113,38 +113,31 @@ public class RechargeSetMealActivity extends BaseActivity {
                         AlipayResultEntity entity = JSON.parseObject(resultInfo, AlipayResultEntity.class);
                         new CustomeDialog(context, getString(R.string.PAY_SUCCESS), confirm -> {
                             if (confirm) {
-                                btnBuy.setProgress(100);
                                 updateRechargeRecord(entity.getAlipay_trade_app_pay_response().getOut_trade_no(), "3", getToken());
                             }
                         }).setTitle("支付结果").setPositiveButton("知道了").show();
                         break;
                     case ALI_RESULT_8000:
-                        btnBuy.setProgress(-1);
                         showTipsDialog(getString(R.string.ALI_RESULT_8000), TipDialog.TYPE_WARNING);
                         break;
                     case ALI_RESULT_5000:
-                        btnBuy.setProgress(-1);
                         showTipsDialog(getString(R.string.ALI_RESULT_5000), TipDialog.TYPE_WARNING);
                         break;
                     case ALI_RESULT_6002:
-                        btnBuy.setProgress(-1);
                         showTipsDialog(getString(R.string.ALI_RESULT_6002), TipDialog.TYPE_WARNING);
                         break;
                     case ALI_RESULT_6004:
-                        btnBuy.setProgress(-1);
                         showTipsDialog(getString(R.string.ALI_RESULT_6004), TipDialog.TYPE_WARNING);
                         break;
                     case ALI_RESULT_6001:
                         new CustomeDialog(context, getString(R.string.ALI_RESULT_6001), confirm -> {
                             if (confirm) {
-                                btnBuy.setProgress(-1);
                                 updateRechargeRecord(order_no, "6", getToken());
                             }
                         }).setTitle("支付结果").setPositiveButton("知道了").show();
                         break;
                     case ALI_RESULT_4000:
                     default:
-                        btnBuy.setProgress(-1);
                         showTipsDialog(getString(R.string.ALI_RESULT_4000), TipDialog.TYPE_WARNING);
                         break;
                 }
@@ -172,7 +165,7 @@ public class RechargeSetMealActivity extends BaseActivity {
         tvPhone = findViewById(R.id.tvPhone);
         tvName = findViewById(R.id.tvName);
         recycleMeal = findViewById(R.id.recycle_meal);
-        btnBuy = findViewById(R.id.btnBuy);
+        Button btnBuy = findViewById(R.id.btnBuy);
         wxApi = WXAPIFactory.createWXAPI(context, WeiXinConstants.APP_ID);
         spUtil = new SPUtil(context);
         vehicleId = spUtil.getString(VEHICLE_ID, "");
@@ -224,7 +217,6 @@ public class RechargeSetMealActivity extends BaseActivity {
             intent.putExtra("isSelect", true);
             startActivityForResult(intent, 101);
         });
-        btnBuy.setIndeterminateProgressMode(true);
         btnBuy.setOnClickListener(v -> {
             if (TextUtils.isEmpty(rechargeId)) {
                 showTipsDialog("请选择套餐类型", TipDialog.TYPE_ERROR);
@@ -338,8 +330,6 @@ public class RechargeSetMealActivity extends BaseActivity {
      *                        APP用户购买套餐下单接口
      */
     private void placeAnOrder(String paymentChannels, String token, String appUserId, String rechargeId, String amount, String contacts, String telephone, String address) {
-        btnBuy.setProgress(0);
-        new Handler().postDelayed(() -> btnBuy.setProgress(50), 3000);
         OkHttpUtils.post().url(SERVER_URL + placeAnOrder_URL).
                 addParam("paymentChannels", paymentChannels).
                 addParam("token", token).
@@ -356,7 +346,6 @@ public class RechargeSetMealActivity extends BaseActivity {
 
             @Override
             public void onResponse(String response, int id) {
-                LogE("APP用户购买套餐下单接口:"+response);
                 switch (paymentChannels) {
                     case Constant.WX_PAY_TYPE:
                         WxOrderEntity entity = JSON.parseObject(response, WxOrderEntity.class);
@@ -441,17 +430,12 @@ public class RechargeSetMealActivity extends BaseActivity {
             public void onResponse(String response, int id) {
                 ResultEntity entity = JSON.parseObject(response, ResultEntity.class);
                 if (entity.isSuccess()) {
-                    if (btnBuy.getProgress() == -1) {
-                        btnBuy.setProgress(0);
-                    }
                     placeAnOrder(channel, getToken(), getUserId(), mealId, amount, contacts, telephone, address);
                 } else {
-                    btnBuy.setProgress(-1);
                     showTipsDialog(entity.getMessage(), TipDialog.TYPE_ERROR);
                 }
             }
         });
-
     }
 
 
@@ -519,9 +503,9 @@ public class RechargeSetMealActivity extends BaseActivity {
                         recycleMeal.setPullLoadMoreCompleted();
                     } else {
                         new Handler().postDelayed(() -> getActivity().runOnUiThread(() -> {
-                            datas.clear();
-                            datas.addAll(entity.getData().getList());
-                            adapter.addFootItem(datas);
+                            data.clear();
+                            data.addAll(entity.getData().getList());
+                            adapter.addFootItem(data);
                             // 加载更多完成后调用，必须在UI线程中
                             recycleMeal.setPullLoadMoreCompleted();
                         }), 1000);
@@ -550,16 +534,11 @@ public class RechargeSetMealActivity extends BaseActivity {
             String orderNo = intent.getStringExtra("orderNo");
             switch (payResult){
                 case "3":
-                    btnBuy.setProgress(100);
+                case "6":
                     updateRechargeRecord(orderNo, payResult, getToken());
                     break;
                 case "-1":
-                    btnBuy.setProgress(-1);
                     showTipsDialog(getString(R.string.ALI_RESULT_4000), TipDialog.TYPE_WARNING);
-                    break;
-                case "6":
-                    btnBuy.setProgress(-1);
-                    updateRechargeRecord(orderNo, payResult, getToken());
                     break;
             }
         }

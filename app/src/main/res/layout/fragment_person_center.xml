@@ -133,13 +133,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="30dp"
                                 android:gravity="center"
-                                android:text="添加"
+                                android:text="@string/add_car_per"
                                 android:textColor="@color/color_E0AA79" />
 
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/icon_add_car" />
+                                android:src="@drawable/icon_add_car"
+                                android:contentDescription="@string/add_car_per" />
                         </LinearLayout>
 
 
@@ -181,7 +182,8 @@
                                 android:layout_height="0dp"
                                 android:layout_weight="1"
                                 android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:orientation="horizontal"
+                                tools:ignore="NestedWeights">
 
                                 <TextView
                                     android:id="@+id/tvAutomobileBrandName"
@@ -279,7 +281,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        tools:ignore="UseCompoundDrawables">
 
 
                         <TextView
@@ -316,7 +319,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        tools:ignore="UseCompoundDrawables">
 
                         <TextView
                             android:layout_width="0dp"
@@ -346,13 +350,12 @@
                         android:background="@color/black_line" />
 
                     <LinearLayout
-                        android:id="@+id/ll_Version"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:visibility="gone">
-
+                        android:visibility="gone"
+                        tools:ignore="UseCompoundDrawables">
 
                         <TextView
                             android:layout_width="0dp"
@@ -382,7 +385,6 @@
                         android:background="@color/black_line" />
 
                     <LinearLayout
-                        android:id="@+id/ll_help"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:gravity="center_vertical"

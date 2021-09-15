@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
@@ -20,7 +18,6 @@ import com.example.obdandroid.ui.entity.VehicleEntity;
 import com.example.obdandroid.ui.view.CustomeDialog;
 import com.example.obdandroid.ui.view.IosDialog;
 import com.example.obdandroid.utils.DialogUtils;
-import com.example.obdandroid.utils.JumpUtil;
 import com.example.obdandroid.utils.SPUtil;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
@@ -51,10 +48,10 @@ public class MyVehicleActivity extends BaseActivity {
     private int pageNum = 1;
     private int pageSize = 10;
     private boolean isLoadMore;
-    private final List<VehicleEntity.DataEntity.ListEntity> datas = new ArrayList<>();
+    private final List<VehicleEntity.DataEntity.ListEntity> data = new ArrayList<>();
     private MyVehicleAdapter adapter;
     private SPUtil spUtil;
-    private LocalBroadcastManager mLocalBroadcastManager; //创建本地广播管理器类变量
+    private LocalBroadcastManager broadcastManager; //创建本地广播管理器类变量
     private DialogUtils dialogUtils;
 
     @Override
@@ -86,7 +83,7 @@ public class MyVehicleActivity extends BaseActivity {
         recycleCar.setFooterViewText(getString(R.string.loading));
         //设置上拉刷新文字颜色
         recycleCar.setFooterViewTextColor(R.color.teal_200);
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);                   //广播变量管理器获
+        broadcastManager = LocalBroadcastManager.getInstance(this);                   //广播变量管理器获
         adapter = new MyVehicleAdapter(context);
         getVehiclePageList(String.valueOf(pageNum), String.valueOf(pageSize), getToken(), getUserId(), true);
         recycleCar.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
@@ -188,7 +185,7 @@ public class MyVehicleActivity extends BaseActivity {
         Intent intent = new Intent(OBD_ACTION);//创建发送广播的Action
         intent.putExtra(VEHICLE_ID, String.valueOf(entity.getVehicleId()));//发送携带的数据
         intent.putExtra("type", "2");
-        mLocalBroadcastManager.sendBroadcast(intent);
+        broadcastManager.sendBroadcast(intent);
     }
 
     private void deleteVehicle(String token, String userId, String vehicleId) {
@@ -258,9 +255,9 @@ public class MyVehicleActivity extends BaseActivity {
 
                     } else {
                         new Handler().postDelayed(() -> getActivity().runOnUiThread(() -> {
-                            datas.clear();
-                            datas.addAll(entity.getData().getList());
-                            adapter.addFootItem(datas);
+                            data.clear();
+                            data.addAll(entity.getData().getList());
+                            adapter.addFootItem(data);
                             // 加载更多完成后调用，必须在UI线程中
                             recycleCar.setPullLoadMoreCompleted();
                         }), 1000);

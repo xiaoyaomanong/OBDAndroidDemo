@@ -30,7 +30,7 @@ public class WelcomeActivity extends BaseFullScreenActivity implements OnNotchCa
     private ImageView ivEntry;
     private ImageView imgBack;
     private Context context;
-    private boolean ISLOGIN = false;
+    private boolean IS_LOGIN = false;
 
     @Override
     protected int getContentViewId() {
@@ -62,7 +62,7 @@ public class WelcomeActivity extends BaseFullScreenActivity implements OnNotchCa
         ivEntry = findViewById(R.id.iv_entry);
         imgBack = findViewById(R.id.img_back);
         SPUtil spUtil = new SPUtil(context);
-        ISLOGIN = spUtil.getBoolean(Constant.IS_LOGIN, false);
+        IS_LOGIN = spUtil.getBoolean(Constant.IS_LOGIN, false);
         NotchTools.getFullScreenTools().fullScreenUseStatusForActivityOnCreate(this, this);
         ivEntry.setImageResource(R.drawable.icon_welcome);
         Observable.timer(1000, TimeUnit.MILLISECONDS)
@@ -77,10 +77,9 @@ public class WelcomeActivity extends BaseFullScreenActivity implements OnNotchCa
         set.setDuration(ANIM_TIME).play(animatorX).with(animatorY);
         set.start();
         set.addListener(new AnimatorListenerAdapter() {
-
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (ISLOGIN) {
+                if (IS_LOGIN) {
                     JumpUtil.startAct(context, MainActivity.class);
                 } else {
                     JumpUtil.startAct(context, LoginActivity.class);

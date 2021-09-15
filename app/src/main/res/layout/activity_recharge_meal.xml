@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/color_080707"
     android:orientation="vertical">
 
@@ -19,12 +19,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <LinearLayout
             android:id="@+id/layoutAddress"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:background="@drawable/bg_charge"
             android:layout_margin="@dimen/dp_5"
+            android:background="@drawable/bg_charge"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:visibility="gone">
@@ -78,7 +79,7 @@
                     android:paddingStart="@dimen/dp_10"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_12"
-                    tools:ignore="RtlSymmetry"/>
+                    tools:ignore="RtlSymmetry" />
 
             </LinearLayout>
 
@@ -90,6 +91,7 @@
                 tools:ignore="ContentDescription" />
 
         </LinearLayout>
+
         <com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
             android:id="@+id/recycle_meal"
             android:layout_width="match_parent"
@@ -99,7 +101,7 @@
 
         </com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView>
 
-        <com.example.obdandroid.ui.view.progressButton.CircularProgressButton
+        <Button
             android:id="@+id/btnBuy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -107,16 +109,12 @@
             android:layout_marginTop="30dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
+            android:gravity="center"
             android:fontFamily="@font/calibri"
-            android:textColor="@color/cpb_white"
-            android:textSize="18sp"
-            app:cpb_cornerRadius="10dp"
-            app:cpb_iconComplete="@drawable/ic_action_accept"
-            app:cpb_iconError="@drawable/ic_action_cancel"
-            app:cpb_selectorComplete="@drawable/idle_state_selector"
-            app:cpb_selectorError="@drawable/error_state_selector"
-            app:cpb_selectorIdle="@drawable/idle_state_selector"
-            app:cpb_textIdle="@string/buy" />
+            android:text="@string/buy"
+            android:textColor="@color/white"
+            android:background="@drawable/btn_buy_bg"
+            android:textSize="18sp" />
     </LinearLayout>
 
 </LinearLayout>

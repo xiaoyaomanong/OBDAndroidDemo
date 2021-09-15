@@ -24,13 +24,6 @@
         <item name="android:textColorHint">@color/textInputLayout</item>
     </style>
 
-    <style name="EditScreenTextInputLayoutStyleTwo" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorControlNormal">@color/color_000000</item>
-        <item name="colorControlActivated">@color/color_000000</item>
-        <item name="colorControlHighlight">@color/color_000000</item>
-        <item name="colorAccent">@color/color_000000</item>
-        <item name="android:textColorHint">@color/color_000000</item>
-    </style>
     <!-- 应用启动页(StartingWindow)的theme -->
     <style name="AppTheme.StartingWindowTheme" parent="AppThemes">
         <item name="android:windowIsTranslucent">true</item>
@@ -214,10 +207,6 @@
         <attr name="spread_delay_milliseconds" format="integer" />
         <attr name="spread_text" format="string" />
     </declare-styleable>
-
-    <style name="tabTextSizeStyle">
-        <item name="android:textSize">12sp</item>
-    </style>
 
     <!--弹窗动画-->
     <style name="PopupWindow">

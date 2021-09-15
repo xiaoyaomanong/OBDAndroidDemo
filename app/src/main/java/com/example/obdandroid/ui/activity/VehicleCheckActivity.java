@@ -101,8 +101,6 @@ public class VehicleCheckActivity extends BaseActivity {
     private static final int COMPLETEO = 2;
     private int size;
     private DialogUtils dialogUtils;
-
-    private File localErrorSave;
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
         @SuppressLint({"SetTextI18n", "DefaultLocale"})

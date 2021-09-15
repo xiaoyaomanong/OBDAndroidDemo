@@ -173,7 +173,7 @@ public class WelcomeGuideActivity extends BaseFullScreenActivity implements OnNo
     /**
      * onWindowFocusChanged最好也进行全屏适配，防止失去焦点又重回焦点时的flag不正确。
      *
-     * @param hasFocus
+     * @param hasFocus 是否获取焦点
      */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {

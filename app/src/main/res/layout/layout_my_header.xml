@@ -75,11 +75,12 @@
                     tools:ignore="NestedWeights,RtlHardcoded" />
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="7dp"
                     android:layout_marginEnd="@dimen/dp_10"
                     android:contentDescription="@null"
-                    android:src="@drawable/icon_next" />
+                    android:src="@drawable/ic_setting" />
             </LinearLayout>
 
         </LinearLayout>

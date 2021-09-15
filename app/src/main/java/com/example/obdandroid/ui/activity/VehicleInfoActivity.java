@@ -76,8 +76,6 @@ public class VehicleInfoActivity extends BaseActivity {
     private TextView tvInterfaceDesc;
     private LinearLayout layoutBind;
     private boolean isRefresh = false;
-    private Disposable mDisposable;
-    private ImageWatcherHelper iwHelper;
     private final LevelListDrawable mDrawable = new LevelListDrawable();
     // 注意啦，这么写Handler是会造成内存泄漏的，实际项目中不要这么直接用。
     @SuppressLint("HandlerLeak")
@@ -138,7 +136,6 @@ public class VehicleInfoActivity extends BaseActivity {
         tvInterfaceDesc = findViewById(R.id.tvInterfaceDesc);
         titleBarSet.setRightTitle("修改");
         dialogUtils = new DialogUtils(context);
-        //iwHelper = ImageWatcherHelper.with(this, new GlideSimpleLoader());
         getVehicleInfoById(getToken(), vehicleId);
         titleBarSet.setOnTitleBarListener(new OnTitleBarListener() {
             @Override
@@ -217,7 +214,6 @@ public class VehicleInfoActivity extends BaseActivity {
                 }).start();
                 return mDrawable;
             }, null));
-            //tvInterfaceDesc.post(() -> dealWithContent(entity.getInterfaceDesc()));
         }
 
         if (StringUtil.isNull(entity.getBluetoothDeviceNumber())) {//车辆状态 1 未绑定 2 已绑定 ,
@@ -262,103 +258,6 @@ public class VehicleInfoActivity extends BaseActivity {
             startActivityForResult(intent, 100);
         });
     }
-
-   /* private void dealWithContent(String myContent) {
-        tvInterfaceDesc.clearAllLayout();
-        showDataSync(myContent);
-        // 图片点击事件
-        tvInterfaceDesc.setOnRtImageClickListener((view, imagePath) -> {
-            try {
-                ArrayList<String> imageList = StringUtils.getTextFromHtml(myContent, true);
-                int currentPosition = imageList.indexOf(imagePath);
-                List<Uri> dataList = new ArrayList<>();
-                for (int i = 0; i < imageList.size(); i++) {
-                    dataList.add(ImageUtils.getUriFromPath(imageList.get(i)));
-                }
-                iwHelper.show(dataList, currentPosition);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }*/
-
-    /**
-     * 异步方式显示数据
-     */
-    /*private void showDataSync(final String html) {
-        Observable.create((ObservableOnSubscribe<String>) emitter -> showEditData(emitter, html))
-                .subscribeOn(Schedulers.io())//生产事件在io
-                .observeOn(AndroidSchedulers.mainThread())//消费事件在UI线程
-                .subscribe(new Observer<String>() {
-                    @Override
-                    public void onComplete() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        showTipDialog("解析错误：图片不存在或已损坏");
-                    }
-
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        mDisposable = d;
-                    }
-
-                    @Override
-                    public void onNext(String text) {
-                        try {
-                            if (tvInterfaceDesc != null) {
-                                if (text.contains("<img") && text.contains("src=")) {
-                                    //imagePath可能是本地路径，也可能是网络地址
-                                    String imagePath = StringUtils.getImgSrc(text);
-                                    tvInterfaceDesc.addImageViewAtIndex(tvInterfaceDesc.getLastIndex(), imagePath);
-                                } else {
-                                    LogE("text:"+text);
-                                    String str=StringUtils.
-                                    tvInterfaceDesc.addTextViewAtIndex(tvInterfaceDesc.getLastIndex(), text);
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
-    }*/
-
-    /**
-     * 显示数据
-     */
-    /*private void showEditData(ObservableEmitter<String> emitter, String html) {
-        try {
-            List<String> textList = StringUtils.cutStringByImgTag(html);
-            for (int i = 0; i < textList.size(); i++) {
-                String text = textList.get(i);
-                emitter.onNext(text);
-            }
-            emitter.onComplete();
-        } catch (Exception e) {
-            e.printStackTrace();
-            emitter.onError(e);
-        }
-    }*/
-
-  /*  @Override
-    protected void onStop() {
-        super.onStop();
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.dispose();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (!iwHelper.handleBackPressed()) {
-            super.onBackPressed();
-        }
-        finish();
-    }*/
 
     /**
      * @param content 内容

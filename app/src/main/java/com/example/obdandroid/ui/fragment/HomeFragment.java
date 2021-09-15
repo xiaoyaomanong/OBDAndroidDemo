@@ -245,7 +245,9 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onRightClick(View v) {
-                if (blueList.size() == 1) {
+                if (blueList.size() == 0) {
+                    showTipDialog("未查询到配对蓝牙");
+                } else if (blueList.size() == 1) {
                     singleConn(blueList.get(0).getBlue_address());
                 } else {
                     showSingleChoiceDialog();
@@ -607,7 +609,7 @@ public class HomeFragment extends BaseFragment {
      * 处理建立的蓝牙连接
      */
     @SuppressLint("StringFormatInvalid")
-    private void onConnect(String address)  {
+    private void onConnect(String address) {
         titleBar.setLeftTitle(getString(R.string.conOk));
         titleBar.setRightIcon(R.drawable.action_connect);
         isConnected = true;

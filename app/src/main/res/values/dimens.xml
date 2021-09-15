@@ -3,7 +3,6 @@
     <dimen name="text_size">12sp</dimen>
     <dimen name="cpb_stroke_width">4dp</dimen>
     <dimen name="text_13sp">13sp</dimen>
-    <dimen name="text_8dp">8sp</dimen>
     <dimen name="dp_20">20dp</dimen>
     <dimen name="dp_12">12dp</dimen>
     <dimen name="dp_5">5dp</dimen>

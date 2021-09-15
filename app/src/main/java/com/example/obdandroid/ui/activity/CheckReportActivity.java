@@ -1,24 +1,18 @@
 package com.example.obdandroid.ui.activity;
 
 import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.obdandroid.R;
 import com.example.obdandroid.base.BaseActivity;
+import com.example.obdandroid.config.CheckRecord;
 import com.example.obdandroid.config.Constant;
-import com.example.obdandroid.utils.AppDateUtils;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
-import com.example.obdandroid.config.CheckRecord;
-import com.sohrab.obd.reader.enums.ModeTrim;
-import com.sohrab.obd.reader.obdCommand.ObdCommand;
-import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
 import com.sohrab.obd.reader.trip.OBDJsonTripEntity;
 
 import java.util.ArrayList;

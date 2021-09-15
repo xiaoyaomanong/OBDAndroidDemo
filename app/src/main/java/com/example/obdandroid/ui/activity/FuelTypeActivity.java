@@ -30,7 +30,6 @@ import static com.example.obdandroid.config.APIConfig.getVocationalDictDataListB
  */
 public class FuelTypeActivity extends BaseActivity {
     private Context context;
-    private TitleBar titleBarSet;
     private RecyclerView recycleFuelType;
     private FuelTypeAdapter adapter;
 
@@ -48,7 +47,7 @@ public class FuelTypeActivity extends BaseActivity {
     public void initView() {
         super.initView();
         context = this;
-        titleBarSet = findViewById(R.id.titleBarSet);
+        TitleBar titleBarSet = findViewById(R.id.titleBarSet);
         recycleFuelType = findViewById(R.id.recycle_fuelType);
         LinearLayoutManager manager = new LinearLayoutManager(context);
         manager.setOrientation(OrientationHelper.VERTICAL);

@@ -40,7 +40,6 @@ public class PersonSettingActivity extends BaseActivity {
     private TextView tvValidityDate;
     private TextView tvVIP;
     private TextView tvIsTheDeviceBound;
-    private LinearLayout layoutReceivingAddress;
     private DialogUtils dialogUtils;
     private Context context;
 
@@ -66,7 +65,7 @@ public class PersonSettingActivity extends BaseActivity {
         tvValidityDate = findViewById(R.id.tvValidityDate);
         tvVIP = findViewById(R.id.tvVIP);
         tvIsTheDeviceBound = findViewById(R.id.tvIsTheDeviceBound);
-        layoutReceivingAddress = findViewById(R.id.layoutReceivingAddress);
+        LinearLayout layoutReceivingAddress = findViewById(R.id.layoutReceivingAddress);
         dialogUtils = new DialogUtils(context);
         getUserInfo(getUserId(), getToken());
         //layoutReceivingAddress.setVisibility(View.GONE);

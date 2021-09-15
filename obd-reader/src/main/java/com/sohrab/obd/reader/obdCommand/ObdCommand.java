@@ -22,7 +22,6 @@ import java.util.ArrayList;
  * Created by EMP203 on 6/13/2017.
  */
 
-
 /**
  * Base OBD command.
  *
@@ -30,19 +29,6 @@ import java.util.ArrayList;
  * @version $Id: $Id
  */
 public abstract class ObdCommand {
-    //private Handler mHandler = new Handler();
-    /**
-     * Error classes to be tested in order
-     */
-
-  /*  private static Pattern WHITESPACE_PATTERN = Pattern.compile("\\s");
-    private static Pattern BUSINIT_PATTERN = Pattern.compile("(BUS INIT)|(BUSINIT)|(\\.)");
-    private static Pattern SEARCHING_PATTERN = Pattern.compile("SEARCHING");
-
-    private static Pattern OK_PATTERN = Pattern.compile(":OK");
-    private static Pattern DIGITS_LETTERS_PATTERN = Pattern.compile("([0-9A-F])+");*/
-
-
     private final Class[] ERROR_CLASSES = {
             UnableToConnectException.class,
             BusInitException.class,
@@ -56,9 +42,6 @@ public abstract class ObdCommand {
     protected String cmd = null;
     protected boolean useImperialUnits = false;
     protected String rawData = null;
-    protected Long responseDelayInMs = null;
-    private long start;
-    private long end;
 
     /**
      * Default ctor to use
@@ -96,10 +79,8 @@ public abstract class ObdCommand {
      * @throws InterruptedException if any.
      */
     public void run(InputStream in, OutputStream out) throws Exception {
-        start = System.currentTimeMillis();
         sendCommand(out);
         readResult(in);
-        end = System.currentTimeMillis();
     }
 
     /**
@@ -113,29 +94,19 @@ public abstract class ObdCommand {
      * @throws InterruptedException if any.
      */
     protected void sendCommand(OutputStream out) throws Exception {
-        // write to OutputStream (i.e.: a BluetoothSocket) with an added
-        // Carriage return
         out.write((cmd + "\r").getBytes());
         out.flush();
-        if (responseDelayInMs != null && responseDelayInMs > 0) {
-            Thread.sleep(responseDelayInMs);
-        }
     }
 
     /**
      * 重新发送这个命令。
      *
      * @param out a {@link OutputStream} object.
-     * @throws IOException          if any.
-     * @throws InterruptedException if any.
+     * @throws IOException if any.
      */
-    protected void resendCommand(OutputStream out) throws IOException,
-            InterruptedException {
+    protected void resendCommand(OutputStream out) throws IOException {
         out.write("\r".getBytes());
         out.flush();
-        if (responseDelayInMs != null && responseDelayInMs > 0) {
-            Thread.sleep(responseDelayInMs);
-        }
     }
 
     /**
@@ -165,9 +136,10 @@ public abstract class ObdCommand {
     protected void fillBuffer() {
         rawData = rawData.replaceAll("\\s", ""); //removes all [ \t\n\x0B\f\r]
         rawData = rawData.replaceAll("(BUS INIT)|(BUSINIT)|(\\.)", "");
-        Log.e("BaseActivity","Cmd :: " + cmd + " rawData :: " + rawData);
+        Log.e("BaseActivity", "Cmd :: " + cmd + " rawData :: " + rawData);
         if (!rawData.matches("([0-9A-F])+")) {
-            throw new NonNumericResponseException(rawData);
+            rawData = "";
+            // throw new NonNumericResponseException(rawData);
         }
         //每两个字符读取字符串
         buffer.clear();
@@ -178,7 +150,7 @@ public abstract class ObdCommand {
             begin = end;
             end += 2;
         }
-        Log.e("BaseActivity","buffer:"+buffer);
+        Log.e("BaseActivity", "buffer:" + buffer);
     }
 
     /**
@@ -191,10 +163,7 @@ public abstract class ObdCommand {
     protected void readRawData(InputStream in) throws Exception {
         byte b;
         StringBuilder res = new StringBuilder();
-
-        // read until '>' arrives OR end of stream reached
         char c;
-        // -1 if the end of the stream is reached
         while (((b = (byte) in.read()) > -1)) {
             c = (char) b;
             if (c == '>') {// read until '>' arrives
@@ -202,28 +171,9 @@ public abstract class ObdCommand {
             }
             res.append(c);
         }
-
-        /*
-         * Imagine the following response 41 0c 00 0d.
-         *
-         * ELM sends strings!! So, ELM puts spaces between each "byte". And pay
-         * attention to the fact that I've put the word byte in quotes, because 41
-         * is actually TWO bytes (two chars) in the socket. So, we must do some more
-         * processing..
-         */
-
-       // LogUtils.i("Cmd :: " + cmd + " data :: " + res);
-        Log.e("BaseActivity","Cmd :: " + cmd + " res :: " + res.toString());
+        Log.e("BaseActivity", "Cmd :: " + cmd + " res :: " + res.toString());
         rawData = res.toString().replaceAll("SEARCHING", "");
-
-        /*
-         * Data may have echo or informative text like "INIT BUS..." or similar.
-         * The response ends with two carriage return characters. So we need to take
-         * everything from the last carriage return before those two (trimmed above).
-         */
-        //kills multiline.. rawData = rawData.substring(rawData.lastIndexOf(13) + 1);
         rawData = rawData.replaceAll("\\s", "");//removes all [ \t\n\x0B\f\r]
-
     }
 
     @SuppressWarnings("unchecked")
@@ -237,7 +187,8 @@ public abstract class ObdCommand {
                 throw new RuntimeException(e);
             }
             if (messageError.isError(rawData)) {
-                throw messageError;
+                //throw messageError;
+                rawData = "";
             }
         }
     }
@@ -265,23 +216,7 @@ public abstract class ObdCommand {
      */
     public abstract String getCalculatedResult();
 
-    /**
-     * <p>Getter for the field <code>buffer</code>.</p>
-     *
-     * @return a list of integers
-     */
-    protected ArrayList<Integer> getBuffer() {
-        return buffer;
-    }
-
-    /**
-     * <p>useImperialUnits.</p>
-     *
-     * @return true if imperial units are used, or false otherwise
-     */
-    public boolean useImperialUnits() {
-        return useImperialUnits;
-    }
+    ;
 
     /**
      * The unit of the result, as used in {@link #getFormattedResult()}
@@ -293,77 +228,11 @@ public abstract class ObdCommand {
     }
 
     /**
-     * Set to 'true' if you want to use imperial units, false otherwise. By
-     * default this value is set to 'false'.
-     *
-     * @param isImperial a boolean.
-     */
-    public void useImperialUnits(boolean isImperial) {
-        this.useImperialUnits = isImperial;
-    }
-
-    /**
      * <p>getName.</p>
      *
      * @return the OBD command name.
      */
     public abstract String getName();
-
-    /**
-     * Time the command waits before returning from #sendCommand()
-     *
-     * @return delay in ms (may be null)
-     */
-    public Long getResponseTimeDelay() {
-        return responseDelayInMs;
-    }
-
-    /**
-     * Time the command waits before returning from #sendCommand()
-     *
-     * @param responseDelayInMs a Long (can be null)
-     */
-    public void setResponseTimeDelay(Long responseDelayInMs) {
-        this.responseDelayInMs = responseDelayInMs;
-    }
-
-    //fixme resultunit
-
-    /**
-     * <p>Getter for the field <code>start</code>.</p>
-     *
-     * @return a long.
-     */
-    public long getStart() {
-        return start;
-    }
-
-    /**
-     * <p>Setter for the field <code>start</code>.</p>
-     *
-     * @param start a long.
-     */
-    public void setStart(long start) {
-        this.start = start;
-    }
-
-    /**
-     * <p>Getter for the field <code>end</code>.</p>
-     *
-     * @return a long.
-     */
-    public long getEnd() {
-        return end;
-    }
-
-    /**
-     * <p>Setter for the field <code>end</code>.</p>
-     *
-     * @param end a long.
-     */
-    public void setEnd(long end) {
-        this.end = end;
-    }
 
     /**
      * <p>getCommandPID.</p>

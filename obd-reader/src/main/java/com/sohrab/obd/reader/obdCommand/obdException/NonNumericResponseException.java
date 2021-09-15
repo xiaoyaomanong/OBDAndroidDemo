@@ -1,7 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.obdException;
 
 /**
- * Thrown when there are no numbers in the response and they are expected
+ * 当响应中没有数字且预期为数字时引发
  *
  * @author pires
  * @version $Id: $Id

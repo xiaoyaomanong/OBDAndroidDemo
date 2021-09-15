@@ -12,7 +12,7 @@ public class BusInitException extends ResponseException {
      * <p>Constructor for BusInitException.</p>
      */
     public BusInitException() {
-        super("BUS INIT... ERROR");
+        super("总线初始化。。。错误");
     }
 
 }

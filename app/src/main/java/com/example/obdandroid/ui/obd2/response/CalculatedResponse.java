@@ -63,18 +63,6 @@ public abstract class CalculatedResponse implements Response {
     }
 
     public static Number calculateFromEquation(byte[] raw, String equation) {
-      /*  ScriptEngine mathSolver = new ScriptEngineManager().getEngineByName("JavaScript");
-        Map<String, Object> vars = new HashMap<>();
-        //vars.put("SignedA", getSignedA2(raw));
-        for (int index = 0; index < CalculatedResponse.getGroupCount(raw); index++) {
-            vars.put(Character.toString((char) ('A' + index)), CalculatedResponse.getIntValue(raw, index));
-            vars.put("Signed" + (char) ('A' + index), CalculatedResponse.getSigned(raw, index));
-        }
-        try {
-            return (Number) mathSolver.eval(equation, new SimpleBindings(vars));
-        } catch (ScriptException e) {
-            e.printStackTrace();
-        }*/
 
         fillBuffer(raw);
         float result = 0f;

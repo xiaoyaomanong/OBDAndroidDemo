@@ -12,7 +12,7 @@ public class StoppedException extends ResponseException {
      * <p>Constructor for StoppedException.</p>
      */
     public StoppedException() {
-        super("STOPPED");
+        super("停止");
     }
 
 }

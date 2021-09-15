@@ -42,6 +42,7 @@ public abstract class ObdCommand {
     protected String cmd = null;
     protected boolean useImperialUnits = false;
     protected String rawData = null;
+    protected boolean isHaveData = true;
 
     /**
      * Default ctor to use
@@ -84,10 +85,9 @@ public abstract class ObdCommand {
     }
 
     /**
-     * Sends the OBD-II request.
+     * 发送OBD-II请求。
      * <p>
-     * This method may be overriden in subclasses, such as ObMultiCommand or
-     * TroubleCodesCommand.
+     *此方法可以在子类中重写，例如ObMultiCommand或
      *
      * @param out The output stream.
      * @throws IOException          if any.
@@ -125,37 +125,36 @@ public abstract class ObdCommand {
     }
 
     /**
-     * This method exists so that for each command, there must be a method that is
-     * called only once to perform calculations.
+     * 计算
      */
     protected abstract void performCalculations();
 
     /**
-     * <p>fillBuffer.</p>
+     * 填充数据
      */
     protected void fillBuffer() {
         rawData = rawData.replaceAll("\\s", ""); //removes all [ \t\n\x0B\f\r]
         rawData = rawData.replaceAll("(BUS INIT)|(BUSINIT)|(\\.)", "");
         Log.e("BaseActivity", "Cmd :: " + cmd + " rawData :: " + rawData);
         if (!rawData.matches("([0-9A-F])+")) {
-            rawData = "";
-            // throw new NonNumericResponseException(rawData);
+            rawData = "N/A";
         }
-        //每两个字符读取字符串
-        buffer.clear();
-        int begin = 0;
-        int end = 2;
-        while (end <= rawData.length()) {
-            buffer.add(Integer.decode("0x" + rawData.substring(begin, end)));
-            begin = end;
-            end += 2;
+        if (!rawData.equals("N/A")) {
+            //每两个字符读取字符串
+            buffer.clear();
+            int begin = 0;
+            int end = 2;
+            while (end <= rawData.length()) {
+                buffer.add(Integer.decode("0x" + rawData.substring(begin, end)));
+                begin = end;
+                end += 2;
+            }
         }
         Log.e("BaseActivity", "buffer:" + buffer);
     }
 
     /**
-     * <p>
-     * readRawData.</p>
+     * 读取数据
      *
      * @param in a {@link InputStream} object.
      * @throws IOException if any.
@@ -188,57 +187,45 @@ public abstract class ObdCommand {
             }
             if (messageError.isError(rawData)) {
                 //throw messageError;
-                rawData = "";
+                rawData = "N/A";
             }
         }
     }
 
     /**
-     * <p>getResult.</p>
-     *
-     * @return the raw command response in string representation.
+     * @return 以字符串表示的原始命令响应。
      */
     public String getResult() {
         return rawData;
     }
 
     /**
-     * <p>getFormattedResult.</p>
-     *
-     * @return a formatted command response in string representation.
+     * @return 字符串表示形式的格式化命令响应。
      */
     public abstract String getFormattedResult();
 
     /**
-     * <p>getCalculatedResult.</p>
      *
-     * @return the command response in string representation, without formatting.
+     * @return 命令响应以字符串表示，不带格式。
      */
     public abstract String getCalculatedResult();
 
     ;
 
     /**
-     * The unit of the result, as used in {@link #getFormattedResult()}
-     *
-     * @return a String representing a unit or "", never null
+     * @return 表示单位或“”的字符串，从不为空
      */
     public String getResultUnit() {
-        return "";//no unit by default
+        return "";
     }
 
     /**
-     * <p>getName.</p>
-     *
-     * @return the OBD command name.
+     * @return OBD命令名。
      */
     public abstract String getName();
 
     /**
-     * <p>getCommandPID.</p>
-     *
-     * @return a {@link String} object.
-     * @since 1.0-RC12
+     * @return PID
      */
     public final String getCommandPID() {
         return cmd.substring(3);

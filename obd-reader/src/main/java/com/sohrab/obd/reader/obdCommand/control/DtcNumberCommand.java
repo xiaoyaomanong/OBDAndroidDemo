@@ -22,7 +22,7 @@ public class DtcNumberCommand extends ObdCommand {
      * Default ctor.
      */
     public DtcNumberCommand(String mode) {
-        super(mode+" 01");
+        super(mode + " 01");
     }
 
     /**
@@ -38,9 +38,14 @@ public class DtcNumberCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [hh hh] of the response
-        final int mil = buffer.get(2);
-        milOn = (mil & 0x80) == 128;
-        codeCount = mil & 0x7F;
+        if (buffer.size() != 0) {
+            final int mil = buffer.get(2);
+            milOn = (mil & 0x80) == 128;
+            codeCount = mil & 0x7F;
+            isHaveData = true;
+        } else {
+            isHaveData = false;
+        }
     }
 
     /**
@@ -49,8 +54,12 @@ public class DtcNumberCommand extends ObdCommand {
      * @return a {@link String} object.
      */
     public String getFormattedResult() {
-        final String res = milOn ? "ON" : "OFF";
-        return "异常指示灯（MIL）状态: " + res + ";DTC的个数: " + codeCount;
+        if (isHaveData) {
+            final String res = milOn ? "ON" : "OFF";
+            return "异常指示灯（MIL）状态: " + res + ";DTC的个数: " + codeCount;
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -58,7 +67,11 @@ public class DtcNumberCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return String.valueOf(codeCount);
+        if (isHaveData) {
+            return String.valueOf(codeCount);
+        } else {
+            return "";
+        }
     }
 
     /**

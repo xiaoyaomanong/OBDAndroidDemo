@@ -15,12 +15,11 @@ public class FuelRailPressureManifoldVacuumCommand extends PressureCommand {
      * <p>Constructor for FuelRailPressureCommand.</p>
      */
     public FuelRailPressureManifoldVacuumCommand(String mode) {
-        super(mode+" 22");
+        super(mode + " 22");
     }
 
     /**
      * <p>Constructor for FuelRailPressureCommand.</p>
-     *
      */
     public FuelRailPressureManifoldVacuumCommand(FuelRailPressureCommand other) {
         super(other);
@@ -33,12 +32,18 @@ public class FuelRailPressureManifoldVacuumCommand extends PressureCommand {
      */
     @Override
     protected final int preparePressureValue() {
-        int a = buffer.get(2);
-        int b = buffer.get(3);
-        return (int) (((a * 256) + b) * 0.079);
+        if (buffer.size() != 0) {
+            int a = buffer.get(2);
+            int b = buffer.get(3);
+            return (int) (((a * 256) + b) * 0.079);
+        } else {
+            return 0;
+        }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return AvailableCommandNames.FUEL_RAIL_PRESSURE_manifold.getValue();

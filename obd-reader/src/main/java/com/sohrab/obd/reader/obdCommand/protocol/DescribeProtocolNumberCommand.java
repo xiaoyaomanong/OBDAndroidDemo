@@ -4,6 +4,8 @@ import com.sohrab.obd.reader.enums.AvailableCommandNames;
 import com.sohrab.obd.reader.enums.ObdProtocols;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
+import static com.sohrab.obd.reader.obdCommand.Const.NO_DATA;
+
 /**
  * Describe the Protocol by Number.
  * It returns a number which represents the current
@@ -27,39 +29,51 @@ public class DescribeProtocolNumberCommand extends ObdCommand {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * This method exists so that for each command, there must be a method that is
      * called only once to perform calculations.
      */
     @Override
     protected void performCalculations() {
         String result = getResult();
-        char protocolNumber;
-        if (result.length() == 2) {//the obdProtocol was set automatic and its format A#
-            protocolNumber = result.charAt(1);
-        } else protocolNumber = result.charAt(0);
-        ObdProtocols[] protocols = ObdProtocols.values();
-        for (ObdProtocols protocol : protocols) {
-            if (protocol.getValue() == protocolNumber) {
-                this.obdProtocol = protocol;
-                break;
+        if (!result.equals(NO_DATA)) {
+            char protocolNumber;
+            if (result.length() == 2) {//the obdProtocol was set automatic and its format A#
+                protocolNumber = result.charAt(1);
+            } else protocolNumber = result.charAt(0);
+            ObdProtocols[] protocols = ObdProtocols.values();
+            for (ObdProtocols protocol : protocols) {
+                if (protocol.getValue() == protocolNumber) {
+                    this.obdProtocol = protocol;
+                    break;
+                }
             }
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getFormattedResult() {
-        return getResult();
+        if (getResult().equals(NO_DATA)) {
+            return NO_DATA;
+        } else {
+            return getResult();
+        }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getCalculatedResult() {
         return obdProtocol.name();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return AvailableCommandNames.DESCRIBE_PROTOCOL_NUMBER.getValue();
@@ -67,7 +81,6 @@ public class DescribeProtocolNumberCommand extends ObdCommand {
 
     /**
      * <p>Getter for the field <code>obdProtocol</code>.</p>
-     *
      */
     public ObdProtocols getObdProtocol() {
         return obdProtocol;

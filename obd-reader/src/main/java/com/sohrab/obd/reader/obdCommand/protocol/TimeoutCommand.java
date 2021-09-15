@@ -1,5 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.protocol;
 
+import static com.sohrab.obd.reader.obdCommand.Const.NO_DATA;
+
 /**
  * This will set the value of time in milliseconds (ms) that the OBD interface
  * will wait for a response from the ECU. If exceeds, the response is "NO DATA".
@@ -22,7 +24,6 @@ public class TimeoutCommand extends ObdProtocolCommand {
     /**
      * <p>Constructor for TimeoutCommand.</p>
      *
-     * @param other a {@link com.github.pires.obd.commands.protocol.TimeoutCommand} object.
      */
     public TimeoutCommand(TimeoutCommand other) {
         super(other);
@@ -31,7 +32,11 @@ public class TimeoutCommand extends ObdProtocolCommand {
     /** {@inheritDoc} */
     @Override
     public String getFormattedResult() {
-        return getResult();
+        if (getResult().equals(NO_DATA)) {
+            return NO_DATA;
+        } else {
+            return getResult();
+        }
     }
 
     /** {@inheritDoc} */

@@ -2,6 +2,8 @@ package com.sohrab.obd.reader.obdCommand.protocol;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
 
+import static com.sohrab.obd.reader.obdCommand.Const.NO_DATA;
+
 /**
  * Describe the current Protocol.
  * If a protocol is chosen and the automatic option is
@@ -24,7 +26,11 @@ public class DescribeProtocolCommand extends ObdProtocolCommand {
     /** {@inheritDoc} */
     @Override
     public String getFormattedResult() {
-        return getResult();
+        if (getResult().equals(NO_DATA)) {
+            return NO_DATA;
+        } else {
+            return getResult();
+        }
     }
 
     /** {@inheritDoc} */

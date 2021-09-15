@@ -1,6 +1,8 @@
 package com.sohrab.obd.reader.obdCommand.protocol;
 
 
+import static com.sohrab.obd.reader.obdCommand.Const.NO_DATA;
+
 /**
  * Turn-off echo.
  *
@@ -19,7 +21,6 @@ public class EchoOffCommand extends ObdProtocolCommand {
     /**
      * <p>Constructor for EchoOffCommand.</p>
      *
-     * @param other a {@link com.github.pires.obd.commands.protocol.EchoOffCommand} object.
      */
     public EchoOffCommand(EchoOffCommand other) {
         super(other);
@@ -28,7 +29,11 @@ public class EchoOffCommand extends ObdProtocolCommand {
     /** {@inheritDoc} */
     @Override
     public String getFormattedResult() {
-        return getResult();
+        if (getResult().equals(NO_DATA)) {
+            return NO_DATA;
+        } else {
+            return getResult();
+        }
     }
 
     /** {@inheritDoc} */

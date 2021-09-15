@@ -28,17 +28,23 @@ public abstract class TemperatureCommand extends ObdCommand implements
 
     /**
      * Copy ctor.
-     *
      */
     public TemperatureCommand(TemperatureCommand other) {
         super(other);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void performCalculations() {
         // ignore first two bytes [hh hh] of the response
-        temperature = buffer.get(2) - 40;
+        if (buffer.size() != 0) {
+            temperature = buffer.get(2) - 40;
+            isHaveData = true;
+        } else {
+            isHaveData = false;
+        }
     }
 
 
@@ -51,17 +57,29 @@ public abstract class TemperatureCommand extends ObdCommand implements
     @SuppressLint("DefaultLocale")
     @Override
     public String getFormattedResult() {
-        return useImperialUnits ? String.format("%.1f%s", getImperialUnit(), getResultUnit())
-                : String.format("%.0f%s", temperature, getResultUnit());
+        if (isHaveData) {
+            return useImperialUnits ? String.format("%.1f%s", getImperialUnit(), getResultUnit())
+                    : String.format("%.0f%s", temperature, getResultUnit());
+        } else {
+            return "";
+        }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getCalculatedResult() {
-        return useImperialUnits ? String.valueOf(getImperialUnit()) : String.valueOf(temperature);
+        if (isHaveData) {
+            return useImperialUnits ? String.valueOf(getImperialUnit()) : String.valueOf(temperature);
+        } else {
+            return "";
+        }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getResultUnit() {
         return useImperialUnits ? "F" : "℃";

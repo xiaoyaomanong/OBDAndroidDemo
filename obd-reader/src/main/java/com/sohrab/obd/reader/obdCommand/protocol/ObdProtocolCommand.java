@@ -3,6 +3,8 @@ package com.sohrab.obd.reader.obdCommand.protocol;
 
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
+import static com.sohrab.obd.reader.obdCommand.Const.NO_DATA;
+
 /**
  * <p>Abstract ObdProtocolCommand class.</p>
  */
@@ -43,6 +45,10 @@ public abstract class ObdProtocolCommand extends ObdCommand {
     /** {@inheritDoc} */
     @Override
     public String getCalculatedResult() {
-        return String.valueOf(getResult());
+        if (getResult().equals(NO_DATA)) {
+            return NO_DATA;
+        } else {
+            return String.valueOf(getResult());
+        }
     }
 }

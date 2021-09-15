@@ -1,5 +1,7 @@
 package com.sohrab.obd.reader.obdCommand.protocol;
 
+import static com.sohrab.obd.reader.obdCommand.Const.NO_DATA;
+
 /**
  * Reset the OBD connection.
  *
@@ -17,19 +19,26 @@ public class ObdResetCommand extends ObdProtocolCommand {
 
     /**
      * <p>Constructor for ObdResetCommand.</p>
-     *
      */
     public ObdResetCommand(ObdResetCommand other) {
         super(other);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getFormattedResult() {
-        return getResult();
+        if (getResult().equals(NO_DATA)) {
+            return NO_DATA;
+        } else {
+            return getResult();
+        }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return "Reset OBD";

@@ -4,6 +4,8 @@ package com.sohrab.obd.reader.obdCommand.protocol;
 import com.sohrab.obd.reader.enums.ObdProtocols;
 import com.sohrab.obd.reader.obdCommand.protocol.ObdProtocolCommand;
 
+import static com.sohrab.obd.reader.obdCommand.Const.NO_DATA;
+
 /**
  * Select the protocol to use.
  *
@@ -27,7 +29,11 @@ public class SelectProtocolCommand extends ObdProtocolCommand {
     /** {@inheritDoc} */
     @Override
     public String getFormattedResult() {
-        return getResult();
+        if (getResult().equals(NO_DATA)) {
+            return NO_DATA;
+        } else {
+            return getResult();
+        }
     }
 
     /** {@inheritDoc} */

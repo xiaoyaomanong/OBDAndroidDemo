@@ -14,7 +14,6 @@ import com.sohrab.obd.reader.obdCommand.SystemOfUnits;
 public abstract class PressureCommand extends ObdCommand implements
         SystemOfUnits {
 
-    protected int tempValue = 0;
     protected int pressure = 0;
 
     /**
@@ -28,7 +27,6 @@ public abstract class PressureCommand extends ObdCommand implements
 
     /**
      * Copy ctor.
-     *
      */
     public PressureCommand(PressureCommand other) {
         super(other);
@@ -43,7 +41,13 @@ public abstract class PressureCommand extends ObdCommand implements
      * @return a int.
      */
     protected int preparePressureValue() {
-        return buffer.get(2);
+        if (buffer.size() != 0) {
+            isHaveData = true;
+            return buffer.get(2);
+        } else {
+            isHaveData = false;
+            return 0;
+        }
     }
 
     /**
@@ -54,12 +58,18 @@ public abstract class PressureCommand extends ObdCommand implements
         pressure = preparePressureValue();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @SuppressLint("DefaultLocale")
     @Override
     public String getFormattedResult() {
-        return useImperialUnits ? String.format("%.1f%s", getImperialUnit(), getResultUnit())
-                : String.format("%d%s", pressure, getResultUnit());
+        if (isHaveData) {
+            return useImperialUnits ? String.format("%.1f%s", getImperialUnit(), getResultUnit())
+                    : String.format("%d%s", pressure, getResultUnit());
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -80,13 +90,17 @@ public abstract class PressureCommand extends ObdCommand implements
         return pressure * 0.145037738F;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getCalculatedResult() {
         return useImperialUnits ? String.valueOf(getImperialUnit()) : String.valueOf(pressure);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getResultUnit() {
         return useImperialUnits ? "psi" : "kPa";

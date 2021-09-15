@@ -28,8 +28,13 @@ public class EGRCommand extends ObdCommand {
      */
     @Override
     protected void performCalculations() {
-        // ignore first two bytes [hh hh] of the response
-        CommandedEGR = (buffer.get(2) * 100) / 255;
+        if (buffer.size()!=0) {
+            // ignore first two bytes [hh hh] of the response
+            CommandedEGR = (buffer.get(2) * 100) / 255;
+            isHaveData = true;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /**
@@ -37,7 +42,12 @@ public class EGRCommand extends ObdCommand {
      */
     @Override
     public String getFormattedResult() {
-        return CommandedEGR + "%";
+        if (isHaveData){
+            return CommandedEGR + "%";
+        }else {
+            return "";
+        }
+
     }
 
     /**
@@ -45,7 +55,11 @@ public class EGRCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return CommandedEGR + "%";
+        if (isHaveData){
+            return CommandedEGR + "%";
+        }else {
+            return "";
+        }
     }
 
     @Override

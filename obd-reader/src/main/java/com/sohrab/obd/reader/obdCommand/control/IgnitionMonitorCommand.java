@@ -4,6 +4,8 @@ import com.sohrab.obd.reader.enums.AvailableCommandNames;
 import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
+import static com.sohrab.obd.reader.obdCommand.Const.NO_DATA;
+
 public class IgnitionMonitorCommand extends ObdCommand {
 
     private boolean ignitionOn = false;
@@ -32,7 +34,11 @@ public class IgnitionMonitorCommand extends ObdCommand {
 
     @Override
     public String getFormattedResult() {
-        return getResult();
+        if (getResult().equals(NO_DATA)) {
+            return NO_DATA;
+        } else {
+            return getResult();
+        }
     }
 
     @Override
@@ -42,7 +48,11 @@ public class IgnitionMonitorCommand extends ObdCommand {
 
     @Override
     public String getCalculatedResult() {
-        return getResult();
+        if (getResult().equals(NO_DATA)) {
+            return NO_DATA;
+        } else {
+            return getResult();
+        }
     }
 
     @Override

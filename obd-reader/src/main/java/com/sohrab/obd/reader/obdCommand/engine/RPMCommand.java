@@ -20,13 +20,11 @@ public class RPMCommand extends ObdCommand {
      * Default ctor.
      */
     public RPMCommand(String mode) {
-        super(mode+" 0C");
+        super(mode + " 0C");
     }
 
     /**
      * Copy ctor.
-     *
-     *
      */
     public RPMCommand(RPMCommand other) {
         super(other);
@@ -38,7 +36,12 @@ public class RPMCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [41 0C] of the response((A*256)+B)/4
-        rpm = (buffer.get(2) * 256 + buffer.get(3)) / 4;
+        if (buffer.size() != 0) {
+            rpm = (buffer.get(2) * 256 + buffer.get(3)) / 4;
+            isHaveData = true;
+        } else {
+            isHaveData = false;
+        }
     }
 
     /**
@@ -46,7 +49,11 @@ public class RPMCommand extends ObdCommand {
      */
     @Override
     public String getFormattedResult() {
-        return String.format(Locale.ENGLISH, "%d%s", rpm, getResultUnit());
+        if (isHaveData) {
+            return String.format(Locale.ENGLISH, "%d%s", rpm, getResultUnit());
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -54,7 +61,11 @@ public class RPMCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return String.valueOf(rpm);
+        if (isHaveData) {
+            return String.valueOf(rpm);
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -72,15 +83,5 @@ public class RPMCommand extends ObdCommand {
     public String getName() {
         return AvailableCommandNames.ENGINE_RPM.getValue();
     }
-
-    /**
-     * <p>getRPM.</p>
-     *
-     * @return a int.
-     */
-    public int getRPM() {
-        return rpm;
-    }
-
 }
 

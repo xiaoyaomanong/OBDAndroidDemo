@@ -20,7 +20,7 @@ public class SpeedCommand extends ObdCommand implements SystemOfUnits {
      * Default ctor.
      */
     public SpeedCommand(String mode) {
-        super(mode+" 0D");
+        super(mode + " 0D");
     }//"01 0D"
 
     /**
@@ -36,8 +36,12 @@ public class SpeedCommand extends ObdCommand implements SystemOfUnits {
     @Override
     protected void performCalculations() {
         // Ignore first two bytes [hh hh] of the response.
-        metricSpeed = buffer.get(2);
-        System.out.println("metricSpeed  =  " + metricSpeed);
+        if (buffer.size() != 0) {
+            metricSpeed = buffer.get(2);
+            isHaveData = true;
+        } else {
+            isHaveData = false;
+        }
     }
 
     /**
@@ -73,8 +77,12 @@ public class SpeedCommand extends ObdCommand implements SystemOfUnits {
      * @return a {@link String} object.
      */
     public String getFormattedResult() {
-        return useImperialUnits ? String.format(Locale.ENGLISH, "%.2f%s", getImperialUnit(), getResultUnit())
-                : String.format(Locale.ENGLISH, "%d%s", getMetricSpeed(), getResultUnit());
+        if (isHaveData) {
+            return useImperialUnits ? String.format(Locale.ENGLISH, "%.2f%s", getImperialUnit(), getResultUnit())
+                    : String.format(Locale.ENGLISH, "%d%s", getMetricSpeed(), getResultUnit());
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -82,7 +90,11 @@ public class SpeedCommand extends ObdCommand implements SystemOfUnits {
      */
     @Override
     public String getCalculatedResult() {
-        return useImperialUnits ? String.valueOf(getImperialUnit()) : String.valueOf(getMetricSpeed());
+        if (isHaveData) {
+            return useImperialUnits ? String.valueOf(getImperialUnit()) : String.valueOf(getMetricSpeed());
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -100,6 +112,4 @@ public class SpeedCommand extends ObdCommand implements SystemOfUnits {
     public String getName() {
         return AvailableCommandNames.SPEED.getValue();
     }
-
-
 }

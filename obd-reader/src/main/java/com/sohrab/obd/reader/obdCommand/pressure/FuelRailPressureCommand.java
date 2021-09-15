@@ -5,7 +5,6 @@ import com.sohrab.obd.reader.enums.ModeTrim;
 
 /**
  * <p>FuelRailPressureCommand class.</p>
- *
  */
 public class FuelRailPressureCommand extends PressureCommand {
 
@@ -13,12 +12,11 @@ public class FuelRailPressureCommand extends PressureCommand {
      * <p>Constructor for FuelRailPressureCommand.</p>
      */
     public FuelRailPressureCommand(String mode) {
-        super(mode+" 23");
+        super(mode + " 23");
     }
 
     /**
      * <p>Constructor for FuelRailPressureCommand.</p>
-     *
      */
     public FuelRailPressureCommand(FuelRailPressureCommand other) {
         super(other);
@@ -31,12 +29,18 @@ public class FuelRailPressureCommand extends PressureCommand {
      */
     @Override
     protected final int preparePressureValue() {
-        int a = buffer.get(2);
-        int b = buffer.get(3);
-        return ((a * 256) + b) * 10;
+        if (buffer.size() != 0) {
+            int a = buffer.get(2);
+            int b = buffer.get(3);
+            return ((a * 256) + b) * 10;
+        } else {
+            return 0;
+        }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return AvailableCommandNames.FUEL_RAIL_PRESSURE.getValue();

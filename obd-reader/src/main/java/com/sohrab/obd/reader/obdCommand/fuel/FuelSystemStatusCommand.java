@@ -14,7 +14,7 @@ public class FuelSystemStatusCommand extends ObdCommand {
     private int fuelSystemStatus = 0;
 
     public FuelSystemStatusCommand(String mode) {
-        super(mode+" 03");
+        super(mode + " 03");
     }
 
     /**
@@ -26,22 +26,34 @@ public class FuelSystemStatusCommand extends ObdCommand {
 
     @Override
     protected void performCalculations() {
-        // ignore first two bytes [hh hh] of the response
-        fuelSystemStatus = buffer.get(2);
+        if (buffer.size() != 0) {
+            fuelSystemStatus = buffer.get(2);
+            isHaveData = true;
+        } else {
+            isHaveData = false;
+        }
     }
 
     @Override
     public String getFormattedResult() {
-        try {
-            return FuelSystemStatus.fromValue(fuelSystemStatus).getDescription();
-        } catch (NullPointerException e) {
-            return "Ok";
+        if (isHaveData) {
+            try {
+                return FuelSystemStatus.fromValue(fuelSystemStatus).getDescription();
+            } catch (NullPointerException e) {
+                return "Ok";
+            }
+        } else {
+            return "";
         }
     }
 
     @Override
     public String getCalculatedResult() {
-        return String.valueOf(fuelSystemStatus);
+        if (isHaveData) {
+            return String.valueOf(fuelSystemStatus);
+        } else {
+            return "";
+        }
     }
 
     @Override

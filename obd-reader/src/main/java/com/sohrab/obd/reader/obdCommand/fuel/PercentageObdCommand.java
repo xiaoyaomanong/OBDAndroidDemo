@@ -2,8 +2,8 @@
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,7 +18,6 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
  * Abstract class for percentage commands.
- *
  */
 public abstract class PercentageObdCommand extends ObdCommand {
 
@@ -35,24 +34,35 @@ public abstract class PercentageObdCommand extends ObdCommand {
 
     /**
      * <p>Constructor for PercentageObdCommand.</p>
-     *
      */
     public PercentageObdCommand(PercentageObdCommand other) {
         super(other);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void performCalculations() {
-        // ignore first two bytes [hh hh] of the response
-        percentage = (buffer.get(2) * 100.0f) / 255.0f;
+        if (buffer.size() != 0) {
+            isHaveData = true;
+            percentage = (buffer.get(2) * 100.0f) / 255.0f;
+        } else {
+            isHaveData = false;
+        }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @SuppressLint("DefaultLocale")
     @Override
     public String getFormattedResult() {
-        return String.format("%.1f%s", percentage, getResultUnit());
+        if (isHaveData) {
+            return String.format("%.1f%s", percentage, getResultUnit());
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -64,16 +74,23 @@ public abstract class PercentageObdCommand extends ObdCommand {
         return percentage;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getResultUnit() {
         return "%";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getCalculatedResult() {
-        return String.valueOf(percentage);
+        if (isHaveData) {
+            return String.valueOf(percentage);
+        } else {
+            return "";
+        }
     }
-
 }

@@ -23,7 +23,7 @@ public class RuntimeCommand extends ObdCommand {
      * Default ctor.
      */
     public RuntimeCommand(String mode) {
-        super(mode+" 1F");
+        super(mode + " 1F");
     }
 
     /**
@@ -39,7 +39,12 @@ public class RuntimeCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [01 0C] of the response
-        value = buffer.get(2) * 256 + buffer.get(3);
+        if (buffer.size() != 0) {
+            value = buffer.get(2) * 256 + buffer.get(3);
+            isHaveData = true;
+        } else {
+            isHaveData = false;
+        }
     }
 
     /**
@@ -48,11 +53,15 @@ public class RuntimeCommand extends ObdCommand {
     @Override
     public String getFormattedResult() {
         // determine time
-        Log.d("RUNTIME VALUE", String.valueOf(value));
-        final String hh = String.format(Locale.ENGLISH, "%02d", value / 3600);
-        final String mm = String.format(Locale.ENGLISH, "%02d", (value % 3600) / 60);
-        final String ss = String.format(Locale.ENGLISH, "%02d", value % 60);
-        return String.format(Locale.ENGLISH , "%s:%s:%s", hh, mm, ss);
+        if (isHaveData) {
+            Log.d("RUNTIME VALUE", String.valueOf(value));
+            final String hh = String.format(Locale.ENGLISH, "%02d", value / 3600);
+            final String mm = String.format(Locale.ENGLISH, "%02d", (value % 3600) / 60);
+            final String ss = String.format(Locale.ENGLISH, "%02d", value % 60);
+            return String.format(Locale.ENGLISH, "%s:%s:%s", hh, mm, ss);
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -60,7 +69,11 @@ public class RuntimeCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return String.valueOf(value);
+        if (isHaveData) {
+            return String.valueOf(value);
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -78,6 +91,5 @@ public class RuntimeCommand extends ObdCommand {
     public String getName() {
         return AvailableCommandNames.ENGINE_RUNTIME.getValue();
     }
-
 }
 

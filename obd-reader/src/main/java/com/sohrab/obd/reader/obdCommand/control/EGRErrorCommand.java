@@ -29,7 +29,13 @@ public class EGRErrorCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [hh hh] of the response
-        EGRError = ((buffer.get(2) - 128) * 100) / 128;
+
+        if (buffer.size()!=0) {
+            EGRError = ((buffer.get(2) - 128) * 100) / 128;
+            isHaveData = true;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /**
@@ -37,7 +43,11 @@ public class EGRErrorCommand extends ObdCommand {
      */
     @Override
     public String getFormattedResult() {
-        return EGRError + "%";
+        if (isHaveData){
+            return EGRError + "%";
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -45,7 +55,11 @@ public class EGRErrorCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return EGRError + "%";
+        if (isHaveData){
+            return EGRError + "%";
+        }else {
+            return "";
+        }
     }
 
     @Override

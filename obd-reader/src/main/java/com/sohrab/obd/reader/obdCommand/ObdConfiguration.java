@@ -136,6 +136,9 @@ public class ObdConfiguration {
         mObdCommands.add(new FuelRailPressureCommand(modeTrim.build()));//"01 23" 油轨压力（柴油或汽油直喷）
         mObdCommands.add(new EGRCommand(modeTrim.build()));//"01 2C" 废气循环命令
         mObdCommands.add(new EGRErrorCommand(modeTrim.build()));//"01 2D" 废气循环错误
+
+
+
         mObdCommands.add(new EvaporativePurgeCommand(modeTrim.build()));//"01 2E" 蒸发净化
         mObdCommands.add(new FuelLevelCommand(modeTrim.build()));//"01 2F" 油量液位情况
         mObdCommands.add(new WarmUpSinceCodesClearedCommand(modeTrim.build()));//"01 30" 代码清除后的预热

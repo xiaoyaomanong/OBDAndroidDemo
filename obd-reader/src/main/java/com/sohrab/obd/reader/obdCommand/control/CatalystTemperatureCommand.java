@@ -34,9 +34,14 @@ public class CatalystTemperatureCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [01 44] of the response
-        float A = buffer.get(2);
-        float B = buffer.get(3);
-        temp = (((A * 256) + B) / 10) - 40;
+        if (buffer.size()!=0) {
+            float A = buffer.get(2);
+            float B = buffer.get(3);
+            temp = (((A * 256) + B) / 10) - 40;
+            isHaveData = true;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /**
@@ -45,7 +50,11 @@ public class CatalystTemperatureCommand extends ObdCommand {
     @SuppressLint("DefaultLocale")
     @Override
     public String getFormattedResult() {
-        return getCatalystTemperature() + " ℃";
+        if (isHaveData) {
+            return getCatalystTemperature() + " ℃";
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -53,7 +62,11 @@ public class CatalystTemperatureCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return getCatalystTemperature() + " ℃";
+        if (isHaveData) {
+            return getCatalystTemperature() + " ℃";
+        }else {
+            return "";
+        }
     }
 
     /**

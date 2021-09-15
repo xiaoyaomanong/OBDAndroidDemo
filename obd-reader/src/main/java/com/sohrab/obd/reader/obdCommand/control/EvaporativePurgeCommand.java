@@ -29,7 +29,12 @@ public class EvaporativePurgeCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [hh hh] of the response
-        Purge = (buffer.get(2) * 100) / 255;
+        if(buffer.size()!=0) {
+            Purge = (buffer.get(2) * 100) / 255;
+            isHaveData = true;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /**
@@ -37,7 +42,11 @@ public class EvaporativePurgeCommand extends ObdCommand {
      */
     @Override
     public String getFormattedResult() {
-        return Purge + "%";
+        if (isHaveData) {
+            return Purge + "%";
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -45,7 +54,11 @@ public class EvaporativePurgeCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return Purge + "%";
+        if (isHaveData) {
+            return Purge + "%";
+        }else {
+            return "";
+        }
     }
 
     @Override

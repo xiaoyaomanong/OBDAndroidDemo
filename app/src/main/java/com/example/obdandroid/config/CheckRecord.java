@@ -2,15 +2,11 @@ package com.example.obdandroid.config;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.nfc.Tag;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.example.obdandroid.ui.entity.DefaultCodeEntity;
-import com.example.obdandroid.ui.entity.FaultCodeDetailsEntity;
 import com.sohrab.obd.reader.application.ObdPreferences;
-import com.sohrab.obd.reader.constants.DefineObdReader;
 import com.sohrab.obd.reader.enums.FuelType;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.SpeedCommand;
@@ -22,8 +18,6 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -39,10 +33,9 @@ import static com.example.obdandroid.config.APIConfig.getInquireAboutFaultCodeDe
  * 日期：2021/3/6
  * 描述：
  */
-public class CheckRecord implements DefineObdReader, Serializable {
+public class CheckRecord implements Serializable {
     @SuppressLint("StaticFieldLeak")
     private static Context sContext;
-    int MINUS_ONE = -1;
     private static final int SPEED_GAP = 20;
     private static final float GRAM_TO_LITRE_GASOLIN = 748.9f;
     private static final float GRAM_TO_LITRE_DIESEL = 850.8f;
@@ -142,25 +135,8 @@ public class CheckRecord implements DefineObdReader, Serializable {
     private static CheckRecord sInstance;
     private Integer engineRpmMax = 0;
     private String engineRpm = "";
-    private String mEngineFrictionPercentTorque = "";
-    private String mDPFTemp = "";
-    private String mEngineReferenceTorque = "";
-    private String mActualEngineTorque = "";
-    private String mDriverEngineTorque = "";
-    private String mHyBatteryPackLife;
-    private String mRelAccPedalPos;
-    private String mFuelRailAbsPressure;
-    private String mMaxAirFlowMassRate;
-    private String mEthanolFuelRate;
-    private String mAbsEvapSystemVaporPressure;
-    private String mEvapSystemVaporPressure;
-    private String mShortA_BANK1_B_BANK3;
-    private String mLong_A_BANK1_B_BANK3;
-    private String mShort_A_BANK2_B_BANK4;
-    private String mLong_A_BANK2_B_BANK4;
     private Integer speed = -1;
     private Integer speedMax = 0;
-    private String engineRuntime;
     private final long tripStartTime;
     private float idlingDuration;
     private float drivingDuration;
@@ -168,91 +144,28 @@ public class CheckRecord implements DefineObdReader, Serializable {
     private long mAddSpeed;
     private long mSpeedCount;
     private float mDistanceTravel;
-    private float mMassAirFlow;
     private int mRapidAccTimes = 0;
     private int mRapidDeclTimes = 0;
     private float mInsFuelConsumption = 0.0f;
     private float mDrivingFuelConsumption = 0.0f;
     private float mIdlingFuelConsumption = 0.0f;
-    private String mFuelLevel;
     private long mLastTimeStamp;
     private float mFuelTypeValue = 14.7f; //默认值为汽油燃油比
-    private String mFuelTypeName;
     private float mDrivingMaf;
     private int mDrivingMafCount;
     private float mIdleMaf;
     private int mIdleMafCount;
     private int mSecondAgoSpeed;
     private float gramToLitre = GRAM_TO_LITRE_GASOLIN;
-    private final String mTripIdentifier;
-    private boolean mIsMAFSupported = true;
-    private boolean mIsEngineRuntimeSupported = true;
-    private boolean mIsTempPressureSupported = true;
     private float mIntakeAirTemp = 0.0f;
     private float mIntakePressure = 0.0f;
-    private String mFaultCodes = "";
-    private String mAmbientAirTemp;
 
-    private String mWideBandAirFuelRatioOne;
-    private String mWideBandAirFuelRatioTwo;
-    private String mWideBandAirFuelRatioThree;
-    private String mWideBandAirFuelRatioFour;
-    private String mWideBandAirFuelRatioFive;
-    private String mWideBandAirFuelRatioSix;
-    private String mWideBandAirFuelRatioSeven;
-    private String mWideBandAirFuelRatioEight;
-
-    private String mCatalystTemperatureBank1Sensor1;
-    private String mCatalystTemperatureBank2Sensor1;
-    private String mCatalystTemperatureBank1Sensor2;
-    private String mCatalystTemperatureBank2Sensor2;
-
-    private String mAbsThrottlePosb;
-    private String mAbsThrottlePosc;
-    private String mAccPedalPosd;
-    private String mAccPedalPose;
-    private String mAccPedalPosf;
-    private String mThrottleActuator;
-
-    private String mTimeRunwithMILOn;
-
-    private String mWarmUpSinceCodesCleared;
     private String mEngineCoolantTemp;
     private String mEngineOilTemp;
-    private String mSystemVaporPressure;
     private String mFuelConsumptionRate;
-    private String mFuelSystemStatus;
     private String mFuelPressure;
-    private String mEGR;
-    private String mEGRError;
-    private String mEvaporaivePurge;
-    private String mEngineLoad;
-    private String mBarometricPressure;
     private String mThrottlePos;
-    private String mTimingAdvance;
-    private String mPermanentTroubleCode;
-    private String mPendingTroubleCode;
-    private String mEquivRatio;
-    private String mDistanceTraveledAfterCodesCleared;
-    private String mControlModuleVoltage;
-    // private String mEngineFuelRate;
     private String mFuelRailPressure = "";
-    private String mFuelRailPressurevacuum = "";
-    private String mVehicleIdentificationNumber;
-    private String mDistanceTraveledMilOn;
-    private String mDtcNumber;
-    private String mTimeSinceTcClear;
-    private String mRelThottlePos;
-    private String mAbsLoad;
-    private String mAirFuelRatio;
-    private String mWideBandAirFuelRatio;
-    private String mDescribeProtocol;
-    private String mDescribeProtocolNumber;
-    private String mIgnitionMonitor;
-    private String mShortTermBank1;
-    private String mShortTermBank2;
-    private String mLongTermBank1;
-    private String mLongTermBank2;
     private static String mToken;
     private final StringBuilder DefaultCode;
     private final StringBuilder permanentCode;
@@ -263,7 +176,6 @@ public class CheckRecord implements DefineObdReader, Serializable {
 
     private CheckRecord() {
         tripStartTime = System.currentTimeMillis();
-        mTripIdentifier = UUID.randomUUID().toString();
         DefaultCode = new StringBuilder();
         permanentCode = new StringBuilder();
         pendingCode = new StringBuilder();
@@ -289,20 +201,18 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 break;
             case ENGINE_RPM://转速
                 setEngineRpm(command.getCalculatedResult());
-                setmIsEngineRuntimeSupported(true);
                 break;
             case MAF://MAF空气流量速率
-                mMassAirFlow = Float.parseFloat(command.getFormattedResult());
-                findInsFualConsumption(mMassAirFlow);
-                setmIsMAFSupported(true);
+                float mMassAirFlow = Float.parseFloat(command.getFormattedResult());
+                findInsFuelConsumption(mMassAirFlow);
                 break;
             case ENGINE_RUNTIME:
-                engineRuntime = command.getFormattedResult();
+                String engineRuntime = command.getFormattedResult();
                 data.add(new OBDTripEntity("引擎启动后的运行时间", TextUtils.isEmpty(engineRuntime) ? "N/A" : engineRuntime));
                 entity.setEngineRuntime(TextUtils.isEmpty(engineRuntime) ? "" : engineRuntime);
                 break;
             case FUEL_LEVEL:
-                mFuelLevel = command.getFormattedResult();
+                String mFuelLevel = command.getFormattedResult();
                 data.add(new OBDTripEntity("燃油油位", TextUtils.isEmpty(mFuelLevel) ? "N/A" : mFuelLevel));
                 entity.setFuelLevel(TextUtils.isEmpty(mFuelLevel) ? "" : mFuelLevel);
                 break;
@@ -323,7 +233,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 calculateMaf();
                 break;
             case AMBIENT_AIR_TEMP:
-                mAmbientAirTemp = command.getFormattedResult();
+                String mAmbientAirTemp = command.getFormattedResult();
                 data.add(new OBDTripEntity("环境空气温度", TextUtils.isEmpty(mAmbientAirTemp) ? "N/A" : mAmbientAirTemp + " ℃"));
                 entity.setAmbientAirTemp(TextUtils.isEmpty(mAmbientAirTemp) ? "" : mAmbientAirTemp);
                 break;
@@ -345,7 +255,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 entity.setFuelConsumptionRate(TextUtils.isEmpty(mFuelConsumptionRate) ? "" : mFuelConsumptionRate);
                 break;
             case FUEL_SYSTEM_STATUS:
-                mFuelSystemStatus = command.getFormattedResult();
+                String mFuelSystemStatus = command.getFormattedResult();
                 data.add(new OBDTripEntity("燃油系统状态", mFuelSystemStatus));
                 entity.setFuelSystemStatus(mFuelSystemStatus);
                 break;
@@ -355,27 +265,27 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 entity.setFuelPressure(TextUtils.isEmpty(mFuelPressure) ? "" : mFuelPressure);
                 break;
             case ENGINE_LOAD:
-                mEngineLoad = command.getFormattedResult();
+                String mEngineLoad = command.getFormattedResult();
                 data.add(new OBDTripEntity("引擎载荷", TextUtils.isEmpty(mEngineLoad) ? "N/A" : mEngineLoad));
                 entity.setEngineLoad(TextUtils.isEmpty(mEngineLoad) ? "" : mEngineLoad);
                 break;
             case EGR:
-                mEGR = command.getFormattedResult();
+                String mEGR = command.getFormattedResult();
                 data.add(new OBDTripEntity("废气循环", TextUtils.isEmpty(mEGR) ? "N/A" : mEGR));
                 entity.setRmCommandedEGR(TextUtils.isEmpty(mEGR) ? "" : mEGR);
                 break;
             case EGR_ERROR:
-                mEGRError = command.getFormattedResult();
+                String mEGRError = command.getFormattedResult();
                 data.add(new OBDTripEntity("废气循环错误", TextUtils.isEmpty(mEGRError) ? "N/A" : mEGRError));
                 entity.setEgrError(TextUtils.isEmpty(mEGRError) ? "" : mEGRError);
                 break;
             case EVAPORAIVE_PURGE:
-                mEvaporaivePurge = command.getFormattedResult();
+                String mEvaporaivePurge = command.getFormattedResult();
                 data.add(new OBDTripEntity("蒸发净化", TextUtils.isEmpty(mEvaporaivePurge) ? "N/A" : mEvaporaivePurge));
                 entity.setEvaporaivePurge(TextUtils.isEmpty(mEvaporaivePurge) ? "" : mEvaporaivePurge);
                 break;
             case BAROMETRIC_PRESSURE:
-                mBarometricPressure = command.getFormattedResult();
+                String mBarometricPressure = command.getFormattedResult();
                 data.add(new OBDTripEntity("绝对大气压", TextUtils.isEmpty(mBarometricPressure) ? "N/A" : mBarometricPressure));
                 entity.setBarometricPressure(TextUtils.isEmpty(mBarometricPressure) ? "" : mBarometricPressure);
                 break;
@@ -385,197 +295,197 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 entity.setThottlePos(TextUtils.isEmpty(mThrottlePos) ? "" : mThrottlePos);
                 break;
             case TIMING_ADVANCE:
-                mTimingAdvance = command.getFormattedResult();
+                String mTimingAdvance = command.getFormattedResult();
                 data.add(new OBDTripEntity("点火提前值", TextUtils.isEmpty(mTimingAdvance) ? "N/A" : mTimingAdvance));
                 entity.setTimingAdvance(TextUtils.isEmpty(mTimingAdvance) ? "" : mTimingAdvance);
                 break;
             case WarmUpSinceCodesCleared:
-                mWarmUpSinceCodesCleared = command.getFormattedResult();
+                String mWarmUpSinceCodesCleared = command.getFormattedResult();
                 data.add(new OBDTripEntity("代码清除后的预热", TextUtils.isEmpty(mWarmUpSinceCodesCleared) ? "N/A" : mWarmUpSinceCodesCleared));
                 entity.setWarmUpSinceCodesCleared(TextUtils.isEmpty(mWarmUpSinceCodesCleared) ? "" : mWarmUpSinceCodesCleared);
                 break;
             case WIDE_BAND_AIR_FUEL_RATIO_1:
-                mWideBandAirFuelRatioOne = command.getFormattedResult();
+                String mWideBandAirFuelRatioOne = command.getFormattedResult();
                 data.add(new OBDTripEntity("氧气侦测器1 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioOne) ? "N/A" : mWideBandAirFuelRatioOne));
                 entity.setWideBandAirFuelRatioOne(TextUtils.isEmpty(mWideBandAirFuelRatioOne) ? "" : mWideBandAirFuelRatioOne);
                 break;
             case WIDE_BAND_AIR_FUEL_RATIO_2:
-                mWideBandAirFuelRatioTwo = command.getFormattedResult();
+                String mWideBandAirFuelRatioTwo = command.getFormattedResult();
                 data.add(new OBDTripEntity("氧气侦测器2 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioTwo) ? "N/A" : mWideBandAirFuelRatioTwo));
                 entity.setWideBandAirFuelRatioTwo(TextUtils.isEmpty(mWideBandAirFuelRatioTwo) ? "" : mWideBandAirFuelRatioTwo);
                 break;
             case WIDE_BAND_AIR_FUEL_RATIO_3:
-                mWideBandAirFuelRatioThree = command.getFormattedResult();
+                String mWideBandAirFuelRatioThree = command.getFormattedResult();
                 data.add(new OBDTripEntity("氧气侦测器3 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioThree) ? "N/A" : mWideBandAirFuelRatioThree));
                 entity.setWideBandAirFuelRatioThree(TextUtils.isEmpty(mWideBandAirFuelRatioThree) ? "" : mWideBandAirFuelRatioThree);
                 break;
             case WIDE_BAND_AIR_FUEL_RATIO_4:
-                mWideBandAirFuelRatioFour = command.getFormattedResult();
+                String mWideBandAirFuelRatioFour = command.getFormattedResult();
                 data.add(new OBDTripEntity("氧气侦测器4 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioFour) ? "N/A" : mWideBandAirFuelRatioFour));
                 entity.setWideBandAirFuelRatioFour(TextUtils.isEmpty(mWideBandAirFuelRatioFour) ? "" : mWideBandAirFuelRatioFour);
                 break;
             case WIDE_BAND_AIR_FUEL_RATIO_5:
-                mWideBandAirFuelRatioFive = command.getFormattedResult();
+                String mWideBandAirFuelRatioFive = command.getFormattedResult();
                 data.add(new OBDTripEntity("氧气侦测器5 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioFive) ? "N/A" : mWideBandAirFuelRatioFive));
                 entity.setWideBandAirFuelRatioFive(TextUtils.isEmpty(mWideBandAirFuelRatioFive) ? "" : mWideBandAirFuelRatioFive);
                 break;
             case WIDE_BAND_AIR_FUEL_RATIO_6:
-                mWideBandAirFuelRatioSix = command.getFormattedResult();
+                String mWideBandAirFuelRatioSix = command.getFormattedResult();
                 data.add(new OBDTripEntity("氧气侦测器6 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioSix) ? "N/A" : mWideBandAirFuelRatioSix));
                 entity.setWideBandAirFuelRatioSix(TextUtils.isEmpty(mWideBandAirFuelRatioSix) ? "" : mWideBandAirFuelRatioSix);
                 break;
             case WIDE_BAND_AIR_FUEL_RATIO_7:
-                mWideBandAirFuelRatioSeven = command.getFormattedResult();
+                String mWideBandAirFuelRatioSeven = command.getFormattedResult();
                 data.add(new OBDTripEntity("氧气侦测器7 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioSeven) ? "N/A" : mWideBandAirFuelRatioSeven));
                 entity.setWideBandAirFuelRatioSeven(TextUtils.isEmpty(mWideBandAirFuelRatioSeven) ? "" : mWideBandAirFuelRatioSeven);
                 break;
             case WIDE_BAND_AIR_FUEL_RATIO_8:
-                mWideBandAirFuelRatioEight = command.getFormattedResult();
+                String mWideBandAirFuelRatioEight = command.getFormattedResult();
                 data.add(new OBDTripEntity("氧气侦测器8 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioEight) ? "N/A" : mWideBandAirFuelRatioEight));
                 entity.setWideBandAirFuelRatioEight(TextUtils.isEmpty(mWideBandAirFuelRatioEight) ? "" : mWideBandAirFuelRatioEight);
                 break;
             case Catalyst_Temperature_Bank_1_Sensor_1:
-                mCatalystTemperatureBank1Sensor1 = command.getFormattedResult();
+                String mCatalystTemperatureBank1Sensor1 = command.getFormattedResult();
                 data.add(new OBDTripEntity("催化剂温度:Bank1,感测器1", TextUtils.isEmpty(mCatalystTemperatureBank1Sensor1) ? "N/A" : mCatalystTemperatureBank1Sensor1));
                 entity.setCatalystTemperatureBank1Sensor1(TextUtils.isEmpty(mCatalystTemperatureBank1Sensor1) ? "" : mCatalystTemperatureBank1Sensor1);
                 break;
             case Catalyst_Temperature_Bank_2_Sensor_1:
-                mCatalystTemperatureBank2Sensor1 = command.getFormattedResult();
+                String mCatalystTemperatureBank2Sensor1 = command.getFormattedResult();
                 data.add(new OBDTripEntity("催化剂温度:Bank2,感测器1", TextUtils.isEmpty(mCatalystTemperatureBank2Sensor1) ? "N/A" : mCatalystTemperatureBank2Sensor1));
                 entity.setCatalystTemperatureBank2Sensor1(TextUtils.isEmpty(mCatalystTemperatureBank2Sensor1) ? "" : mCatalystTemperatureBank2Sensor1);
                 break;
             case Catalyst_Temperature_Bank_1_Sensor_2:
-                mCatalystTemperatureBank1Sensor2 = command.getFormattedResult();
+                String mCatalystTemperatureBank1Sensor2 = command.getFormattedResult();
                 data.add(new OBDTripEntity("催化剂温度:Bank1,感测器2", TextUtils.isEmpty(mCatalystTemperatureBank1Sensor2) ? "N/A" : mCatalystTemperatureBank1Sensor2));
                 entity.setCatalystTemperatureBank1Sensor2(TextUtils.isEmpty(mCatalystTemperatureBank1Sensor2) ? "" : mCatalystTemperatureBank1Sensor2);
                 break;
             case Catalyst_Temperature_Bank_2_Sensor_2:
-                mCatalystTemperatureBank2Sensor2 = command.getFormattedResult();
+                String mCatalystTemperatureBank2Sensor2 = command.getFormattedResult();
                 data.add(new OBDTripEntity("催化剂温度:Bank2,感测器2", TextUtils.isEmpty(mCatalystTemperatureBank2Sensor2) ? "N/A" : mCatalystTemperatureBank2Sensor2));
                 entity.setCatalystTemperatureBank2Sensor2(TextUtils.isEmpty(mCatalystTemperatureBank2Sensor2) ? "" : mCatalystTemperatureBank2Sensor2);
                 break;
             case ABS_THROTTLE_POS_B:
-                mAbsThrottlePosb = command.getFormattedResult();
+                String mAbsThrottlePosb = command.getFormattedResult();
                 data.add(new OBDTripEntity("绝对油门位置B", TextUtils.isEmpty(mAbsThrottlePosb) ? "N/A" : mAbsThrottlePosb));
                 entity.setAbsThrottlePosb(TextUtils.isEmpty(mAbsThrottlePosb) ? "" : mAbsThrottlePosb);
                 break;
             case ABS_THROTTLE_POS_C:
-                mAbsThrottlePosc = command.getFormattedResult();
+                String mAbsThrottlePosc = command.getFormattedResult();
                 data.add(new OBDTripEntity("绝对油门位置C", TextUtils.isEmpty(mAbsThrottlePosc) ? "N/A" : mAbsThrottlePosc));
                 entity.setAbsThrottlePosc(TextUtils.isEmpty(mAbsThrottlePosc) ? "" : mAbsThrottlePosc);
                 break;
             case ACC_PEDAL_POS_D:
-                mAccPedalPosd = command.getFormattedResult();
+                String mAccPedalPosd = command.getFormattedResult();
                 data.add(new OBDTripEntity("加速踏板位置D", TextUtils.isEmpty(mAccPedalPosd) ? "N/A" : mAccPedalPosd));
                 entity.setAccPedalPosd(TextUtils.isEmpty(mAccPedalPosd) ? "" : mAccPedalPosd);
                 break;
             case ACC_PEDAL_POS_E:
-                mAccPedalPose = command.getFormattedResult();
+                String mAccPedalPose = command.getFormattedResult();
                 data.add(new OBDTripEntity("加速踏板位置E", TextUtils.isEmpty(mAccPedalPose) ? "N/A" : mAccPedalPose));
                 entity.setAccPedalPose(TextUtils.isEmpty(mAccPedalPose) ? "" : mAccPedalPose);
                 break;
             case ACC_PEDAL_POS_F:
-                mAccPedalPosf = command.getFormattedResult();
+                String mAccPedalPosf = command.getFormattedResult();
                 data.add(new OBDTripEntity("加速踏板位置F", TextUtils.isEmpty(mAccPedalPosf) ? "N/A" : mAccPedalPosf));
                 entity.setAccPedalPosf(TextUtils.isEmpty(mAccPedalPosf) ? "" : mAccPedalPosf);
                 break;
             case THROTTLE_ACTUATOR:
-                mThrottleActuator = command.getFormattedResult();
+                String mThrottleActuator = command.getFormattedResult();
                 data.add(new OBDTripEntity("油门执行器控制值", TextUtils.isEmpty(mThrottleActuator) ? "N/A" : mThrottleActuator));
                 entity.setThrottleActuator(TextUtils.isEmpty(mThrottleActuator) ? "" : mThrottleActuator);
                 break;
             case TIME_TRAVELED_MIL_ON:
-                mTimeRunwithMILOn = command.getFormattedResult();
+                String mTimeRunwithMILOn = command.getFormattedResult();
                 data.add(new OBDTripEntity("MIL灯亮的行驶时间", TextUtils.isEmpty(mTimeRunwithMILOn) ? "N/A" : mTimeRunwithMILOn));
                 entity.setTimeRunWithMILOn(TextUtils.isEmpty(mTimeRunwithMILOn) ? "" : mTimeRunwithMILOn);
                 break;
             case MAX_AIR_FLOW_MASS_RATE:
-                mMaxAirFlowMassRate = command.getFormattedResult();
+                String mMaxAirFlowMassRate = command.getFormattedResult();
                 data.add(new OBDTripEntity("质量空气流量计的最大空气流率", TextUtils.isEmpty(mMaxAirFlowMassRate) ? "N/A" : mMaxAirFlowMassRate));
                 entity.setMaxAirFlowMassRate(TextUtils.isEmpty(mMaxAirFlowMassRate) ? "" : mMaxAirFlowMassRate);
                 break;
             case ETHANOL_FUEL_RATE:
-                mEthanolFuelRate = command.getFormattedResult();
+                String mEthanolFuelRate = command.getFormattedResult();
                 data.add(new OBDTripEntity("乙醇燃料百分比", TextUtils.isEmpty(mEthanolFuelRate) ? "N/A" : mEthanolFuelRate));
                 entity.setEthanolFuelRate(TextUtils.isEmpty(mEthanolFuelRate) ? "" : mEthanolFuelRate);
                 break;
             case ABS_EVAP_SYSTEM_VAPOR_PRESSURE:
-                mAbsEvapSystemVaporPressure = command.getFormattedResult();
+                String mAbsEvapSystemVaporPressure = command.getFormattedResult();
                 data.add(new OBDTripEntity("蒸发系统绝对蒸气压力", TextUtils.isEmpty(mAbsEvapSystemVaporPressure) ? "N/A" : mAbsEvapSystemVaporPressure));
                 entity.setAbsEvapSystemVaporPressure(TextUtils.isEmpty(mAbsEvapSystemVaporPressure) ? "" : mAbsEvapSystemVaporPressure);
                 break;
             case EVAP_SYSTEM_VAPOR_PRESSURE:
-                mEvapSystemVaporPressure = command.getFormattedResult();
+                String mEvapSystemVaporPressure = command.getFormattedResult();
                 data.add(new OBDTripEntity("蒸发系统(相对)蒸气压力", TextUtils.isEmpty(mEvapSystemVaporPressure) ? "N/A" : mEvapSystemVaporPressure));
                 entity.setEvapSystemVaporPressure(TextUtils.isEmpty(mEvapSystemVaporPressure) ? "" : mEvapSystemVaporPressure);
                 break;
             case SHORT_A_BANK1_B_BANK3:
-                mShortA_BANK1_B_BANK3 = command.getFormattedResult();
+                String mShortA_BANK1_B_BANK3 = command.getFormattedResult();
                 data.add(new OBDTripEntity("第二侧氧气侦测器短期修正,A:bank 1,B:bank 3", TextUtils.isEmpty(mShortA_BANK1_B_BANK3) ? "N/A" : mShortA_BANK1_B_BANK3));
                 entity.setShortA_BANK1_B_BANK3(TextUtils.isEmpty(mShortA_BANK1_B_BANK3) ? "" : mShortA_BANK1_B_BANK3);
                 break;
             case LONG_A_BANK1_B_BANK3:
-                mLong_A_BANK1_B_BANK3 = command.getFormattedResult();
+                String mLong_A_BANK1_B_BANK3 = command.getFormattedResult();
                 data.add(new OBDTripEntity("第二侧氧气侦测器长期修正,A:bank 1,B:bank 3", TextUtils.isEmpty(mLong_A_BANK1_B_BANK3) ? "N/A" : mLong_A_BANK1_B_BANK3));
                 entity.setLong_A_BANK1_B_BANK3(TextUtils.isEmpty(mLong_A_BANK1_B_BANK3) ? "" : mLong_A_BANK1_B_BANK3);
                 break;
             case SHORT_A_BANK2_B_BANK4:
-                mShort_A_BANK2_B_BANK4 = command.getFormattedResult();
+                String mShort_A_BANK2_B_BANK4 = command.getFormattedResult();
                 data.add(new OBDTripEntity("第二侧氧气侦测器短期修正,A:bank 2,B:bank 4", TextUtils.isEmpty(mShort_A_BANK2_B_BANK4) ? "N/A" : mShort_A_BANK2_B_BANK4));
                 entity.setShort_A_BANK2_B_BANK4(TextUtils.isEmpty(mShort_A_BANK2_B_BANK4) ? "" : mShort_A_BANK2_B_BANK4);
                 break;
             case LONG_A_BANK2_B_BANK4:
-                mLong_A_BANK2_B_BANK4 = command.getFormattedResult();
+                String mLong_A_BANK2_B_BANK4 = command.getFormattedResult();
                 data.add(new OBDTripEntity("第二侧氧气侦测器长期修正,A:bank 2,B:bank 4", TextUtils.isEmpty(mLong_A_BANK2_B_BANK4) ? "N/A" : mLong_A_BANK2_B_BANK4));
                 entity.setLong_A_BANK2_B_BANK4(TextUtils.isEmpty(mLong_A_BANK2_B_BANK4) ? "" : mLong_A_BANK2_B_BANK4);
                 break;
             case FUEL_RAIL_ABS_PRESSURE:
-                mFuelRailAbsPressure = command.getFormattedResult();
+                String mFuelRailAbsPressure = command.getFormattedResult();
                 data.add(new OBDTripEntity("高压共轨绝对压力", TextUtils.isEmpty(mFuelRailAbsPressure) ? "N/A" : mFuelRailAbsPressure));
                 entity.setFuelRailAbsPressure(TextUtils.isEmpty(mFuelRailAbsPressure) ? "" : mFuelRailAbsPressure);
                 break;
             case REL_ACCELERATOR_PEDAL_POS:
-                mRelAccPedalPos = command.getFormattedResult();
+                String mRelAccPedalPos = command.getFormattedResult();
                 data.add(new OBDTripEntity("加速踏板相对位置", TextUtils.isEmpty(mRelAccPedalPos) ? "N/A" : mRelAccPedalPos));
                 entity.setRelAccPedalPos(TextUtils.isEmpty(mRelAccPedalPos) ? "" : mRelAccPedalPos);
                 break;
             case HY_BATTERY_PACK_LIFE:
-                mHyBatteryPackLife = command.getFormattedResult();
+                String mHyBatteryPackLife = command.getFormattedResult();
                 data.add(new OBDTripEntity("油电混合电池组剩下寿命", TextUtils.isEmpty(mHyBatteryPackLife) ? "N/A" : mHyBatteryPackLife));
                 entity.setHyBatteryPackLife(TextUtils.isEmpty(mHyBatteryPackLife) ? "" : mHyBatteryPackLife);
                 break;
             case DRIVER_ENGINE_TORQUE:
-                mDriverEngineTorque = command.getFormattedResult();
+                String mDriverEngineTorque = command.getFormattedResult();
                 data.add(new OBDTripEntity("驾驶的引擎命令-扭矩百分比", TextUtils.isEmpty(mDriverEngineTorque) ? "N/A" : mDriverEngineTorque));
                 entity.setHyBatteryPackLife(TextUtils.isEmpty(mDriverEngineTorque) ? "" : mDriverEngineTorque);
                 break;
             case ACTUAL_ENGINE_TORQUE:
-                mActualEngineTorque = command.getFormattedResult();
+                String mActualEngineTorque = command.getFormattedResult();
                 data.add(new OBDTripEntity("实际引擎-扭矩百分比", TextUtils.isEmpty(mActualEngineTorque) ? "N/A" : mActualEngineTorque));
                 entity.setActualEngineTorque(TextUtils.isEmpty(mActualEngineTorque) ? "" : mActualEngineTorque);
                 break;
             case ENGINE_REFERENCE_TORQUE:
-                mEngineReferenceTorque = command.getFormattedResult();
+                String mEngineReferenceTorque = command.getFormattedResult();
                 data.add(new OBDTripEntity("引擎参考扭矩", TextUtils.isEmpty(mEngineReferenceTorque) ? "N/A" : mEngineReferenceTorque));
                 entity.setEngineReferenceTorque(TextUtils.isEmpty(mEngineReferenceTorque) ? "" : mEngineReferenceTorque);
                 break;
             case DPF_TEMP:
-                mDPFTemp = command.getFormattedResult();
+                String mDPFTemp = command.getFormattedResult();
                 data.add(new OBDTripEntity("柴油粒子过滤器(DPF)温度", TextUtils.isEmpty(mDPFTemp) ? "N/A" : mDPFTemp));
                 entity.setDPFTemp(TextUtils.isEmpty(mDPFTemp) ? "" : mDPFTemp);
                 break;
             case ENGINE_FRICTION_PERCENT_TORQUE:
-                mEngineFrictionPercentTorque = command.getFormattedResult();
+                String mEngineFrictionPercentTorque = command.getFormattedResult();
                 data.add(new OBDTripEntity("引擎摩擦力-扭矩百分比", TextUtils.isEmpty(mEngineFrictionPercentTorque) ? "N/A" : mEngineFrictionPercentTorque));
                 entity.setEngineFrictionPercentTorque(TextUtils.isEmpty(mEngineFrictionPercentTorque) ? "" : mEngineFrictionPercentTorque);
                 break;
             case DISTANCE_TRAVELED_AFTER_CODES_CLEARED:
-                mDistanceTraveledAfterCodesCleared = command.getFormattedResult();
+                String mDistanceTraveledAfterCodesCleared = command.getFormattedResult();
                 data.add(new OBDTripEntity("故障码清除后行驶里程", TextUtils.isEmpty(mDistanceTraveledAfterCodesCleared) ? "N/A" : mDistanceTraveledAfterCodesCleared));
                 entity.setDistanceTraveledAfterCodesCleared(TextUtils.isEmpty(mDistanceTraveledAfterCodesCleared) ? "" : mDistanceTraveledAfterCodesCleared);
                 break;
             case CONTROL_MODULE_VOLTAGE:
-                mControlModuleVoltage = command.getFormattedResult();
+                String mControlModuleVoltage = command.getFormattedResult();
                 data.add(new OBDTripEntity("控制模组电压", TextUtils.isEmpty(mControlModuleVoltage) ? "N/A" : mControlModuleVoltage));
                 entity.setControlModuleVoltage(TextUtils.isEmpty(mControlModuleVoltage) ? "" : mControlModuleVoltage);
                 break;
@@ -585,88 +495,88 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 entity.setFuelRailPressure(TextUtils.isEmpty(mFuelRailPressure) ? "" : mFuelRailPressure);
                 break;
             case FUEL_RAIL_PRESSURE_manifold:
-                mFuelRailPressurevacuum = command.getFormattedResult();
+                String mFuelRailPressurevacuum = command.getFormattedResult();
                 data.add(new OBDTripEntity("油轨压力(相对进气歧管真空度)", TextUtils.isEmpty(mFuelRailPressurevacuum) ? "N/A" : mFuelRailPressurevacuum));
                 entity.setFuelRailPressurevacuum(TextUtils.isEmpty(mFuelRailPressurevacuum) ? "" : mFuelRailPressurevacuum);
                 break;
             case VIN:
-                mVehicleIdentificationNumber = command.getFormattedResult();
+                String mVehicleIdentificationNumber = command.getFormattedResult();
                 data.add(new OBDTripEntity("车辆识别号(VIN)", TextUtils.isEmpty(mVehicleIdentificationNumber) ? "N/A" : mVehicleIdentificationNumber));
                 entity.setVehicleIdentificationNumber(TextUtils.isEmpty(mVehicleIdentificationNumber) ? "" : mVehicleIdentificationNumber);
                 break;
 
             case DISTANCE_TRAVELED_MIL_ON:
-                mDistanceTraveledMilOn = command.getFormattedResult();
+                String mDistanceTraveledMilOn = command.getFormattedResult();
                 data.add(new OBDTripEntity("故障指示灯(MIL)亮时行驶的距离", TextUtils.isEmpty(mDistanceTraveledMilOn) ? "N/A" : mDistanceTraveledMilOn));
                 entity.setDistanceTraveledMilOn(TextUtils.isEmpty(mDistanceTraveledMilOn) ? "" : mDistanceTraveledMilOn);
                 break;
             case DTC_NUMBER:
-                mDtcNumber = command.getFormattedResult();
+                String mDtcNumber = command.getFormattedResult();
                 data.add(new OBDTripEntity("自从DTC清除后的监控状态", TextUtils.isEmpty(mDtcNumber) ? "N/A" : mDtcNumber));
                 entity.setDtcNumber(TextUtils.isEmpty(mDtcNumber) ? "" : mDtcNumber);
                 break;
             case SYSTEM_VAPOR_PRESSURE:
-                mSystemVaporPressure = command.getFormattedResult();
+                String mSystemVaporPressure = command.getFormattedResult();
                 data.add(new OBDTripEntity("系统蒸汽压力", TextUtils.isEmpty(mSystemVaporPressure) ? "N/A" : mSystemVaporPressure));
                 entity.setSystemVaporPressure(TextUtils.isEmpty(mSystemVaporPressure) ? "" : mSystemVaporPressure);
                 break;
             case TIME_SINCE_TC_CLEARED:
-                mTimeSinceTcClear = command.getFormattedResult();
+                String mTimeSinceTcClear = command.getFormattedResult();
                 data.add(new OBDTripEntity("故障代码清除后的时间", TextUtils.isEmpty(mTimeSinceTcClear) ? "N/A" : mTimeSinceTcClear));
                 entity.setTimeSinceTcClear(TextUtils.isEmpty(mTimeSinceTcClear) ? "" : mTimeSinceTcClear);
                 break;
             case REL_THROTTLE_POS:
-                mRelThottlePos = command.getFormattedResult();
+                String mRelThottlePos = command.getFormattedResult();
                 data.add(new OBDTripEntity("相对油门位置", TextUtils.isEmpty(mRelThottlePos) ? "N/A" : mRelThottlePos));
                 entity.setRelThottlePos(TextUtils.isEmpty(mRelThottlePos) ? "" : mRelThottlePos);
                 break;
             case ABS_LOAD:
-                mAbsLoad = command.getFormattedResult();
+                String mAbsLoad = command.getFormattedResult();
                 data.add(new OBDTripEntity("绝对负荷", TextUtils.isEmpty(mAbsLoad) ? "N/A" : mAbsLoad));
                 entity.setAbsLoad(TextUtils.isEmpty(mAbsLoad) ? "" : mAbsLoad);
                 break;
             case AIR_FUEL_RATIO:
-                mAirFuelRatio = command.getFormattedResult();
+                String mAirFuelRatio = command.getFormattedResult();
                 data.add(new OBDTripEntity("燃油-空气命令等效比", TextUtils.isEmpty(mAirFuelRatio) ? "N/A" : mAirFuelRatio));
                 entity.setAirFuelRatio(TextUtils.isEmpty(mAirFuelRatio) ? "" : mAirFuelRatio);
                 break;
             case DESCRIBE_PROTOCOL:
-                mDescribeProtocol = command.getFormattedResult();
+                String mDescribeProtocol = command.getFormattedResult();
                 data.add(new OBDTripEntity("协议", TextUtils.isEmpty(mDescribeProtocol) ? "N/A" : mDescribeProtocol));
                 entity.setDescribeProtocol(TextUtils.isEmpty(mDescribeProtocol) ? "" : mDescribeProtocol);
                 break;
             case DESCRIBE_PROTOCOL_NUMBER:
-                mDescribeProtocolNumber = command.getFormattedResult();
+                String mDescribeProtocolNumber = command.getFormattedResult();
                 data.add(new OBDTripEntity("协议编号", TextUtils.isEmpty(mDescribeProtocolNumber) ? "N/A" : mDescribeProtocolNumber));
                 entity.setDescribeProtocolNumber(TextUtils.isEmpty(mDescribeProtocolNumber) ? "" : mDescribeProtocolNumber);
                 break;
             case IGNITION_MONITOR:
-                mIgnitionMonitor = command.getFormattedResult();
+                String mIgnitionMonitor = command.getFormattedResult();
                 data.add(new OBDTripEntity("点火监视器", TextUtils.isEmpty(mIgnitionMonitor) ? "N/A" : mIgnitionMonitor));
                 entity.setIgnitionMonitor(TextUtils.isEmpty(mIgnitionMonitor) ? "" : mIgnitionMonitor);
                 break;
             case SHORT_TERM_BANK_1:
-                mShortTermBank1 = command.getFormattedResult();
+                String mShortTermBank1 = command.getFormattedResult();
                 data.add(new OBDTripEntity("短期燃油调节库1", TextUtils.isEmpty(mShortTermBank1) ? "N/A" : mShortTermBank1));
                 entity.setShortTermBank1(TextUtils.isEmpty(mShortTermBank1) ? "" : mShortTermBank1);
                 break;
             case SHORT_TERM_BANK_2:
-                mShortTermBank2 = command.getFormattedResult();
+                String mShortTermBank2 = command.getFormattedResult();
                 data.add(new OBDTripEntity("短期燃油调节库2", TextUtils.isEmpty(mShortTermBank2) ? "N/A" : mShortTermBank2));
                 entity.setShortTermBank2(TextUtils.isEmpty(mShortTermBank2) ? "" : mShortTermBank2);
                 break;
             case LONG_TERM_BANK_1:
-                mLongTermBank1 = command.getFormattedResult();
+                String mLongTermBank1 = command.getFormattedResult();
                 data.add(new OBDTripEntity("长期燃油调节库1", TextUtils.isEmpty(mLongTermBank1) ? "N/A" : mLongTermBank1));
                 entity.setLongTermBank1(TextUtils.isEmpty(mLongTermBank1) ? "" : mLongTermBank1);
                 break;
             case LONG_TERM_BANK_2:
-                mLongTermBank2 = command.getFormattedResult();
+                String mLongTermBank2 = command.getFormattedResult();
                 data.add(new OBDTripEntity("长期燃油调节库2", TextUtils.isEmpty(mLongTermBank2) ? "N/A" : mLongTermBank2));
                 entity.setLongTermBank2(TextUtils.isEmpty(mLongTermBank2) ? "" : mLongTermBank2);
                 break;
             case TROUBLE_CODES:
-                mFaultCodes = command.getFormattedResult();
+                String mFaultCodes = command.getFormattedResult();
                 String[] troubleCodes = mFaultCodes.replaceAll("[\r\n]", ",").split(",");
                 DefaultCode.delete(0, DefaultCode.length());
                 for (String troubleCode : troubleCodes) {
@@ -674,7 +584,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 }
                 break;
             case PERMANENT_TROUBLE_CODES:
-                mPermanentTroubleCode = command.getFormattedResult();
+                String mPermanentTroubleCode = command.getFormattedResult();
                 String[] PermanentTroubleCodes = mPermanentTroubleCode.replaceAll("[\r\n]", ",").split(",");
                 permanentCode.delete(0, permanentCode.length());
                 for (String permanentTroubleCode : PermanentTroubleCodes) {
@@ -682,7 +592,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
                 }
                 break;
             case PENDING_TROUBLE_CODES:
-                mPendingTroubleCode = command.getFormattedResult();
+                String mPendingTroubleCode = command.getFormattedResult();
                 String[] PendingTroubleCodes = mPendingTroubleCode.replaceAll("[\r\n]", ",").split(",");
                 pendingCode.delete(0, pendingCode.length());
                 for (String pendingTroubleCode : PendingTroubleCodes) {
@@ -789,6 +699,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
         });
     }
 
+    @SuppressWarnings("IntegerDivisionInFloatingPointContext")
     public void setSpeed(Integer currentSpeed) {
         calculateIdlingAndDrivingTime(currentSpeed);
         findRapidAccAndDeclTimes(currentSpeed);
@@ -851,21 +762,10 @@ public class CheckRecord implements DefineObdReader, Serializable {
             float imap = ((rpm * mIntakePressure) / mIntakeAirTemp) / 2;
             float engineDisp = 2;
             float maf = (imap / 60.0f) * (85.0f / 100.0f) * (engineDisp) * ((28.97f) / (8.314f));
-            findInsFualConsumption(maf);
+            findInsFuelConsumption(maf);
         }
     }
 
-    public float getmIntakeAirTemp() {
-        return mIntakeAirTemp;
-    }
-
-    public String getmFuelLevel() {
-        return mFuelLevel;
-    }
-
-    public float getmMassAirFlow() {
-        return mMassAirFlow;
-    }
 
     private void getFuelTypeValue(String fuelType) {
         float fuelTypeValue = 0;
@@ -902,157 +802,6 @@ public class CheckRecord implements DefineObdReader, Serializable {
         return speed;
     }
 
-    public String getEngineFrictionPercentTorque() {
-        return mEngineFrictionPercentTorque;
-    }
-
-    public String getDPFTemp() {
-        return mDPFTemp;
-    }
-
-    public String getEngineReferenceTorque() {
-        return mEngineReferenceTorque;
-    }
-
-    public String getActualEngineTorque() {
-        return mActualEngineTorque;
-    }
-
-    public String getDriverEngineTorque() {
-        return mDriverEngineTorque;
-    }
-
-    public String getHyBatteryPackLife() {
-        return mHyBatteryPackLife;
-    }
-
-    public String getRelAccPedalPos() {
-        return mRelAccPedalPos;
-    }
-
-    public String getFuelRailAbsPressure() {
-        return mFuelRailAbsPressure;
-    }
-
-    public String getmShortA_BANK1_B_BANK3() {
-        return mShortA_BANK1_B_BANK3;
-    }
-
-    public String getmLong_A_BANK1_B_BANK3() {
-        return mLong_A_BANK1_B_BANK3;
-    }
-
-    public String getmShort_A_BANK2_B_BANK4() {
-        return mShort_A_BANK2_B_BANK4;
-    }
-
-    public String getmLong_A_BANK2_B_BANK4() {
-        return mLong_A_BANK2_B_BANK4;
-    }
-
-    public String getEvapSystemVaporPressure() {
-        return mEvapSystemVaporPressure;
-    }
-
-    public String getAbsEvapSystemVaporPressure() {
-        return mAbsEvapSystemVaporPressure;
-    }
-
-    public String getEthanolFuelRate() {
-        return mEthanolFuelRate;
-    }
-
-    public String getmMaxAirFlowMassRate() {
-        return mMaxAirFlowMassRate;
-    }
-
-    public String getTimeRunwithMILOn() {
-        return mTimeRunwithMILOn;
-    }
-
-    public String getAbsThrottlePosb() {
-        return mAbsThrottlePosb;
-    }
-
-    public String getAbsThrottlePosc() {
-        return mAbsThrottlePosc;
-    }
-
-    public String getAccPedalPosd() {
-        return mAccPedalPosd;
-    }
-
-    public String getAccPedalPose() {
-        return mAccPedalPose;
-    }
-
-    public String getAccPedalPosf() {
-        return mAccPedalPosf;
-    }
-
-    public String getThrottleActuator() {
-        return mThrottleActuator;
-    }
-
-    public String getCatalystTemperatureBank1Sensor1() {
-        return mCatalystTemperatureBank1Sensor1;
-    }
-
-    public String getCatalystTemperatureBank2Sensor1() {
-        return mCatalystTemperatureBank2Sensor1;
-    }
-
-    public String getCatalystTemperatureBank1Sensor2() {
-        return mCatalystTemperatureBank1Sensor2;
-    }
-
-    public String getCatalystTemperatureBank2Sensor2() {
-        return mCatalystTemperatureBank2Sensor2;
-    }
-
-    public String getWideBandAirFuelRatioOne() {
-        return mWideBandAirFuelRatioOne;
-    }
-
-    public String getWideBandAirFuelRatioTwo() {
-        return mWideBandAirFuelRatioTwo;
-    }
-
-    public String getWideBandAirFuelRatioThree() {
-        return mWideBandAirFuelRatioThree;
-    }
-
-    public String getWideBandAirFuelRatioFour() {
-        return mWideBandAirFuelRatioFour;
-    }
-
-    public String getWideBandAirFuelRatioFive() {
-        return mWideBandAirFuelRatioFive;
-    }
-
-    public String getWideBandAirFuelRatioSix() {
-        return mWideBandAirFuelRatioSix;
-    }
-
-    public String getWideBandAirFuelRatioSeven() {
-        return mWideBandAirFuelRatioSeven;
-    }
-
-    public String getWideBandAirFuelRatioEight() {
-        return mWideBandAirFuelRatioEight;
-    }
-
-    public String getSystemVaporPressure() {
-        return mSystemVaporPressure;
-    }
-
-    public String getEvaporaivePurge() {
-        return mEvaporaivePurge;
-    }
-
-    public String getWarmUpSinceCodesCleared() {
-        return mWarmUpSinceCodesCleared;
-    }
 
     public Integer getEngineRpmMax() {
         return this.engineRpmMax;
@@ -1062,9 +811,6 @@ public class CheckRecord implements DefineObdReader, Serializable {
         return drivingDuration / 60000; //time in minutes
     }
 
-    public float getIdlingDuration() {
-        return (idlingDuration / 60000); // time in minutes
-    }
 
     public Integer getSpeedMax() {
         return speedMax;
@@ -1074,76 +820,12 @@ public class CheckRecord implements DefineObdReader, Serializable {
         return AverageSpeed;
     }
 
-    public float getmDistanceTravel() {
-        return mDistanceTravel;
-    }
-
-    public int getmRapidAccTimes() {
-        return mRapidAccTimes;
-    }
-
-    public int getmRapidDeclTimes() {
-        return mRapidDeclTimes;
-    }
-
-    public String getEngineRuntime() {
-        return engineRuntime;
-    }
-
-    public String getmTripIdentifier() {
-        return mTripIdentifier;
-    }
-
-    public static Context getsContext() {
-        return sContext;
-    }
-
-    public String getmShortTermBank1() {
-        return mShortTermBank1;
-    }
-
-    public String getmShortTermBank2() {
-        return mShortTermBank2;
-    }
-
-    public String getmLongTermBank1() {
-        return mLongTermBank1;
-    }
-
-    public String getmLongTermBank2() {
-        return mLongTermBank2;
-    }
-
-    public float getmGasCost() {
-        return (mIsMAFSupported || mIsTempPressureSupported) ? (mIdlingFuelConsumption + mDrivingFuelConsumption) * ObdPreferences.get(sContext.getApplicationContext()).getGasPrice() : MINUS_ONE;
-    }
-
-    public boolean ismIsMAFSupported() {
-        return mIsMAFSupported;
-    }
-
-    public void setmIsMAFSupported(boolean mIsMAFSupported) {
-        this.mIsMAFSupported = mIsMAFSupported;
-    }
-
-    public boolean ismIsEngineRuntimeSupported() {
-        return mIsEngineRuntimeSupported;
-    }
-
-    public void setmIsEngineRuntimeSupported(boolean mIsEngineRuntimeSupported) {
-        this.mIsEngineRuntimeSupported = mIsEngineRuntimeSupported;
-    }
-
-    public void findInsFualConsumption(float massAirFlow) {
+    public void findInsFuelConsumption(float massAirFlow) {
         data.add(new OBDTripEntity("MAF空气流量速率", massAirFlow + ""));
         entity.setMassAirFlow(massAirFlow + "");
         if (speed > 0)
             mInsFuelConsumption = 100 * (massAirFlow / (mFuelTypeValue * gramToLitre) * 3600) / speed; // in  litre/100km
-        findIdleAndDrivingFuelConsumtion(massAirFlow);
-    }
-
-    public float getmInsFuelConsumption() {
-        return (mIsMAFSupported || mIsTempPressureSupported) ? mInsFuelConsumption : MINUS_ONE;
+        findIdleAndDrivingFuelCons(massAirFlow);
     }
 
     public void setEngineRpm(String currentRPM) {
@@ -1157,7 +839,7 @@ public class CheckRecord implements DefineObdReader, Serializable {
         entity.setEngineRpmMax(String.valueOf(engineRpmMax));
     }
 
-    public void findIdleAndDrivingFuelConsumtion(float currentMaf) {
+    public void findIdleAndDrivingFuelCons(float currentMaf) {
         float literPerSecond;
         if (speed > 0) {
             mDrivingMaf += currentMaf;
@@ -1175,158 +857,45 @@ public class CheckRecord implements DefineObdReader, Serializable {
         entity.setIdleMaf(mIdleMaf + " g/s");
         data.add(new OBDTripEntity("驱动空气流量", mDrivingMaf + " g/s"));
         entity.setDrivingMaf(mDrivingMaf + " g/s");
-        data.add(new OBDTripEntity("瞬时油耗", ((mIsMAFSupported || mIsTempPressureSupported) ? mInsFuelConsumption : MINUS_ONE) + " L/100km"));
-        entity.setInsFuelConsumption(((mIsMAFSupported || mIsTempPressureSupported) ? mInsFuelConsumption : MINUS_ONE) + " L");
-        data.add(new OBDTripEntity("行驶油耗", ((mIsMAFSupported || mIsTempPressureSupported) ? mDrivingFuelConsumption : MINUS_ONE) + " L"));
-        data.add(new OBDTripEntity("怠速油耗", ((mIsMAFSupported || mIsTempPressureSupported) ? mIdlingFuelConsumption : MINUS_ONE) + " L"));
-        entity.setDrivingFuelConsumption(((mIsMAFSupported || mIsTempPressureSupported) ? mDrivingFuelConsumption : MINUS_ONE) + " L");
-        entity.setIdlingFuelConsumption(((mIsMAFSupported || mIsTempPressureSupported) ? mIdlingFuelConsumption : MINUS_ONE) + " L");
+        data.add(new OBDTripEntity("瞬时油耗", mInsFuelConsumption + " L/100km"));
+        entity.setInsFuelConsumption(mInsFuelConsumption + " L");
+        data.add(new OBDTripEntity("行驶油耗", mDrivingFuelConsumption + " L"));
+        data.add(new OBDTripEntity("怠速油耗", mIdlingFuelConsumption + " L"));
+        entity.setDrivingFuelConsumption(mDrivingFuelConsumption + " L");
+        entity.setIdlingFuelConsumption(mIdlingFuelConsumption + " L");
     }
 
 
-    public float getmDrivingFuelConsumption() {
-        return (mIsMAFSupported || mIsTempPressureSupported) ? mDrivingFuelConsumption : MINUS_ONE;
-    }
-
-    public float getmIdlingFuelConsumption() {
-        return (mIsMAFSupported || mIsTempPressureSupported) ? mIdlingFuelConsumption : MINUS_ONE;
-    }
 
     public String getEngineRpm() {
         return engineRpm;
     }
 
-    public String getmFaultCodes() {
-        return mFaultCodes;
-    }
 
-    public String getmEGRError() {
-        return mEGRError;
-    }
-
-    public void setmIsTempPressureSupported(boolean mIsTempPressureSupported) {
-        this.mIsTempPressureSupported = mIsTempPressureSupported;
-    }
-
-    public boolean ismIsTempPressureSupported() {
-        return mIsTempPressureSupported;
-    }
-
-    public String getmAmbientAirTemp() {
-        return mAmbientAirTemp;
-    }
-
-    public String getmEngineCoolantTemp() {
+    public String getEngineCoolantTemp() {
         return mEngineCoolantTemp;
     }
 
-    public String getmEngineOilTemp() {
+    public String getEngineOilTemp() {
         return mEngineOilTemp;
     }
 
-    public String getmFuelConsumptionRate() {
+    public String getFuelConsumptionRate() {
         return mFuelConsumptionRate;
     }
 
-    public String getmFuelSystemStatus() {
-        return mFuelSystemStatus;
-    }
-
-    public String getmFuelPressure() {
+    public String getFuelPressure() {
         return mFuelPressure;
     }
 
-    public String getmEGR() {
-        return mEGR;
-    }
-
-    public String getmEngineLoad() {
-        return mEngineLoad;
-    }
-
-    public String getmBarometricPressure() {
-        return mBarometricPressure;
-    }
-
-    public String getmThrottlePos() {
+    public String getThrottlePos() {
         return mThrottlePos;
     }
 
-    public String getmTimingAdvance() {
-        return mTimingAdvance;
-    }
-
-    public String getmPermanentTroubleCode() {
-        return mPermanentTroubleCode;
-    }
-
-    public String getmPendingTroubleCode() {
-        return mPendingTroubleCode;
-    }
-
-    public String getmEquivRatio() {
-        return mEquivRatio;
-    }
-
-    public String getmDistanceTraveledAfterCodesCleared() {
-        return mDistanceTraveledAfterCodesCleared;
-    }
-
-    public String getmControlModuleVoltage() {
-        return mControlModuleVoltage;
-    }
-
-    public String getmFuelRailPressure() {
+    public String getFuelRailPressure() {
         return mFuelRailPressure;
     }
 
-    public String getmFuelRailPressurevacuum() {
-        return mFuelRailPressurevacuum;
-    }
-
-    public String getmVehicleIdentificationNumber() {
-        return mVehicleIdentificationNumber;
-    }
-
-    public String getmDistanceTraveledMilOn() {
-        return mDistanceTraveledMilOn;
-    }
-
-    public String getmDtcNumber() {
-        return mDtcNumber;
-    }
-
-    public String getmTimeSinceTcClear() {
-        return mTimeSinceTcClear;
-    }
-
-    public String getmRelThottlePos() {
-        return mRelThottlePos;
-    }
-
-    public String getmAbsLoad() {
-        return mAbsLoad;
-    }
-
-    public String getmAirFuelRatio() {
-        return mAirFuelRatio;
-    }
-
-    public String getmWideBandAirFuelRatio() {
-        return mWideBandAirFuelRatio;
-    }
-
-    public String getmDescribeProtocol() {
-        return mDescribeProtocol;
-    }
-
-    public String getmDescribeProtocolNumber() {
-        return mDescribeProtocolNumber;
-    }
-
-    public String getmIgnitionMonitor() {
-        return mIgnitionMonitor;
-    }
 
 
     public List<OBDTripEntity> getTripMap() {

@@ -88,11 +88,11 @@ public class VehicleDashOneActivity extends BaseActivity {
                     break;
                 case 102://发动机油温
                     CheckRecord record1 = (CheckRecord) msg.obj;
-                    dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(record1.getmEngineOilTemp()) ? "0" : record1.getmEngineOilTemp().replace("℃", "")));
+                    dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(record1.getEngineOilTemp()) ? "0" : record1.getEngineOilTemp().replace("℃", "")));
                     break;
                 case 103://冷却液温度
                     CheckRecord record2 = (CheckRecord) msg.obj;
-                    dashEngineCoolantTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(record2.getmEngineCoolantTemp()) ? "0" : record2.getmEngineCoolantTemp().replace("℃", "")));
+                    dashEngineCoolantTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(record2.getEngineCoolantTemp()) ? "0" : record2.getEngineCoolantTemp().replace("℃", "")));
                     break;
             }
         }
@@ -290,8 +290,8 @@ public class VehicleDashOneActivity extends BaseActivity {
         dashRPM.setVelocity((Float.parseFloat(rpm) / 1000));
         tvmRPM.setText(String.valueOf(Float.parseFloat(rpm) / 1000));
         tvMaxRPM.setText(String.valueOf(maxRpm));
-        dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineOilTemp()) ? "0" : tripRecord.getmEngineOilTemp().replace("℃", "")));
-        dashEngineCoolantTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getmEngineCoolantTemp()) ? "0" : tripRecord.getmEngineCoolantTemp().replace("℃", "")));
+        dashEngineOilTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getEngineOilTemp()) ? "0" : tripRecord.getEngineOilTemp().replace("℃", "")));
+        dashEngineCoolantTemp.setVelocity(Float.parseFloat(TextUtils.isEmpty(tripRecord.getEngineCoolantTemp()) ? "0" : tripRecord.getEngineCoolantTemp().replace("℃", "")));
     }
 
     /**

@@ -247,25 +247,25 @@ public class VehicleDashTwoActivity extends BaseActivity {
      */
     private void setView(CheckRecord tripRecord) {
         if (tripRecord != null) {
-            if (!StringUtil.isNull(tripRecord.getmFuelRailPressure())) {
-                String FuelRailPressure = tripRecord.getmFuelRailPressure().replace("kPa", "");
+            if (!StringUtil.isNull(tripRecord.getFuelRailPressure())) {
+                String FuelRailPressure = tripRecord.getFuelRailPressure().replace("kPa", "");
                 dashFuelRailPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(FuelRailPressure) ? "0" : FuelRailPressure) / 1000);
                 tvFuelRailPressure.setText(String.valueOf(Float.parseFloat(TextUtils.isEmpty(FuelRailPressure) ? "0" : FuelRailPressure) / 1000));
             }
 
-            if (!StringUtil.isNull(tripRecord.getmFuelConsumptionRate())) {
-                String fuelRate = tripRecord.getmFuelConsumptionRate().replace("L/h", "");
+            if (!StringUtil.isNull(tripRecord.getFuelConsumptionRate())) {
+                String fuelRate = tripRecord.getFuelConsumptionRate().replace("L/h", "");
                 dashFuelRate.setVelocity(Float.parseFloat(TextUtils.isEmpty(fuelRate) ? "0" : fuelRate));
                 tvFuelRate.setText(TextUtils.isEmpty(fuelRate) ? "0" : fuelRate);
             }
 
-            if (!StringUtil.isNull(tripRecord.getmFuelPressure())) {
-                String pressure = tripRecord.getmFuelPressure().replace("kPa", "");
+            if (!StringUtil.isNull(tripRecord.getFuelPressure())) {
+                String pressure = tripRecord.getFuelPressure().replace("kPa", "");
                 tvFuelPressure.setText(TextUtils.isEmpty(pressure) ? "0" : pressure);
                 dashFuelPressure.setVelocity(Float.parseFloat(TextUtils.isEmpty(pressure) ? "0" : pressure));
             }
-            if (!StringUtil.isNull(tripRecord.getmThrottlePos())) {
-                String ThrottlePos = tripRecord.getmThrottlePos().replace("%", "");
+            if (!StringUtil.isNull(tripRecord.getThrottlePos())) {
+                String ThrottlePos = tripRecord.getThrottlePos().replace("%", "");
                 dashThrottlePos.setVelocity(Float.parseFloat(TextUtils.isEmpty(ThrottlePos) ? "0" : ThrottlePos));
                 tvIntakeAirTemp.setText(TextUtils.isEmpty(ThrottlePos) ? "0" : ThrottlePos);
             }

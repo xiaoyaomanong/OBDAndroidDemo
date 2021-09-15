@@ -34,23 +34,36 @@ public class FindFuelTypeCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [hh hh] of the response
-        fuelType = buffer.get(2);
+        if (buffer.size()!=0) {
+            fuelType = buffer.get(2);
+            isHaveData = true;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public String getFormattedResult() {
-        try {
-            return FuelType.fromValue(fuelType).getDescription();
-        } catch (NullPointerException e) {
-            return "-";
+        if (isHaveData) {
+            try {
+                return FuelType.fromValue(fuelType).getDescription();
+            } catch (NullPointerException e) {
+                return "-";
+            }
+        }else {
+            return "";
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public String getCalculatedResult() {
-        return String.valueOf(fuelType);
+        if (isHaveData) {
+            return String.valueOf(fuelType);
+        }else {
+            return "";
+        }
     }
 
     /** {@inheritDoc} */

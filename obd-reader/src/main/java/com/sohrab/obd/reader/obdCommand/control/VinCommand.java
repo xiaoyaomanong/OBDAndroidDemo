@@ -7,6 +7,8 @@ import com.sohrab.obd.reader.obdCommand.PersistentCommand;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.sohrab.obd.reader.obdCommand.Const.NO_DATA;
+
 public class VinCommand extends PersistentCommand {
 
     String vin = "";
@@ -31,15 +33,19 @@ public class VinCommand extends PersistentCommand {
     @Override
     protected void performCalculations() {
         final String result = getResult();
-        String workingData;
-        if (result.contains(":")) {//CAN(ISO-15765) protocol.
-            workingData = result.replaceAll(".:", "").substring(9);//9 is xxx490201, xxx is bytes of information to follow.
-            Matcher m = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE).matcher(convertHexToString(workingData));
-            if (m.find()) workingData = result.replaceAll("0:49", "").replaceAll(".:", "");
-        } else {//ISO9141-2, KWP2000 Fast and KWP2000 5Kbps (ISO15031) protocols.
-            workingData = result.replaceAll("49020.", "");
+        if (!result.equals(NO_DATA)) {
+            String workingData;
+            if (result.contains(":")) {//CAN(ISO-15765) protocol.
+                workingData = result.replaceAll(".:", "").substring(9);//9 is xxx490201, xxx is bytes of information to follow.
+                Matcher m = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE).matcher(convertHexToString(workingData));
+                if (m.find()) workingData = result.replaceAll("0:49", "").replaceAll(".:", "");
+            } else {//ISO9141-2, KWP2000 Fast and KWP2000 5Kbps (ISO15031) protocols.
+                workingData = result.replaceAll("49020.", "");
+            }
+            vin = convertHexToString(workingData).replaceAll("[\u0000-\u001f]", "");
+        }else {
+            vin="";
         }
-        vin = convertHexToString(workingData).replaceAll("[\u0000-\u001f]", "");
     }
 
     /**

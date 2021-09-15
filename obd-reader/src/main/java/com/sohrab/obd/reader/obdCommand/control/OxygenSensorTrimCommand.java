@@ -36,10 +36,15 @@ public class OxygenSensorTrimCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [01 44] of the response
-        float A = buffer.get(2);
-        float B = buffer.get(3);
-        bankA = ((100 * A) / 128) - 100;
-        bankB = ((100 * B) / 128) - 100;
+        if (buffer.size()!=0) {
+            float A = buffer.get(2);
+            float B = buffer.get(3);
+            bankA = ((100 * A) / 128) - 100;
+            bankB = ((100 * B) / 128) - 100;
+            isHaveData = true;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /**
@@ -48,7 +53,11 @@ public class OxygenSensorTrimCommand extends ObdCommand {
     @SuppressLint("DefaultLocale")
     @Override
     public String getFormattedResult() {
-        return getBankA() + "% , " + getBankB() + "%";
+        if (isHaveData) {
+            return getBankA() + "% , " + getBankB() + "%";
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -56,7 +65,11 @@ public class OxygenSensorTrimCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return getBankA() + "% , " + getBankB() + "%";
+        if (isHaveData) {
+            return getBankA() + "% , " + getBankB() + "%";
+        }else {
+            return "";
+        }
     }
 
     public float getBankA() {

@@ -27,8 +27,13 @@ public class MaxAirFlowMassRateCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [01 44] of the response
-        float A = buffer.get(2);
-        MaxAirFlowMass = 10 * A ;
+        if (buffer.size()!=0) {
+            float A = buffer.get(2);
+            MaxAirFlowMass = 10 * A;
+            isHaveData = true;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /**
@@ -36,7 +41,11 @@ public class MaxAirFlowMassRateCommand extends ObdCommand {
      */
     @Override
     public String getFormattedResult() {
-        return getMaxAirFlowMass() + " g/s";
+        if (isHaveData) {
+            return getMaxAirFlowMass() + " g/s";
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -44,7 +53,11 @@ public class MaxAirFlowMassRateCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return getMaxAirFlowMass()+" g/s";
+        if (isHaveData) {
+            return getMaxAirFlowMass() + " g/s";
+        }else {
+            return "";
+        }
     }
 
     /**

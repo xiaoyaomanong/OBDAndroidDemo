@@ -27,9 +27,14 @@ public class DPFTemperatureCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [01 44] of the response
-        float A = buffer.get(2);
-        float B = buffer.get(3);
-        temp = ((256 * A + B) / 10) - 40;
+        if (buffer.size()!=0) {
+            float A = buffer.get(2);
+            float B = buffer.get(3);
+            temp = ((256 * A + B) / 10) - 40;
+            isHaveData=true;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /**
@@ -37,7 +42,11 @@ public class DPFTemperatureCommand extends ObdCommand {
      */
     @Override
     public String getFormattedResult() {
-        return getTemp() + " ℃";
+        if (isHaveData) {
+            return getTemp() + " ℃";
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -45,11 +54,14 @@ public class DPFTemperatureCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return getTemp() + " ℃";
+        if (isHaveData) {
+            return getTemp() + " ℃";
+        }else {
+            return "";
+        }
     }
 
     /**
-     * <p>getAirFuelRatio.</p>
      *
      * @return a double.
      */

@@ -32,15 +32,24 @@ public class ModuleVoltageCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [hh hh] of the response
-        int a = buffer.get(2);
-        int b = buffer.get(3);
-        voltage = (a * 256 + b) / 1000;
+        if (buffer.size()!=0) {
+            int a = buffer.get(2);
+            int b = buffer.get(3);
+            voltage = (a * 256 + b) / 1000;
+            isHaveData = true;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public String getFormattedResult() {
-        return String.format("%.1f%s", voltage, getResultUnit());
+        if (isHaveData) {
+            return String.format("%.1f%s", voltage, getResultUnit());
+        }else {
+            return "";
+        }
     }
 
     /** {@inheritDoc} */
@@ -52,7 +61,11 @@ public class ModuleVoltageCommand extends ObdCommand {
     /** {@inheritDoc} */
     @Override
     public String getCalculatedResult() {
-        return String.valueOf(voltage);
+        if (isHaveData) {
+            return String.valueOf(voltage);
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -61,7 +74,11 @@ public class ModuleVoltageCommand extends ObdCommand {
      * @return a double.
      */
     public double getVoltage() {
-        return voltage;
+        if (isHaveData) {
+            return voltage;
+        }else {
+            return 0;
+        }
     }
 
     /** {@inheritDoc} */

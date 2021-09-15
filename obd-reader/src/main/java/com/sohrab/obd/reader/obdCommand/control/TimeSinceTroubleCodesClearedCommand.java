@@ -27,9 +27,14 @@ public class TimeSinceTroubleCodesClearedCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [01 44] of the response
-        float A = buffer.get(2);
-        float B = buffer.get(3);
-        time = 256 * A + B;
+        if (buffer.size()!=0) {
+            float A = buffer.get(2);
+            float B = buffer.get(3);
+            time = 256 * A + B;
+            isHaveData = true;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /**
@@ -37,7 +42,11 @@ public class TimeSinceTroubleCodesClearedCommand extends ObdCommand {
      */
     @Override
     public String getFormattedResult() {
-        return getTime() + " 分";
+        if (isHaveData) {
+            return getTime() + " 分";
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -45,7 +54,11 @@ public class TimeSinceTroubleCodesClearedCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return getTime()+" 分";
+        if (isHaveData) {
+            return getTime() + " 分";
+        }else {
+            return "";
+        }
     }
 
     /**

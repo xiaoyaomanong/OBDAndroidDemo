@@ -31,34 +31,38 @@ public class ConsumptionRateCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [hh hh] of the response
-        fuelRate = (buffer.get(2) * 256 + buffer.get(3)) * 0.05f;
+        if (buffer.size()!=0) {
+            fuelRate = (buffer.get(2) * 256 + buffer.get(3)) * 0.05f;
+            isHaveData=true;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public String getFormattedResult() {
-        return String.format("%.1f%s", fuelRate, getResultUnit());
+        if (isHaveData) {
+            return String.format("%.1f%s", fuelRate, getResultUnit());
+        }else {
+            return "";
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public String getCalculatedResult() {
-        return String.valueOf(fuelRate);
+        if (isHaveData) {
+            return String.valueOf(fuelRate);
+        }else {
+            return "";
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public String getResultUnit() {
         return "L/h";
-    }
-
-    /**
-     * <p>getLitersPerHour.</p>
-     *
-     * @return a float.
-     */
-    public float getLitersPerHour() {
-        return fuelRate;
     }
 
     /** {@inheritDoc} */

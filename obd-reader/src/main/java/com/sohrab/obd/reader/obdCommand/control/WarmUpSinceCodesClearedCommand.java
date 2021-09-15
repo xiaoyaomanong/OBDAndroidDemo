@@ -29,7 +29,12 @@ public class WarmUpSinceCodesClearedCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [hh hh] of the response
-        Since = buffer.get(2);
+        if (buffer.size()!=0) {
+            Since = buffer.get(2);
+            isHaveData = true;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /**
@@ -37,7 +42,11 @@ public class WarmUpSinceCodesClearedCommand extends ObdCommand {
      */
     @Override
     public String getFormattedResult() {
-        return Since + " count";
+        if (isHaveData) {
+            return Since + " count";
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -45,7 +54,11 @@ public class WarmUpSinceCodesClearedCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return Since + " count";
+        if (isHaveData) {
+            return Since + " count";
+        }else {
+            return "";
+        }
     }
 
     @Override

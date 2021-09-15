@@ -28,9 +28,14 @@ public class AirFuelRatioCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [01 44] of the response
-        float A = buffer.get(2);
-        float B = buffer.get(3);
-        afr = (((A * 256) + B) / 32768) * 14.7f;//((A*256)+B)/32768
+        if (buffer.size()!=0) {
+            float A = buffer.get(2);
+            float B = buffer.get(3);
+            afr = (((A * 256) + B) / 32768) * 14.7f;//((A*256)+B)/32768
+            isHaveData = true;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /**
@@ -39,7 +44,11 @@ public class AirFuelRatioCommand extends ObdCommand {
     @SuppressLint("DefaultLocale")
     @Override
     public String getFormattedResult() {
-        return String.format("%.2f", getAirFuelRatio()) + ":1 AFR";
+        if (isHaveData) {
+            return String.format("%.2f", getAirFuelRatio()) + ":1 AFR";
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -47,7 +56,11 @@ public class AirFuelRatioCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return String.valueOf(getAirFuelRatio());
+        if (isHaveData) {
+            return String.valueOf(getAirFuelRatio());
+        }else {
+            return "";
+        }
     }
 
     /**

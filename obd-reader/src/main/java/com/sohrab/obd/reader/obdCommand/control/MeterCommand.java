@@ -12,7 +12,7 @@ public class MeterCommand extends ObdCommand {
     private double Odometer = 0;
 
     public MeterCommand(String mode) {
-        super(mode+" A6");
+        super(mode + " A6");
     }
 
     /**
@@ -29,7 +29,12 @@ public class MeterCommand extends ObdCommand {
     protected void performCalculations() {
         // ignore first two bytes [hh hh] of the response
         //*Math.pow(a, b)//计算a的b次方
-        Odometer = (buffer.get(2) * Math.pow(2, 24) + buffer.get(3) * Math.pow(2, 16) + buffer.get(4) * Math.pow(2, 8) + buffer.get(5)) / 10;
+        if (buffer.size() != 0) {
+            Odometer = (buffer.get(2) * Math.pow(2, 24) + buffer.get(3) * Math.pow(2, 16) + buffer.get(4) * Math.pow(2, 8) + buffer.get(5)) / 10;
+            isHaveData = true;
+        } else {
+            isHaveData = false;
+        }
     }
 
     /**
@@ -37,7 +42,11 @@ public class MeterCommand extends ObdCommand {
      */
     @Override
     public String getFormattedResult() {
-        return  String.valueOf(Odometer);
+        if (isHaveData) {
+            return String.valueOf(Odometer);
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -45,7 +54,11 @@ public class MeterCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return String.valueOf(Odometer);
+        if (isHaveData) {
+            return String.valueOf(Odometer);
+        }else {
+            return "";
+        }
     }
 
     @Override

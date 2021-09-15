@@ -27,8 +27,13 @@ public class RelativeThrottlePositionCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [01 44] of the response
-        float A = buffer.get(2);
-        RelativeThrottlePosition = (100 * A) / 255;
+        if (buffer.size()!=0) {
+            float A = buffer.get(2);
+            RelativeThrottlePosition = (100 * A) / 255;
+            isHaveData = true;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /**
@@ -36,7 +41,11 @@ public class RelativeThrottlePositionCommand extends ObdCommand {
      */
     @Override
     public String getFormattedResult() {
-        return getThrottlePosition() + " %";
+        if (isHaveData) {
+            return getThrottlePosition() + " %";
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -44,7 +53,11 @@ public class RelativeThrottlePositionCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return getThrottlePosition() + " %";
+        if (isHaveData) {
+            return getThrottlePosition() + " %";
+        }else {
+            return "";
+        }
     }
 
     /**

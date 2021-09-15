@@ -27,9 +27,14 @@ public class AbsoluteEvapSystemVaporPressureCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [01 44] of the response
-        float A = buffer.get(2);
-        float B = buffer.get(3);
-        pressure = (256 * A + B) / 200;
+        if (buffer.size()!=0) {
+            float A = buffer.get(2);
+            float B = buffer.get(3);
+            pressure = (256 * A + B) / 200;
+            isHaveData = true;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /**
@@ -37,7 +42,11 @@ public class AbsoluteEvapSystemVaporPressureCommand extends ObdCommand {
      */
     @Override
     public String getFormattedResult() {
-        return getPressure() + " kPa";
+        if (isHaveData) {
+            return getPressure() + " kPa";
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -45,7 +54,11 @@ public class AbsoluteEvapSystemVaporPressureCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return getPressure() + " kPa";
+        if (isHaveData) {
+            return getPressure() + " kPa";
+        }else {
+            return "";
+        }
     }
 
     /**

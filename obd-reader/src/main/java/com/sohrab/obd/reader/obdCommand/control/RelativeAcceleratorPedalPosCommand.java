@@ -27,8 +27,14 @@ public class RelativeAcceleratorPedalPosCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [01 44] of the response
-        float A = buffer.get(2);
-        rate = (100 * A) / 255;
+        if (buffer.size()!=0){
+            float A = buffer.get(2);
+            rate = (100 * A) / 255;
+            isHaveData=true;
+        }else {
+            isHaveData=false;
+        }
+
     }
 
     /**
@@ -36,7 +42,11 @@ public class RelativeAcceleratorPedalPosCommand extends ObdCommand {
      */
     @Override
     public String getFormattedResult() {
-        return getRate() + " %";
+        if (isHaveData) {
+            return getRate() + " %";
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -44,7 +54,11 @@ public class RelativeAcceleratorPedalPosCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return getRate() + " %";
+        if (isHaveData) {
+            return getRate() + " %";
+        }else {
+            return "";
+        }
     }
 
     /**

@@ -20,7 +20,7 @@ public class WidebandAirFuelRatioTwoCommand extends ObdCommand {
      * <p>Constructor for WidebandAirFuelRatioCommand.</p>
      */
     public WidebandAirFuelRatioTwoCommand(String mode) {
-        super(mode+" 35");
+        super(mode + " 35");
     }
 
     /**
@@ -28,13 +28,19 @@ public class WidebandAirFuelRatioTwoCommand extends ObdCommand {
      */
     @Override
     protected void performCalculations() {
-        // ignore first two bytes [01 44] of the response
-        float A = buffer.get(2);
-        float B = buffer.get(3);
-        float C = buffer.get(4);
-        float D = buffer.get(5);
-        current = ((256 * C + D) / 256) - 128;//(256*C+D)/256-128
-        wafr = (((A * 256) + B) / 32768) * 14.7f;//((A*256)+B)/32768
+        if (buffer.size() != 0) {
+            // ignore first two bytes [01 44] of the response
+            float A = buffer.get(2);
+            float B = buffer.get(3);
+            float C = buffer.get(4);
+            float D = buffer.get(5);
+            current = ((256 * C + D) / 256) - 128;//(256*C+D)/256-128
+            wafr = (((A * 256) + B) / 32768) * 14.7f;//((A*256)+B)/32768
+            isHaveData = true;
+        } else {
+            isHaveData = false;
+        }
+
     }
 
     /**
@@ -43,7 +49,11 @@ public class WidebandAirFuelRatioTwoCommand extends ObdCommand {
     @SuppressLint("DefaultLocale")
     @Override
     public String getFormattedResult() {
-        return String.format("%.2f", getWidebandAirFuelRatio()) + ":1 AFR" + "," + getElectricCurrent() + " mA";
+        if (isHaveData) {
+            return String.format("%.2f", getWidebandAirFuelRatio()) + ":1 AFR" + "," + getElectricCurrent() + " mA";
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -51,7 +61,11 @@ public class WidebandAirFuelRatioTwoCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return getWidebandAirFuelRatio() + "," + getElectricCurrent();
+        if (isHaveData) {
+            return getWidebandAirFuelRatio() + "," + getElectricCurrent();
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -67,7 +81,9 @@ public class WidebandAirFuelRatioTwoCommand extends ObdCommand {
         return current;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return AvailableCommandNames.WIDE_BAND_AIR_FUEL_RATIO_2.getValue();

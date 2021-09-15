@@ -29,9 +29,14 @@ public class SystemVaporPressureCommand extends ObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [hh hh] of the response
-        int a = buffer.get(2);
-        int b = buffer.get(3);
-        SystemVaporPressure = (a * 256 + b) / 4;
+        if (buffer.size()!=0) {
+            int a = buffer.get(2);
+            int b = buffer.get(3);
+            SystemVaporPressure = (a * 256 + b) / 4;
+            isHaveData=false;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /**
@@ -39,7 +44,11 @@ public class SystemVaporPressureCommand extends ObdCommand {
      */
     @Override
     public String getFormattedResult() {
-        return SystemVaporPressure + "Pa";
+        if (isHaveData) {
+            return SystemVaporPressure + "Pa";
+        }else {
+            return "";
+        }
     }
 
     /**
@@ -47,7 +56,11 @@ public class SystemVaporPressureCommand extends ObdCommand {
      */
     @Override
     public String getCalculatedResult() {
-        return SystemVaporPressure + "Pa";
+        if (isHaveData) {
+            return SystemVaporPressure + "Pa";
+        }else {
+            return "";
+        }
     }
 
     @Override

@@ -6,19 +6,24 @@ import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static com.sohrab.obd.reader.obdCommand.Const.NO_DATA;
+
 /**
  * It is not needed no know how many DTC are stored.
  * Because when no DTC are stored response will be NO DATA
  * And where are more messages it will be stored in frames that have 7 bytes.
  * In one frame are stored 3 DTC.
  * If we find out DTC P0000 that mean no message are we can end.
- *
  */
 public class PendingTroubleCodesCommand extends ObdCommand {
 
-    /** Constant <code>dtcLetters={'P', 'C', 'B', 'U'}</code> */
+    /**
+     * Constant <code>dtcLetters={'P', 'C', 'B', 'U'}</code>
+     */
     protected final static char[] dtcLetters = {'P', 'C', 'B', 'U'};
-    /** Constant <code>hexArray="0123456789ABCDEF".toCharArray()</code> */
+    /**
+     * Constant <code>hexArray="0123456789ABCDEF".toCharArray()</code>
+     */
     protected final static char[] hexArray = "0123456789ABCDEF".toCharArray();
 
     protected StringBuilder codes = null;
@@ -33,48 +38,56 @@ public class PendingTroubleCodesCommand extends ObdCommand {
 
     /**
      * Copy ctor.
-     *
      */
     public PendingTroubleCodesCommand(PendingTroubleCodesCommand other) {
         super(other);
         codes = new StringBuilder();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void fillBuffer() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void performCalculations() {
         final String result = getResult();
-        String workingData;
-        int startIndex = 0;//Header size.
+        if (!result.equals(NO_DATA)) {
+            String workingData;
+            int startIndex = 0;//Header size.
 
-        String canOneFrame = result.replaceAll("[\r\n]", "");
-        int canOneFrameLength = canOneFrame.length();
-        if (canOneFrameLength <= 16 && canOneFrameLength % 4 == 0) {//CAN(ISO-15765) protocol one frame.
-            workingData = canOneFrame;//47yy{codes}
-            startIndex = 4;//Header is 47yy, yy showing the number of data items.
-        } else if (result.contains(":")) {//CAN(ISO-15765) protocol two and more frames.
-            workingData = result.replaceAll("[\r\n].:", "");//xxx47yy{codes}
-            startIndex = 7;//Header is xxx47yy, xxx is bytes of information to follow, yy showing the number of data items.
-        } else {//ISO9141-2, KWP2000 Fast and KWP2000 5Kbps (ISO15031) protocols.
-            workingData = result.replaceAll("^47|[\r\n]47|[\r\n]", "");
-        }
-        for (int begin = startIndex; begin < workingData.length(); begin += 4) {
-            String dtc = "";
-            byte b1 = hexStringToByteArray(workingData.charAt(begin));
-            int ch1 = ((b1 & 0xC0) >> 6);
-            int ch2 = ((b1 & 0x30) >> 4);
-            dtc += dtcLetters[ch1];
-            dtc += hexArray[ch2];
-            dtc += workingData.substring(begin+1, begin + 4);
-            if (dtc.equals("P0000")) {
-                return;
+            String canOneFrame = result.replaceAll("[\r\n]", "");
+            int canOneFrameLength = canOneFrame.length();
+            if (canOneFrameLength <= 16 && canOneFrameLength % 4 == 0) {//CAN(ISO-15765) protocol one frame.
+                workingData = canOneFrame;//47yy{codes}
+                startIndex = 4;//Header is 47yy, yy showing the number of data items.
+            } else if (result.contains(":")) {//CAN(ISO-15765) protocol two and more frames.
+                workingData = result.replaceAll("[\r\n].:", "");//xxx47yy{codes}
+                startIndex = 7;//Header is xxx47yy, xxx is bytes of information to follow, yy showing the number of data items.
+            } else {//ISO9141-2, KWP2000 Fast and KWP2000 5Kbps (ISO15031) protocols.
+                workingData = result.replaceAll("^47|[\r\n]47|[\r\n]", "");
             }
-            codes.append(dtc);
+            for (int begin = startIndex; begin < workingData.length(); begin += 4) {
+                String dtc = "";
+                byte b1 = hexStringToByteArray(workingData.charAt(begin));
+                int ch1 = ((b1 & 0xC0) >> 6);
+                int ch2 = ((b1 & 0x30) >> 4);
+                dtc += dtcLetters[ch1];
+                dtc += hexArray[ch2];
+                dtc += workingData.substring(begin + 1, begin + 4);
+                if (dtc.equals("P0000")) {
+                    return;
+                }
+                codes.append(dtc);
+                codes.append('\n');
+            }
+        } else {
+            codes.append("P0000");
             codes.append('\n');
         }
     }
@@ -93,49 +106,50 @@ public class PendingTroubleCodesCommand extends ObdCommand {
         return codes.toString();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getCalculatedResult() {
         return String.valueOf(codes);
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void readRawData(InputStream in) throws IOException {
         byte b;
         StringBuilder res = new StringBuilder();
-
-        // read until '>' arrives OR end of stream reached (and skip ' ')
         char c;
         while (true) {
             b = (byte) in.read();
-            if (b == -1) // -1 if the end of the stream is reached
-            {
+            if (b == -1) {
                 break;
             }
             c = (char) b;
-            if (c == '>') // read until '>' arrives
-            {
+            if (c == '>') {
                 break;
             }
-            if (c != ' ') // skip ' '
-            {
+            if (c != ' ') {
                 res.append(c);
             }
         }
-
         rawData = res.toString().trim();
-
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getFormattedResult() {
         return codes.toString();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return AvailableCommandNames.PENDING_TROUBLE_CODES.getValue();

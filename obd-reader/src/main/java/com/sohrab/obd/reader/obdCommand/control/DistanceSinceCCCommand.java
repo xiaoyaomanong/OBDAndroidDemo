@@ -25,8 +25,7 @@ public class DistanceSinceCCCommand extends ObdCommand
      * Copy ctor.
      *
      */
-    public DistanceSinceCCCommand(
-            DistanceSinceCCCommand other) {
+    public DistanceSinceCCCommand(DistanceSinceCCCommand other) {
         super(other);
     }
 
@@ -34,7 +33,12 @@ public class DistanceSinceCCCommand extends ObdCommand
     @Override
     protected void performCalculations() {
         // ignore first two bytes [01 31] of the response
-        km = buffer.get(2) * 256 + buffer.get(3);
+        if (buffer.size()!=0) {
+            km = buffer.get(2) * 256 + buffer.get(3);
+            isHaveData=true;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /**
@@ -43,14 +47,22 @@ public class DistanceSinceCCCommand extends ObdCommand
      * @return a {@link String} object.
      */
     public String getFormattedResult() {
-        return useImperialUnits ? String.format("%.2f%s", getImperialUnit(), getResultUnit())
-                : String.format("%d%s", km, getResultUnit());
+        if (isHaveData) {
+            return useImperialUnits ? String.format("%.2f%s", getImperialUnit(), getResultUnit())
+                    : String.format("%d%s", km, getResultUnit());
+        }else {
+            return "";
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public String getCalculatedResult() {
-        return useImperialUnits ? String.valueOf(getImperialUnit()) : String.valueOf(km);
+        if (isHaveData) {
+            return useImperialUnits ? String.valueOf(getImperialUnit()) : String.valueOf(km);
+        }else {
+            return "";
+        }
     }
 
     /** {@inheritDoc} */

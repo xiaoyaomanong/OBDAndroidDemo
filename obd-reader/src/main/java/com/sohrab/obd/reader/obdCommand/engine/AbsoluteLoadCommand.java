@@ -29,9 +29,14 @@ public class AbsoluteLoadCommand extends PercentageObdCommand {
     @Override
     protected void performCalculations() {
         // ignore first two bytes [hh hh] of the response
-        int a = buffer.get(2);
-        int b = buffer.get(3);
-        percentage = (a * 256 + b) * 100 / 255;
+        if (buffer.size()!=0) {
+            int a = buffer.get(2);
+            int b = buffer.get(3);
+            percentage = (a * 256 + b) * 100 / 255;
+            isHaveData=true;
+        }else {
+            isHaveData=false;
+        }
     }
 
     /**
@@ -40,7 +45,11 @@ public class AbsoluteLoadCommand extends PercentageObdCommand {
      * @return a double.
      */
     public double getRatio() {
-        return percentage;
+        if (isHaveData) {
+            return percentage;
+        }else {
+            return 0;
+        }
     }
 
     /** {@inheritDoc} */

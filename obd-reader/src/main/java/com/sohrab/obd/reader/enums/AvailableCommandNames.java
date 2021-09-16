@@ -7,7 +7,6 @@ package com.sohrab.obd.reader.enums;
  * @version $Id: $Id
  */
 public enum AvailableCommandNames {
-
     AIR_INTAKE_TEMP("Air Intake Temperature"),
     AMBIENT_AIR_TEMP("Ambient Air Temperature"),
     ENGINE_COOLANT_TEMP("Engine Coolant Temperature"),
@@ -39,7 +38,7 @@ public enum AvailableCommandNames {
     TIME_TRAVELED_MIL_ON("Time run with MIL on"),
     TIME_SINCE_TC_CLEARED("Time since trouble codes cleared"),
     MAX_AIR_FLOW_MASS_RATE("Maximum value for air flow rate from mass air flow sensor"),
-    ABS_EVAP_SYSTEM_VAPOR_PRESSURE("Absolute Evap system Vapor Pressure"),
+    ABS_EVA_SYSTEM_VAPOR_PRESSURE("Absolute Eva system Vapor Pressure"),
     FUEL_RAIL_ABS_PRESSURE("Fuel rail absolute pressure"),
     REL_ACCELERATOR_PEDAL_POS("Relative accelerator pedal position"),
     HY_BATTERY_PACK_LIFE("Hybrid battery pack remaining life"),
@@ -48,16 +47,16 @@ public enum AvailableCommandNames {
     ENGINE_REFERENCE_TORQUE("Engine reference torque"),
     DPF_TEMP("Diesel Particulate filter (DPF) temperature"),
     ENGINE_FRICTION_PERCENT_TORQUE("Engine Friction - Percent Torque"),
-    EVAP_SYSTEM_VAPOR_PRESSURE("Evap system vapor pressure"),
+    EVA_SYSTEM_VAPOR_PRESSURE("Eva system vapor pressure"),
     ETHANOL_FUEL_RATE("Ethanol fuel %"),
     REL_THROTTLE_POS("Relative throttle position"),
-    PIDS_01_20("Available PIDs 01-20"),
-    PIDS_21_40("Available PIDs 21-40"),
-    PIDS_41_60("Available PIDs 41-60"),
+    PID_01_20("Available PIDs 01-20"),
+    PID_21_40("Available PIDs 21-40"),
+    PID_41_60("Available PIDs 41-60"),
     ABS_LOAD("Absolute load"),
     EGR("EGR"),
     EGR_ERROR("EGR Error"),
-    EVAPORAIVE_PURGE("evaporative purge"),
+    EVAPORATE_PURGE("evaporate purge"),
     SYSTEM_VAPOR_PRESSURE("System Vapor Pressure"),
     ODOMETER("Odometer"),
     ENGINE_OIL_TEMP("Engine oil temperature"),

@@ -1,7 +1,6 @@
 package com.sohrab.obd.reader.obdCommand.control;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
-import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -63,6 +62,6 @@ public class EvaporativePurgeCommand extends ObdCommand {
 
     @Override
     public String getName() {
-        return AvailableCommandNames.EVAPORAIVE_PURGE.getValue();
+        return AvailableCommandNames.EVAPORATE_PURGE.getValue();
     }
 }

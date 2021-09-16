@@ -1,7 +1,6 @@
 package com.sohrab.obd.reader.obdCommand.pressure;
 
 import com.sohrab.obd.reader.enums.AvailableCommandNames;
-import com.sohrab.obd.reader.enums.ModeTrim;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 
 /**
@@ -75,6 +74,6 @@ public class EvapSystemVaporPressureCommand extends ObdCommand {
      */
     @Override
     public String getName() {
-        return AvailableCommandNames.EVAP_SYSTEM_VAPOR_PRESSURE.getValue();
+        return AvailableCommandNames.EVA_SYSTEM_VAPOR_PRESSURE.getValue();
     }
 }

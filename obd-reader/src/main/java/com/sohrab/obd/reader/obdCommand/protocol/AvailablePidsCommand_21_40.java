@@ -30,6 +30,6 @@ public class AvailablePidsCommand_21_40 extends AvailablePidsCommand {
     /** {@inheritDoc} */
     @Override
     public String getName() {
-        return AvailableCommandNames.PIDS_21_40.getValue();
+        return AvailableCommandNames.PID_21_40.getValue();
     }
 }

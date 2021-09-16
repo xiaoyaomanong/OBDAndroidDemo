@@ -1,7 +1,6 @@
 package com.example.obdandroid.config;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.text.TextUtils;
 
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
@@ -9,71 +8,65 @@ import com.sohrab.obd.reader.obdCommand.SpeedCommand;
 
 import java.io.Serializable;
 
+import static com.example.obdandroid.config.OBDConfig.ABS_LOAD;
+import static com.example.obdandroid.config.OBDConfig.ABS_THROTTLE_POS_B;
+import static com.example.obdandroid.config.OBDConfig.ABS_THROTTLE_POS_C;
+import static com.example.obdandroid.config.OBDConfig.ACC_PEDAL_POS_D;
+import static com.example.obdandroid.config.OBDConfig.ACC_PEDAL_POS_E;
+import static com.example.obdandroid.config.OBDConfig.ACC_PEDAL_POS_F;
+import static com.example.obdandroid.config.OBDConfig.AIR_INTAKE_TEMPERATURE;
+import static com.example.obdandroid.config.OBDConfig.AMBIENT_AIR_TEMP;
+import static com.example.obdandroid.config.OBDConfig.BAROMETRIC_PRESSURE;
+import static com.example.obdandroid.config.OBDConfig.CONTROL_MODULE_VOLTAGE;
+import static com.example.obdandroid.config.OBDConfig.Catalyst_Temperature_Bank_1_Sensor_1;
+import static com.example.obdandroid.config.OBDConfig.Catalyst_Temperature_Bank_1_Sensor_2;
+import static com.example.obdandroid.config.OBDConfig.Catalyst_Temperature_Bank_2_Sensor_1;
+import static com.example.obdandroid.config.OBDConfig.Catalyst_Temperature_Bank_2_Sensor_2;
+import static com.example.obdandroid.config.OBDConfig.DISTANCE_TRAVELED_MIL_ON;
+import static com.example.obdandroid.config.OBDConfig.DTC_NUMBER;
+import static com.example.obdandroid.config.OBDConfig.ENGINE_COOLANT_TEMP;
+import static com.example.obdandroid.config.OBDConfig.ENGINE_OIL_TEMP;
+import static com.example.obdandroid.config.OBDConfig.ENGINE_RPM;
+import static com.example.obdandroid.config.OBDConfig.FUEL_LEVEL;
+import static com.example.obdandroid.config.OBDConfig.FUEL_PRESSURE;
+import static com.example.obdandroid.config.OBDConfig.FUEL_RAIL_PRESSURE;
+import static com.example.obdandroid.config.OBDConfig.FUEL_RAIL_PRESSURE_manifold;
+import static com.example.obdandroid.config.OBDConfig.INTAKE_MANIFOLD_PRESSURE;
+import static com.example.obdandroid.config.OBDConfig.LONG_A_BANK1_B_BANK3;
+import static com.example.obdandroid.config.OBDConfig.LONG_A_BANK2_B_BANK4;
+import static com.example.obdandroid.config.OBDConfig.LONG_TERM_BANK_1;
+import static com.example.obdandroid.config.OBDConfig.LONG_TERM_BANK_2;
+import static com.example.obdandroid.config.OBDConfig.MAF;
+import static com.example.obdandroid.config.OBDConfig.REL_THROTTLE_POS;
+import static com.example.obdandroid.config.OBDConfig.SHORT_A_BANK1_B_BANK3;
+import static com.example.obdandroid.config.OBDConfig.SHORT_A_BANK2_B_BANK4;
+import static com.example.obdandroid.config.OBDConfig.SHORT_TERM_BANK_1;
+import static com.example.obdandroid.config.OBDConfig.SHORT_TERM_BANK_2;
+import static com.example.obdandroid.config.OBDConfig.SYSTEM_VAPOR_PRESSURE;
+import static com.example.obdandroid.config.OBDConfig.THROTTLE_ACTUATOR;
+import static com.example.obdandroid.config.OBDConfig.THROTTLE_POS;
+import static com.example.obdandroid.config.OBDConfig.TIME_TRAVELED_MIL_ON;
+import static com.example.obdandroid.config.OBDConfig.VEHICLE_SPEED;
+import static com.example.obdandroid.config.OBDConfig.WIDE_BAND_AIR_FUEL_RATIO_1;
+import static com.example.obdandroid.config.OBDConfig.WIDE_BAND_AIR_FUEL_RATIO_2;
+import static com.example.obdandroid.config.OBDConfig.WIDE_BAND_AIR_FUEL_RATIO_3;
+import static com.example.obdandroid.config.OBDConfig.WIDE_BAND_AIR_FUEL_RATIO_4;
+import static com.example.obdandroid.config.OBDConfig.WIDE_BAND_AIR_FUEL_RATIO_5;
+import static com.example.obdandroid.config.OBDConfig.WIDE_BAND_AIR_FUEL_RATIO_6;
+import static com.example.obdandroid.config.OBDConfig.WIDE_BAND_AIR_FUEL_RATIO_7;
+import static com.example.obdandroid.config.OBDConfig.WIDE_BAND_AIR_FUEL_RATIO_8;
+
 /**
  * 作者：Jealous
  * 日期：2021/9/14 0014
- * 描述：
+ * 描述：OBD 模式二数据解析
  */
 public class CheckRecordTwo implements Serializable {
-    @SuppressLint("StaticFieldLeak")
-    private final static String ENGINE_RPM = "Engine RPM";
-    private final static String VEHICLE_SPEED = "Vehicle Speed";
-    private final static String MAF = "Mass Air Flow";
-    private final static String FUEL_LEVEL = "Fuel Level";
-    private final static String INTAKE_MANIFOLD_PRESSURE = "Intake Manifold Pressure";
-    private final static String AIR_INTAKE_TEMPERATURE = "Air Intake Temperature";
-    private final static String AMBIENT_AIR_TEMP = "Ambient Air Temperature";
-    private final static String ENGINE_COOLANT_TEMP = "Engine Coolant Temperature";
-    private final static String BAROMETRIC_PRESSURE = "Barometric Pressure";
-    private final static String FUEL_PRESSURE = "Fuel Pressure";
-    private final static String THROTTLE_POS = "Throttle Position";
-    private final static String SYSTEM_VAPOR_PRESSURE = "System Vapor Pressure";
-    private final static String CONTROL_MODULE_VOLTAGE = "Control Module Power Supply";
-    private final static String FUEL_RAIL_PRESSURE = "Fuel Rail Pressure";
-    private final static String FUEL_RAIL_PRESSURE_manifold = "Fuel Rail Pressure relative to manifold vacuum";
-    private final static String DISTANCE_TRAVELED_MIL_ON = "Distance traveled with MIL on";
-    private final static String DTC_NUMBER = "Diagnostic Trouble Codes";
-    private final static String REL_THROTTLE_POS = "Relative throttle position";
-    private final static String ABS_LOAD = "Absolute load";
-    private final static String ENGINE_OIL_TEMP = "Engine oil temperature";
-    private final static String SHORT_TERM_BANK_1 = "Short Term Fuel Trim Bank 1";
-    private final static String SHORT_TERM_BANK_2 = "Short Term Fuel Trim Bank 2";
-    private final static String LONG_TERM_BANK_1 = "Long Term Fuel Trim Bank 1";
-    private final static String LONG_TERM_BANK_2 = "Long Term Fuel Trim Bank 2";
-
-    private final static String WIDE_BAND_AIR_FUEL_RATIO_1 = "Wide band Air/Fuel Ratio Oxygen Sensor 1";
-    private final static String WIDE_BAND_AIR_FUEL_RATIO_2 = "Wide band Air/Fuel Ratio Oxygen Sensor 2";
-    private final static String WIDE_BAND_AIR_FUEL_RATIO_3 = "Wide band Air/Fuel Ratio Oxygen Sensor 3";
-    private final static String WIDE_BAND_AIR_FUEL_RATIO_4 = "Wide band Air/Fuel Ratio Oxygen Sensor 4";
-    private final static String WIDE_BAND_AIR_FUEL_RATIO_5 = "Wide band Air/Fuel Ratio Oxygen Sensor 5";
-    private final static String WIDE_BAND_AIR_FUEL_RATIO_6 = "Wide band Air/Fuel Ratio Oxygen Sensor 6";
-    private final static String WIDE_BAND_AIR_FUEL_RATIO_7 = "Wide band Air/Fuel Ratio Oxygen Sensor 7";
-    private final static String WIDE_BAND_AIR_FUEL_RATIO_8 = "Wide band Air/Fuel Ratio Oxygen Sensor 8";
-
-    private final static String Catalyst_Temperature_Bank_1_Sensor_1 = "Catalyst Temperature: Bank 1, Sensor 1";
-    private final static String Catalyst_Temperature_Bank_2_Sensor_1 = "Catalyst Temperature: Bank 2, Sensor 1";
-    private final static String Catalyst_Temperature_Bank_1_Sensor_2 = "Catalyst Temperature: Bank 1, Sensor 2";
-    private final static String Catalyst_Temperature_Bank_2_Sensor_2 = "Catalyst Temperature: Bank 2, Sensor 2";
-
-
-    private final static String ABS_THROTTLE_POS_B = "Absolute throttle position B";
-    private final static String ABS_THROTTLE_POS_C = "Absolute throttle position C";
-    private final static String ACC_PEDAL_POS_D = "Accelerator pedal position D";
-    private final static String ACC_PEDAL_POS_E = "Accelerator pedal position E";
-    private final static String ACC_PEDAL_POS_F = "Accelerator pedal position F";
-    private final static String THROTTLE_ACTUATOR = "Commanded throttle actuator";
-    private final static String TIME_TRAVELED_MIL_ON = "Time run with MIL on";
-    private final static String SHORT_A_BANK1_B_BANK3 = "Short term secondary oxygen sensor trim, A: bank 1, B: bank 3";
-    private final static String LONG_A_BANK1_B_BANK3 = "Long term secondary oxygen sensor trim, A: bank 1, B: bank 3";
-    private final static String SHORT_A_BANK2_B_BANK4 = "Short term secondary oxygen sensor trim, A: bank 2, B: bank 4";
-    private final static String LONG_A_BANK2_B_BANK4 = "Long term secondary oxygen sensor trim, A: bank 2, B: bank 4";
-
-    @SuppressLint("StaticFieldLeak")
     private static CheckRecordTwo sInstance;
-    private Integer engineRpmMax = 0;
+    private int engineRpmMax = 0;
     private String engineRpm = "";
-    private Integer speed = -1;
-    private Integer speedMax = 0;
+    private int speed = -1;
+    private int speedMax = 0;
 
     private String mShortA_BANK1_B_BANK3;
     private String mLong_A_BANK1_B_BANK3;
@@ -99,11 +92,11 @@ public class CheckRecordTwo implements Serializable {
     private String mCatalystTemperatureBank1Sensor2;
     private String mCatalystTemperatureBank2Sensor2;
 
-    private String mAbsThrottlePosb;
-    private String mAbsThrottlePosc;
-    private String mAccPedalPosd;
-    private String mAccPedalPose;
-    private String mAccPedalPosf;
+    private String mAbsThrottlePosB;
+    private String mAbsThrottlePosC;
+    private String mAccPedalPosD;
+    private String mAccPedalPosE;
+    private String mAccPedalPosF;
     private String mThrottleActuator;
     private String mTimeRunWithMILOn;
     private String mEngineCoolantTemp;
@@ -127,7 +120,7 @@ public class CheckRecordTwo implements Serializable {
     private CheckRecordTwo() {
     }
 
-    public static CheckRecordTwo getTriRecode(Context context) {
+    public static CheckRecordTwo getRecode() {
         if (sInstance == null)
             sInstance = new CheckRecordTwo();
         return sInstance;
@@ -146,182 +139,183 @@ public class CheckRecordTwo implements Serializable {
             case ENGINE_RPM://转速
                 setEngineRpm(command.getCalculatedResult());
                 break;
-            case MAF://"MAF空气流量速率", massAirFlow + ""
+            case MAF://"MAF空气流量速率"
                 mMassAirFlow = Float.parseFloat(command.getFormattedResult());
+                setMassAirFlow(mMassAirFlow);
                 break;
-            case FUEL_LEVEL://燃油油位  "燃油油位",
+            case FUEL_LEVEL://燃油油位
                 mFuelLevel = command.getFormattedResult();
                 setFuelLevel(TextUtils.isEmpty(mFuelLevel) ? "N/A" : mFuelLevel);
                 break;
-            case INTAKE_MANIFOLD_PRESSURE://"进气歧管压力", mIntakePressure + " kpa"
+            case INTAKE_MANIFOLD_PRESSURE://"进气歧管压力"
                 mIntakePressure = Float.parseFloat(command.getCalculatedResult());
                 setIntakePressure(mIntakePressure);
                 break;
-            case AIR_INTAKE_TEMPERATURE://"油箱空气温度", mIntakeAirTemp + " ℃"
+            case AIR_INTAKE_TEMPERATURE://"油箱空气温度"
                 mIntakeAirTemp = Float.parseFloat(command.getCalculatedResult()) + 273.15f;
                 setIntakeAirTemp(mIntakeAirTemp);
                 break;
-            case AMBIENT_AIR_TEMP://"环境空气温度", TextUtils.isEmpty(mAmbientAirTemp) ? "N/A" : mAmbientAirTemp + " ℃"
+            case AMBIENT_AIR_TEMP://"环境空气温度"
                 mAmbientAirTemp = command.getFormattedResult();
                 setAmbientAirTemp(TextUtils.isEmpty(mAmbientAirTemp) ? "N/A" : mAmbientAirTemp + " ℃");
                 break;
-            case ENGINE_COOLANT_TEMP://"引擎冷媒温度", TextUtils.isEmpty(mEngineCoolantTemp) ? "N/A" : mEngineCoolantTemp + " ℃"
+            case ENGINE_COOLANT_TEMP://"引擎冷媒温度"
                 mEngineCoolantTemp = command.getFormattedResult();
                 setEngineCoolantTemp(TextUtils.isEmpty(mEngineCoolantTemp) ? "N/A" : mEngineCoolantTemp + " ℃");
                 break;
-            case ENGINE_OIL_TEMP://"引擎油温", TextUtils.isEmpty(mEngineOilTemp) ? "N/A" : mEngineOilTemp
+            case ENGINE_OIL_TEMP://"引擎油温"
                 mEngineOilTemp = command.getFormattedResult();
                 setEngineOilTemp(TextUtils.isEmpty(mEngineOilTemp) ? "N/A" : mEngineOilTemp);
                 break;
-            case FUEL_PRESSURE://"油压", TextUtils.isEmpty(mFuelPressure) ? "N/A" : mFuelPressure
+            case FUEL_PRESSURE://"油压"
                 mFuelPressure = command.getFormattedResult();
                 setFuelPressure(TextUtils.isEmpty(mFuelPressure) ? "N/A" : mFuelPressure);
                 break;
-            case BAROMETRIC_PRESSURE://"绝对大气压", TextUtils.isEmpty(mBarometricPressure) ? "N/A" : mBarometricPressure
+            case BAROMETRIC_PRESSURE://"绝对大气压"
                 mBarometricPressure = command.getFormattedResult();
                 setBarometricPressure(TextUtils.isEmpty(mBarometricPressure) ? "N/A" : mBarometricPressure);
                 break;
-            case THROTTLE_POS://"油门位置", TextUtils.isEmpty(mThrottlePos) ? "N/A" : mThrottlePos
+            case THROTTLE_POS://"油门位置"
                 mThrottlePos = command.getFormattedResult();
                 setThrottlePos(TextUtils.isEmpty(mThrottlePos) ? "N/A" : mThrottlePos);
                 break;
-            case WIDE_BAND_AIR_FUEL_RATIO_1://"氧气侦测器1 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioOne) ? "N/A" : mWideBandAirFuelRatioOne
+            case WIDE_BAND_AIR_FUEL_RATIO_1://"氧气侦测器1 燃油-空气当量比 电流"
                 mWideBandAirFuelRatioOne = command.getFormattedResult();
                 setWideBandAirFuelRatioOne(TextUtils.isEmpty(mWideBandAirFuelRatioOne) ? "N/A" : mWideBandAirFuelRatioOne);
                 break;
-            case WIDE_BAND_AIR_FUEL_RATIO_2://"氧气侦测器2 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioTwo) ? "N/A" : mWideBandAirFuelRatioTwo
+            case WIDE_BAND_AIR_FUEL_RATIO_2://"氧气侦测器2 燃油-空气当量比 电流"
                 mWideBandAirFuelRatioTwo = command.getFormattedResult();
                 setWideBandAirFuelRatioTwo(TextUtils.isEmpty(mWideBandAirFuelRatioTwo) ? "N/A" : mWideBandAirFuelRatioTwo);
                 break;
-            case WIDE_BAND_AIR_FUEL_RATIO_3://"氧气侦测器3 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioThree) ? "N/A" : mWideBandAirFuelRatioThree
+            case WIDE_BAND_AIR_FUEL_RATIO_3://"氧气侦测器3 燃油-空气当量比 电流"
                 mWideBandAirFuelRatioThree = command.getFormattedResult();
                 setWideBandAirFuelRatioThree(TextUtils.isEmpty(mWideBandAirFuelRatioThree) ? "N/A" : mWideBandAirFuelRatioThree);
                 break;
-            case WIDE_BAND_AIR_FUEL_RATIO_4://"氧气侦测器4 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioFour) ? "N/A" : mWideBandAirFuelRatioFour
+            case WIDE_BAND_AIR_FUEL_RATIO_4://"氧气侦测器4 燃油-空气当量比 电流"
                 mWideBandAirFuelRatioFour = command.getFormattedResult();
                 setWideBandAirFuelRatioFour(TextUtils.isEmpty(mWideBandAirFuelRatioFour) ? "N/A" : mWideBandAirFuelRatioFour);
                 break;
-            case WIDE_BAND_AIR_FUEL_RATIO_5://"氧气侦测器5 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioFive) ? "N/A" : mWideBandAirFuelRatioFive
+            case WIDE_BAND_AIR_FUEL_RATIO_5://"氧气侦测器5 燃油-空气当量比 电流"
                 mWideBandAirFuelRatioFive = command.getFormattedResult();
                 setWideBandAirFuelRatioFive(TextUtils.isEmpty(mWideBandAirFuelRatioFive) ? "N/A" : mWideBandAirFuelRatioFive);
                 break;
-            case WIDE_BAND_AIR_FUEL_RATIO_6://"氧气侦测器6 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioSix) ? "N/A" : mWideBandAirFuelRatioSix
+            case WIDE_BAND_AIR_FUEL_RATIO_6://"氧气侦测器6 燃油-空气当量比 电流"
                 mWideBandAirFuelRatioSix = command.getFormattedResult();
                 setWideBandAirFuelRatioSix(TextUtils.isEmpty(mWideBandAirFuelRatioSix) ? "N/A" : mWideBandAirFuelRatioSix);
                 break;
-            case WIDE_BAND_AIR_FUEL_RATIO_7://"氧气侦测器7 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioSeven) ? "N/A" : mWideBandAirFuelRatioSeven
+            case WIDE_BAND_AIR_FUEL_RATIO_7://"氧气侦测器7 燃油-空气当量比 电流"
                 mWideBandAirFuelRatioSeven = command.getFormattedResult();
                 setWideBandAirFuelRatioSeven(TextUtils.isEmpty(mWideBandAirFuelRatioSeven) ? "N/A" : mWideBandAirFuelRatioSeven);
                 break;
-            case WIDE_BAND_AIR_FUEL_RATIO_8://"氧气侦测器8 燃油-空气当量比 电流", TextUtils.isEmpty(mWideBandAirFuelRatioEight) ? "N/A" : mWideBandAirFuelRatioEight
+            case WIDE_BAND_AIR_FUEL_RATIO_8://"氧气侦测器8 燃油-空气当量比 电流"
                 mWideBandAirFuelRatioEight = command.getFormattedResult();
                 setWideBandAirFuelRatioEight(TextUtils.isEmpty(mWideBandAirFuelRatioEight) ? "N/A" : mWideBandAirFuelRatioEight);
                 break;
-            case Catalyst_Temperature_Bank_1_Sensor_1://"催化剂温度:Bank1,感测器1", TextUtils.isEmpty(mCatalystTemperatureBank1Sensor1) ? "N/A" : mCatalystTemperatureBank1Sensor1
+            case Catalyst_Temperature_Bank_1_Sensor_1://"催化剂温度:Bank1,感测器1"
                 mCatalystTemperatureBank1Sensor1 = command.getFormattedResult();
                 setCatalystTemperatureBank1Sensor1(TextUtils.isEmpty(mCatalystTemperatureBank1Sensor1) ? "N/A" : mCatalystTemperatureBank1Sensor1);
                 break;
-            case Catalyst_Temperature_Bank_2_Sensor_1://"催化剂温度:Bank2,感测器1", TextUtils.isEmpty(mCatalystTemperatureBank2Sensor1) ? "N/A" : mCatalystTemperatureBank2Sensor1
+            case Catalyst_Temperature_Bank_2_Sensor_1://"催化剂温度:Bank2,感测器1"
                 mCatalystTemperatureBank2Sensor1 = command.getFormattedResult();
                 setCatalystTemperatureBank2Sensor1(TextUtils.isEmpty(mCatalystTemperatureBank2Sensor1) ? "N/A" : mCatalystTemperatureBank2Sensor1);
                 break;
-            case Catalyst_Temperature_Bank_1_Sensor_2://"催化剂温度:Bank1,感测器2", TextUtils.isEmpty(mCatalystTemperatureBank1Sensor2) ? "N/A" : mCatalystTemperatureBank1Sensor2
+            case Catalyst_Temperature_Bank_1_Sensor_2://"催化剂温度:Bank1,感测器2"
                 mCatalystTemperatureBank1Sensor2 = command.getFormattedResult();
                 setCatalystTemperatureBank1Sensor2(TextUtils.isEmpty(mCatalystTemperatureBank1Sensor2) ? "N/A" : mCatalystTemperatureBank1Sensor2);
                 break;
-            case Catalyst_Temperature_Bank_2_Sensor_2://"催化剂温度:Bank2,感测器2", TextUtils.isEmpty(mCatalystTemperatureBank2Sensor2) ? "N/A" : mCatalystTemperatureBank2Sensor2
+            case Catalyst_Temperature_Bank_2_Sensor_2://"催化剂温度:Bank2,感测器2"
                 mCatalystTemperatureBank2Sensor2 = command.getFormattedResult();
                 setCatalystTemperatureBank2Sensor2(TextUtils.isEmpty(mCatalystTemperatureBank2Sensor2) ? "N/A" : mCatalystTemperatureBank2Sensor2);
                 break;
-            case ABS_THROTTLE_POS_B://"绝对油门位置B", TextUtils.isEmpty(mAbsThrottlePosb) ? "N/A" : mAbsThrottlePosb
-                mAbsThrottlePosb = command.getFormattedResult();
-                setAbsThrottlePosb(TextUtils.isEmpty(mAbsThrottlePosb) ? "N/A" : mAbsThrottlePosb);
+            case ABS_THROTTLE_POS_B://"绝对油门位置B"
+                mAbsThrottlePosB = command.getFormattedResult();
+                setAbsThrottlePosB(TextUtils.isEmpty(mAbsThrottlePosB) ? "N/A" : mAbsThrottlePosB);
                 break;
-            case ABS_THROTTLE_POS_C://"绝对油门位置C", TextUtils.isEmpty(mAbsThrottlePosc) ? "N/A" : mAbsThrottlePosc
-                mAbsThrottlePosc = command.getFormattedResult();
-                setAbsThrottlePosc(TextUtils.isEmpty(mAbsThrottlePosc) ? "N/A" : mAbsThrottlePosc);
+            case ABS_THROTTLE_POS_C://"绝对油门位置C"
+                mAbsThrottlePosC = command.getFormattedResult();
+                setAbsThrottlePosC(TextUtils.isEmpty(mAbsThrottlePosC) ? "N/A" : mAbsThrottlePosC);
                 break;
-            case ACC_PEDAL_POS_D://"加速踏板位置D", TextUtils.isEmpty(mAccPedalPosd) ? "N/A" : mAccPedalPosd
-                mAccPedalPosd = command.getFormattedResult();
-                setAccPedalPosd(TextUtils.isEmpty(mAccPedalPosd) ? "N/A" : mAccPedalPosd);
+            case ACC_PEDAL_POS_D://"加速踏板位置D"
+                mAccPedalPosD = command.getFormattedResult();
+                setAccPedalPosD(TextUtils.isEmpty(mAccPedalPosD) ? "N/A" : mAccPedalPosD);
                 break;
-            case ACC_PEDAL_POS_E://"加速踏板位置E", TextUtils.isEmpty(mAccPedalPose) ? "N/A" : mAccPedalPose
-                mAccPedalPose = command.getFormattedResult();
-                setAccPedalPose(TextUtils.isEmpty(mAccPedalPose) ? "N/A" : mAccPedalPose);
+            case ACC_PEDAL_POS_E://"加速踏板位置E"
+                mAccPedalPosE = command.getFormattedResult();
+                setAccPedalPosE(TextUtils.isEmpty(mAccPedalPosE) ? "N/A" : mAccPedalPosE);
                 break;
-            case ACC_PEDAL_POS_F://"加速踏板位置F", TextUtils.isEmpty(mAccPedalPosf) ? "N/A" : mAccPedalPosf
-                mAccPedalPosf = command.getFormattedResult();
-                setAccPedalPosf(TextUtils.isEmpty(mAccPedalPosf) ? "N/A" : mAccPedalPosf);
+            case ACC_PEDAL_POS_F://"加速踏板位置F"
+                mAccPedalPosF = command.getFormattedResult();
+                setAccPedalPosF(TextUtils.isEmpty(mAccPedalPosF) ? "N/A" : mAccPedalPosF);
                 break;
-            case THROTTLE_ACTUATOR://"油门执行器控制值", TextUtils.isEmpty(mThrottleActuator) ? "N/A" : mThrottleActuator
+            case THROTTLE_ACTUATOR://"油门执行器控制值"
                 mThrottleActuator = command.getFormattedResult();
                 setThrottleActuator(TextUtils.isEmpty(mThrottleActuator) ? "N/A" : mThrottleActuator);
                 break;
-            case TIME_TRAVELED_MIL_ON://"MIL灯亮的行驶时间", TextUtils.isEmpty(mTimeRunwithMILOn) ? "N/A" : mTimeRunwithMILOn
+            case TIME_TRAVELED_MIL_ON://"MIL灯亮的行驶时间"
                 mTimeRunWithMILOn = command.getFormattedResult();
                 setTimeRunWithMILOn(TextUtils.isEmpty(mTimeRunWithMILOn) ? "N/A" : mTimeRunWithMILOn);
                 break;
-            case SHORT_A_BANK1_B_BANK3://"第二侧氧气侦测器短期修正,A:bank 1,B:bank 3", TextUtils.isEmpty(mShortA_BANK1_B_BANK3) ? "N/A" : mShortA_BANK1_B_BANK3
+            case SHORT_A_BANK1_B_BANK3://"第二侧氧气侦测器短期修正,A:bank 1,B:bank 3"
                 mShortA_BANK1_B_BANK3 = command.getFormattedResult();
                 setShortA_BANK1_B_BANK3(TextUtils.isEmpty(mShortA_BANK1_B_BANK3) ? "N/A" : mShortA_BANK1_B_BANK3);
                 break;
-            case LONG_A_BANK1_B_BANK3://"第二侧氧气侦测器长期修正,A:bank 1,B:bank 3", TextUtils.isEmpty(mLong_A_BANK1_B_BANK3) ? "N/A" : mLong_A_BANK1_B_BANK3
+            case LONG_A_BANK1_B_BANK3://"第二侧氧气侦测器长期修正,A:bank 1,B:bank 3"
                 mLong_A_BANK1_B_BANK3 = command.getFormattedResult();
                 setLong_A_BANK1_B_BANK3(TextUtils.isEmpty(mLong_A_BANK1_B_BANK3) ? "N/A" : mLong_A_BANK1_B_BANK3);
                 break;
-            case SHORT_A_BANK2_B_BANK4://"第二侧氧气侦测器短期修正,A:bank 2,B:bank 4", TextUtils.isEmpty(mShort_A_BANK2_B_BANK4) ? "N/A" : mShort_A_BANK2_B_BANK4
+            case SHORT_A_BANK2_B_BANK4://"第二侧氧气侦测器短期修正,A:bank 2,B:bank 4"
                 mShort_A_BANK2_B_BANK4 = command.getFormattedResult();
                 setShort_A_BANK2_B_BANK4(TextUtils.isEmpty(mShort_A_BANK2_B_BANK4) ? "N/A" : mShort_A_BANK2_B_BANK4);
                 break;
-            case LONG_A_BANK2_B_BANK4://"第二侧氧气侦测器长期修正,A:bank 2,B:bank 4", TextUtils.isEmpty(mLong_A_BANK2_B_BANK4) ? "N/A" : mLong_A_BANK2_B_BANK4
+            case LONG_A_BANK2_B_BANK4://"第二侧氧气侦测器长期修正,A:bank 2,B:bank 4"
                 mLong_A_BANK2_B_BANK4 = command.getFormattedResult();
                 setLong_A_BANK2_B_BANK4(TextUtils.isEmpty(mLong_A_BANK2_B_BANK4) ? "N/A" : mLong_A_BANK2_B_BANK4);
                 break;
-            case CONTROL_MODULE_VOLTAGE://"控制模组电压", TextUtils.isEmpty(mControlModuleVoltage) ? "N/A" : mControlModuleVoltage
+            case CONTROL_MODULE_VOLTAGE://"控制模组电压"
                 mControlModuleVoltage = command.getFormattedResult();
                 setControlModuleVoltage(TextUtils.isEmpty(mControlModuleVoltage) ? "N/A" : mControlModuleVoltage);
                 break;
-            case FUEL_RAIL_PRESSURE://"油轨压力(柴油或汽油直喷)", TextUtils.isEmpty(mFuelRailPressure) ? "N/A" : mFuelRailPressure
+            case FUEL_RAIL_PRESSURE://"油轨压力(柴油或汽油直喷)"
                 mFuelRailPressure = command.getFormattedResult();
                 setFuelRailPressure(TextUtils.isEmpty(mFuelRailPressure) ? "N/A" : mFuelRailPressure);
                 break;
-            case FUEL_RAIL_PRESSURE_manifold://"油轨压力(相对进气歧管真空度)", TextUtils.isEmpty(mFuelRailPressurevacuum) ? "N/A" : mFuelRailPressurevacuum
+            case FUEL_RAIL_PRESSURE_manifold://"油轨压力(相对进气歧管真空度)"
                 mFuelRailPressureVacuum = command.getFormattedResult();
                 setFuelRailPressureVacuum(TextUtils.isEmpty(mFuelRailPressureVacuum) ? "N/A" : mFuelRailPressureVacuum);
                 break;
-            case DISTANCE_TRAVELED_MIL_ON://"故障指示灯(MIL)亮时行驶的距离", TextUtils.isEmpty(mDistanceTraveledMilOn) ? "N/A" : mDistanceTraveledMilOn
+            case DISTANCE_TRAVELED_MIL_ON://"故障指示灯(MIL)亮时行驶的距离"
                 mDistanceTraveledMilOn = command.getFormattedResult();
                 setDistanceTraveledMilOn(TextUtils.isEmpty(mDistanceTraveledMilOn) ? "N/A" : mDistanceTraveledMilOn);
                 break;
-            case DTC_NUMBER://"自从DTC清除后的监控状态", TextUtils.isEmpty(mDtcNumber) ? "N/A" : mDtcNumber
+            case DTC_NUMBER://"自从DTC清除后的监控状态"
                 mDtcNumber = command.getFormattedResult();
                 setDtcNumber(TextUtils.isEmpty(mDtcNumber) ? "N/A" : mDtcNumber);
                 break;
-            case SYSTEM_VAPOR_PRESSURE://"系统蒸汽压力", TextUtils.isEmpty(mSystemVaporPressure) ? "N/A" : mSystemVaporPressure
+            case SYSTEM_VAPOR_PRESSURE://"系统蒸汽压力"
                 mSystemVaporPressure = command.getFormattedResult();
                 setSystemVaporPressure(TextUtils.isEmpty(mSystemVaporPressure) ? "N/A" : mSystemVaporPressure);
                 break;
-            case REL_THROTTLE_POS://"相对油门位置", TextUtils.isEmpty(mRelThottlePos) ? "N/A" : mRelThottlePos
+            case REL_THROTTLE_POS://"相对油门位置"
                 mRelThoPosition = command.getFormattedResult();
                 setRelThoPos(TextUtils.isEmpty(mRelThoPosition) ? "N/A" : mRelThoPosition);
                 break;
-            case ABS_LOAD://"绝对负荷", TextUtils.isEmpty(mAbsLoad) ? "N/A" : mAbsLoad
+            case ABS_LOAD://"绝对负荷"
                 mAbsLoad = command.getFormattedResult();
                 setAbsLoad(TextUtils.isEmpty(mAbsLoad) ? "N/A" : mAbsLoad);
                 break;
-            case SHORT_TERM_BANK_1://"短期燃油调节库1", TextUtils.isEmpty(mShortTermBank1) ? "N/A" : mShortTermBank1
+            case SHORT_TERM_BANK_1://"短期燃油调节库1"
                 mShortTermBank1 = command.getFormattedResult();
                 setShortTermBank1(TextUtils.isEmpty(mShortTermBank1) ? "N/A" : mShortTermBank1);
                 break;
-            case SHORT_TERM_BANK_2://"短期燃油调节库2", TextUtils.isEmpty(mShortTermBank2) ? "N/A" : mShortTermBank2
+            case SHORT_TERM_BANK_2://"短期燃油调节库2"
                 mShortTermBank2 = command.getFormattedResult();
                 setShortTermBank2(TextUtils.isEmpty(mShortTermBank2) ? "N/A" : mShortTermBank2);
                 break;
-            case LONG_TERM_BANK_1://"长期燃油调节库1", TextUtils.isEmpty(mLongTermBank1) ? "N/A" : mLongTermBank1
+            case LONG_TERM_BANK_1://"长期燃油调节库1"
                 mLongTermBank1 = command.getFormattedResult();
                 setLongTermBank1(TextUtils.isEmpty(mLongTermBank1) ? "N/A" : mLongTermBank1);
                 break;
-            case LONG_TERM_BANK_2://"长期燃油调节库2", TextUtils.isEmpty(mLongTermBank2) ? "N/A" : mLongTermBank2
+            case LONG_TERM_BANK_2://"长期燃油调节库2"
                 mLongTermBank2 = command.getFormattedResult();
                 setLongTermBank2(TextUtils.isEmpty(mLongTermBank2) ? "N/A" : mLongTermBank2);
                 break;
@@ -329,13 +323,13 @@ public class CheckRecordTwo implements Serializable {
     }
 
 
-    public void setSpeed(Integer currentSpeed) {
+    public void setSpeed(int currentSpeed) {
         speed = currentSpeed;
         if (speedMax < currentSpeed)
             speedMax = currentSpeed;
     }
 
-    public Integer getSpeed() {
+    public int getSpeed() {
         if (speed == -1)
             return 0;
         return speed;
@@ -528,44 +522,44 @@ public class CheckRecordTwo implements Serializable {
         this.mCatalystTemperatureBank2Sensor2 = mCatalystTemperatureBank2Sensor2;
     }
 
-    public String getAbsThrottlePosb() {
-        return mAbsThrottlePosb;
+    public String getAbsThrottlePosB() {
+        return mAbsThrottlePosB;
     }
 
-    public void setAbsThrottlePosb(String mAbsThrottlePosb) {
-        this.mAbsThrottlePosb = mAbsThrottlePosb;
+    public void setAbsThrottlePosB(String mAbsThrottlePosB) {
+        this.mAbsThrottlePosB = mAbsThrottlePosB;
     }
 
-    public String getAbsThrottlePosc() {
-        return mAbsThrottlePosc;
+    public String getAbsThrottlePosC() {
+        return mAbsThrottlePosC;
     }
 
-    public void setAbsThrottlePosc(String mAbsThrottlePosc) {
-        this.mAbsThrottlePosc = mAbsThrottlePosc;
+    public void setAbsThrottlePosC(String mAbsThrottlePosC) {
+        this.mAbsThrottlePosC = mAbsThrottlePosC;
     }
 
-    public String getAccPedalPosd() {
-        return mAccPedalPosd;
+    public String getAccPedalPosD() {
+        return mAccPedalPosD;
     }
 
-    public void setAccPedalPosd(String mAccPedalPosd) {
-        this.mAccPedalPosd = mAccPedalPosd;
+    public void setAccPedalPosD(String mAccPedalPosD) {
+        this.mAccPedalPosD = mAccPedalPosD;
     }
 
-    public String getAccPedalPose() {
-        return mAccPedalPose;
+    public String getAccPedalPosE() {
+        return mAccPedalPosE;
     }
 
-    public void setAccPedalPose(String mAccPedalPose) {
-        this.mAccPedalPose = mAccPedalPose;
+    public void setAccPedalPosE(String mAccPedalPosE) {
+        this.mAccPedalPosE = mAccPedalPosE;
     }
 
-    public String getAccPedalPosf() {
-        return mAccPedalPosf;
+    public String getAccPedalPosF() {
+        return mAccPedalPosF;
     }
 
-    public void setAccPedalPosf(String mAccPedalPosf) {
-        this.mAccPedalPosf = mAccPedalPosf;
+    public void setAccPedalPosF(String mAccPedalPosF) {
+        this.mAccPedalPosF = mAccPedalPosF;
     }
 
     public String getThrottleActuator() {

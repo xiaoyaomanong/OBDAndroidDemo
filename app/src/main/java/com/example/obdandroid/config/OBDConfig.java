@@ -1,0 +1,95 @@
+package com.example.obdandroid.config;
+
+/**
+ * 作者：Jealous
+ * 日期：2021/9/16 0016
+ * 描述：OBD 常量配置
+ */
+public class OBDConfig {
+    public static final int SPEED_GAP = 20;
+    public static final float GRAM_TO_LITRE_GASOLINE = 748.9f;
+    public static final float GRAM_TO_LITRE_DIESEL = 850.8f;
+    public static final float GRAM_TO_LITRE_CNG = 128.2f;
+    public static final float GRAM_TO_LITRE_METHANOL = 786.6f;
+    public static final float GRAM_TO_LITRE_ETHANOL = 789f;
+    public static final float GRAM_TO_LITRE_PROPANE = 493f;
+    public final static String ENGINE_RPM = "Engine RPM";
+    public final static String VEHICLE_SPEED = "Vehicle Speed";
+    public final static String ENGINE_RUNTIME = "Engine Runtime";
+    public final static String MAF = "Mass Air Flow";
+    public final static String FUEL_LEVEL = "Fuel Level";
+    public final static String FUEL_TYPE = "Fuel Type";
+    public final static String INTAKE_MANIFOLD_PRESSURE = "Intake Manifold Pressure";
+    public final static String AIR_INTAKE_TEMPERATURE = "Air Intake Temperature";
+    public final static String TROUBLE_CODES = "Trouble Codes";
+    public final static String AMBIENT_AIR_TEMP = "Ambient Air Temperature";
+    public final static String ENGINE_COOLANT_TEMP = "Engine Coolant Temperature";
+    public final static String BAROMETRIC_PRESSURE = "Barometric Pressure";
+    public final static String FUEL_PRESSURE = "Fuel Pressure";
+    public final static String ENGINE_LOAD = "Engine Load";
+    public final static String THROTTLE_POS = "Throttle Position";
+    public final static String FUEL_CONSUMPTION_RATE = "Fuel Consumption Rate";
+    public final static String FUEL_SYSTEM_STATUS = "Fuel System Status";
+    public final static String TIMING_ADVANCE = "Timing Advance";
+    public final static String PERMANENT_TROUBLE_CODES = "Permanent Trouble Codes";
+    public final static String PENDING_TROUBLE_CODES = "Pending Trouble Codes";
+    public final static String DISTANCE_TRAVELED_AFTER_CODES_CLEARED = "Distance since codes cleared";
+    public final static String SYSTEM_VAPOR_PRESSURE = "System Vapor Pressure";
+    public final static String CONTROL_MODULE_VOLTAGE = "Control Module Power Supply ";
+    public final static String FUEL_RAIL_PRESSURE = "Fuel Rail Pressure";
+    public final static String FUEL_RAIL_PRESSURE_manifold = "Fuel Rail Pressure relative to manifold vacuum";
+    public final static String VIN = "Vehicle Identification Number (VIN)";
+    public final static String DISTANCE_TRAVELED_MIL_ON = "Distance traveled with MIL on";
+    public final static String DTC_NUMBER = "Diagnostic Trouble Codes";
+    public final static String TIME_SINCE_TC_CLEARED = "Time since trouble codes cleared";
+    public final static String REL_THROTTLE_POS = "Relative throttle position";
+    public final static String ABS_LOAD = "Absolute load";
+    public final static String ENGINE_OIL_TEMP = "Engine oil temperature";
+    public final static String AIR_FUEL_RATIO = "Air/Fuel Ratio";
+    public final static String DESCRIBE_PROTOCOL = "Describe protocol";
+    public final static String DESCRIBE_PROTOCOL_NUMBER = "Describe protocol number";
+    public final static String IGNITION_MONITOR = "Ignition monitor";
+    public final static String EGR = "EGR";
+    public final static String EGR_ERROR = "EGR Error";
+    public final static String SHORT_TERM_BANK_1 = "Short Term Fuel Trim Bank 1";
+    public final static String SHORT_TERM_BANK_2 = "Short Term Fuel Trim Bank 2";
+    public final static String LONG_TERM_BANK_1 = "Long Term Fuel Trim Bank 1";
+    public final static String LONG_TERM_BANK_2 = "Long Term Fuel Trim Bank 2";
+    public final static String EVAPORATE_PURGE = "evaporate purge";
+    public final static String WarmUpSinceCodesCleared = "Warm Up Since Codes Cleared Command";
+    public final static String WIDE_BAND_AIR_FUEL_RATIO_1 = "Wide band Air/Fuel Ratio Oxygen Sensor 1";
+    public final static String WIDE_BAND_AIR_FUEL_RATIO_2 = "Wide band Air/Fuel Ratio Oxygen Sensor 2";
+    public final static String WIDE_BAND_AIR_FUEL_RATIO_3 = "Wide band Air/Fuel Ratio Oxygen Sensor 3";
+    public final static String WIDE_BAND_AIR_FUEL_RATIO_4 = "Wide band Air/Fuel Ratio Oxygen Sensor 4";
+    public final static String WIDE_BAND_AIR_FUEL_RATIO_5 = "Wide band Air/Fuel Ratio Oxygen Sensor 5";
+    public final static String WIDE_BAND_AIR_FUEL_RATIO_6 = "Wide band Air/Fuel Ratio Oxygen Sensor 6";
+    public final static String WIDE_BAND_AIR_FUEL_RATIO_7 = "Wide band Air/Fuel Ratio Oxygen Sensor 7";
+    public final static String WIDE_BAND_AIR_FUEL_RATIO_8 = "Wide band Air/Fuel Ratio Oxygen Sensor 8";
+    public final static String Catalyst_Temperature_Bank_1_Sensor_1 = "Catalyst Temperature: Bank 1, Sensor 1";
+    public final static String Catalyst_Temperature_Bank_2_Sensor_1 = "Catalyst Temperature: Bank 2, Sensor 1";
+    public final static String Catalyst_Temperature_Bank_1_Sensor_2 = "Catalyst Temperature: Bank 1, Sensor 2";
+    public final static String Catalyst_Temperature_Bank_2_Sensor_2 = "Catalyst Temperature: Bank 2, Sensor 2";
+    public final static String ABS_THROTTLE_POS_B = "Absolute throttle position B";
+    public final static String ABS_THROTTLE_POS_C = "Absolute throttle position C";
+    public final static String ACC_PEDAL_POS_D = "Accelerator pedal position D";
+    public final static String ACC_PEDAL_POS_E = "Accelerator pedal position E";
+    public final static String ACC_PEDAL_POS_F = "Accelerator pedal position F";
+    public final static String THROTTLE_ACTUATOR = "Commanded throttle actuator";
+    public final static String TIME_TRAVELED_MIL_ON = "Time run with MIL on";
+    public final static String MAX_AIR_FLOW_MASS_RATE = "Maximum value for air flow rate from mass air flow sensor";
+    public final static String ETHANOL_FUEL_RATE = "Ethanol fuel %";
+    public final static String ABS_EVA_SYSTEM_VAPOR_PRESSURE = "Absolute Eva system Vapor Pressure";
+    public final static String EVA_SYSTEM_VAPOR_PRESSURE = "Eva system vapor pressure";
+    public final static String SHORT_A_BANK1_B_BANK3 = "Short term secondary oxygen sensor trim, A: bank 1, B: bank 3";
+    public final static String LONG_A_BANK1_B_BANK3 = "Long term secondary oxygen sensor trim, A: bank 1, B: bank 3";
+    public final static String SHORT_A_BANK2_B_BANK4 = "Short term secondary oxygen sensor trim, A: bank 2, B: bank 4";
+    public final static String LONG_A_BANK2_B_BANK4 = "Long term secondary oxygen sensor trim, A: bank 2, B: bank 4";
+    public final static String FUEL_RAIL_ABS_PRESSURE = "Fuel rail absolute pressure";
+    public final static String REL_ACCELERATOR_PEDAL_POS = "Relative accelerator pedal position";
+    public final static String HY_BATTERY_PACK_LIFE = "Hybrid battery pack remaining life";
+    public final static String DRIVER_ENGINE_TORQUE = "Driver's demand engine - percent torque";
+    public final static String ACTUAL_ENGINE_TORQUE = "Actual engine - percent torque";
+    public final static String ENGINE_REFERENCE_TORQUE = "Engine reference torque";
+    public final static String DPF_TEMP = "Diesel Particulate filter (DPF) temperature";
+    public final static String ENGINE_FRICTION_PERCENT_TORQUE = "Engine Friction - Percent Torque";
+}

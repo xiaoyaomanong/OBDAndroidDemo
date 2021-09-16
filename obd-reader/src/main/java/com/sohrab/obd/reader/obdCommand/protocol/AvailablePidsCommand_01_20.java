@@ -23,7 +23,7 @@ public class AvailablePidsCommand_01_20 extends AvailablePidsCommand {
      */
     @Override
     public String getName() {
-        return AvailableCommandNames.PIDS_01_20.getValue();
+        return AvailableCommandNames.PID_01_20.getValue();
     }
 
 }
